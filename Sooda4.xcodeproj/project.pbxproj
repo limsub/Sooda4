@@ -17,6 +17,7 @@
 		48267DDE2B46EED600B30D6C /* UIColor+HexCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DDD2B46EED600B30D6C /* UIColor+HexCode.swift */; };
 		48267DF32B47AD9E00B30D6C /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DF22B47AD9E00B30D6C /* Coordinator.swift */; };
 		48267DF52B47AE9D00B30D6C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DF42B47AE9D00B30D6C /* AppCoordinator.swift */; };
+		48267DFC2B47B0BC00B30D6C /* SplashCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DFB2B47B0BC00B30D6C /* SplashCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		48267DDD2B46EED600B30D6C /* UIColor+HexCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexCode.swift"; sourceTree = "<group>"; };
 		48267DF22B47AD9E00B30D6C /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
 		48267DF42B47AE9D00B30D6C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		48267DFB2B47B0BC00B30D6C /* SplashCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 		48267DCD2B46ED6E00B30D6C /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				48267DF62B47B06500B30D6C /* SplashScene */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -207,6 +210,46 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
+		48267DF62B47B06500B30D6C /* SplashScene */ = {
+			isa = PBXGroup;
+			children = (
+				48267DFA2B47B09F00B30D6C /* View */,
+				48267DF92B47B09C00B30D6C /* ViewController */,
+				48267DF82B47B09A00B30D6C /* ViewModel */,
+				48267DF72B47B06C00B30D6C /* Coordinator */,
+			);
+			path = SplashScene;
+			sourceTree = "<group>";
+		};
+		48267DF72B47B06C00B30D6C /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				48267DFB2B47B0BC00B30D6C /* SplashCoordinator.swift */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		48267DF82B47B09A00B30D6C /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		48267DF92B47B09C00B30D6C /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		48267DFA2B47B09F00B30D6C /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -279,6 +322,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48267DB32B46ED1B00B30D6C /* AppDelegate.swift in Sources */,
+				48267DFC2B47B0BC00B30D6C /* SplashCoordinator.swift in Sources */,
 				48267DDC2B46EED000B30D6C /* UIColor+AppColor.swift in Sources */,
 				48267DF32B47AD9E00B30D6C /* Coordinator.swift in Sources */,
 				48267DDA2B46EEC800B30D6C /* ColorSet.swift in Sources */,
