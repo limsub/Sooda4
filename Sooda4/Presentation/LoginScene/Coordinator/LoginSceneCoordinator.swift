@@ -38,6 +38,7 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
     
     // 5.
     func start() {
+        // 스플래시 뷰에서 넘어오기 때문에 맨 처음에는 present transition 으로 전환이 필요해
         showOnboardingView()
     }
     
@@ -50,7 +51,11 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
         
         // TODO: VM - DidSendEventClosure
         
-        navigationController.pushViewController(onboardingVC, animated: true)
+//        navigationController.pushViewController(onboardingVC, animated: true)
+        
+        setUpViewFadeEffect()
+        onboardingVC.modalPresentationStyle = .fullScreen
+        navigationController.present(onboardingVC, animated: false)
     }
     
     func showSelectAuthView() {
@@ -103,5 +108,14 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
     // 애초에 자식 코디네이터가 없기 때문에 얜 실행되지 않을거야
     func coordinatorDidFinish(childCoordinator: Coordinator) {
         print("이게 실행될 리가 없어...")
+    }
+}
+
+extension LoginSceneCoordinator {
+    func setUpViewFadeEffect() {
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.type = .fade
+        navigationController.view.window?.layer.add(transition, forKey: kCATransition)
     }
 }

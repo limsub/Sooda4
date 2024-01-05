@@ -15,6 +15,7 @@ protocol SplashCoordinatorProtocol: Coordinator {
     // flow
     func showLoginFlow()
     func showTabBarFlow()
+    func showEmptyHomeFlow()
 }
 
 // MARK: - Splash Coordinator Class
@@ -49,6 +50,21 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         let splashVC = SplashViewController.create(with: splashVM)
         
         // TODO: VM - DidSendEventClosure
+        splashVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .goLoginScene:
+                self?.showLoginFlow()
+                break;
+                
+            case .goTabBarScene:
+                break;
+            
+            case .goHomeEmptyScene:
+                break;
+                
+            }
+        }
         
         navigationController.pushViewController(splashVC, animated: true)
     }
@@ -57,10 +73,19 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         print(#function)
         
         // TODO: loginCoordinator
+        
+        let loginSceneCoordinator = LoginSceneCoordinator(navigationController)
+        loginSceneCoordinator.finishDelegate = self
+        childCoordinators.append(loginSceneCoordinator)
+        loginSceneCoordinator.start()
     }
     
     func showTabBarFlow() {
         // TODO: tabBarCoordinator
+    }
+    
+    func showEmptyHomeFlow() {
+        // TODO: emptyHomeCoordinator
     }
     
     

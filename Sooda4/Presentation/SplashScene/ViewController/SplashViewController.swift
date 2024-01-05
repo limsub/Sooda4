@@ -26,6 +26,6 @@ class SplashViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        viewModel.transitionNextPage()
     }
 }
