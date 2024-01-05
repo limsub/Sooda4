@@ -42,7 +42,10 @@ class AppCoordinator: AppCoordinatorProtocol {
     func showSplashFlow() {
         print(#function)
         
-        // TODO: splash Coordinator
+        let splashCoordinator = SplashCoordinator(navigationController)
+        splashCoordinator.finishDelegate = self
+        childCoordinators.append(splashCoordinator)
+        splashCoordinator.start()
     }
     
     deinit {

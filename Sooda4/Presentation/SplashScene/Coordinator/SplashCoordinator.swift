@@ -44,7 +44,13 @@ class SplashCoordinator: SplashCoordinatorProtocol {
     func showSplashView() {
         print(#function)
         
-        // TODO: splashVC, splashVM
+        
+        let splashVM = SplashViewModel()
+        let splashVC = SplashViewController.create(with: splashVM)
+        
+        // TODO: VM - DidSendEventClosure
+        
+        navigationController.pushViewController(splashVC, animated: true)
     }
     
     func showLoginFlow() {
