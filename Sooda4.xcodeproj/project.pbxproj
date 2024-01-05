@@ -117,10 +117,11 @@
 		48267DCF2B46ED7400B30D6C /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				48267DF12B47AD2E00B30D6C /* Coordinator */,
+				48267DD32B46ED7F00B30D6C /* Base */,
 				48267DBB2B46ED1C00B30D6C /* Assets.xcassets */,
 				48267DBD2B46ED1C00B30D6C /* LaunchScreen.storyboard */,
 				48267DC02B46ED1D00B30D6C /* Info.plist */,
-				48267DD32B46ED7F00B30D6C /* Base */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -191,6 +192,13 @@
 			children = (
 			);
 			path = Repository;
+			sourceTree = "<group>";
+		};
+		48267DF12B47AD2E00B30D6C /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
