@@ -76,7 +76,7 @@ extension SplashCoordinator: CoordinatorFinishDelegate {
         
         print(#function, Swift.type(of: self))
         
-        // TODO: - 로그인 플로우가 끝났으면 탭바 플로우로 돌려주기. 탭바 플로우는 끝나면 뭐 없다.
+        // TODO: - 로그인 플로우 or Empty Home 플로우가 끝났으면 탭바 플로우로 돌려주기. 탭바 플로우는 끝나면 뭐 없다.
         
     }
 }

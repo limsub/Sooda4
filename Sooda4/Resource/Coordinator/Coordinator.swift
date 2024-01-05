@@ -50,5 +50,5 @@ protocol CoordinatorFinishDelegate: AnyObject {
 // MARK: - Coordinator Type
 // 앱 내에서 어떤 flow를 담당하는지 정의한다
 enum CoordinatorType {
-    case app, splash, login, tab
+    case app, splash, loginScene, tabBarScene
 }
