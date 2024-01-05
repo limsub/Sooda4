@@ -15,6 +15,8 @@
 		48267DDA2B46EEC800B30D6C /* ColorSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DD92B46EEC800B30D6C /* ColorSet.swift */; };
 		48267DDC2B46EED000B30D6C /* UIColor+AppColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DDB2B46EED000B30D6C /* UIColor+AppColor.swift */; };
 		48267DDE2B46EED600B30D6C /* UIColor+HexCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DDD2B46EED600B30D6C /* UIColor+HexCode.swift */; };
+		48267DF32B47AD9E00B30D6C /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DF22B47AD9E00B30D6C /* Coordinator.swift */; };
+		48267DF52B47AE9D00B30D6C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48267DF42B47AE9D00B30D6C /* AppCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		48267DD92B46EEC800B30D6C /* ColorSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorSet.swift; sourceTree = "<group>"; };
 		48267DDB2B46EED000B30D6C /* UIColor+AppColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+AppColor.swift"; sourceTree = "<group>"; };
 		48267DDD2B46EED600B30D6C /* UIColor+HexCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexCode.swift"; sourceTree = "<group>"; };
+		48267DF22B47AD9E00B30D6C /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		48267DF42B47AE9D00B30D6C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +81,7 @@
 			children = (
 				48267DB22B46ED1B00B30D6C /* AppDelegate.swift */,
 				48267DB42B46ED1B00B30D6C /* SceneDelegate.swift */,
+				48267DF42B47AE9D00B30D6C /* AppCoordinator.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 		48267DF12B47AD2E00B30D6C /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
+				48267DF22B47AD9E00B30D6C /* Coordinator.swift */,
 			);
 			path = Coordinator;
 			sourceTree = "<group>";
@@ -274,9 +280,11 @@
 			files = (
 				48267DB32B46ED1B00B30D6C /* AppDelegate.swift in Sources */,
 				48267DDC2B46EED000B30D6C /* UIColor+AppColor.swift in Sources */,
+				48267DF32B47AD9E00B30D6C /* Coordinator.swift in Sources */,
 				48267DDA2B46EEC800B30D6C /* ColorSet.swift in Sources */,
 				48267DDE2B46EED600B30D6C /* UIColor+HexCode.swift in Sources */,
 				48267DB52B46ED1B00B30D6C /* SceneDelegate.swift in Sources */,
+				48267DF52B47AE9D00B30D6C /* AppCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

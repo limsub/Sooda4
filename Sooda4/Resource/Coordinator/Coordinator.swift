@@ -1,0 +1,54 @@
+//
+//  Coordinator.swift
+//  Sooda4
+//
+//  Created by 임승섭 on 1/5/24.
+//
+
+import UIKit
+
+// MARK: - Coorinator Protocol
+protocol Coordinator: AnyObject {
+    
+    // 1. 부모 코디네이터
+    var finishDelegate: CoordinatorFinishDelegate? { get set }
+    
+    // 2. 각 코디네이터는 하나의 nav를 갖는다
+    var navigationController: UINavigationController { get set }
+    init(_ navigationController: UINavigationController)
+    
+    // 3. 현재 살아있는 자식 코디네이터 배열.
+    var childCoordinators: [Coordinator] { get set }
+    
+    // 4. Flow 타입
+    var type: CoordinatorType { get }
+    
+    // 5. Flow 시작 시점 로직
+    func start()
+    
+    // 6. Flow 종료 시점 로직. (extension에서 선언)
+    func finish()
+}
+
+extension Coordinator {
+    func finish() {
+        // 1. 자식 코디 다 지우기
+        childCoordinators.removeAll()
+        // 2. 부모 코디에게 알리기
+        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+    }
+}
+
+
+// MARK: - Coordinator Finish Delegate
+// 부모 코디네이터에게 자식 코디네이터(self)가 이제 끝난다고 알려준다
+protocol CoordinatorFinishDelegate: AnyObject {
+    func coordinatorDidFinish(childCoordinator: Coordinator)
+}
+
+
+// MARK: - Coordinator Type
+// 앱 내에서 어떤 flow를 담당하는지 정의한다
+enum CoordinatorType {
+    case app, splash, login, tab
+}
