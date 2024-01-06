@@ -25,6 +25,15 @@ final class OnboardingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        mainView.nextButton.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
+        
+        title = "온보딩 뷰"
+    }
+    
+    @objc
+    func buttonClicked() {
+        viewModel.didSendEventClosure?(.presentSelectAuthView)
     }
     
 }

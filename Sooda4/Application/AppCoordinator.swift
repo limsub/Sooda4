@@ -37,6 +37,20 @@ class AppCoordinator: AppCoordinatorProtocol {
         showSplashFlow()
     }
     
+    // 6.
+    func finish() {
+        // 1. 자식 코디 다 지우기
+        childCoordinators.removeAll()
+        
+        /* 궁금한 점. navigationController에 쌓인 것들이나, present로 띄운 애들을 제거하는 과정은 필요하지 않은가?*/
+        
+        // 2. 부모 코디에게 알리기
+        finishDelegate?.coordinatorDidFinish(
+            childCoordinator: self,
+            nextFlow: nil   // 이게 실행될 일 없음
+        )
+    }
+    
     
     // 프로토콜 메서드
     func showSplashFlow() {
@@ -55,18 +69,19 @@ class AppCoordinator: AppCoordinatorProtocol {
 
 // MARK: - Child Didfinished
 extension AppCoordinator: CoordinatorFinishDelegate {
-    func coordinatorDidFinish(childCoordinator: Coordinator) {
+    
+    // CoordinatorFinishDelegate
+    func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
         print(#function)
+        print("--- 이게 실행되면 문제가 있는 상황 ---")
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
-        
-        // 아마 이게 실행될 일은 없을듯
-        switch childCoordinator.type {
-        case .splash:
-            print("이게 실행되면 문제가 있는거여")
-        default:
-            break
-        }
     }
-    
+}
+
+// MARK: - Child Coordinator 타입
+extension AppCoordinator {
+    enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
+        case splah, loginScene, TabBarScene, homeEmptyScene
+    }
 }

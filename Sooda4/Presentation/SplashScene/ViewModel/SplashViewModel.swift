@@ -9,6 +9,7 @@ import Foundation
 
 class SplashViewModel {
     
+    // Coordinator에게 어떤 화면으로 전환할지 요청 
     var didSendEventClosure: ( (SplashViewModel.Event) -> Void)?
     
     // 1. 타이머 시작

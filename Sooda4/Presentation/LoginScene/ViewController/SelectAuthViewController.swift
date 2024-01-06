@@ -25,6 +25,17 @@ class SelectAuthViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "로그인 선택 뷰"
+        
+        mainView.b3.addTarget(self , action: #selector(b3Clicked), for: .touchUpInside)
+    }
+    
+    @objc
+    func b3Clicked() {
+        viewModel.didSendEventClosure?(.presentSignUpView)
+            
+        let vc = LoginViewController()
+        present(vc, animated: true)
         
     }
 }

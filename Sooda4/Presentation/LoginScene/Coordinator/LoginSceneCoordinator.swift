@@ -50,12 +50,21 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
         let onboardingVC = OnboardingViewController.create(with: onboardingVM)
         
         // TODO: VM - DidSendEventClosure
+        // 화면 전환을 위한 Event 받기
+        onboardingVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .presentSelectAuthView:
+                self?.showSelectAuthView()
+            }
+        }
         
-//        navigationController.pushViewController(onboardingVC, animated: true)
         
+        
+        // 전환 - fade 효과, present, fullScreen -> (x)
         setUpViewFadeEffect()
-        onboardingVC.modalPresentationStyle = .fullScreen
-        navigationController.present(onboardingVC, animated: false)
+//        onboardingVC.modalPresentationStyle = .fullScreen
+//        navigationController.present(onboardingVC, animated: false)
+        navigationController.pushViewController(onboardingVC, animated: false)
     }
     
     func showSelectAuthView() {
@@ -63,10 +72,22 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
         
         let selectAuthVM = SelectAuthViewModel()
         let selectAuthVC = SelectAuthViewController.create(with: selectAuthVM)
+        print("----")
         
         // TODO: VM - DidSendEventClosure
+        selectAuthVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .presentSignUpView:
+                self?.showSignUpView()
+                
+            }
+        }
         
-        navigationController.pushViewController(selectAuthVC, animated: true)
+        // 전환 - bottom sheet
+        navigationController.present(selectAuthVC, animated: true)
+        
+        print(navigationController.viewControllers)
+//        navigationController.pushViewController(selectAuthVC, animated: true)
     }
     
     func showSignUpView() {
@@ -75,9 +96,26 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
         let signUpVM = SignUpViewModel()
         let signUpVC = SignUpViewController.create(with: signUpVM)
         
+        
+        // 얘가 호출된다는건 SelectAuthVC에서 눌렸다.
+        // 그렇다는건 nav의 vc들 중 맨 마지막에 SelectAuthVC가 있다. -> 확실?
+        
+        let vc = navigationController.viewControllers.last
+        vc?.present(signUpVC, animated: true)
+//        navigationController.viewControllers.last!.present(signUpVC, animated: true)
+//        
+        print(navigationController.viewControllers)
+//        
+//        navigationController.viewControllers.forEach { vc in
+//            if let selectAuthVC = vc as? SelectAuthViewController {
+//                print("hi")
+//            }
+//        }
+        
         // TODO: VM - DidSendEventClosure
         
-        navigationController.pushViewController(signUpVC, animated: true)
+//        navigationController.present(signUpVC, animated: true)
+//        navigationController.pushViewController(signUpVC, animated: true)
     }
     
     func showLoginView() {
