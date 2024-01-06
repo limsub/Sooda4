@@ -34,14 +34,13 @@ class SignUpViewController: BaseViewController {
             sheetPresentationController.prefersGrabberVisible = true
         }
         
-        // TODO: 네비게이션 배경 색 지정하기
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.configureWithOpaqueBackground()
         navigationBarAppearance.backgroundColor = .white
 //        navigationBarAppearance.shadowColor = .clear
-        UINavigationBar.appearance().standardAppearance = navigationBarAppearance
-        UINavigationBar.appearance().compactAppearance = navigationBarAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = navigationBarAppearance
-        
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
+        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
 }

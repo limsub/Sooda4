@@ -83,7 +83,9 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         let emailLoginVM = EmailLoginViewModel()
         let emailLoginVC = EmailLoginViewController.create(with: emailLoginVM)
         
-        navigationController.present(emailLoginVC, animated: true)
+        let nav = UINavigationController(rootViewController: emailLoginVC)
+        
+        navigationController.present(nav, animated: true)
     }
 }
 

@@ -10,31 +10,55 @@ import SnapKit
 
 class EmailLoginView: BaseView {
     
-    // MARK: - 임시
-    let tempLabel = UILabel()
-    let nextButton = UIButton()
+    let emailTitleLabel = SignUpTextFieldTitleLabel("이메일")
+    let pwTitleLabel = SignUpTextFieldTitleLabel("비밀번호")
     
-    override func setting() {
-        super.setting()
+    let emailTextField = SignUpTextField("이메일을 입력하세요")
+    let pwTextField = SignUpTextField("비밀번호를 입력하세요")
+    
+    let completeButton = SignUpActiveButton("로그인")
+    
+    override func setConfigure() {
+        super.setConfigure()
         
-        backgroundColor = .blue
-        
-        tempLabel.text = "로그인 뷰"
-        tempLabel.backgroundColor = .yellow
-        
-        nextButton.setTitle("로그인 성공", for: .normal)
-        nextButton.backgroundColor = .blue
-        
-        self.addSubview(tempLabel)
-        self.addSubview(nextButton)
-        tempLabel.snp.makeConstraints { make in
-            make.size.equalTo(200)
-            make.center.equalTo(self)
-        }
-        nextButton.snp.makeConstraints { make in
-            make.size.equalTo(100)
-            make.centerX.equalTo(self)
-            make.top.equalTo(tempLabel.snp.bottom).offset(50)
+        [emailTitleLabel, pwTitleLabel, emailTextField, pwTextField, completeButton].forEach { item  in
+            addSubview(item)
         }
     }
+    
+    override func setConstraints() {
+        super.setConstraints()
+        
+        let h = 44
+        let p = 24
+        
+        emailTitleLabel.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(self.safeAreaLayoutGuide).inset(p)
+            make.height.equalTo(p)
+        }
+        emailTextField.snp.makeConstraints { make in
+            make.top.equalTo(emailTitleLabel.snp.bottom).offset(8)
+            make.horizontalEdges.equalTo(self).inset(p)
+            make.height.equalTo(h)
+        }
+        
+        pwTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(emailTextField.snp.bottom).offset(p)
+            make.horizontalEdges.equalTo(self).inset(p)
+            make.height.equalTo(p)
+        }
+        pwTextField.snp.makeConstraints { make in
+            make.top.equalTo(pwTitleLabel.snp.bottom).offset(8)
+            make.horizontalEdges.equalTo(self).inset(p)
+            make.height.equalTo(h)
+        }
+        
+        completeButton.snp.makeConstraints { make in
+            make.bottom.equalTo(safeAreaLayoutGuide).inset(p)
+            make.horizontalEdges.equalTo(self).inset(p)
+            make.height.equalTo(h)
+        }
+    }
+    
+    
 }

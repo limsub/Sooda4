@@ -25,6 +25,22 @@ class EmailLoginViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setNavigation()
+    }
+    
+    func setNavigation() {
+        navigationItem.title = "이메일 로그인"
+        if let sheetPresentationController {
+            sheetPresentationController.prefersGrabberVisible = true
+        }
         
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.configureWithOpaqueBackground()
+        navigationBarAppearance.backgroundColor = .white
+//        navigationBarAppearance.shadowColor = .clear
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
+        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
 }
