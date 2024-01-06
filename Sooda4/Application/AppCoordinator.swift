@@ -100,7 +100,7 @@ extension AppCoordinator: CoordinatorFinishDelegate {
     ) {
         print(#function, Swift.type(of: self))
         
-        print("매개변수로 받은 nextFlow 실행해주기")
+        print("매개변수로 받은 nextFlow : ", nextFlow)
         
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }

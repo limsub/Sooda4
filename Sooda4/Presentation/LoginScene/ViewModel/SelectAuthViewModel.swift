@@ -18,5 +18,6 @@ class SelectAuthViewModel {
 extension SelectAuthViewModel {
     enum Event {
         case presentSignUpView
+        case presentEmailLoginView
     }
 }
