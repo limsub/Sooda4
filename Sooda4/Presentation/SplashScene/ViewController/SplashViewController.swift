@@ -28,6 +28,17 @@ class SplashViewController: BaseViewController {
         
         title = "스플래시 뷰"
         
+        mainView.tempLabel.font = UIFont(name: "SFPro-Regular", size: 40)
+        
+        
+        
+        for item in UIFont.familyNames {
+            print(item)
+
+            for name in UIFont.fontNames(forFamilyName: item) {
+                print("===\(name)")
+            }
+        }
         
         viewModel.transitionNextPage()
     }
