@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 protocol SignUpRepositoryProtocol {
     
     // (1). 이메일 유효성 검증
-    func checkValidEmail(_ email: String)
+    func checkValidEmail(_ email: String) -> Single< Result<String, Error> >
     
     
     

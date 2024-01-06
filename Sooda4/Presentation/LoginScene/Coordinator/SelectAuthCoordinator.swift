@@ -68,7 +68,11 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
     }
     
     func showSignUpView() {
-        let signUpVM = SignUpViewModel()
+        let signUpVM = SignUpViewModel(
+            signUpUseCase: SignUpUseCase(
+                signUpRepository: SignUpRepository()
+            )
+        )
         let signUpVC = SignUpViewController.create(with: signUpVM)
         
         // TODO: didSendEvent

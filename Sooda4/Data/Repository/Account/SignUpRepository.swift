@@ -6,13 +6,13 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 class SignUpRepository: SignUpRepositoryProtocol {
     
-    // 실제로 네트워크 콜을 쏘는 곳은 여기다.
-    
-    
-    func checkValidEmail(_ email: String) {
+    // 실제로 네트워크 콜을 쏘는 곳
+    func checkValidEmail(_ email: String) -> Single< Result<String, Error> > {
         
         // 1. requestDTO 변환
         let dto = CheckEmailValidationRequestDTO(
@@ -20,6 +20,6 @@ class SignUpRepository: SignUpRepositoryProtocol {
         )
         
         // 2. 요청
-        
+        return NetworkManager.shared.requestEmptyResponse(api: .checkValidEmail(dto))
     }
 }

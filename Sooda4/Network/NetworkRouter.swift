@@ -11,13 +11,13 @@ import Alamofire
 enum NetworkRouter: URLRequestConvertible {
     
     /* === 1. case === */
-    case checkValidEmail(_ sender: String?)// DTO
+    case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)// DTO
     
     
     /* === 2. path === */
     var path: String {
         switch self {
-        case .checkValidEmail(let _):
+        case .checkValidEmail:
             return "/v1/users/validation/email"
         }
     }
@@ -26,7 +26,7 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
-        case .checkValidEmail(let _):
+        case .checkValidEmail:
             return [
                 "Content-Type": "application/json",
                 "SesacKey": APIKey.key
@@ -38,7 +38,7 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 4. method === */
     var method: HTTPMethod {
         switch self {
-        case .checkValidEmail(let _):
+        case .checkValidEmail:
             return .post
         }
     }
@@ -47,9 +47,9 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 5. parameter === */
     var parameter: [String: Any] {
         switch self {
-        case .checkValidEmail(let _):
+        case .checkValidEmail(let sender):
             return [
-                "email": "hi"
+                "email": sender.email
             ]
             
         default:

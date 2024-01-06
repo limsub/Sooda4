@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 protocol SignUpUseCaseProtocol {
     
-    func checkValidEmail(_ email: String) 
+    func checkValidEmail(_ email: String) -> Single< Result<String, Error> >
     
 }
