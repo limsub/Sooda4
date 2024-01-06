@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol ViewModelType {
+protocol BaseViewModelType {
     
     associatedtype Input
     associatedtype Output
     
     
-    func tranform(_ input: Input) -> Output
+    func transform(_ input: Input) -> Output
 }
