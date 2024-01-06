@@ -23,9 +23,6 @@ protocol AppCoordinatorProtocol: Coordinator {
 // MARK: - App Coordinator Class
 class AppCoordinator: AppCoordinatorProtocol {
     
-    
-    
-    
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate? = nil   // AppCoordinator : 부모 코디 x
     
@@ -73,6 +70,11 @@ class AppCoordinator: AppCoordinatorProtocol {
     
     func showLoginFlow() {
         print(#function)
+        
+        let loginCoordinator = LoginSceneCoordinator(navigationController)
+        loginCoordinator.finishDelegate = self
+        childCoordinators.append(loginCoordinator)
+        loginCoordinator.start()
     }
     
     func showHomeEmptyFlow() {
@@ -92,17 +94,41 @@ class AppCoordinator: AppCoordinatorProtocol {
 extension AppCoordinator: CoordinatorFinishDelegate {
     
     // CoordinatorFinishDelegate
-    func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
-        print(#function)
-        print("--- 이게 실행되면 문제가 있는 상황 ---")
+    func coordinatorDidFinish(
+        childCoordinator: Coordinator,
+        nextFlow: ChildCoordinatorTypeProtocol?
+    ) {
+        print(#function, Swift.type(of: self))
+        
+        print("매개변수로 받은 nextFlow 실행해주기")
+        
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
+        navigationController.viewControllers.removeAll()
+        // present된 애들도 없애줘야 하지 않을까..? navigationController.dismiss??
+        
+        if let nextFlow = nextFlow as? ChildCoordinatorType {
+            switch nextFlow {
+            case .splash:
+                print("여기로 가자고 하는 애는 없어야 해...")
+            case .loginScene:
+                // TODO: - show LoginFlow
+                self.showLoginFlow()
+                break;
+            case .tabBarScene:
+                // TODO: - show TabBarFlow
+                break;
+            case .homeEmptyScene:
+                // TODO: - show HomeEmptyFlow
+                break;
+            }
+        }
     }
 }
 
 // MARK: - Child Coordinator 타입
 extension AppCoordinator {
     enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
-        case splah, loginScene, TabBarScene, homeEmptyScene
+        case splash, loginScene, tabBarScene, homeEmptyScene
     }
 }

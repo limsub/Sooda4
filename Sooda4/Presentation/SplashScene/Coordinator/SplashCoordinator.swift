@@ -52,29 +52,25 @@ class SplashCoordinator: SplashCoordinatorProtocol {
     
     // 프로토콜 메서드
     func showSplashView() {
-        print(#function)
-        
         
         let splashVM = SplashViewModel()
         let splashVC = SplashViewController.create(with: splashVM)
         
-        // TODO: VM - DidSendEventClosure
         splashVM.didSendEventClosure = { [weak self] event in
-            
-            // didfinish로 부모 코디(AppCoordi)에게 나 끝났다고 알리고, 매개변수로 다음 어디 코디로 전환할지 알려줘
-            print("보내는 입장")
-            
+            // 응답 받으면 splash코디는 끝나는 거고, -> finish
+            // 형제 코디 중 하나를 실행해달라고 부모 코디에게 전달해야 함 -> (next: )
             switch event {
             case .goLoginScene:
-//                self?.showLoginFlow()
+                self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
                 break;
                 
             case .goTabBarScene:
+                self?.finish(AppCoordinator.ChildCoordinatorType.tabBarScene)
                 break;
             
             case .goHomeEmptyScene:
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
                 break;
-                
             }
         }
         

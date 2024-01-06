@@ -34,7 +34,7 @@ class SelectAuthViewController: BaseViewController {
     func b3Clicked() {
         viewModel.didSendEventClosure?(.presentSignUpView)
             
-        let vc = LoginViewController()
+        let vc = EmailLoginViewController()
         present(vc, animated: true)
         
     }

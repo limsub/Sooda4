@@ -14,6 +14,7 @@ protocol LoginSceneCoordinatorProtocol: Coordinator {
     
     // flow
     func showSelectAuthFlow()   // present
+    func showInitialWorkSpaceFlow()
 
 }
 
@@ -82,6 +83,10 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
     // 프로토콜 메서드 - flow
     func showSelectAuthFlow() {
         // TODO: selectAuthFlow 시작. present로 진행. 별도의 navigationController 주입
+    }
+    
+    func showInitialWorkSpaceFlow() {
+        
     }
     
 //    func showSelectAuthView() {
