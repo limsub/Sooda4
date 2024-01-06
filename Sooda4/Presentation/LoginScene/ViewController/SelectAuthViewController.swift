@@ -25,9 +25,15 @@ class SelectAuthViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "로그인 선택 뷰"
-        
+
         mainView.b3.addTarget(self , action: #selector(b3Clicked), for: .touchUpInside)
+        
+        if let sheetPresentationController = sheetPresentationController {
+            sheetPresentationController.detents = [.medium()]
+            sheetPresentationController.prefersGrabberVisible = true
+        }
+                
+//        navigationController?.navigationBar.isHidden = true
     }
     
     @objc
