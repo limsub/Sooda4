@@ -73,7 +73,10 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         
         // TODO: didSendEvent
         
-        navigationController.present(signUpVC, animated: true)
+        // 회원가입 화면에 네비게이션 바가 있어서 달아주는 게 더 편할듯
+        let nav = UINavigationController(rootViewController: signUpVC)
+        
+        navigationController.present(nav, animated: true)
     }
     
     func showEmailLoginView() {
