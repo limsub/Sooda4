@@ -26,7 +26,7 @@ class SelectAuthViewController: BaseViewController {
         super.viewDidLoad()
         
 
-        mainView.b3.addTarget(self , action: #selector(b3Clicked), for: .touchUpInside)
+//        mainView.b3.addTarget(self , action: #selector(b3Clicked), for: .touchUpInside)
         
         if let sheetPresentationController = sheetPresentationController {
             sheetPresentationController.detents = [.medium()]
