@@ -6,11 +6,14 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SignUpViewController: BaseViewController {
     
     private let mainView = SignUpView()
     private var viewModel: SignUpViewModel!
+    private let disposeBag = DisposeBag()
     
     static func create(with viewModel: SignUpViewModel) -> SignUpViewController {
         let vc = SignUpViewController()
@@ -27,8 +30,6 @@ class SignUpViewController: BaseViewController {
         
         setNavigation()
         bindVM()
-        
-        mainView.checkEmailValidButton.update(.enabled)
     }
     
     func setNavigation() {
@@ -49,9 +50,29 @@ class SignUpViewController: BaseViewController {
     
     func bindVM() {
         let input = SignUpViewModel.Input(
-            a: mainView.checkEmailValidButton.rx.tap
+            emailText: mainView.emailTextField.rx.text.orEmpty,
+            nicknameText: mainView.nicknameTextField.rx.text.orEmpty,
+            phoneNumText: mainView.phoneNumTextField.rx.text.orEmpty,
+            pwText: mainView.pwTextField.rx.text.orEmpty,
+            checkPwText: mainView.checkPwTextField.rx.text.orEmpty,
+            emailValidButtonClicked: mainView.checkEmailValidButton.rx.tap,
+            completeButtonClicked: mainView.completeButton.rx.tap
         )
-        
+
         let output = viewModel.transform(input)
+        
+        // 이메일 중복 확인 버튼
+        output.enabledEmailValidationButton
+            .subscribe(with: self) { owner , value in
+                owner.mainView.checkEmailValidButton.update(value ? .enabled : .disabled)
+            }
+            .disposed(by: disposeBag)
+        
+        // 가입하기 버튼
+        output.enabledCompleteButton
+            .subscribe(with: self) { owner , value in
+                owner.mainView.completeButton.update(value ? .enabled : .disabled)
+            }
+            .disposed(by: disposeBag)
     }
 }
