@@ -39,6 +39,7 @@ class SelectAuthView: BaseView {
             make.size.equalTo(200)
             make.center.equalTo(self)
         }
+        
         b1.snp.makeConstraints { make in
             make.size.equalTo(100)
             make.top.equalTo(tempLabel.snp.bottom).offset(20)

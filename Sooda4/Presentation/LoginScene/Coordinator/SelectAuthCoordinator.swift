@@ -10,11 +10,10 @@ import UIKit
 // MARK: - SelectAuth Coordinator Protocol
 protocol SelectAuthCoordinatorProtocol: Coordinator {
     // view
-    func showSelectAuthView()
+    func showSelectAuthView()   // first
     
-    // flow
-    func showSignUpFlow()       // present
-    func showEmailLoginFlow()   // present
+    func showSignUpView()       // present
+    func showEmailLoginView()   // present
 }
 
 // MARK: - SelectAuth Coordinator Class
@@ -46,7 +45,8 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         childCoordinators.removeAll()
         finishDelegate?.coordinatorDidFinish(
             childCoordinator: self ,
-            nextFlow: nextFlow)
+            nextFlow: nextFlow
+        )
     }
     
     // 프로토콜 메서드 - view
@@ -57,23 +57,30 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         selectAuthVM.didSendEventClosure = { [weak self] event in
             switch event {
             case .presentSignUpView:
-                self?.showSignUpFlow()
+                self?.showSignUpView()
                 
             case .presentEmailLoginView:
-                self?.showEmailLoginFlow()
+                self?.showEmailLoginView()
             }
         }
         
         navigationController.pushViewController(selectAuthVC, animated: false)
     }
     
-    // 프로토콜 메서드 - flow
-    func showSignUpFlow() {
-        // TODO: signUpFlow 시작. present 진행. 별도 nav 주입
+    func showSignUpView() {
+        let signUpVM = SignUpViewModel()
+        let signUpVC = SignUpViewController.create(with: signUpVM)
+        
+        // TODO: didSendEvent
+        
+        navigationController.present(signUpVC, animated: true)
     }
     
-    func showEmailLoginFlow() {
-        // TODO: emailLoginFlow 시작. present 진행. 별도 nav 주입
+    func showEmailLoginView() {
+        let emailLoginVM = EmailLoginViewModel()
+        let emailLoginVC = EmailLoginViewController.create(with: emailLoginVM)
+        
+        navigationController.present(emailLoginVC, animated: true)
     }
 }
 
