@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SelectAuthViewController: BaseViewController {
     
@@ -25,21 +27,30 @@ class SelectAuthViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
-        mainView.b3.addTarget(self , action: #selector(b3Clicked), for: .touchUpInside)
+        bindVM()
+    }
+    
+    override func setting() {
+        super.setting()
         
+        // medium sheet presentation 세팅
         if let sheetPresentationController = sheetPresentationController {
             sheetPresentationController.detents = [.medium()]
             sheetPresentationController.prefersGrabberVisible = true
         }
-                
-//        navigationController?.navigationBar.isHidden = true
     }
     
-    @objc
-    func b3Clicked() {
-        viewModel.didSendEventClosure?(.presentSignUpView)
-            
+    func bindVM() {
+        let input = SelectAuthViewModel.Input(
+            appleLoginButtonClicked: mainView.appleLoginButton.rx.tap,
+            kakaoLoginButtonClicked: mainView.kakaoLoginButton.rx.tap,
+            emailLoginButtonClicked: mainView.emailLoginButton.rx.tap,
+            signUpButtonClicked: mainView.signUpButton.rx.tap
+        )
+        
+        let output = viewModel.transform(input)
+        
         
     }
+
 }

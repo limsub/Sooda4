@@ -10,50 +10,70 @@ import SnapKit
 
 class SelectAuthView: BaseView {
     
-    // MARK: - 임시
-    let tempLabel = UILabel()
-    let b1 = UIButton()
-    let b2 = UIButton()
-    let b3 = UIButton()
+    // 소셜 로그인 버튼이 이미지로 저장되어 있어서 여긴 오토레이아웃 따로 안잡는다
+    // 버튼 width로 관리
+    
+    
+    let appleLoginButton = UIButton()
+    let kakaoLoginButton = UIButton()
+    let emailLoginButton = UIButton()
+    
+    let signUpButton = UIButton()
+    
+    override func setConfigure() {
+        super.setConfigure()
+        
+        [appleLoginButton, kakaoLoginButton, emailLoginButton, signUpButton].forEach { item in
+            addSubview(item)
+        }
+    }
+    
+    override func setConstraints() {
+        super.setConstraints()
+        
+        appleLoginButton.snp.makeConstraints { make in
+            make.top.equalTo(self).inset(42)
+            make.centerX.equalTo(self)
+            make.width.equalTo(323)
+            make.height.equalTo(44)
+        }
+        
+        kakaoLoginButton.snp.makeConstraints { make in
+            make.top.equalTo(appleLoginButton.snp.bottom).offset(16)
+            make.centerX.equalTo(self)
+            make.width.equalTo(323)
+            make.height.equalTo(44)
+        }
+        
+        emailLoginButton.snp.makeConstraints { make in
+            make.top.equalTo(kakaoLoginButton.snp.bottom).offset(16)
+            make.centerX.equalTo(self)
+            make.width.equalTo(323)
+            make.height.equalTo(44)
+        }
+        
+        signUpButton.snp.makeConstraints { make in
+            make.top.equalTo(emailLoginButton.snp.bottom).offset(16)
+            make.centerX.equalTo(self)
+            make.width.equalTo(323)
+            make.height.equalTo(20)
+        }
+    }
     
     override func setting() {
         super.setting()
         
-        backgroundColor = .blue
+        self.backgroundColor = UIColor.appColor(.background_primary)
         
-        tempLabel.text = "로그인 선택 뷰"
-        tempLabel.backgroundColor = .yellow
+        appleLoginButton.setBackgroundImage(UIImage(named: "loginButton_Apple ID Login"), for: .normal)
+        kakaoLoginButton.setBackgroundImage(UIImage(named: "loginButton_Kakao Login"), for: .normal)
+        emailLoginButton.setBackgroundImage(UIImage(named: "loginButton_ActiveWithIcon"), for: .normal)
         
-        b1.setTitle("소셜 로그인 성공", for: .normal)
-        b2.setTitle("이메일 회원가입", for: .normal)
-        b3.setTitle("이메일 로그인", for: .normal)
-        [b1, b2, b3].forEach { item in
-            item.backgroundColor = .brown
-        }
+        signUpButton.setTitle("또는 새롭게 회원가입 하기", for: .normal)
+        signUpButton.makeEmailSignUpButton(.title2, for: .normal)
         
-        self.addSubview(tempLabel)
-        self.addSubview(b1)
-        self.addSubview(b2)
-        self.addSubview(b3)
-        tempLabel.snp.makeConstraints { make in
-            make.size.equalTo(200)
-            make.center.equalTo(self)
-        }
-        
-        b1.snp.makeConstraints { make in
-            make.size.equalTo(100)
-            make.top.equalTo(tempLabel.snp.bottom).offset(20)
-            make.leading.equalTo(self).inset(30)
-        }
-        b2.snp.makeConstraints { make in
-            make.size.equalTo(100)
-            make.top.equalTo(b1)
-            make.leading.equalTo(b1.snp.trailing).offset(40)
-        }
-        b3.snp.makeConstraints { make in
-            make.size.equalTo(100)
-            make.top.equalTo(b1)
-            make.leading.equalTo(b2.snp.trailing).offset(40)
-        }
+
     }
+    
+    
 }
