@@ -36,6 +36,9 @@ class OnboardingView: BaseView {
             make.centerX.equalTo(self)
             make.top.equalTo(tempLabel.snp.bottom).offset(50)
         }
+        
+        tempLabel.setAppFont(.title2)
+        tempLabel.textColor = .purple
     }
     
 }
