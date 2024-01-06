@@ -26,6 +26,9 @@ class SignUpViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation()
+        bindVM()
+        
+        mainView.checkEmailValidButton.update(.enabled)
     }
     
     func setNavigation() {
@@ -42,5 +45,13 @@ class SignUpViewController: BaseViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
+    }
+    
+    func bindVM() {
+        let input = SignUpViewModel.Input(
+            a: mainView.checkEmailValidButton.rx.tap
+        )
+        
+        let output = viewModel.transform(input)
     }
 }
