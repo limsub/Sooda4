@@ -28,7 +28,8 @@ class SplashViewController: BaseViewController {
         
         title = "스플래시 뷰"
         
-        mainView.tempLabel.font = UIFont(name: "SFPro-Regular", size: 40)
+        mainView.tempLabel.setAppFont(.title1)
+        
         
         
         
