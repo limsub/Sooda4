@@ -19,6 +19,8 @@ class SignUpTextField: UITextField {
                 .font: UIFont.appFont(.body)
             ]
         )
+        
+        setUp()
     }
     
     func setUp() {
@@ -27,5 +29,7 @@ class SignUpTextField: UITextField {
         leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
         leftViewMode = .always
         backgroundColor = UIColor.appColor(.background_secondary)
+        
+        setAppFont(.body)
     }
 }

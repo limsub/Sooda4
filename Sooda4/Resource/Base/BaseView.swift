@@ -22,5 +22,7 @@ class BaseView: UIView {
     
     func setConfigure() { }
     func setConstraints() { }
-    func setting() { }
+    func setting() { 
+        self.backgroundColor = UIColor.appColor(.background_primary)
+    }
 }

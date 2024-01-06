@@ -52,7 +52,7 @@ enum ColorSet {
         case .view_seperator:
             return "#ECECEC"
         case .view_alpha:
-            return "#00000080"
+            return "#000000"
         }
     }
 }

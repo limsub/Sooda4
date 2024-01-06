@@ -9,20 +9,20 @@ import UIKit
 
 class SignUpActiveButton: UIButton {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    convenience init(_ title: String) {
+        self.init()
         
+        setTitle(title, for: .normal)
         setUp()
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     func setUp() {
         update(.disabled)
         
         setAppFont(.title2, for: .normal)
+        setTitleColor(UIColor.appColor(.brand_white), for: .normal)
         clipsToBounds = true
         layer.cornerRadius = 8
     }
