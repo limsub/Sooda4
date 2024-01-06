@@ -7,6 +7,6 @@
 
 import Foundation
 
-class LoginViewModel {
+class EmailLoginViewModel {
     
 }

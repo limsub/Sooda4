@@ -27,7 +27,7 @@ protocol Coordinator: AnyObject {
     func start()
     
     // 6. Flow 종료 시점 로직. (extension에서 선언)
-    func finish()
+    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?)
 }
 
 // (nextFlow 매개변수 추가) -> 각 코디네이터에서 선언하기

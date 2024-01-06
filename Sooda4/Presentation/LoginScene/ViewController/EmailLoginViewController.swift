@@ -7,13 +7,13 @@
 
 import UIKit
 
-class LoginViewController: BaseViewController {
+class EmailLoginViewController: BaseViewController {
     
-    private let mainView = LoginView()
-    private var viewModel: LoginViewModel!
+    private let mainView = EmailLoginView()
+    private var viewModel: EmailLoginViewModel!
     
-    static func create(with viewModel: LoginViewModel) -> LoginViewController {
-        let vc = LoginViewController()
+    static func create(with viewModel: EmailLoginViewModel) -> EmailLoginViewController {
+        let vc = EmailLoginViewController()
         vc.viewModel = viewModel
         return vc
     }

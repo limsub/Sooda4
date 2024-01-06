@@ -11,11 +11,20 @@ import UIKit
 
 // MARK: - App Coordinator Protocol
 protocol AppCoordinatorProtocol: Coordinator {
+    // view
+    
+    // flow
     func showSplashFlow()
+    func showLoginFlow()
+    func showHomeEmptyFlow()
+    func tabBarFlow()
 }
 
 // MARK: - App Coordinator Class
 class AppCoordinator: AppCoordinatorProtocol {
+    
+    
+    
     
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate? = nil   // AppCoordinator : 부모 코디 x
@@ -38,7 +47,7 @@ class AppCoordinator: AppCoordinatorProtocol {
     }
     
     // 6.
-    func finish() {
+    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
         // 1. 자식 코디 다 지우기
         childCoordinators.removeAll()
         
@@ -47,7 +56,7 @@ class AppCoordinator: AppCoordinatorProtocol {
         // 2. 부모 코디에게 알리기
         finishDelegate?.coordinatorDidFinish(
             childCoordinator: self,
-            nextFlow: nil   // 이게 실행될 일 없음
+            nextFlow: nextFlow   // 이게 실행될 일 없음
         )
     }
     
@@ -60,6 +69,18 @@ class AppCoordinator: AppCoordinatorProtocol {
         splashCoordinator.finishDelegate = self
         childCoordinators.append(splashCoordinator)
         splashCoordinator.start()
+    }
+    
+    func showLoginFlow() {
+        print(#function)
+    }
+    
+    func showHomeEmptyFlow() {
+        print(#function)
+    }
+    
+    func tabBarFlow() {
+        print(#function)
     }
     
     deinit {

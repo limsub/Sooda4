@@ -13,9 +13,6 @@ protocol SplashCoordinatorProtocol: Coordinator {
     func showSplashView()
     
     // flow
-    func showLoginFlow()
-    func showTabBarFlow()
-    func showEmptyHomeFlow()
 }
 
 // MARK: - Splash Coordinator Class
@@ -41,6 +38,18 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         showSplashView()
     }
     
+    // 6.
+    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
+        // 1. 자식 코디 다 지우기
+        childCoordinators.removeAll()
+        
+        // 2. 부모 코디에게 알리기
+        finishDelegate?.coordinatorDidFinish(
+            childCoordinator: self ,
+            nextFlow: nextFlow
+        )
+    }
+    
     // 프로토콜 메서드
     func showSplashView() {
         print(#function)
@@ -52,9 +61,12 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         // TODO: VM - DidSendEventClosure
         splashVM.didSendEventClosure = { [weak self] event in
             
+            // didfinish로 부모 코디(AppCoordi)에게 나 끝났다고 알리고, 매개변수로 다음 어디 코디로 전환할지 알려줘
+            print("보내는 입장")
+            
             switch event {
             case .goLoginScene:
-                self?.showLoginFlow()
+//                self?.showLoginFlow()
                 break;
                 
             case .goTabBarScene:
@@ -69,25 +81,6 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         navigationController.pushViewController(splashVC, animated: true)
     }
     
-    func showLoginFlow() {
-        print(#function)
-        
-        // TODO: loginCoordinator
-        
-        let loginSceneCoordinator = LoginSceneCoordinator(navigationController)
-        loginSceneCoordinator.finishDelegate = self
-        childCoordinators.append(loginSceneCoordinator)
-        loginSceneCoordinator.start()
-    }
-    
-    func showTabBarFlow() {
-        // TODO: tabBarCoordinator
-    }
-    
-    func showEmptyHomeFlow() {
-        // TODO: emptyHomeCoordinator
-    }
-    
     
     deinit {
         print("splash Coordinator deinit")
@@ -97,11 +90,9 @@ class SplashCoordinator: SplashCoordinatorProtocol {
 // MARK: - Child Didfinished
 extension SplashCoordinator: CoordinatorFinishDelegate {
     
-    func coordinatorDidFinish(childCoordinator: Coordinator) {
+    func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
+        print(#function)
         
-        print(#function, Swift.type(of: self))
-        
-        // TODO: - 로그인 플로우 or Empty Home 플로우가 끝났으면 탭바 플로우로 돌려주기. 탭바 플로우는 끝나면 뭐 없다.
-        
+        print("--- 자식 코디가 없기 때문에 이게 실행되면 안된다", Swift.type(of: self))
     }
 }

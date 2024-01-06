@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class LoginView: BaseView {
+class EmailLoginView: BaseView {
     
     // MARK: - 임시
     let tempLabel = UILabel()
