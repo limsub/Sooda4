@@ -15,9 +15,11 @@ class SignUpRepository: SignUpRepositoryProtocol {
     func checkValidEmail(_ email: String) {
         
         // 1. requestDTO 변환
+        let dto = CheckEmailValidationRequestDTO(
+            email: email
+        )
         
+        // 2. 요청
         
-        
-        <#code#>
     }
 }
