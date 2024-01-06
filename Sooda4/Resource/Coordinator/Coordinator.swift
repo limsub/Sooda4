@@ -27,28 +27,40 @@ protocol Coordinator: AnyObject {
     func start()
     
     // 6. Flow 종료 시점 로직. (extension에서 선언)
-    func finish()
+    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?)
 }
 
-extension Coordinator {
-    func finish() {
-        // 1. 자식 코디 다 지우기
-        childCoordinators.removeAll()
-        // 2. 부모 코디에게 알리기
-        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
-    }
-}
+// (nextFlow 매개변수 추가) -> 각 코디네이터에서 선언하기
+//extension Coordinator {
+//    func finish() {
+//        // 1. 자식 코디 다 지우기
+//        childCoordinators.removeAll()
+//        // 2. 부모 코디에게 알리기
+////        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
+//    }
+//}
 
 
 // MARK: - Coordinator Finish Delegate
 // 부모 코디네이터에게 자식 코디네이터(self)가 이제 끝난다고 알려준다
 protocol CoordinatorFinishDelegate: AnyObject {
-    func coordinatorDidFinish(childCoordinator: Coordinator)
+    func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?)
+}
+
+// MARK: - ChildCoordinatorTypeProtocol
+// 각 코디네이터의 자식 코디네이터 타입을 저장. (enum)
+// 모든 enum을 매개변수로 받기 위한 프로토콜. (제네릭으로 받을 예정)
+protocol ChildCoordinatorTypeProtocol {
+    
 }
 
 
 // MARK: - Coordinator Type
 // 앱 내에서 어떤 flow를 담당하는지 정의한다
 enum CoordinatorType {
-    case app, splash, login, tab
+    case app
+    case splash, loginScene, homeEmptyScene, tabBarScene
+    case selectAuth, initialWorkSpace
+    case signUp, emailLogin
+    
 }

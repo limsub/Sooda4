@@ -11,7 +11,13 @@ import UIKit
 
 // MARK: - App Coordinator Protocol
 protocol AppCoordinatorProtocol: Coordinator {
+    // view
+    
+    // flow
     func showSplashFlow()
+    func showLoginFlow()
+    func showHomeEmptyFlow()
+    func tabBarFlow()
 }
 
 // MARK: - App Coordinator Class
@@ -37,6 +43,20 @@ class AppCoordinator: AppCoordinatorProtocol {
         showSplashFlow()
     }
     
+    // 6.
+    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
+        // 1. 자식 코디 다 지우기
+        childCoordinators.removeAll()
+        
+        /* 궁금한 점. navigationController에 쌓인 것들이나, present로 띄운 애들을 제거하는 과정은 필요하지 않은가?*/
+        
+        // 2. 부모 코디에게 알리기
+        finishDelegate?.coordinatorDidFinish(
+            childCoordinator: self,
+            nextFlow: nextFlow   // 이게 실행될 일 없음
+        )
+    }
+    
     
     // 프로토콜 메서드
     func showSplashFlow() {
@@ -48,6 +68,23 @@ class AppCoordinator: AppCoordinatorProtocol {
         splashCoordinator.start()
     }
     
+    func showLoginFlow() {
+        print(#function)
+        
+        let loginCoordinator = LoginSceneCoordinator(navigationController)
+        loginCoordinator.finishDelegate = self
+        childCoordinators.append(loginCoordinator)
+        loginCoordinator.start()
+    }
+    
+    func showHomeEmptyFlow() {
+        print(#function)
+    }
+    
+    func tabBarFlow() {
+        print(#function)
+    }
+    
     deinit {
         print("앱코디 디이닛")
     }
@@ -55,18 +92,43 @@ class AppCoordinator: AppCoordinatorProtocol {
 
 // MARK: - Child Didfinished
 extension AppCoordinator: CoordinatorFinishDelegate {
-    func coordinatorDidFinish(childCoordinator: Coordinator) {
-        print(#function)
+    
+    // CoordinatorFinishDelegate
+    func coordinatorDidFinish(
+        childCoordinator: Coordinator,
+        nextFlow: ChildCoordinatorTypeProtocol?
+    ) {
+        print(#function, Swift.type(of: self))
+        
+        print("매개변수로 받은 nextFlow : ", nextFlow)
+        
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
+        navigationController.viewControllers.removeAll()
+        // present된 애들도 없애줘야 하지 않을까..? navigationController.dismiss??
         
-        // 아마 이게 실행될 일은 없을듯
-        switch childCoordinator.type {
-        case .splash:
-            print("이게 실행되면 문제가 있는거여")
-        default:
-            break
+        if let nextFlow = nextFlow as? ChildCoordinatorType {
+            switch nextFlow {
+            case .splash:
+                print("여기로 가자고 하는 애는 없어야 해...")
+            case .loginScene:
+                // TODO: - show LoginFlow
+                self.showLoginFlow()
+                break;
+            case .tabBarScene:
+                // TODO: - show TabBarFlow
+                break;
+            case .homeEmptyScene:
+                // TODO: - show HomeEmptyFlow
+                break;
+            }
         }
     }
-    
+}
+
+// MARK: - Child Coordinator 타입
+extension AppCoordinator {
+    enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
+        case splash, loginScene, tabBarScene, homeEmptyScene
+    }
 }

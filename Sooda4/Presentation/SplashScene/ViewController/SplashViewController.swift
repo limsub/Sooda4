@@ -26,6 +26,9 @@ class SplashViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "스플래시 뷰"
         
+        
+        viewModel.transitionNextPage()
     }
 }

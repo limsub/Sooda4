@@ -1,5 +1,5 @@
 //
-//  OnboardingView.swift
+//  LoginView.swift
 //  Sooda4
 //
 //  Created by 임승섭 on 1/5/24.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class OnboardingView: BaseView {
+class EmailLoginView: BaseView {
     
     // MARK: - 임시
     let tempLabel = UILabel()
@@ -19,10 +19,10 @@ class OnboardingView: BaseView {
         
         backgroundColor = .blue
         
-        tempLabel.text = "온보딩 뷰"
+        tempLabel.text = "로그인 뷰"
         tempLabel.backgroundColor = .yellow
         
-        nextButton.setTitle("다음", for: .normal)
+        nextButton.setTitle("로그인 성공", for: .normal)
         nextButton.backgroundColor = .blue
         
         self.addSubview(tempLabel)
@@ -37,5 +37,4 @@ class OnboardingView: BaseView {
             make.top.equalTo(tempLabel.snp.bottom).offset(50)
         }
     }
-    
 }
