@@ -8,8 +8,8 @@
 APIKey.swift
 
 # Fonts
-.ttf
-.otf
+SF-Pro.ttf
+
 
 # SwiftLint
 .swiftlint.yml
