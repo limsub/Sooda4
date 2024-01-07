@@ -43,7 +43,10 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
         // 1. 자식 코디 없음
         
         // 2. 부모 코디에게 알림
-        
+        finishDelegate?.coordinatorDidFinish(
+            childCoordinator: self ,
+            nextFlow: nextFlow
+        )
     }
     
     // 프로토콜 메서드
@@ -54,7 +57,16 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
         let initialWorkSpaceVC = InitialWorkSpaceViewController.create(with: initialWorkSpaceVM)
         
         // 이벤트 받기
-//        initialWorkSpaceVM.did
+        initialWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goHomeEmptyView:
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.homeEmptyView))
+                
+            case .goMakeWorkSpaceView:
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.makeWorkSpace))
+                
+            }
+        }
         
         navigationController.pushViewController(initialWorkSpaceVC, animated: false)
     }

@@ -39,7 +39,8 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
     
     // 5.
     func start() {
-        showOnboardingView()
+//        showOnboardingView()
+        showInitialWorkSpaceFlow()
     }
     
     // 6.
