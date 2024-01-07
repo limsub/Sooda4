@@ -120,6 +120,8 @@ extension AppCoordinator: CoordinatorFinishDelegate {
                 break;
             case .homeEmptyScene:
                 // TODO: - show HomeEmptyFlow
+                
+                
                 break;
             }
         }
@@ -129,6 +131,9 @@ extension AppCoordinator: CoordinatorFinishDelegate {
 // MARK: - Child Coordinator 타입
 extension AppCoordinator {
     enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
-        case splash, loginScene, tabBarScene, homeEmptyScene
+        case splash, loginScene, tabBarScene
+        
+        case homeEmptyScene(_ startView: HomeEmptySceneCoordinatorStartViewType)
+        
     }
 }

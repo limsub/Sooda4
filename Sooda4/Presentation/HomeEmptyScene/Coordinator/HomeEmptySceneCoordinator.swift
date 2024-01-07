@@ -18,10 +18,10 @@
 //    var startViewType: HomeEmptySceneCoordinatorStartViewType  { get }
 //}
 //
-//enum HomeEmptySceneCoordinatorStartViewType {
-//    case homeEmptyView
-//    case makeWorkSpace
-//}
+enum HomeEmptySceneCoordinatorStartViewType {
+    case homeEmptyView
+    case makeWorkSpace
+}
 //
 //
 //// MARK: - HomeEmptyScene Coordinator Class

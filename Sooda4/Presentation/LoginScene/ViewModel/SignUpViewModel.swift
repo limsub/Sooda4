@@ -90,6 +90,9 @@ class SignUpViewModel: BaseViewModelType {
     
     private let signUpUseCase: SignUpUseCaseProtocol
     
+    var didSendEventClosure: ( (SignUpViewModel.Event) -> Void)?
+    
+    
     init(signUpUseCase: SignUpUseCaseProtocol) {
         self.signUpUseCase = signUpUseCase
     }
@@ -365,6 +368,8 @@ class SignUpViewModel: BaseViewModelType {
                     // 회원가입 성공 -> SelectAuth코디 종료 -> InitialWorkSpace 코디 실행
                     // 1. signUpView dismiss  2. selectAuthView dismiss  3. intialWorkSpaceView push
                     
+                    owner.didSendEventClosure?(.goInitialWorkSpace)
+                    
                 case .failure(let networkError):
                     
                     resultValidEmailCheck.onNext(.failure(error: networkError))
@@ -425,4 +430,10 @@ class SignUpViewModel: BaseViewModelType {
     }
  
     
+}
+
+extension SignUpViewModel {
+    enum Event {
+        case goInitialWorkSpace
+    }
 }

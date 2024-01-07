@@ -42,7 +42,8 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
     // 6.
     func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
         // 전달하는 곳
-        childCoordinators.removeAll()
+        childCoordinators.removeAll()   // 없어 이건
+        
         finishDelegate?.coordinatorDidFinish(
             childCoordinator: self ,
             nextFlow: nextFlow
@@ -78,7 +79,11 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         // TODO: didSendEvent
         // 회원가입 성공했다.
         // -> 현재 SelectAuth 코디 종료하고 InitialWorkSpace코디 실행
-        finish(<#T##nextFlow: ChildCoordinatorTypeProtocol?##ChildCoordinatorTypeProtocol?#>)
+        signUpVM.didSendEventClosure = { [weak self] event in
+            
+            self?.finish(LoginSceneCoordinator.ChildCoordinatorType.initialWorkSpace)
+        }
+        
         
         // 회원가입 화면에 네비게이션 바가 있어서 달아주는 게 더 편할듯
         let nav = UINavigationController(rootViewController: signUpVC)
