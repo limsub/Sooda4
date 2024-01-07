@@ -53,6 +53,11 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
         
         let homeEmptyVC = HomeEmptyViewController()
         
+        homeEmptyVC.k = { [weak self] in
+            self?.showMakeWorkSpaceView()
+            
+        }
+        
         navigationController.pushViewController(homeEmptyVC, animated: true)
     }
     

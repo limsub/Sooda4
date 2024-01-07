@@ -9,6 +9,12 @@ import UIKit
 
 class MakeWorkSpaceViewController: BaseViewController {
     
+    let mainView = MakeWorkSpaceView()
+    
+    override func loadView() {
+        self.view = mainView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
