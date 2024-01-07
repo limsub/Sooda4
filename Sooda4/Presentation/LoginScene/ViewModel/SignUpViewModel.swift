@@ -9,35 +9,43 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+struct ErrorResponse: Decodable {
+    let errorCode: String
+}
 
-// 1. API별로 enum을 다 만들어. 저번 LSLP 했던 것마냥
-// 단, 프로토콜 하나 만들어서 공통 에러에 대한 처리를 해봐
-
-
-//enum AError {
-//    case a
-//    case b
-//    case commonError(errorCode: String)
-//}
-//
-//enum BError {
-//    case c
-//    case d
-//    case commonError(errorCode: String)
-//}
-
-
-enum ResultNetwork<T: Decodable> {
-    case success(a: T)
+enum NetworkError: Error {
+    // 서버에서 주는 에러가 아닌, 실제 에러(?) 알라모파이어 에러 이런거
+    case unknown(message: String)
     
-    case failure(b: Int)
+    // 서버에서 주는 에러 종류
+    case E11    // 잘못된 요청 (이메일 유효성)
+    case E12    // 중복 데이터 (이메일 유효성)
+    
+    init(_ error: String) {
+        
+        switch error {
+        case "E11": self = .E11
+        case "E12": self = .E12
+        default: self = .unknown(message: error)
+        }
+    }
+}
+
+
+
+enum ResultValidEmailCheck {
+    case success
+    
+    case failure(error: NetworkError)
 }
 
 enum ResultSignUp {
-    case success
-    case fail_AlreadySigned
-    case fail_unknowned
+    case success(a: String)  // 응답값을 받았을 때 내가 필요한 정보만 저장 -> Domain Layer의 Entity에 저장해두자. 아마 토큰만 필요할 듯 싶음
+    
+    case failure(error: NetworkError)
 }
+
+
 
 class SignUpViewModel: BaseViewModelType {
     
@@ -70,7 +78,8 @@ class SignUpViewModel: BaseViewModelType {
         let enabledEmailValidationButton: BehaviorSubject<Bool>
         let enabledCompleteButton: BehaviorSubject<Bool>
         
-        let resultSignUp: BehaviorSubject<ResultSignUp>
+//        let resultValidEmailCheck: PublishSubject<ResultValidEmailCheck>
+        let resultSignUp: PublishSubject<ResultSignUp>
     }
     
     func transform(_ input: Input) -> Output {
@@ -98,7 +107,12 @@ class SignUpViewModel: BaseViewModelType {
         let enabledEmailValidationButton = BehaviorSubject(value: false)
         let enabledCompletButton = BehaviorSubject(value: false)
         
-        let resultSignUp = BehaviorSubject<ResultSignUp>(value: .success)
+        
+        // 사실상 reusltValidEmailCheck은 필요가 없네. 어차피 validEmailStore에 다 있음
+//        let resultValidEmailCheck = PublishSubject<ResultValidEmailCheck>()
+        let resultSignUp = PublishSubject<ResultSignUp>()
+        
+        
         
         
         // 텍스트필드 하나라도 바뀌기만 하면 한 방에 검사때려 그냥
@@ -127,8 +141,11 @@ class SignUpViewModel: BaseViewModelType {
                 // 비밀번호
                 validPassWordStore.onNext(owner.checkPwFormat(pw))
                 
-                // 비밀번호 확인
-                validCheckPassWordStore.onNext(owner.checkCheckPwFormat(checkPw))
+                // 비밀번호 확인 -> values3도 같이 써야 해서 따로 메서드 만들지 않고 여기서 처리
+                if checkPw.isEmpty { validCheckPassWordStore.onNext(.nothing) }
+                else if checkPw != pw { validCheckPassWordStore.onNext(.incorrect) }
+                else { validCheckPassWordStore.onNext(.correct) }
+                
                 
                 // 중복 확인 버튼
                 enabledEmailValidationButton.onNext(
@@ -137,11 +154,11 @@ class SignUpViewModel: BaseViewModelType {
                 
                 // 가입하기 버튼
                 enabledCompletButton.onNext(
-                    owner.checkEmailFormat(email) != .nothing
-                    && owner.checkNicknameFormat(nickname) != .nothing
-                    && owner.checkPhoneNumFormat(phoneNum) != .nothing
-                    && owner.checkPwFormat(pw) != .nothing
-                    && owner.checkCheckPwFormat(checkPw) != .nothing
+                    !email.isEmpty
+                    && !nickname.isEmpty
+                    && !phoneNum.isEmpty
+                    && !pw.isEmpty
+                    && !checkPw.isEmpty
                 )
             }
             .disposed(by: disposeBag)
@@ -156,11 +173,16 @@ class SignUpViewModel: BaseViewModelType {
         input.emailValidButtonClicked
             .withLatestFrom(validEmailStore)
             .filter { value in
+                
+                print("validEmailStore : ", try? validEmailStore.value())
+
                 // 이메일 형식에 맞지 않거나, 이미 검증한 값이면 네트워크 콜 쏘지 않는다
-                if value == .nothing || value == .available {
+                if value == .nothing || value == .invalidFormat || value == .available {
                     validEmailOutput.onNext(value)
+                    print("이메일 버튼 클릭 -> filter false")
                     return false
                 } else {
+                    print("이메일 버튼 클릭 -> filter true")
                     return true
                 }
             }
@@ -169,7 +191,33 @@ class SignUpViewModel: BaseViewModelType {
                 self.signUpUseCase.checkValidEmail($0)
             }
             .subscribe(with: self) { owner , response  in
-                print(response)
+                switch response {
+                case .success:  // Empty Data이기 때문에 받는거 없음.
+                    // 이메일 유효성 검증 성공
+                    // 1.
+                    validEmailStore.onNext(.available)
+                    validEmailOutput.onNext(.available)
+//                    // 2.
+//                    resultValidEmailCheck.onNext(.success)
+                    
+                    
+                case .failure(let networkError):
+                    // 이메일 유효성 검증 실패
+                    // 1.
+                    if case .E12 = networkError {
+                        print("이메일 유효성 - 중복 데이터 - alreadyExistedEmail")
+                        validEmailStore.onNext(.alreadyExistedEmail)
+                        validEmailOutput.onNext(.alreadyExistedEmail)
+                    }
+                    else {
+                        print("이메일 유효성 - 알 수 없는 에러 - unknownedError")
+                        validEmailStore.onNext(.unknownedError)
+                        validEmailOutput.onNext(.unknownedError)
+                    }
+                    
+//                    // 2.
+//                    resultValidEmailCheck.onNext(.failure(error: networkError))
+                }
             }
             .disposed(by: disposeBag)
             
@@ -185,6 +233,7 @@ class SignUpViewModel: BaseViewModelType {
             enabledEmailValidationButton: enabledEmailValidationButton,
             enabledCompleteButton: enabledCompletButton,
             
+//            resultValidEmailCheck: resultValidEmailCheck,
             resultSignUp: resultSignUp
         )
     }
@@ -193,7 +242,8 @@ class SignUpViewModel: BaseViewModelType {
     
     func checkEmailFormat(_ txt: String) -> ValidEmail {
         if txt.isEmpty { return .nothing }
-        else { return .validFormatNotChecked }
+        else if txt.count > 3 && txt.count < 10 { return .validFormatNotChecked }
+        else { return .invalidFormat }
     }
     
     func checkNicknameFormat(_ txt: String) -> ValidNickname {
@@ -210,10 +260,6 @@ class SignUpViewModel: BaseViewModelType {
         if txt.isEmpty { return .nothing }
         else { return .invalidFormat }
     }
-    
-    func checkCheckPwFormat(_ txt: String) -> ValidCheckPassword {
-        if txt.isEmpty { return .nothing }
-        else { return .incorrect}
-    }
+ 
     
 }

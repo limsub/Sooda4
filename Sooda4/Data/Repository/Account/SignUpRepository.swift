@@ -12,7 +12,7 @@ import RxCocoa
 class SignUpRepository: SignUpRepositoryProtocol {
     
     // 실제로 네트워크 콜을 쏘는 곳
-    func checkValidEmail(_ email: String) -> Single< Result<String, Error> > {
+    func checkValidEmail(_ email: String) -> Single< Result<String, NetworkError> > {
         
         // 1. requestDTO 변환
         let dto = CheckEmailValidationRequestDTO(

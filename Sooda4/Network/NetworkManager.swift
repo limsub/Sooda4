@@ -23,10 +23,10 @@ class NetworkManager {
     // 아니면, 한 번 더 Result<String, Error> 로 감싸서 디코딩 실패하면 원래 에러 메세지를 던져주기.
     // Singl< Result< T, Result<String, Error> > >
     
-    func request<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, Error> > {
+    func request<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
         
         
-        return Single< Result<T, Error> >.create { single in
+        return Single< Result<T, NetworkError> >.create { single in
             
             AF.request(api)
                 .validate()
@@ -42,7 +42,10 @@ class NetworkManager {
                     case .failure(let error):
                         print("(Single) 네트워크 통신 실패")
                         
-                        single(.success(.failure(error)))
+                        // 디코딩이 되는지 체크
+                        print(response.data)
+                        
+//                        single(.success(.failure(error)))
                     }
                 }
             
@@ -54,9 +57,9 @@ class NetworkManager {
     
     // 빈 데이터가 응답으로 오는 경우 (ex. 이메일 유효성 검사)
     // -> statusCode로 성공 실패 구분.
-    func requestEmptyResponse(api: NetworkRouter) -> Single< Result<String, Error> > {
+    func requestEmptyResponse(api: NetworkRouter) -> Single< Result<String, NetworkError> > {
         
-        return Single< Result<String, Error> >.create { single in
+        return Single< Result<String, NetworkError> >.create { single in
             
             AF.request(api)
                 .validate()
@@ -64,7 +67,6 @@ class NetworkManager {
                     let statusCode = response.response?.statusCode
                     
                     print("code : ", statusCode)
-                    
                  
                     if statusCode == 200 {
                         print("(Single - EmptyResponse) 네트워크 통신 성공")
@@ -76,19 +78,40 @@ class NetworkManager {
                         if case .failure(let error) = result {
                             print("(Single - EmptyResponse) 네트워크 통신 실패")
                             
-                            // 실패이면, 서버에서 받은 데이터를 분석해서, 에러 분기 처리
-                            if let data = response.data {
-                                if let jsonString = String(data: data, encoding: .utf8) {
-                                    print("(Single - EmptyResponse) 서버 응답 데이터(JSON String): \(jsonString)")
-                                }
+                            // ErrorResponse 타입으로 디코딩 성공
+                            if let errorCode = self.decodingErrorResponse(from: response.data) {
+                                print("(Single - EmptyResponse) 에러 디코딩 성공")
+                                let e = NetworkError(errorCode)
+                                single(.success(.failure(e)))
                             }
                             
-                            single(.success(.failure(error)))
+                            // ErrorResponse 타입으로 디코딩 실패
+                            else {
+                                print("(Single - EmptyResponse) 에러 디코딩 실패")
+                                
+                                let errorDescription = error.localizedDescription
+                                let e = NetworkError(errorDescription)
+                                single(.success(.failure(e)))
+                            }
                         }
                     }
                 }
             return Disposables.create()
         }
         
+    }
+    
+    
+    
+    func decodingErrorResponse(from jsonData: Data?) -> String? {
+        
+        guard let jsonData else { return nil }
+        
+        if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: jsonData) {
+            
+            return errorResponse.errorCode  // 디코딩 성공
+        }
+       
+        return nil  // 디코딩 실패
     }
 }

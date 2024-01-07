@@ -61,18 +61,27 @@ class SignUpViewController: BaseViewController {
 
         let output = viewModel.transform(input)
         
-        // 이메일 중복 확인 버튼
+        // 이메일 중복 확인 버튼 enabled
         output.enabledEmailValidationButton
             .subscribe(with: self) { owner , value in
                 owner.mainView.checkEmailValidButton.update(value ? .enabled : .disabled)
             }
             .disposed(by: disposeBag)
         
-        // 가입하기 버튼
+        // 가입하기 버튼 enabled
         output.enabledCompleteButton
             .subscribe(with: self) { owner , value in
                 owner.mainView.completeButton.update(value ? .enabled : .disabled)
             }
             .disposed(by: disposeBag)
+        
+        // output
+        output.validEmail
+            .subscribe(with: self) { owner , value  in
+                print("VC : validEmail : ", value)
+            }
+            .disposed(by: disposeBag)
+        
+
     }
 }

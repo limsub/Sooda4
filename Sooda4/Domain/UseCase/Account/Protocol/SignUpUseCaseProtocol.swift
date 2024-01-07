@@ -11,6 +11,6 @@ import RxCocoa
 
 protocol SignUpUseCaseProtocol {
     
-    func checkValidEmail(_ email: String) -> Single< Result<String, Error> >
+    func checkValidEmail(_ email: String) -> Single< Result<String, NetworkError> >
     
 }

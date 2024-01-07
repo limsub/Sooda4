@@ -12,7 +12,8 @@ enum ValidEmail {
     case nothing
     case invalidFormat
     case validFormatNotChecked
-    case checkFailed    // 중복된 이메일 (네트워크 응답: 에러)
+    case alreadyExistedEmail    // 중복된 이메일 (네트워크 응답: 에러)
+    case unknownedError         // 에러
     case available
 }
 

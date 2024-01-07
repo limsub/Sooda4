@@ -23,7 +23,7 @@ class SignUpUseCase: SignUpUseCaseProtocol {
     
     // 3. 프로토콜 메서드
     // (1). 이메일 유효성 검증
-    func checkValidEmail(_ email: String) -> Single< Result<String, Error> > {
+    func checkValidEmail(_ email: String) -> Single< Result<String, NetworkError> > {
         
         return signUpRepository!.checkValidEmail(email)
         
