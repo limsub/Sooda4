@@ -128,6 +128,7 @@ class SignUpViewModel: BaseViewModelType {
                 print(email, nickname, phoneNum, pw, checkPw)
                 
                 // 이메일 -> 이미 성공이 되었는데, 여기서 다시 체크해서 validFormatNotCHecked로 돌아가게 되어버린다. -> 분기처리
+                // 와 근데 이메일을 수정한 경우에는 처리해줘야 해.... => 밖에다 따로 구현하자. 여기선 너무 빡셀듯
                 let currentState = try? validEmailStore.value()
                 if currentState != .available {
                     validEmailStore.onNext(owner.checkEmailFormat(email))
@@ -162,6 +163,12 @@ class SignUpViewModel: BaseViewModelType {
                     && !pw.isEmpty
                     && !checkPw.isEmpty
                 )
+            }
+            .disposed(by: disposeBag)
+        
+        input.emailText
+            .subscribe(with: self) { owner , value in
+                validEmailStore.onNext(owner.checkEmailFormat(value))
             }
             .disposed(by: disposeBag)
         
@@ -291,6 +298,14 @@ class SignUpViewModel: BaseViewModelType {
                 self.signUpUseCase.requestSignUp($0)
             }
             .subscribe(with: self) { owner , response in
+                
+//                switch response {
+//                case .success():
+//                    
+//                case .failure(let networkError):
+//                    
+//                }
+                
                 print(response)
             }
             .disposed(by: disposeBag)
