@@ -76,6 +76,9 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         let signUpVC = SignUpViewController.create(with: signUpVM)
         
         // TODO: didSendEvent
+        // 회원가입 성공했다.
+        // -> 현재 SelectAuth 코디 종료하고 InitialWorkSpace코디 실행
+        finish(<#T##nextFlow: ChildCoordinatorTypeProtocol?##ChildCoordinatorTypeProtocol?#>)
         
         // 회원가입 화면에 네비게이션 바가 있어서 달아주는 게 더 편할듯
         let nav = UINavigationController(rootViewController: signUpVC)
@@ -98,7 +101,7 @@ extension SelectAuthCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
         print(#function, Swift.type(of: self))
         
-        print("- 자식 코디 끝남. 처리해주기 - 받는 입장")
+        print("- 자식 코디 없음. 이거 실행되면 문제 있는거임")
         
         // 이게 왔다는 건 이메일 완료 아니면 회원가입 완료이기 때문에
         // 아래 코디네이터 끝났다 -> 얘도 끝나야 함.

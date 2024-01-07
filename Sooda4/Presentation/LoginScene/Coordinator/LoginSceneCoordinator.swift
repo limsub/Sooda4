@@ -97,78 +97,6 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
         // 갈아끼기
     }
     
-//    func showSelectAuthView() {
-//        print(#function)
-//        
-//        let selectAuthVM = SelectAuthViewModel()
-//        let selectAuthVC = SelectAuthViewController.create(with: selectAuthVM)
-//        print("----")
-//        
-//        // TODO: VM - DidSendEventClosure
-//        selectAuthVM.didSendEventClosure = { [weak self] event in
-//            switch event {
-//            case .presentSignUpView:
-//                self?.showSignUpView()
-//                
-//            }
-//        }
-//        
-//        // 전환 - bottom sheet
-//        navigationController.present(selectAuthVC, animated: true)
-//        
-//        print(navigationController.viewControllers)
-////        navigationController.pushViewController(selectAuthVC, animated: true)
-//    }
-//    
-//    func showSignUpView() {
-//        print(#function)
-//        
-//        let signUpVM = SignUpViewModel()
-//        let signUpVC = SignUpViewController.create(with: signUpVM)
-//        
-//        
-//        // 얘가 호출된다는건 SelectAuthVC에서 눌렸다.
-//        // 그렇다는건 nav의 vc들 중 맨 마지막에 SelectAuthVC가 있다. -> 확실?
-//        
-//        let vc = navigationController.viewControllers.last
-//        vc?.present(signUpVC, animated: true)
-////        navigationController.viewControllers.last!.present(signUpVC, animated: true)
-////        
-//        print(navigationController.viewControllers)
-////        
-////        navigationController.viewControllers.forEach { vc in
-////            if let selectAuthVC = vc as? SelectAuthViewController {
-////                print("hi")
-////            }
-////        }
-//        
-//        // TODO: VM - DidSendEventClosure
-//        
-////        navigationController.present(signUpVC, animated: true)
-////        navigationController.pushViewController(signUpVC, animated: true)
-//    }
-//    
-//    func showLoginView() {
-//        print(#function)
-//        
-//        let loginVM = LoginViewModel()
-//        let loginVC = LoginViewController.create(with: loginVM)
-//        
-//        // TODO: VM - DidSendEventClosure
-//        
-//        navigationController.pushViewController(loginVC, animated: true)
-//    }
-//    
-//    func showInitialWorkSpaceView() {
-//        print(#function)
-//        
-//        let intialWorkSpaceVM = InitialWorkSpaceViewModel()
-//        let initialWorkSpaceVC = InitialWorkSpaceViewController.create(with: intialWorkSpaceVM)
-//        
-//        // TODO: VM - DidSendEventClosure
-//        
-//        navigationController.pushViewController(initialWorkSpaceVC, animated: true)
-//    }
 }
 
 // MARK: - Child DidFinished
@@ -180,6 +108,8 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
         print("-- 자식 코디가 끝났다는 소식 들었으니까 처리해주자 - 받는 입장")
         
         // 얘 자식은 SelectAuth 아니면 InitialWorkSpace
+        
+        
     }
 }
 
