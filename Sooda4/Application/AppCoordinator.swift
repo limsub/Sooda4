@@ -23,7 +23,6 @@ protocol AppCoordinatorProtocol: Coordinator {
 // MARK: - App Coordinator Class
 class AppCoordinator: AppCoordinatorProtocol {
     
-    
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate? = nil   // AppCoordinator : 부모 코디 x
     
@@ -80,6 +79,11 @@ class AppCoordinator: AppCoordinatorProtocol {
     
     func showHomeEmptyFlow() {
         print(#function)
+        
+        let homeEmptyCoordinator = HomeEmptySceneCoordinator(navigationController)
+        homeEmptyCoordinator.finishDelegate = self
+        childCoordinators.append(homeEmptyCoordinator)
+        homeEmptyCoordinator.start()
     }
     
     func showTabBarFlow() {
@@ -136,7 +140,7 @@ extension AppCoordinator {
     enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
         case splash, loginScene, tabBarScene
         
-        case homeEmptyScene(_ startView: HomeEmptySceneCoordinatorStartViewType)
+        case homeEmptyScene
         
     }
 }

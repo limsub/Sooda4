@@ -11,6 +11,7 @@ import UIKit
 protocol InitialWorkSpaceCoordinatorProtocol: Coordinator {
     // view
     func showInitialWorkSpaceView()
+    func showMakeWorkSpaceView()
 }
 
 
@@ -60,15 +61,23 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
         initialWorkSpaceVM.didSendEventClosure = { [weak self] event in
             switch event {
             case .goHomeEmptyView:
-                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.homeEmptyView))
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
                 
             case .goMakeWorkSpaceView:
-                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.makeWorkSpace))
                 
+                self?.showMakeWorkSpaceView()
+                
+                break
             }
         }
         
         navigationController.pushViewController(initialWorkSpaceVC, animated: false)
+    }
+    
+    func showMakeWorkSpaceView() {
+        let makeWorkSpaceVC = MakeWorkSpaceViewController()
+        
+        navigationController.present(makeWorkSpaceVC, animated: true)
     }
 }
 

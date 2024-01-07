@@ -153,23 +153,20 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
         case .initialWorkSpace:
             
             
-            if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
-               case .homeEmptyScene(let view) = nextFlow {
+            if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType {
                 
-                // 6. InitialWorkSpace -> x버튼 -> HomeEmpty코디의 HomeEmptyView 띄워라
-                // -> 얘도 죽고 App코디에게 알려줘야 해
-                if view == .homeEmptyView {
-                    finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.homeEmptyView))
-                    
+                // 6. initialWorkSpace의 initalWorkSpaceView에서 x 버튼
+                // -> HomeEmpty 코디의 HomeEmptyView
+                if case .homeEmptyScene = nextFlow {
+                    finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
                 }
                 
                 
-                // 7. InitialWorkSpace -> 만들기 버튼 -> HomeEmpty 코디의 MakeWorkSpace 띄워라
-                else if view == .makeWorkSpace {
-                    finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.makeWorkSpace))
-                    
+                // 7. initialWorkSpace의 makeworkSpaceView에서 완성
+                // -> 탭바코디
+                if case .tabBarScene = nextFlow {
+                    finish(AppCoordinator.ChildCoordinatorType.tabBarScene)
                 }
-                
             }
             break
             
@@ -178,12 +175,6 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
         }
         
         
-        
-        
-        
-        
-        
-        // 얘 자식은 SelectAuth 아니면 InitialWorkSpace
         
         
     }
