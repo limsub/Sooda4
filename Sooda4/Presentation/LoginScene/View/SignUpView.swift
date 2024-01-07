@@ -83,19 +83,8 @@ class SignUpView: BaseView {
             make.height.equalTo(h)
         }
         
-        pwTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(nicknameTextField.snp.bottom).offset(p)
-            make.horizontalEdges.equalTo(contentView).inset(p)
-            make.height.equalTo(p)
-        }
-        pwTextField.snp.makeConstraints { make in
-            make.top.equalTo(pwTitleLabel.snp.bottom).offset(8)
-            make.horizontalEdges.equalTo(contentView).inset(p)
-            make.height.equalTo(h)
-        }
-        
         phoneNumTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(pwTextField.snp.bottom).offset(p)
+            make.top.equalTo(nicknameTextField.snp.bottom).offset(p)
             make.horizontalEdges.equalTo(contentView).inset(p)
             make.height.equalTo(p)
         }
@@ -105,8 +94,19 @@ class SignUpView: BaseView {
             make.height.equalTo(h)
         }
         
-        checkPwTitleLabel.snp.makeConstraints { make in
+        pwTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(phoneNumTextField.snp.bottom).offset(p)
+            make.horizontalEdges.equalTo(contentView).inset(p)
+            make.height.equalTo(p)
+        }
+        pwTextField.snp.makeConstraints { make in
+            make.top.equalTo(pwTitleLabel.snp.bottom).offset(8)
+            make.horizontalEdges.equalTo(contentView).inset(p)
+            make.height.equalTo(h)
+        }
+                
+        checkPwTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(pwTextField.snp.bottom).offset(p)
             make.horizontalEdges.equalTo(p)
             make.height.equalTo(p)
         }

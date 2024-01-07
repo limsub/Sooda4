@@ -17,11 +17,12 @@ protocol AppCoordinatorProtocol: Coordinator {
     func showSplashFlow()
     func showLoginFlow()
     func showHomeEmptyFlow()
-    func tabBarFlow()
+    func showTabBarFlow()
 }
 
 // MARK: - App Coordinator Class
 class AppCoordinator: AppCoordinatorProtocol {
+    
     
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate? = nil   // AppCoordinator : 부모 코디 x
@@ -81,7 +82,7 @@ class AppCoordinator: AppCoordinatorProtocol {
         print(#function)
     }
     
-    func tabBarFlow() {
+    func showTabBarFlow() {
         print(#function)
     }
     
@@ -117,9 +118,13 @@ extension AppCoordinator: CoordinatorFinishDelegate {
                 break;
             case .tabBarScene:
                 // TODO: - show TabBarFlow
+                self.showTabBarFlow()
                 break;
             case .homeEmptyScene:
                 // TODO: - show HomeEmptyFlow
+                self.showHomeEmptyFlow()
+                
+                
                 break;
             }
         }
@@ -129,6 +134,9 @@ extension AppCoordinator: CoordinatorFinishDelegate {
 // MARK: - Child Coordinator 타입
 extension AppCoordinator {
     enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
-        case splash, loginScene, tabBarScene, homeEmptyScene
+        case splash, loginScene, tabBarScene
+        
+        case homeEmptyScene(_ startView: HomeEmptySceneCoordinatorStartViewType)
+        
     }
 }

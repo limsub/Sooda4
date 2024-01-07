@@ -69,7 +69,7 @@ class SplashCoordinator: SplashCoordinatorProtocol {
                 break;
             
             case .goHomeEmptyScene:
-                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene(.homeEmptyView))
                 break;
             }
         }

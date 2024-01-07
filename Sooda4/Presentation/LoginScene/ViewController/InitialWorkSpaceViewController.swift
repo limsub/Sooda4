@@ -24,5 +24,21 @@ class InitialWorkSpaceViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mainView.b1.addTarget(self , action: #selector(b1Clicked), for: .touchUpInside)
+        mainView.b2.addTarget(self , action: #selector(b2Clicked), for: .touchUpInside)
+    }
+    
+    
+    @objc
+    func b1Clicked() {
+        print(#function)
+        viewModel.didSendEventClosure?(.goHomeEmptyView)
+    }
+    
+    @objc
+    func b2Clicked() {
+        print(#function)
+        viewModel.didSendEventClosure?(.goMakeWorkSpaceView)
     }
 }

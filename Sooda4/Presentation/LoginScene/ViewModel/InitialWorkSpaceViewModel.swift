@@ -9,4 +9,16 @@ import Foundation
 
 class InitialWorkSpaceViewModel {
     
+    
+    var didSendEventClosure: ( (InitialWorkSpaceViewModel.Event) -> Void)?
+    
+    
+}
+
+
+extension InitialWorkSpaceViewModel {
+    enum Event {
+        case goHomeEmptyView
+        case goMakeWorkSpaceView
+    }
 }
