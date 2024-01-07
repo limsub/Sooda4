@@ -10,8 +10,10 @@ import Alamofire
 
 enum NetworkRouter: URLRequestConvertible {
     
-    /* === 1. case === */
-    case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)// DTO
+    /* ========== case ========== */
+    /* === USER === */
+    case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)
+    case requestSignUp(_ sender: SignUpRequestDTO)
     
     
     /* === 2. path === */
@@ -19,6 +21,8 @@ enum NetworkRouter: URLRequestConvertible {
         switch self {
         case .checkValidEmail:
             return "/v1/users/validation/email"
+        case .requestSignUp:
+            return "/v1/users/join"
         }
     }
     
@@ -26,7 +30,7 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
-        case .checkValidEmail:
+        case .checkValidEmail, .requestSignUp:
             return [
                 "Content-Type": "application/json",
                 "SesacKey": APIKey.key
@@ -38,7 +42,7 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 4. method === */
     var method: HTTPMethod {
         switch self {
-        case .checkValidEmail:
+        case .checkValidEmail, .requestSignUp:
             return .post
         }
     }
@@ -50,6 +54,14 @@ enum NetworkRouter: URLRequestConvertible {
         case .checkValidEmail(let sender):
             return [
                 "email": sender.email
+            ]
+        case .requestSignUp(let sender):
+            return [
+                "email": sender.email,
+                "password": sender.password,
+                "nickname": sender.nickname,
+                "phone": sender.phone,
+                "deviceToken": sender.deviceToken
             ]
             
         default:

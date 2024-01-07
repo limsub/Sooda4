@@ -9,40 +9,34 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-struct ErrorResponse: Decodable {
-    let errorCode: String
-}
-
-enum NetworkError: Error {
-    // 서버에서 주는 에러가 아닌, 실제 에러(?) 알라모파이어 에러 이런거
-    case unknown(message: String)
-    
-    // 서버에서 주는 에러 종류
-    case E11    // 잘못된 요청 (이메일 유효성)
-    case E12    // 중복 데이터 (이메일 유효성)
-    
-    init(_ error: String) {
-        
-        switch error {
-        case "E11": self = .E11
-        case "E12": self = .E12
-        default: self = .unknown(message: error)
-        }
-    }
-}
-
-
 
 enum ResultValidEmailCheck {
     case success
     
     case failure(error: NetworkError)
+    
+    var toastMessage: String {
+        return "유효하지 않은 이메일입니다"
+    }
 }
 
 enum ResultSignUp {
+    enum Component {
+        case email, nickname, phoneNum, pw, checkPw
+    }
+    
+    
+    // 네트워크 콜 x (텍스트필드 포커스 맞춰줄 곳 전달.)
+    case firstInvalidFormatComponent(textField: Component)
+    
+    // 네트워크 콜 o
     case success(a: String)  // 응답값을 받았을 때 내가 필요한 정보만 저장 -> Domain Layer의 Entity에 저장해두자. 아마 토큰만 필요할 듯 싶음
     
     case failure(error: NetworkError)
+    
+    var toastMessage: String {
+        return "이미 존재하는 계정입ㄴ디ㅏ"
+    }
 }
 
 
@@ -91,6 +85,10 @@ class SignUpViewModel: BaseViewModelType {
         let validEmailStore = BehaviorSubject(value: ValidEmail.nothing)
         let validEmailOutput = BehaviorSubject(value: ValidEmail.nothing)
         
+        validEmailStore.subscribe(with: self) { owner, value in
+            print(value)
+        }.disposed(by: disposeBag)
+        
         let validNicknameStore = BehaviorSubject(value: ValidNickname.nothing)
         let validNicknameOutput = BehaviorSubject(value: ValidNickname.nothing)
         
@@ -129,8 +127,12 @@ class SignUpViewModel: BaseViewModelType {
                 
                 print(email, nickname, phoneNum, pw, checkPw)
                 
-                // 이메일
-                validEmailStore.onNext(owner.checkEmailFormat(email))
+                // 이메일 -> 이미 성공이 되었는데, 여기서 다시 체크해서 validFormatNotCHecked로 돌아가게 되어버린다. -> 분기처리
+                let currentState = try? validEmailStore.value()
+                if currentState != .available {
+                    validEmailStore.onNext(owner.checkEmailFormat(email))
+                }
+                
                 
                 // 닉네임
                 validNicknameStore.onNext(owner.checkNicknameFormat(nickname))
@@ -223,6 +225,80 @@ class SignUpViewModel: BaseViewModelType {
             
         
         
+        
+        // 회원가입 버튼 클릭
+        // 1. ValidStore 중 통과 안 된 애가 하나라도 있다. -> ValidOutput으로 (VC에게) 전달. 네트워크 콜 x. 이 때, 맨 위에 애가 포커스되도록 해야 한다...
+        // 2. 네트워크 통신 실패 -> 메세지 토스트. ResultSignUp로 전달.
+        //               성공 -> 메세지 토스트. 위와 동일
+        let validSet = Observable.combineLatest(validEmailStore, validNicknameStore, validPhoneNumStore, validPassWordStore, validCheckPassWordStore)
+        input.completeButtonClicked
+            .withLatestFrom(validSet)
+            .filter { values in
+                
+                let email = values.0
+                let nickname = values.1
+                let phoneNum = values.2
+                let pw = values.3
+                let checkPw = values.4
+                
+                validEmailOutput.onNext(email)
+                validNicknameOutput.onNext(nickname)
+                validPhoneNumOutput.onNext(phoneNum)
+                validPassWordOutput.onNext(pw)
+                validCheckPassWordOutput.onNext(checkPw)
+                
+                if email == .available
+                    && nickname == .available
+                    && phoneNum == .available
+                    && pw == .available
+                    && checkPw == .correct {
+                    print("모든 유효성 검사 통과 - filter true")
+                    return true
+                }
+                else {
+                    if email != .available {
+                        print("- 이메일 유효성 문제 : ", email)
+                        resultSignUp.onNext(.firstInvalidFormatComponent(textField: .email))
+                    } else if nickname != .available {
+                        print("- 닉네임 유효성 문제")
+                        resultSignUp.onNext(.firstInvalidFormatComponent(textField: .nickname))
+                    } else if phoneNum != .available {
+                        print("- 연락처 유효성 문제")
+                        resultSignUp.onNext(.firstInvalidFormatComponent(textField: .phoneNum))
+                    } else if pw != .available {
+                        print("- 비밀번호 유효성 문제")
+                        resultSignUp.onNext(.firstInvalidFormatComponent(textField: .pw))
+                    } else if checkPw != .correct {
+                        print("- 비밀번호 확인 유효성 문제")
+                        resultSignUp.onNext(.firstInvalidFormatComponent(textField: .checkPw))
+                    }
+                    print("유효성 검사 실패 - filter false")
+                    return false
+                }
+                
+            }
+            .withLatestFrom(textSet) { validValue, textValue  in
+                let requestModel = SignUpRequestModel(
+                    email: textValue.0,
+                    nickname: textValue.1,
+                    phoneNum: textValue.2,
+                    password: textValue.3
+                )
+                
+                return requestModel
+            }
+            .flatMap {
+                self.signUpUseCase.requestSignUp($0)
+            }
+            .subscribe(with: self) { owner , response in
+                print(response)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        
+        
+        
         return Output(
             validEmail: validEmailOutput,
             validNickname: validNicknameOutput,
@@ -248,16 +324,19 @@ class SignUpViewModel: BaseViewModelType {
     
     func checkNicknameFormat(_ txt: String) -> ValidNickname {
         if txt.isEmpty { return .nothing }
+        else if txt.count > 3 && txt.count < 10 { return .available }
         else { return .invalidFormat }
     }
     
     func checkPhoneNumFormat(_ txt: String) -> ValidPhoneNum {
         if txt.isEmpty { return .nothing }
+        else if txt.count > 3 && txt.count < 20 { return .available }
         else { return .invalidFormat }
     }
     
     func checkPwFormat(_ txt: String) -> ValidPassword {
         if txt.isEmpty { return .nothing }
+        else if txt.count > 3 && txt.count < 10 { return .available }
         else { return .invalidFormat }
     }
  

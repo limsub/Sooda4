@@ -37,3 +37,15 @@ struct SignUpResponseDTO: Decodable {
 struct TokenDTO: Decodable {
     let accessToken, refreshToken: String
 }
+
+// mapping to Domain
+extension SignUpResponseDTO {
+    func toDomain() -> SignUpResponseModel {
+        return .init(userId: user_id, nickname: nickname, profileImage: profileImage, token: token.toDomain())
+    }
+}
+extension TokenDTO {
+    func toDomain() -> Token {
+        return .init(accessToken: accessToken, refreshToken: refreshToken)
+    }
+}

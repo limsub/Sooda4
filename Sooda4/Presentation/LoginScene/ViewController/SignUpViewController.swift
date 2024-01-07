@@ -60,6 +60,8 @@ class SignUpViewController: BaseViewController {
         )
 
         let output = viewModel.transform(input)
+
+        
         
         // 이메일 중복 확인 버튼 enabled
         output.enabledEmailValidationButton
@@ -78,6 +80,8 @@ class SignUpViewController: BaseViewController {
         // output
         output.validEmail
             .subscribe(with: self) { owner , value  in
+                // .nothing -> 버튼 눌리지도 않아
+                // .invalidFormat
                 print("VC : validEmail : ", value)
             }
             .disposed(by: disposeBag)

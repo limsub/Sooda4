@@ -16,13 +16,6 @@ class NetworkManager {
     private init() { }
     
     
-    // 근데 에러가 발생하면, data로 넘겨주는 string을 확인해야 한다
-    // 그니까 Result<T, String>으로 줘야 하는거 아닌가
-    // String? 으로 선언해서, 디코딩이 되지 않는 에러는 nil로 던져줘서 에러처리하기.
-    
-    // 아니면, 한 번 더 Result<String, Error> 로 감싸서 디코딩 실패하면 원래 에러 메세지를 던져주기.
-    // Singl< Result< T, Result<String, Error> > >
-    
     func request<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
         
         
@@ -42,10 +35,22 @@ class NetworkManager {
                     case .failure(let error):
                         print("(Single) 네트워크 통신 실패")
                         
-                        // 디코딩이 되는지 체크
-                        print(response.data)
+                        // Error Response타입으로 디코딩
+                        // 성공
+                        if let errorCode = self.decodingErrorResponse(from: response.data) {
+                            print("(Single) - 에러 디코딩 성공")
+                            
+                            let e = NetworkError(errorCode)
+                            single(.success(.failure(e)))
+                        }
+                        // 실패
+                        else {
+                            print("(Single) - 에러 디코딩 실패")
+                            let errorDescription = error.localizedDescription
+                            let e = NetworkError(errorDescription)
+                            single(.success(.failure(e)))
+                        }
                         
-//                        single(.success(.failure(error)))
                     }
                 }
             
@@ -107,7 +112,7 @@ class NetworkManager {
         
         guard let jsonData else { return nil }
         
-        if let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: jsonData) {
+        if let errorResponse = try? JSONDecoder().decode(ErrorResponseDTO.self, from: jsonData) {
             
             return errorResponse.errorCode  // 디코딩 성공
         }

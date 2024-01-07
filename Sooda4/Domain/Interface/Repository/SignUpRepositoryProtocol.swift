@@ -14,8 +14,6 @@ protocol SignUpRepositoryProtocol {
     // (1). 이메일 유효성 검증
     func checkValidEmail(_ email: String) -> Single< Result<String, NetworkError> >
     
-    
-    
-    
     // (2). 회원가입
+    func requestSignUp(_ requestModel: SignUpRequestModel) -> Single< Result<SignUpResponseModel, NetworkError> >
 }
