@@ -88,6 +88,11 @@ class AppCoordinator: AppCoordinatorProtocol {
     
     func showTabBarFlow() {
         print(#function)
+        
+        let tabBarCoordinator = TabBarCoordinator(navigationController)
+        tabBarCoordinator.workSpaceId = 10
+        childCoordinators.append(tabBarCoordinator)
+        tabBarCoordinator.start()
     }
     
     deinit {
