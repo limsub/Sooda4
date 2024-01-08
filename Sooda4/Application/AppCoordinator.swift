@@ -17,7 +17,7 @@ protocol AppCoordinatorProtocol: Coordinator {
     func showSplashFlow()
     func showLoginFlow()
     func showHomeEmptyFlow()
-    func showTabBarFlow()
+    func showTabBarFlow(workSpaceId: Int)
 }
 
 // MARK: - App Coordinator Class
@@ -86,11 +86,11 @@ class AppCoordinator: AppCoordinatorProtocol {
         homeEmptyCoordinator.start()
     }
     
-    func showTabBarFlow() {
+    func showTabBarFlow(workSpaceId: Int) {
         print(#function)
         
         let tabBarCoordinator = TabBarCoordinator(navigationController)
-        tabBarCoordinator.workSpaceId = 10
+        tabBarCoordinator.workSpaceId = workSpaceId
         childCoordinators.append(tabBarCoordinator)
         tabBarCoordinator.start()
     }
@@ -127,7 +127,7 @@ extension AppCoordinator: CoordinatorFinishDelegate {
                 break;
             case .tabBarScene:
                 // TODO: - show TabBarFlow
-                self.showTabBarFlow()
+                self.showTabBarFlow(workSpaceId: 100)
                 break;
             case .homeEmptyScene:
                 // TODO: - show HomeEmptyFlow
@@ -137,6 +137,25 @@ extension AppCoordinator: CoordinatorFinishDelegate {
                 break;
             }
         }
+        
+        
+        // 통일 좀 시켜야겠다 이거
+        
+        
+        if let nextFlow = nextFlow as? TabBarCoordinator.ChildCoordinatorType {
+            switch nextFlow {
+            case .homeDefaultScene(let workSpaceId):
+                showTabBarFlow(workSpaceId: workSpaceId)
+            case .dmScene:
+                break;
+            case .searchScene:
+                break;
+            case .settingScene:
+                break;
+            }
+        }
+        
+        
     }
 }
 

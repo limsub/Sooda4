@@ -135,10 +135,28 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
             
             // 2. SelectAuth에서 또 소식이 들려옴 (EmailLoginView)
             // - 로그인 성공했는데 얘 워크스페이스 없으니까 HomeEmptyScenc코디에 HomeEmptyView 띄워라
+            if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
+               nextFlow == .homeEmptyScene {
+                
+                self.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
+            }
             
             
             // 3. SelectAuth에서 또 소식 들려옴 (EmailLoginView)
-            // - 로그인 성공했는데 얘 워크스페이스 있으니까 TabBar코디 띄워라
+            // - 로그인 성공했는데 얘 워크스페이스 있으니까 HomeDefault코디 띄워라
+            if let nextFlow = nextFlow as? TabBarCoordinator.ChildCoordinatorType,
+               case .homeDefaultScene(let workSpaceId) = nextFlow {
+                
+                
+                
+                self.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+            }
+            
+            
+            
+            
+            
+            
             
             
             // 4. SelectAuth에서 소식 (SelectAuthView)
