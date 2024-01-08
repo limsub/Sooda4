@@ -16,6 +16,8 @@ protocol SignUpUseCaseProtocol {
     
     func requestSignUp(_ requestModel: SignUpRequestModel) -> Single< Result< SignUpResponseModel, NetworkError> >
     
+    func signInRequest(_ requestModel: SignInRequestModel) -> Single< Result< SignInResponseModel, NetworkError> >
+    
     
     /* === 로직 === */
     func checkEmailFormat(_ txt: String) -> ValidEmail
@@ -29,11 +31,14 @@ class SignUpUseCase: SignUpUseCaseProtocol {
     
     // 1. repo
     let signUpRepository: SignUpRepositoryProtocol
+    let signInRepository: SignInRepositoryProtocol
     
     
     // 2. init (의존성 주입)
-    init(signUpRepository: SignUpRepositoryProtocol) {
+    init(signUpRepository: SignUpRepositoryProtocol,
+         signInRepository: SignInRepositoryProtocol) {
         self.signUpRepository = signUpRepository
+        self.signInRepository = signInRepository
     }
     
     
@@ -49,6 +54,12 @@ class SignUpUseCase: SignUpUseCaseProtocol {
     func requestSignUp(_ requestModel: SignUpRequestModel) -> Single<Result<SignUpResponseModel, NetworkError>> {
         
         return signUpRepository.requestSignUp(requestModel)
+    }
+    
+    // (3). 이메일 로그인
+    func signInRequest(_ requestModel: SignInRequestModel) -> Single<Result<SignInResponseModel, NetworkError>> {
+        
+        return signInRepository.signInRequest(requestModel)
     }
     
     

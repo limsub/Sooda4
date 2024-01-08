@@ -59,8 +59,15 @@ struct SignInRequestDTO: Encodable {
 }
 
 struct SignInResponseDTO: Decodable {
-    let userId: String
+    let user_id: Int
     let nickname: String
     let accessToken: String 
     let refreshToken: String
+}
+
+// mapping to Domain
+extension SignInResponseDTO {
+    func toDomain() -> SignInResponseModel {
+        return .init(userId: user_id, nickname: nickname, accessToken: accessToken, refreshToken: refreshToken)
+    }
 }

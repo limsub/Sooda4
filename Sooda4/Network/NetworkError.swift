@@ -13,12 +13,14 @@ enum NetworkError: Error {
     case unknown(message: String)
     
     // 서버에서 주는 에러 종류
-    case E11    // 잘못된 요청 (이메일 유효성)
-    case E12    // 중복 데이터 (이메일 유효성)
+    case E03    // (로그인 실패)
+    case E11    // 잘못된 요청
+    case E12    // 중복 데이터
     
     init(_ error: String) {
         
         switch error {
+        case "E03": self = .E03
         case "E11": self = .E11
         case "E12": self = .E12
         default: self = .unknown(message: error)

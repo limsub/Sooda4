@@ -103,12 +103,26 @@ class EmailLoginViewController: BaseViewController {
                 switch value {
                 case .firstInvalidFormatComponent(let component):
                     switch component {
-                    case .email: print("이메일 텍스트필드 포커스")
-                    case .pw: print("비밀번호 텍스트필드 포커스")
+                    case .email: print(" - 이메일 텍스트필드 포커스")
+                    case .pw: print(" - 비밀번호 텍스트필드 포커스")
                     }
+                    
+                    // 토스트 메세지
+                    self.showToast(value.toastMessage)
+                    
+                case .failure:
+                    // 토스트 메세지
+                    self.showToast(value.toastMessage)
+                    
                 default: break
                 }
+                
+                
             }
             .disposed(by: disposeBag)
+    }
+    
+    func showToast(_ message: String) {
+        print("토스트 메세지 : \(message)")
     }
 }

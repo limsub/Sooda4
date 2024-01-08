@@ -31,13 +31,13 @@ struct Token {
 
 
 /* === 로그인 === */
-struct LoginRequestModel {
+struct SignInRequestModel {
     let email: String
     let password: String
     let deviceToken: String
 }
 
-struct LoginResponseModel {
+struct SignInResponseModel {
     let userId: Int
     let nickname: String
     let accessToken: String

@@ -18,6 +18,27 @@ enum ResultLogin {
     
     case failure(error: NetworkError)
     
+    var toastMessage: String {
+        switch self {
+        case .firstInvalidFormatComponent(let textField):
+            switch textField {
+            case .email:
+                return "이메일 형식이 올바르지 않습니다"
+            case .pw:
+                return "비밀번호는 최소 8자 이상, 하나 이상의 대소문자/숫자/특수문자를 설정해주세요"
+            }
+        case .success:
+            return "SignIn SUCCESS"
+        case .failure(let error):
+            switch error {
+            case .E03:
+                return "이메일 또는 비밀번호가 올바르지 않습니다"
+            default:
+                return "에러가 발생했어요. 잠시 후 다시 시도해주세요"
+            }
+        }
+    }
+    
     
     enum Component {
         case email, pw
@@ -125,17 +146,16 @@ class EmailLoginViewModel: BaseViewModelType {
                     return true
                 } else {
                     if email != .validFormatNotChecked {
-                        print(" - 이메일 유효성 문제 (텍스트필드 포커스)")
                         resultLogin.onNext(.firstInvalidFormatComponent(textField: .email))
                     } else if pw != .available {
-                        print(" - 비밀번호 유효성 문제 (텍스트필드 포커스)")
                         resultLogin.onNext(.firstInvalidFormatComponent(textField: .pw))
                     }
+                    print("유효성 검사 실패 - filter false")
                     return false
                 }
             }
             .withLatestFrom(textSet) { validValue, textValues in
-                let requestModel = LoginRequestModel(
+                let requestModel = SignInRequestModel(
                     email: textValues.0,
                     password: textValues.1,
                     deviceToken: "hi"
@@ -144,14 +164,21 @@ class EmailLoginViewModel: BaseViewModelType {
                 return requestModel
             }
             .flatMap {
-                NetworkManager.shared.request(
-                    type: SignInResponseDTO.self,
-                    api: .signInRequest(
-                        SignInRequestDTO(email: $0.email, password: $0.password, deviceToken: $0.deviceToken)
-                    )
-                )
+                self.signUpUseCase.signInRequest($0)
             }
             .subscribe(with: self) { owner , response in
+                
+                switch response {
+                case .success:
+                    // 코디네이터
+                    // 로그인 성공 ->  한 번 더 네트워크 통신 필요!!!!
+                    print("로그인 성공. 한 번 더 네트워크 통신해서 워크스페이스 정보 가져와야 함")
+                    
+                case .failure(let networkError):
+                    resultLogin.onNext(.failure(error: networkError))
+                    
+                }
+                
                 print(response)
             }
             .disposed(by: disposeBag)

@@ -66,7 +66,7 @@ enum ResultSignUp {
                 return "작성하신 비밀번호가 일치하지 않습니다"
             }
         case .success:
-            return "회원가입 성공"
+            return "SignUp SUCCESS"
         case .failure(let error):
             switch error {
             case .E12:
