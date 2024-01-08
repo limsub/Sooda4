@@ -60,7 +60,13 @@ protocol ChildCoordinatorTypeProtocol {
 enum CoordinatorType {
     case app
     case splash, loginScene, homeEmptyScene, tabBarScene
+    // loginScene
     case selectAuth, initialWorkSpace
     case signUp, emailLogin
+    
+    // homeEmpty
+    
+    // tabBar
+    case homeDefault, dm, search, setting
     
 }
