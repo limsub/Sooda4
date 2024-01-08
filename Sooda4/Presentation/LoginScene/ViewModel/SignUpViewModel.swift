@@ -179,18 +179,18 @@ class SignUpViewModel: BaseViewModelType {
                 let currentState = try? validEmailStore.value()
                 if currentState != .available {
                     print("이메일 스토어 바꿈!!1 (textSet) - currentstate : ", currentState)
-                    validEmailStore.onNext(owner.checkEmailFormat(email))
+                    validEmailStore.onNext(owner.signUpUseCase.checkEmailFormat(email))
                 }
                 
                 
                 // 닉네임
-                validNicknameStore.onNext(owner.checkNicknameFormat(nickname))
+                validNicknameStore.onNext(owner.signUpUseCase.checkNicknameFormat(nickname))
                 
                 // 연락처
-                validPhoneNumStore.onNext(owner.checkPhoneNumFormat(phoneNum))
+                validPhoneNumStore.onNext(owner.signUpUseCase.checkPhoneNumFormat(phoneNum))
                 
                 // 비밀번호
-                validPassWordStore.onNext(owner.checkPwFormat(pw))
+                validPassWordStore.onNext(owner.signUpUseCase.checkPwFormat(pw))
                 
                 // 비밀번호 확인 -> values3도 같이 써야 해서 따로 메서드 만들지 않고 여기서 처리
                 if checkPw.isEmpty { validCheckPassWordStore.onNext(.nothing) }
@@ -200,7 +200,7 @@ class SignUpViewModel: BaseViewModelType {
                 
                 // 중복 확인 버튼
                 enabledEmailValidationButton.onNext(
-                    owner.checkEmailFormat(email) != .nothing
+                    owner.signUpUseCase.checkEmailFormat(email) != .nothing
                 )
                 
                 // 가입하기 버튼
@@ -218,7 +218,7 @@ class SignUpViewModel: BaseViewModelType {
             .distinctUntilChanged()
             .subscribe(with: self) { owner , value in
                 print("이메일 스토어 바꿈!!2 (따로) - ", value)
-                validEmailStore.onNext(owner.checkEmailFormat(value))
+                validEmailStore.onNext(owner.signUpUseCase.checkEmailFormat(value))
             }
             .disposed(by: disposeBag)
         
@@ -397,39 +397,6 @@ class SignUpViewModel: BaseViewModelType {
             resultSignUp: resultSignUp
         )
     }
-    
-    
-    
-    func checkEmailFormat(_ txt: String) -> ValidEmail {
-        if txt.isEmpty { return .nothing }
-        else if txt.contains("@") && txt.contains(".com") { return .validFormatNotChecked }
-        else { return .invalidFormat }
-    }
-    
-    func checkNicknameFormat(_ txt: String) -> ValidNickname {
-        if txt.isEmpty { return .nothing }
-        else if txt.count >= 1 && txt.count <= 30 { return .available }
-        else { return .invalidFormat}
-    }
-    
-    func checkPhoneNumFormat(_ txt: String) -> ValidPhoneNum {
-        
-        if txt.isEmpty { return .nothing }
-        else if txt.count == 12 || txt.count == 13 { return .available }
-        else { return .invalidFormat}
-        
-    }
-    
-    func checkPwFormat(_ txt: String) -> ValidPassword {
-        let passwordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"
-        let passwordTest = NSPredicate(format: "SELF MATCHES %@", passwordRegex)
-        
-        if txt.isEmpty { return .nothing }
-        else if txt.count >= 8 && passwordTest.evaluate(with: txt) { return .available }
-        else { return .invalidFormat }
-    }
- 
-    
 }
 
 extension SignUpViewModel {
