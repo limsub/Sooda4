@@ -23,8 +23,8 @@ class SplashViewModel {
     func transitionNextPage() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             
-//            self?.didSendEventClosure?(.goLoginScene)
-            self?.didSendEventClosure?(.goTabBarScene)
+            self?.didSendEventClosure?(.goLoginScene)
+//            self?.didSendEventClosure?(.goTabBarScene)
         }
     }
 }

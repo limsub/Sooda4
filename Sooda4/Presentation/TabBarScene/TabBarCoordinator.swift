@@ -154,6 +154,7 @@ extension TabBarCoordinator: UITabBarControllerDelegate {
 
 extension TabBarCoordinator {
     enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
+        
         case homeDefaultScene(workSpaceId: Int)
         case dmScene, searchScene, settingScene
         

@@ -210,10 +210,15 @@ class EmailLoginViewModel: BaseViewModelType {
                     // 요소가 있는 배열 -> TabBar (Home Default)
                     if model.isEmpty {
                         print("내가 속한 워크스페이스가 없다. Home Empty로 가자")
+                        owner.didSendEventClosure?(.goHomeEmptyView)
                         
                     } else {
                         print("내가 속한 워크스페이스가 있다. Home Default로 가자")
                         // 어떤 워크스페이스인지 값전달을 어떻게 해주냐..?
+                        
+                        let workSpaceId = model[0].workSpaceId
+                        
+                        owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
                     }
                     
                 case .failure(let networkError):
@@ -243,6 +248,6 @@ class EmailLoginViewModel: BaseViewModelType {
 
 extension EmailLoginViewModel {
     enum Event {
-        case goHomeEmptyView, goHomeDefaultView
+        case goHomeEmptyView, goHomeDefaultView(workSpaceId: Int)
     }
 }

@@ -104,6 +104,18 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         )
         let emailLoginVC = EmailLoginViewController.create(with: emailLoginVM)
         
+        emailLoginVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .goHomeDefaultView(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+                
+            case .goHomeEmptyView:
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
+                
+            }
+        }
+        
         let nav = UINavigationController(rootViewController: emailLoginVC)
         
         navigationController.present(nav, animated: true)
