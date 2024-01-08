@@ -14,6 +14,11 @@ enum NetworkRouter: URLRequestConvertible {
     /* === USER === */
     case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)
     case requestSignUp(_ sender: SignUpRequestDTO)
+    case signInRequest(_ sender: SignInRequestDTO)
+    
+    
+    /* === WORKSPACE === */
+    case myWorkSpaces
     
     
     /* === 2. path === */
@@ -23,6 +28,12 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/users/validation/email"
         case .requestSignUp:
             return "/v1/users/join"
+        case .signInRequest:
+            return "/v1/users/login"
+            
+            
+        case .myWorkSpaces:
+            return "/v1/workspaces"
         }
     }
     
@@ -30,9 +41,10 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
-        case .checkValidEmail, .requestSignUp:
+        default:
             return [
                 "Content-Type": "application/json",
+                "Authorization": APIKey.sample,
                 "SesacKey": APIKey.key
             ]
         }
@@ -42,8 +54,13 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 4. method === */
     var method: HTTPMethod {
         switch self {
-        case .checkValidEmail, .requestSignUp:
+        // USER
+        case .checkValidEmail, .requestSignUp, .signInRequest:
             return .post
+        
+        // WORKSPACE
+        case .myWorkSpaces:
+            return .get
         }
     }
     
@@ -61,6 +78,12 @@ enum NetworkRouter: URLRequestConvertible {
                 "password": sender.password,
                 "nickname": sender.nickname,
                 "phone": sender.phone,
+                "deviceToken": sender.deviceToken
+            ]
+        case .signInRequest(let sender):
+            return [
+                "email": sender.email,
+                "password": sender.password,
                 "deviceToken": sender.deviceToken
             ]
             

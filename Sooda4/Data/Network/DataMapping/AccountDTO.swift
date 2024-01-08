@@ -49,3 +49,25 @@ extension TokenDTO {
         return .init(accessToken: accessToken, refreshToken: refreshToken)
     }
 }
+
+
+/* ========== 로그인 ========== */
+struct SignInRequestDTO: Encodable {
+    let email: String
+    let password: String
+    let deviceToken: String
+}
+
+struct SignInResponseDTO: Decodable {
+    let user_id: Int
+    let nickname: String
+    let accessToken: String 
+    let refreshToken: String
+}
+
+// mapping to Domain
+extension SignInResponseDTO {
+    func toDomain() -> SignInResponseModel {
+        return .init(userId: user_id, nickname: nickname, accessToken: accessToken, refreshToken: refreshToken)
+    }
+}

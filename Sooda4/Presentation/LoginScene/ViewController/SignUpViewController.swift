@@ -80,6 +80,7 @@ class SignUpViewController: BaseViewController {
         /* === 이메일 유효성 검증 버튼 눌렀을 때 -> 토스트 메세지 띄워주기 용 === */
         output.resultValidEmailCheck
             .subscribe(with: self) { owner , value in
+                print("--------")
                 self.showToast(value.toastMessage)
             }
             .disposed(by: disposeBag)
@@ -186,11 +187,21 @@ class SignUpViewController: BaseViewController {
                     case .pw: print("비밀번호 텍스트필드 포커스")
                     case .checkPw: print("비밀번호 확인 텍스트필드 포커스")
                     }
+                    
+                    // 토스트 메세지 띄워주기
+                    self.showToast(value.toastMessage)
+                    
+                case .failure:
+                    // 토스트 메세지 띄워주기
+                    self.showToast(value.toastMessage)
+                    
+                // 성공일 때는 토스트 메세지 따로 띄우지 않는다
+                    
+                    
                 default: break
                 }
                 
-                // 토스트 메세지 띄워주기
-                self.showToast(value.toastMessage)
+                
             }
             .disposed(by: disposeBag)
         
