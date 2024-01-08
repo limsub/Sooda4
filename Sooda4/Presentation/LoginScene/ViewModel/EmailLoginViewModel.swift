@@ -91,8 +91,20 @@ class EmailLoginViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
-        // 3. 로그인 버튼 클릭 -> (Output 변경))
+        // 3. 로그인 버튼 활성화
         let textSet = Observable.combineLatest(input.emailText, input.pwText)
+        textSet
+            .subscribe(with: self) { owner , values in
+                enabledLoginButton.onNext(
+                    !values.0.isEmpty
+                    && !values.1.isEmpty
+                )
+            }
+            .disposed(by: disposeBag)
+        
+        
+        // 4. 로그인 버튼 클릭 -> (Output 변경))
+        
         let validSet = Observable.combineLatest(validEmailStore, validPwStore)
         input.completeButtonClicked
             .withLatestFrom(validSet)
