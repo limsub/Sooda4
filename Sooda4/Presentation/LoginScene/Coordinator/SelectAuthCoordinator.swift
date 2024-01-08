@@ -92,7 +92,11 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
     }
     
     func showEmailLoginView() {
-        let emailLoginVM = EmailLoginViewModel()
+        let emailLoginVM = EmailLoginViewModel(
+            signUpUseCase: SignUpUseCase(
+                signUpRepository: SignUpRepository()
+            )
+        )
         let emailLoginVC = EmailLoginViewController.create(with: emailLoginVM)
         
         let nav = UINavigationController(rootViewController: emailLoginVC)

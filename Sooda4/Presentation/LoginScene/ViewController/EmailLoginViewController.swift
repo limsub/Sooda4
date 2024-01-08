@@ -26,6 +26,7 @@ class EmailLoginViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation()
+        bindVM()
     }
     
     func setNavigation() {
@@ -42,5 +43,18 @@ class EmailLoginViewController: BaseViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
+    }
+    
+    func bindVM() {
+        let input = EmailLoginViewModel.Input(
+            emailText: mainView.emailTextField.rx.text.orEmpty,
+            pwText: mainView.pwTextField.rx.text.orEmpty,
+            completeButtonClicked: mainView.completeButton.rx.tap
+        )
+        
+        let output = viewModel.transform(input)
+        
+        mainView.completeButton.update(.enabled)
+        
     }
 }

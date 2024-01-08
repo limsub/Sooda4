@@ -49,3 +49,18 @@ extension TokenDTO {
         return .init(accessToken: accessToken, refreshToken: refreshToken)
     }
 }
+
+
+/* ========== 로그인 ========== */
+struct SignInRequestDTO: Encodable {
+    let email: String
+    let password: String
+    let deviceToken: String
+}
+
+struct SignInResponseDTO: Decodable {
+    let userId: String
+    let nickname: String
+    let accessToken: String 
+    let refreshToken: String
+}

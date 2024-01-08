@@ -7,6 +7,7 @@
 
 import Foundation
 
+/* === 회원가입 === */
 struct SignUpRequestModel {
     let email: String
     let nickname: String
@@ -27,3 +28,20 @@ struct Token {
     let accessToken: String
     let refreshToken: String
 }
+
+
+/* === 로그인 === */
+struct LoginRequestModel {
+    let email: String
+    let password: String
+    let deviceToken: String
+}
+
+struct LoginResponseModel {
+    let userId: Int
+    let nickname: String
+    let accessToken: String
+    let refreshToken: String
+}
+
+
