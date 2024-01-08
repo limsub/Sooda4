@@ -80,6 +80,7 @@ class SignUpViewController: BaseViewController {
         /* === 이메일 유효성 검증 버튼 눌렀을 때 -> 토스트 메세지 띄워주기 용 === */
         output.resultValidEmailCheck
             .subscribe(with: self) { owner , value in
+                print("--------")
                 self.showToast(value.toastMessage)
             }
             .disposed(by: disposeBag)

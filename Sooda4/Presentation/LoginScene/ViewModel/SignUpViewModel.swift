@@ -362,7 +362,7 @@ class SignUpViewModel: BaseViewModelType {
                 
                 switch response {
                 case .success:
-                    resultValidEmailCheck.onNext(.success)
+                    resultSignUp.onNext(.success)
                     
                     // 다시 코디네이터
                     // 회원가입 성공 -> SelectAuth코디 종료 -> InitialWorkSpace 코디 실행
@@ -372,7 +372,7 @@ class SignUpViewModel: BaseViewModelType {
                     
                 case .failure(let networkError):
                     
-                    resultValidEmailCheck.onNext(.failure(error: networkError))
+                    resultSignUp.onNext(.failure(error: networkError))
 
                 }
                 print(response)
