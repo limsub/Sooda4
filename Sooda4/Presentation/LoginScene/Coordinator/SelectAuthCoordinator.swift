@@ -97,6 +97,9 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
             signUpUseCase: SignUpUseCase(
                 signUpRepository: SignUpRepository(),
                 signInRepository: SignInRepository()
+            ),
+            workSpaceUseCase: WorkSpaceUseCase(
+                workSpaceRepository: WorkSpaceRepository()
             )
         )
         let emailLoginVC = EmailLoginViewController.create(with: emailLoginVM)

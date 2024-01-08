@@ -17,6 +17,9 @@ enum NetworkRouter: URLRequestConvertible {
     case signInRequest(_ sender: SignInRequestDTO)
     
     
+    /* === WORKSPACE === */
+    case myWorkSpaces
+    
     
     /* === 2. path === */
     var path: String {
@@ -27,6 +30,10 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/users/join"
         case .signInRequest:
             return "/v1/users/login"
+            
+            
+        case .myWorkSpaces:
+            return "/v1/workspaces"
         }
     }
     
@@ -34,9 +41,10 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
-        case .checkValidEmail, .requestSignUp, .signInRequest:
+        default:
             return [
                 "Content-Type": "application/json",
+                "Authorization": APIKey.sample,
                 "SesacKey": APIKey.key
             ]
         }
@@ -46,8 +54,13 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 4. method === */
     var method: HTTPMethod {
         switch self {
+        // USER
         case .checkValidEmail, .requestSignUp, .signInRequest:
             return .post
+        
+        // WORKSPACE
+        case .myWorkSpaces:
+            return .get
         }
     }
     

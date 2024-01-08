@@ -50,11 +50,13 @@ class EmailLoginViewModel: BaseViewModelType {
     private var disposeBag = DisposeBag()
     
     private let signUpUseCase: SignUpUseCaseProtocol
+    private let workSpaceUseCase: WorkSpaceUseCaseProtocol
     
     var didSendEventClosure: ( (EmailLoginViewModel.Event) -> Void )?
     
-    init(signUpUseCase: SignUpUseCaseProtocol) {
+    init(signUpUseCase: SignUpUseCaseProtocol, workSpaceUseCase: WorkSpaceUseCaseProtocol) {
         self.signUpUseCase = signUpUseCase
+        self.workSpaceUseCase = workSpaceUseCase
     }
     
     struct Input {
@@ -97,8 +99,6 @@ class EmailLoginViewModel: BaseViewModelType {
         input.emailText
             .subscribe(with: self) { owner , value in
                 validEmailStore.onNext(owner.signUpUseCase.checkEmailFormat(value))
-                
-                print("이메일 : ", owner.signUpUseCase.checkEmailFormat(value))
             }
             .disposed(by: disposeBag)
         
@@ -106,8 +106,6 @@ class EmailLoginViewModel: BaseViewModelType {
         input.pwText
             .subscribe(with: self) { owner , value in
                 validPwStore.onNext(owner.signUpUseCase.checkPwFormat(value))
-                
-                print("비밀번호 : ", owner.signUpUseCase.checkPwFormat(value))
             }
             .disposed(by: disposeBag)
         
@@ -166,23 +164,68 @@ class EmailLoginViewModel: BaseViewModelType {
             .flatMap {
                 self.signUpUseCase.signInRequest($0)
             }
-            .subscribe(with: self) { owner , response in
-                
+        
+        // subscribe -> filter로 수정.
+        // 한번 더 네트워크 통신이 진행이 되어야 함 (워크스페이스 유무)
+        
+        // 로직 구상
+        // 1. filter 걸어서 성공일 때, 즉 로그인 성공했을 때 키체인에 토큰 넣어두고, return true
+            // 로그인 실패면 return false
+        // 2. (flatmap) /v1/workspaces 네트워크 쏴
+        // 3. (subscribe)
+            // 워크스페이스 개수 여부에 따라 코디네이터한테 화면 전환 요청
+            // 만약 여기서 에러가 난다 -> 화면 전환 하면 안됨!! VC에 에러 보내서 토스트 메세지 띄워주기
+
+            .filter { response in
                 switch response {
-                case .success:
-                    // 코디네이터
-                    // 로그인 성공 ->  한 번 더 네트워크 통신 필요!!!!
-                    print("로그인 성공. 한 번 더 네트워크 통신해서 워크스페이스 정보 가져와야 함")
+                case .success(let model):
+                    print("로그인 성공 -> filter true")
+                    
+                    // * 임시
+                    print("토큰값 저장!")
+                    APIKey.sample = model.accessToken
+                    
+                    
+                    return true
                     
                 case .failure(let networkError):
+                    print("로그인 실패 -> filter false")
                     resultLogin.onNext(.failure(error: networkError))
                     
+                    return false
                 }
+            }
+            .flatMap { value in
+                // 내가 속한 워크스페이스 조회 -> 매개변수 필요없음
+                self.workSpaceUseCase.myWorkSpacesRequest()
+            }
+            .subscribe(with: self) { owner, response  in
+                // 여기서 실패하는 건 어떤 경우일까..? 그럴 일이 있으면 안될거같은데...
                 
-                print(response)
+                switch response {
+                case .success(let model):
+                    // 속한 워크스페이스 배열이 응답값으로 온다
+                    // (코디네이터 요청)
+                    // 빈 배열 -> HomeEmpty
+                    // 요소가 있는 배열 -> TabBar (Home Default)
+                    if model.isEmpty {
+                        print("내가 속한 워크스페이스가 없다. Home Empty로 가자")
+                        
+                    } else {
+                        print("내가 속한 워크스페이스가 있다. Home Default로 가자")
+                        // 어떤 워크스페이스인지 값전달을 어떻게 해주냐..?
+                    }
+                    
+                case .failure(let networkError):
+                    print("이게 실행되면 문제가 있는거다.")
+                    print("아니 로그인 성공해서 토큰 넣어뒀는데 워크스페이스 조회 못한다는게 말이 되냐")
+                    print("공통 에러면 그럴 수 있긴 하겠다")
+                    resultLogin.onNext(.failure(error: networkError))
+                }
             }
             .disposed(by: disposeBag)
         
+           
             
         
         return Output(
