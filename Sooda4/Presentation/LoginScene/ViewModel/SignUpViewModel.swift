@@ -358,6 +358,19 @@ class SignUpViewModel: BaseViewModelType {
             .flatMap {
                 self.signUpUseCase.requestSignUp($0)
             }
+        // subscribe -> filter로 수정.
+        // 한번 더 네트워크 통신이 진행이 되어야 함 (워크스페이스 유무)
+        
+        // 로직 구상
+        // 1. filter 걸어서 성공일 때, 즉 로그인 성공했을 때 키체인에 토큰 넣어두고, return true
+            // 로그인 실패면 return false
+        // 2. (flatmap) /v1/workspaces 네트워크 쏴
+        // 3. (subscribe)
+            // 워크스페이스 개수 여부에 따라 코디네이터한테 화면 전환 요청
+            // 만약 여기서 에러가 난다 -> 화면 전환 하면 안됨!! VC에 에러 보내서 토스트 메세지 띄워주기
+
+        
+        
             .subscribe(with: self) { owner , response in
                 
                 switch response {
