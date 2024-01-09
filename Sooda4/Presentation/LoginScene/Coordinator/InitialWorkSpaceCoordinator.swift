@@ -53,11 +53,16 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
             case .goHomeEmptyView:
                 self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
                 
-            case .goMakeWorkSpaceView:
+            case .goHomeDefaultView:
+                break
+                
+            case .presentMakeWorkSpaceView:
                 
                 self?.showMakeWorkSpaceView()
                 
                 break
+                
+            
             }
         }
         

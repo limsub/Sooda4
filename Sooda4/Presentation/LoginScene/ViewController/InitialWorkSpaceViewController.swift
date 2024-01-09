@@ -39,6 +39,6 @@ class InitialWorkSpaceViewController: BaseViewController {
     @objc
     func b2Clicked() {
         print(#function)
-        viewModel.didSendEventClosure?(.goMakeWorkSpaceView)
+        viewModel.didSendEventClosure?(.presentMakeWorkSpaceView)
     }
 }

@@ -19,6 +19,7 @@ class InitialWorkSpaceViewModel {
 extension InitialWorkSpaceViewModel {
     enum Event {
         case goHomeEmptyView
-        case goMakeWorkSpaceView
+        case goHomeDefaultView
+        case presentMakeWorkSpaceView
     }
 }
