@@ -175,5 +175,7 @@ enum NetworkRouter: URLRequestConvertible {
                 )
             }
         }
+        
+        return multipartFormData
     }
 }

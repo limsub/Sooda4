@@ -75,7 +75,9 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
     }
     
     func showMakeWorkSpaceView() {
-        let makeWorkSpaceVC = MakeWorkSpaceViewController()
+        let makeWorkSpaceVM = MakeWorkSpaceViewModel()
+        let makeWorkSpaceVC = MakeWorkSpaceViewController.create(with: makeWorkSpaceVM)
+        
         let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
         
         // TODO: - didSendEvent

@@ -9,11 +9,20 @@ import UIKit
 
 class MakeWorkSpaceView: BaseView {
     
-    let messageImageView = {
+    let workSpaceImageView = {
         let view = UIImageView()
-        view.backgroundColor = .green
+        view.backgroundColor = UIColor.appColor(.brand_green)
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 8
         return view
     }()
+    
+    let clearPickerButton = {
+        let view = UIButton()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
     
     let nameTitleLabel = SignUpTextFieldTitleLabel("워크스페이스 이름")
     let descriptionTitleLabel = SignUpTextFieldTitleLabel("워크스페이스 설명")
@@ -27,11 +36,10 @@ class MakeWorkSpaceView: BaseView {
     override func setConfigure() {
         super.setConfigure()
         
-        [messageImageView, nameTitleLabel, descriptionTitleLabel, nameTextField, descriptionTextField, completeButton].forEach { item  in
+        [workSpaceImageView, clearPickerButton, nameTitleLabel, descriptionTitleLabel, nameTextField, descriptionTextField, completeButton].forEach { item  in
             addSubview(item)
         }
     }
-    
     
     override func setConstraints() {
         super.setConstraints()
@@ -39,14 +47,18 @@ class MakeWorkSpaceView: BaseView {
         let h = 44
         let p = 24
         
-        messageImageView.snp.makeConstraints { make in
+        workSpaceImageView.snp.makeConstraints { make in
             make.centerX.equalTo(self)
             make.size.equalTo(70)
             make.top.equalTo(self.safeAreaLayoutGuide).inset(p)
         }
         
+        clearPickerButton.snp.makeConstraints { make in
+            make.edges.equalTo(workSpaceImageView).inset(-8)    // 조금 더 넓은 범위 터치되도록
+        }
+        
         nameTitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(messageImageView.snp.bottom).offset(16)
+            make.top.equalTo(workSpaceImageView.snp.bottom).offset(16)
             make.horizontalEdges.equalTo(self).inset(p)
             make.height.equalTo(p)
         }
@@ -73,5 +85,9 @@ class MakeWorkSpaceView: BaseView {
             make.bottom.equalTo(self.safeAreaLayoutGuide).inset(24)
         }
         
+    }
+    
+    func updateWorkSpaceImageView(_ imageData: Data) {
+        workSpaceImageView.image = UIImage(data: imageData)
     }
 }
