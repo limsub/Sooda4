@@ -10,18 +10,7 @@ import SnapKit
 
 class HomeDefaultViewController: BaseViewController {
     
-    let l = UILabel()
-    override func setting() {
-        super.setting()
-        
-        view.addSubview(l)
-        l.snp.makeConstraints { make in
-            make.size.equalTo(200)
-            make.center.equalTo(view)
-        }
-        l.text = "홈 디폴트"
-        l.backgroundColor = .white
-    }
+    
     
     // Navigation 영역의 객체들
     let leftImageView = {
@@ -114,6 +103,16 @@ class HomeDefaultViewController: BaseViewController {
 }
 
 
+// 테이블뷰 셀 종류
+// 1. (height 56) 섹션 접었다 폈다 (왼쪽 텍스트 - 오른쪽 chevron)
+// 2. (height 41) 채널 섹션의 셀 (왼쪽 # - 가운데 텍스트 - 오른쪽 초록색 배경 숫자)
+// 3. (height 44) DM 섹션의 셀 (왼쪽 이미지 - 가운데 텍스트 - 오른족 초록색 배경 숫자)
+// 4. (height 41) 추가 셀 (왼쪽 + - 가운데 텍스트)
+
+// 커스텀 뷰로 만들 것
+// - 왼쪽 #
+// - 가운데 텍스트
+// - 오른쪽 초록색 배경 숫자
 
 
 

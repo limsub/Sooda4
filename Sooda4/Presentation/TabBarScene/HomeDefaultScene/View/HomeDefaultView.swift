@@ -9,7 +9,7 @@ import UIKit
 
 class HomeDefaultView: BaseView {
     
-    
+//    let tablView = UITableView
     
     
 }
