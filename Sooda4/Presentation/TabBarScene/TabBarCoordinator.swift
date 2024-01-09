@@ -67,7 +67,8 @@ extension TabBarCoordinator {
         nav.tabBarItem = UITabBarItem(
             title: page.title,
             image: UIImage(named: page.unselectedImage),
-            selectedImage: UIImage(named: page.selectedImage)
+//            selectedImage: UIImage(systemName: "pencil")
+            selectedImage: UIImage(named: page.selectedImage)?.withTintColor(.black)
         )
         
         switch page {
