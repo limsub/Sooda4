@@ -83,9 +83,13 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
                 
                 switch response {
                 case .success(let model):
-                    owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: 100))
+                    
+                    // 생성 시에는 추가적인 API 호출 없이 방금 만든 워크스페이스 페이지로 이동
+                    let workSpaceId = model.workSpaceId
+                    owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
                     
                 case .failure(let networkError):
+                    print("명세서 나오면 구현 예정")
                     break
                 }
                 
