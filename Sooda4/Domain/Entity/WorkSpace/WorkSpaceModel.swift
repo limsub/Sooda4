@@ -19,7 +19,7 @@ struct WorkSpaceModel {
 
 // 워크스페이스 생성
 struct MakeWorkSpaceRequestModel {
-    let title: String
+    let name: String
     let description: String
     let image: Data // UIImage
 }
