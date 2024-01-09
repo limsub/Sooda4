@@ -76,10 +76,11 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
     
     func showMakeWorkSpaceView() {
         let makeWorkSpaceVC = MakeWorkSpaceViewController()
+        let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
         
         // TODO: - didSendEvent
         
-        navigationController.present(makeWorkSpaceVC, animated: true)
+        navigationController.present(nav, animated: true)
     }
 }
 
