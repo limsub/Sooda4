@@ -98,7 +98,6 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
     
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
     
-        print("-- 자식 코디가 끝났다는 소식 들었으니까 처리해주자 - 받는 입장")
         print("로그인씬코디 : 자식 코디가 끝났다는 소식 들었다. nextFlow : \(nextFlow)")
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }

@@ -44,7 +44,11 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
     func showInitialWorkSpaceView() {
         print(#function)
         
-        let initialWorkSpaceVM = InitialWorkSpaceViewModel()
+        let initialWorkSpaceVM = InitialWorkSpaceViewModel(
+            workSpaceUseCase: WorkSpaceUseCase(
+                workSpaceRepository: WorkSpaceRepository()
+            )
+        )
         let initialWorkSpaceVC = InitialWorkSpaceViewController.create(with: initialWorkSpaceVM)
         
         // 이벤트 받기
@@ -53,7 +57,8 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
             case .goHomeEmptyView:
                 self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
                 
-            case .goHomeDefaultView:
+            case .goHomeDefaultView(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
                 break
                 
             case .presentMakeWorkSpaceView:

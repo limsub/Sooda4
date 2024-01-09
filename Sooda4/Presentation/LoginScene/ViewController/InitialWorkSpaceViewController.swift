@@ -25,20 +25,17 @@ class InitialWorkSpaceViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        mainView.b1.addTarget(self , action: #selector(b1Clicked), for: .touchUpInside)
-        mainView.b2.addTarget(self , action: #selector(b2Clicked), for: .touchUpInside)
+        bindVM()
     }
     
     
-    @objc
-    func b1Clicked() {
-        print(#function)
-        viewModel.didSendEventClosure?(.goHomeEmptyView)
+    func bindVM() {
+        let input = InitialWorkSpaceViewModel.Input(
+            xButtonClicked: mainView.b1.rx.tap,
+            makeButtonClicked: mainView.b2.rx.tap
+        )
+        
+        let output = viewModel.transform(input) // output 사용 x
     }
     
-    @objc
-    func b2Clicked() {
-        print(#function)
-        viewModel.didSendEventClosure?(.presentMakeWorkSpaceView)
-    }
 }

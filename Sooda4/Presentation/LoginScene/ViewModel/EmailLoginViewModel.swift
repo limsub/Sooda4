@@ -182,8 +182,8 @@ class EmailLoginViewModel: BaseViewModelType {
                     print("로그인 성공 -> filter true")
                     
                     // * 임시
-                    print("토큰값 저장!")
                     APIKey.sample = model.accessToken
+                    print("토큰 업데이트! : \(APIKey.sample)")
                     
                     
                     return true
