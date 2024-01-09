@@ -32,7 +32,7 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
     private var disposeBag = DisposeBag()
     private let makeWorkSpaceUseCase: MakeWorkSpaceUseCase
     
-//    var didSendEventClosure: ( )
+    var didSendEventClosure: ( (MakeWorkSpaceViewModel.Event) -> Void)?
     
     init(makeWorkSpaceUseCase: MakeWorkSpaceUseCase) {
         self.makeWorkSpaceUseCase = makeWorkSpaceUseCase
@@ -77,6 +77,18 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
             }
             .subscribe(with: self) { owner , response in
                 print(response)
+                
+                // 성공적으로 만들었다 -> 화면 전환 Home Default
+                
+                
+                switch response {
+                case .success(let model):
+                    owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: 100))
+                    
+                case .failure(let networkError):
+                    break
+                }
+                
             }
             .disposed(by: disposeBag)
         
@@ -85,6 +97,12 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
             enabledCompleteButton: enabledCompleteButton,
             resultLogin: resultLogin
         )
+    }
+}
+
+extension MakeWorkSpaceViewModel {
+    enum Event {
+        case goHomeDefaultView(workSpaceId: Int)
     }
 }
 

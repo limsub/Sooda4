@@ -80,11 +80,22 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
                 makeWorkSpaceRepository: MakeWorkSpaceRepository()
             )
         )
+        makeWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .goHomeDefaultView(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+            }
+            
+        }
+        
         let makeWorkSpaceVC = MakeWorkSpaceViewController.create(with: makeWorkSpaceVM)
         
         let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
         
-        // TODO: - didSendEvent
+
+        
+        
         
         navigationController.present(nav, animated: true)
     }
