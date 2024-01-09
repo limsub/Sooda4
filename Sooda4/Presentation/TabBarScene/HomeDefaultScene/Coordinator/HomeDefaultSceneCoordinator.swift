@@ -39,18 +39,7 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         guard let workSpaceId else { return }
         showHomeDefaultView()
     }
-    
-    // 6
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 1.
-        childCoordinators.removeAll()
-        
-        // 2.
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self,
-            nextFlow: nextFlow
-        )
-    }
+
     
     // 프로토콜 메서드 - view
     func showHomeDefaultView() {

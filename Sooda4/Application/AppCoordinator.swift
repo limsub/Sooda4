@@ -43,20 +43,6 @@ class AppCoordinator: AppCoordinatorProtocol {
         showSplashFlow()
     }
     
-    // 6.
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 1. 자식 코디 다 지우기
-        childCoordinators.removeAll()
-        
-        /* 궁금한 점. navigationController에 쌓인 것들이나, present로 띄운 애들을 제거하는 과정은 필요하지 않은가?*/
-        
-        // 2. 부모 코디에게 알리기
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self,
-            nextFlow: nextFlow   // 이게 실행될 일 없음
-        )
-    }
-    
     
     // 프로토콜 메서드
     func showSplashFlow() {
@@ -108,40 +94,39 @@ extension AppCoordinator: CoordinatorFinishDelegate {
         childCoordinator: Coordinator,
         nextFlow: ChildCoordinatorTypeProtocol?
     ) {
-        print(#function, Swift.type(of: self))
-        
-        print("매개변수로 받은 nextFlow : ", nextFlow)
-        
-        
+
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
         navigationController.viewControllers.removeAll()
         // present된 애들도 없애줘야 하지 않을까..? navigationController.dismiss??
+        // -> 일단 이 navController에서 present된 애들은 없어. LoginScene에서는 dismiss 해주고 있다.
         
+        
+        /* App코디에게 연락이 온다.
+         1. Child
+         2. Child의 Child
+         3. 부모 타고 가야 하는 코디 -> 없음
+         */
+        
+        // 1 .Child
         if let nextFlow = nextFlow as? ChildCoordinatorType {
             switch nextFlow {
             case .splash:
                 print("여기로 가자고 하는 애는 없어야 해...")
+                
             case .loginScene:
-                // TODO: - show LoginFlow
                 self.showLoginFlow()
-                break;
+                
             case .tabBarScene:
-                // TODO: - show TabBarFlow
-                self.showTabBarFlow(workSpaceId: 100)
-                break;
+                print("이것도 실행되면 안된다. 탭바 코디 중 정확히 어디로 갈지 전달받아야 한다")
+                
             case .homeEmptyScene:
-                // TODO: - show HomeEmptyFlow
                 self.showHomeEmptyFlow()
                 
-                
-                break;
             }
         }
         
-        
-        // 통일 좀 시켜야겠다 이거
-        
-        
+        // 2. Child의 Child
+        // - 이렇게 갈 수 있는건 일단 TabBar코디 쪽밖에 없음
         if let nextFlow = nextFlow as? TabBarCoordinator.ChildCoordinatorType {
             switch nextFlow {
             case .homeDefaultScene(let workSpaceId):
@@ -154,17 +139,15 @@ extension AppCoordinator: CoordinatorFinishDelegate {
                 break;
             }
         }
-        
-        
     }
 }
 
 // MARK: - Child Coordinator 타입
 extension AppCoordinator {
     enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
-        case splash, loginScene, tabBarScene
-        
+        case splash
+        case loginScene
+        case tabBarScene
         case homeEmptyScene
-        
     }
 }
