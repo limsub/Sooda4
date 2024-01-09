@@ -122,6 +122,8 @@ extension TabBarCoordinator {
         tabBarController.selectedIndex = 0  // 이게 꼭 필요할까? 싶음
         
         tabBarController.tabBarItem.isEnabled = true
+        tabBarController.tabBar.tintColor = UIColor.appColor(.brand_black)
+        tabBarController.tabBar.unselectedItemTintColor = UIColor.appColor(.brand_inactive)
         
         
         // 현재 코디네이터의 네비게이션 컨트롤러의 뷰로 잡아준다
