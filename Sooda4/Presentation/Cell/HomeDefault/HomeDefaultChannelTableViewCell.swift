@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeDefaultChannelTablViewCell: BaseTableViewCell {
+class HomeDefaultChannelTableViewCell: BaseTableViewCell {
     
     let label1 = {
         let view = UILabel()

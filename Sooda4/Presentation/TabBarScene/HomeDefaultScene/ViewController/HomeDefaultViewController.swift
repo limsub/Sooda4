@@ -8,8 +8,33 @@
 import UIKit
 import SnapKit
 
+struct cellData {
+    var opened = Bool()
+    var title = String()
+    var sectionData = [String]()
+}
+
 class HomeDefaultViewController: BaseViewController {
     
+    // 섹션 1 : 채널
+    // 섹션 2 : 디엠
+    // 섹션 3 : 팀원 추가
+    
+    
+    let channelData = cellData(
+        opened: false,
+        title: "채널 - 6개",
+        sectionData: ["1", "2", "3", "ji", "hi", "as"]
+    )
+    let dmData = cellData(
+        opened: true,
+        title: "다이렉트 메세지 - 3개",
+        sectionData: ["a", "ab", "cde"]
+    )
+    
+    
+    
+    let mainView = HomeDefaultView()
     
     
     // Navigation 영역의 객체들
@@ -38,6 +63,10 @@ class HomeDefaultViewController: BaseViewController {
         return view
     }()
     
+    override func loadView() {
+        self.view = mainView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,6 +75,7 @@ class HomeDefaultViewController: BaseViewController {
         view.backgroundColor = .white
         
         setNavigation()
+        setTableView()
     }
     
     func setNavigation() {
@@ -100,8 +130,130 @@ class HomeDefaultViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
+    
+    func setTableView() {
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
+    }
 }
 
+extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource {
+
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
+    }
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            // 섹션 들어가는거 하나 빼고,
+            // 근데 마지막에 추가하기 때문에 하나 추가하고
+            // -> 쌤
+            return channelData.sectionData.count + 2
+        case 1:
+            return dmData.sectionData.count + 2
+        case 2:
+            return 1
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        switch (indexPath.section, indexPath.row) {
+            
+        case (0, 0), (1, 0):
+            // 1. 섹션 접었다 폈다
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultSectionTableViewCell.description(), for: indexPath) as? HomeDefaultSectionTableViewCell else { return UITableViewCell() }
+            
+            // (1). 채널 섹션
+            if indexPath.section == 0 {
+                cell.label1.text = "채널"
+            }
+            // (2). 디엠 섹션
+            else {
+                cell.label1.text = "다이렉트 메세지"
+            }
+            
+            return cell
+            // return 하니까 다음 케이스로 안넘어갈거야
+            
+        case (0, channelData.sectionData.count - 1), (1, dmData.sectionData.count - 1), (2, 0):
+            // 4. 추가하기
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultPlusTableViewCell.description(), for: indexPath) as? HomeDefaultPlusTableViewCell else { return UITableViewCell() }
+            
+            // (1). 채널 섹션
+            if indexPath.section == 0 {
+                cell.label1.text = "채널 추가"
+            }
+            // (2). 디엠 섹션
+            else if indexPath.section == 1 {
+                cell.label1.text = "새 메시지 추가"
+            }
+            // (3). 팀원 추가
+            else {
+                cell.label1.text =  "팀원 추가"
+            }
+            
+            return cell
+            
+            
+        case (0, _):
+            // 2. 채널 셀
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultChannelTableViewCell.description(), for: indexPath) as? HomeDefaultChannelTableViewCell else { return UITableViewCell() }
+            
+            return cell
+            
+            
+        case (1, _):
+            // 3. 디엠 셀
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultDMTableViewCell.description(), for: indexPath) as? HomeDefaultDMTableViewCell else { return UITableViewCell() }
+            
+            return cell
+            
+            
+        default:
+            return UITableViewCell()
+        }
+        
+
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch (indexPath.section, indexPath.row) {
+            
+        case (0, 0), (1, 0):
+            // 1. 섹션 접었다 폈다
+            return 56
+
+            
+        case (0, channelData.sectionData.count - 1), (1, dmData.sectionData.count - 1), (2, 0):
+            // 4. 추가하기
+            return 41
+
+
+            
+        case (0, _):
+            // 2. 채널 셀
+            return 44
+
+            
+        case (1, _):
+            // 3. 디엠 셀
+            return 44
+
+            
+        default:
+            return 0
+        }
+    }
+    
+}
 
 // 테이블뷰 셀 종류
 // 1. (height 56) 섹션 접었다 폈다 (왼쪽 텍스트 - 오른쪽 chevron)

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeDefaultDMCell: BaseTableViewCell {
+class HomeDefaultDMTableViewCell: BaseTableViewCell {
     
     let label1 = {
         let view = UILabel()
