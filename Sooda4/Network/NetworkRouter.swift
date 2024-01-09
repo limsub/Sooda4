@@ -126,6 +126,7 @@ enum NetworkRouter: URLRequestConvertible {
     var multipart: MultipartFormData {
         
         if self.header["Content-Type"] == "multipart/form-data" {
+            
             return makeMultiPartFormData()
         }
         
@@ -141,7 +142,8 @@ enum NetworkRouter: URLRequestConvertible {
         request.method = method
         
         // paramter
-        if method == .post || method == .put {
+        if (method == .post || method == .put)
+            && self.header["Content-Type"] != "multipart/form-data" {
             let jsonData = try? JSONSerialization.data(withJSONObject: parameter)
             request.httpBody = jsonData
             

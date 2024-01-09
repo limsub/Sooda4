@@ -69,7 +69,7 @@ class MakeWorkSpaceViewController: BaseViewController {
         // Input Output Pattern
         let input = MakeWorkSpaceViewModel.Input(
             nameText: mainView.nameTextField.rx.text.orEmpty,
-            descriptionText: mainView.nameTextField.rx.text.orEmpty,
+            descriptionText: mainView.descriptionTextField.rx.text.orEmpty,
             completeButtonClicked: mainView.completeButton.rx.tap
         )
         

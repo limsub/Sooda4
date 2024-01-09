@@ -30,6 +30,13 @@ enum ResultMakeWorkSpace {
 class MakeWorkSpaceViewModel: BaseViewModelType {
     
     private var disposeBag = DisposeBag()
+    private let makeWorkSpaceUseCase: MakeWorkSpaceUseCase
+    
+//    var didSendEventClosure: ( )
+    
+    init(makeWorkSpaceUseCase: MakeWorkSpaceUseCase) {
+        self.makeWorkSpaceUseCase = makeWorkSpaceUseCase
+    }
     
     let imageData = PublishSubject<Data>()
     
@@ -50,15 +57,28 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
         let resultLogin = PublishSubject<ResultMakeWorkSpace>()
         
         
+        let requestModel = Observable.combineLatest(input.nameText, input.descriptionText, imageData) { v1, v2, v3 in
+            return MakeWorkSpaceRequestModel(name: v1, description: v2, image: v3)
+        }
+        
+        // descriptionText는 없어도 돼!
+        
+
+        requestModel.subscribe(with: self) { owner , value  in
+            print(value)
+        }.disposed(by: disposeBag)
+        
+        
+        
         
         input.completeButtonClicked
-            .subscribe(with: self) { owner , _ in
-                print("hi")
+            .withLatestFrom(requestModel)
+            .flatMap { value in self.makeWorkSpaceUseCase.makeWorkSpaceRequest(value)
+            }
+            .subscribe(with: self) { owner , response in
+                print(response)
             }
             .disposed(by: disposeBag)
-        
-        
-        
         
         
         return Output(

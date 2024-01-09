@@ -110,6 +110,8 @@ class NetworkManager {
     // multipart
     func requestMultiPart<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
         
+        print("--------------")
+        
         return Single< Result<T, NetworkError> >.create { single in
             
             AF.upload(
@@ -149,7 +151,7 @@ class NetworkManager {
     
     
     
-    func decodingErrorResponse(from jsonData: Data?) -> String? {
+    private func decodingErrorResponse(from jsonData: Data?) -> String? {
         
         guard let jsonData else { return nil }
         
