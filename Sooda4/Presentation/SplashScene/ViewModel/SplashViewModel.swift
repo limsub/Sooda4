@@ -23,8 +23,8 @@ class SplashViewModel {
     func transitionNextPage() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             
-            self?.didSendEventClosure?(.goLoginScene)
-//            self?.didSendEventClosure?(.goTabBarScene)
+//            self?.didSendEventClosure?(.goLoginScene)
+            self?.didSendEventClosure?(.goHomeDefault(workSpaceId: 10))
         }
     }
 }
@@ -33,7 +33,7 @@ class SplashViewModel {
 extension SplashViewModel {
     enum Event {
         case goLoginScene
-        case goTabBarScene
+        case goHomeDefault(workSpaceId: Int)  // TabBar
         case goHomeEmptyScene
     }
 }
