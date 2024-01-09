@@ -104,6 +104,7 @@ extension AppCoordinator: CoordinatorFinishDelegate {
         /* App코디에게 연락이 온다.
          1. Child
          2. Child의 Child
+         3. 부모 타고 가야 하는 코디 -> 없음
          */
         
         // 1 .Child

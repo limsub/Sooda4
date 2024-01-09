@@ -97,92 +97,48 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
 extension LoginSceneCoordinator: CoordinatorFinishDelegate {
     
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
-        print(#function, Swift.type(of: self))
-        
+    
         print("-- 자식 코디가 끝났다는 소식 들었으니까 처리해주자 - 받는 입장")
+        print("로그인씬코디 : 자식 코디가 끝났다는 소식 들었다. nextFlow : \(nextFlow)")
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
         navigationController.viewControllers.removeAll()
         navigationController.dismiss(animated: true)
         
-        /* == 여긴 나중에 코드 좀 합칠 수 있을 것 같음. 일단 직관적으로 이해하기 위해 요렇게 해두자*/
-        /* == 어차피 값전달 할 건 없는 것 같으니까 nextFlow가 누구 Child코디인지 분기 처리하고 요러쿵 저러쿵 하면 될 듯? */
-        switch childCoordinator.type {
-        case .selectAuth:
-            
-            // 1. SelectAuth에서 소식이 들려옴 (SignUpView)
-            // - SignUp 성공했으니까 나 죽고 InitialWorkSpace코디 실행시켜줘
-            // : SignUp dismiss, SelectAuth dismiss -> 한 번에 되나?
-            // -> 위에 navigationController.dismiss 하나 쓰니까 된다.
-            if let nextFlow = nextFlow as? ChildCoordinatorType,
-               nextFlow == .initialWorkSpace {
-                
+        
+        /*
+         LoginScene 코디에게 연락이 온다
+         1. Child
+         2. Child의 Child -> 없음
+         3. 부모 타고 가야 하는 코디
+         */
+        
+        
+        // 1. Child
+            // (SignUpView) 회원가입 성공 -> InitialWorkSpaceView
+        if let nextFlow = nextFlow as? ChildCoordinatorType {
+            switch nextFlow {
+            case .selectAuth:
+                print("실행되면 안됨.")
+            case .initialWorkSpace:
+                print("회원가입 성공 시, initialWorkSpace로 간다")
                 self.showInitialWorkSpaceFlow()
             }
-            
-            
-            // 2. SelectAuth에서 또 소식이 들려옴 (EmailLoginView)
-            // - 로그인 성공했는데 얘 워크스페이스 없으니까 HomeEmptyScenc코디에 HomeEmptyView 띄워라
-            if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
-               nextFlow == .homeEmptyScene {
-                
-                self.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
-            }
-            
-            
-            // 3. SelectAuth에서 또 소식 들려옴 (EmailLoginView)
-            // - 로그인 성공했는데 얘 워크스페이스 있으니까 HomeDefault코디 띄워라
-            if let nextFlow = nextFlow as? TabBarCoordinator.ChildCoordinatorType,
-               case .homeDefaultScene(let workSpaceId) = nextFlow {
-                
-                
-                
-                self.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
-            }
-            
-            
-            
-            
-            
-            
-            
-            
-            // 4. SelectAuth에서 소식 (SelectAuthView)
-            // - 소셜 로그인 성공했는데 얘 워크스페이스 없으니까 HomeEmptyScenc코디에 HomeEmptyView 띄워라
-            
-            // 5. SelectAuth에서 소식 (SelectAuthView)
-            // - 소셜 로그인 성공했는데 얘 워크스페이스 있으니까 TabBar코디 띄워라
-            
-            
-            break
-            
-        case .initialWorkSpace:
-            
-            
-            if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType {
-                
-                // 6. initialWorkSpace의 initalWorkSpaceView에서 x 버튼
-                // -> HomeEmpty 코디의 HomeEmptyView
-                if case .homeEmptyScene = nextFlow {
-                    finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
-                }
-                
-                
-                // 7. initialWorkSpace의 makeworkSpaceView에서 완성
-                // -> 탭바코디
-                if case .tabBarScene = nextFlow {
-                    finish(AppCoordinator.ChildCoordinatorType.tabBarScene)
-                }
-            }
-            break
-            
-        default:
-            break
         }
         
-        
-        
-        
+        // 3. 부모 타고 가야하는 코디
+            // (EmailLoginView) 로그인 성공 -> HomeEmptyView
+            // (EmailLoginView) 로그인 성공 -> HomeDefaultView
+            // (SelectAuthView) 소셜 로그인 성공 -> HomeEmptyView
+            // (SelectAuthView) 소셜 로그인 성공 -> HomeDefaultView
+            // (InitialWorkSpaceView) x 버튼 -> HomeEmptyView
+            // (InitialWorkSpaceView) x 버튼 -> HomeDefaultView
+            // (MakeWorkSpaceView) 워크스페이스 생성 -> HomeDefaultView
+        else {
+            // 이거 하나면 끝남. 그냥 부모 코디한테 던져줘
+            self.finish(nextFlow)
+            // 어차피 얘가 여기서 뭘 해줄수가 없기 때문에 부모 코디(App코디)한테 nextFlow그대로 던지면 알아서 해줄거다.
+        }
     }
 }
 
