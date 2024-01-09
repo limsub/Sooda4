@@ -55,8 +55,23 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
     }
     
     func showMakeWorkSpaceView() {
-        let makeWorkSpaceVC = MakeWorkSpaceViewController()
+        let makeWorkSpaceVM = MakeWorkSpaceViewModel(
+            makeWorkSpaceUseCase: MakeWorkSpaceUseCase(
+                makeWorkSpaceRepository: MakeWorkSpaceRepository()
+            )
+        )
+        makeWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goHomeDefaultView(let workSpaceId):
+                self?.navigationController.dismiss(animated: true)
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+            }
+        }
         
-        navigationController.present(makeWorkSpaceVC, animated: true)
+        let makeWorkSpaceVC = MakeWorkSpaceViewController.create(with: makeWorkSpaceVM)
+        
+        let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
+        
+        navigationController.present(nav, animated: true)
     }
 }

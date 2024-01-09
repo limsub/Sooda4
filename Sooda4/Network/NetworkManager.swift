@@ -107,8 +107,51 @@ class NetworkManager {
     }
     
     
+    // multipart
+    func requestMultiPart<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
+        
+        print("--------------")
+        
+        return Single< Result<T, NetworkError> >.create { single in
+            
+            AF.upload(
+                multipartFormData: api.multipart,
+                with: api
+            )
+            .validate()
+            .responseDecodable(of: T.self) { response  in
+                let statusCode = response.response?.statusCode
+                
+                switch response.result {
+                case .success(let data):
+                    print("(Single - Multipart) 네트워크 통신 성공")
+                    single(.success(.success(data)))
+                    
+                case .failure(let error):
+                    print("(Single - Multipart) 네트워크 통신 실패")
+                    
+                    if let errorCode = self.decodingErrorResponse(from: response.data) {
+                        print("(Single - Multipart) 에러 디코딩 성공")
+                        let e = NetworkError(errorCode)
+                        single(.success(.failure(e)))
+                    } else {
+                        print("(Single - Multipart) 에러 디코딩 실패")
+                        let errorDescription = error.localizedDescription
+                        let e = NetworkError(errorDescription)
+                        single(.success(.failure(e)))
+                    }
+                }
+            
+            }
+            
+            
+            return Disposables.create()
+        }
+    }
     
-    func decodingErrorResponse(from jsonData: Data?) -> String? {
+    
+    
+    private func decodingErrorResponse(from jsonData: Data?) -> String? {
         
         guard let jsonData else { return nil }
         

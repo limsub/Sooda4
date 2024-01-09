@@ -15,3 +15,11 @@ struct WorkSpaceModel {
     let ownerId: Int
     let createdAt: String 
 }
+
+
+// 워크스페이스 생성
+struct MakeWorkSpaceRequestModel {
+    let name: String
+    let description: String
+    let image: Data // UIImage
+}

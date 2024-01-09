@@ -361,12 +361,16 @@ class SignUpViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , response in
                 
                 switch response {
-                case .success:
+                case .success(let model):
                     resultSignUp.onNext(.success)
                     
                     // 다시 코디네이터
                     // 회원가입 성공 -> SelectAuth코디 종료 -> InitialWorkSpace 코디 실행
                     // 1. signUpView dismiss  2. selectAuthView dismiss  3. intialWorkSpaceView push
+                    
+                    // 임시
+                    APIKey.sample = model.token.accessToken
+                    print("토큰 업데이트! : \(APIKey.sample)")
                     
                     owner.didSendEventClosure?(.goInitialWorkSpace)
                     

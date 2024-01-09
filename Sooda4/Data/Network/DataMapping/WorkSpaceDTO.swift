@@ -21,7 +21,14 @@ extension WorkSpaceInfoDTO {
 }
 
 
+
+
 /* ========== 워크스페이스 생성 ========== */
+struct MakeWorkSpaceRequestDTO: Encodable {
+    let name: String
+    let description: String?
+    let image: Data
+}
 
 
 /* ========== 내가 속한 워크스페이스 조회 ========== */

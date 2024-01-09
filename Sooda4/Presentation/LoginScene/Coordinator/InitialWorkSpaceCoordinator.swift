@@ -44,7 +44,11 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
     func showInitialWorkSpaceView() {
         print(#function)
         
-        let initialWorkSpaceVM = InitialWorkSpaceViewModel()
+        let initialWorkSpaceVM = InitialWorkSpaceViewModel(
+            workSpaceUseCase: WorkSpaceUseCase(
+                workSpaceRepository: WorkSpaceRepository()
+            )
+        )
         let initialWorkSpaceVC = InitialWorkSpaceViewController.create(with: initialWorkSpaceVM)
         
         // 이벤트 받기
@@ -53,7 +57,8 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
             case .goHomeEmptyView:
                 self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
                 
-            case .goHomeDefaultView:
+            case .goHomeDefaultView(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
                 break
                 
             case .presentMakeWorkSpaceView:
@@ -70,11 +75,29 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
     }
     
     func showMakeWorkSpaceView() {
-        let makeWorkSpaceVC = MakeWorkSpaceViewController()
+        let makeWorkSpaceVM = MakeWorkSpaceViewModel(
+            makeWorkSpaceUseCase: MakeWorkSpaceUseCase(
+                makeWorkSpaceRepository: MakeWorkSpaceRepository()
+            )
+        )
+        makeWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .goHomeDefaultView(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+            }
+            
+        }
         
-        // TODO: - didSendEvent
+        let makeWorkSpaceVC = MakeWorkSpaceViewController.create(with: makeWorkSpaceVM)
         
-        navigationController.present(makeWorkSpaceVC, animated: true)
+        let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
+        
+
+        
+        
+        
+        navigationController.present(nav, animated: true)
     }
 }
 
