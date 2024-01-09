@@ -7,6 +7,20 @@
 
 import UIKit
 
+extension UITableViewCell {
+
+    // 해당 셀 기준으로 아래 구분선이 지워짐
+    // 추가하기 빼고 다 지우면 되지 않나?
+    // -> 접었을 때 문제가 생기네... 훔.
+  func hideSeparator() {
+    self.separatorInset = UIEdgeInsets(top: 0, left: self.bounds.size.width, bottom: 0, right: 0)
+  }
+
+  func showSeparator() {
+    self.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+  }
+}
+
 class HomeDefaultView: BaseView {
     
     let tableView = {
@@ -19,9 +33,8 @@ class HomeDefaultView: BaseView {
         
         view.separatorColor = .red
         
-        view.separatorStyle = .singleLine
         
-        view.sepa
+
         
         // 기타 설정
 //        view.showsVerticalScrollIndicator = false

@@ -173,17 +173,18 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             
             // (1). 채널 섹션
             if indexPath.section == 0 {
-                cell.label1.text = "채널"
+                cell.designCell("채널")
             }
             // (2). 디엠 섹션
             else {
-                cell.label1.text = "다이렉트 메세지"
+                cell.designCell("다이렉트 메세지")
             }
             
+            cell.hideSeparator()
             return cell
             // return 하니까 다음 케이스로 안넘어갈거야
             
-        case (0, channelData.sectionData.count - 1), (1, dmData.sectionData.count - 1), (2, 0):
+        case (0, channelData.sectionData.count + 1), (1, dmData.sectionData.count + 1), (2, 0):
             // 4. 추가하기
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultPlusTableViewCell.description(), for: indexPath) as? HomeDefaultPlusTableViewCell else { return UITableViewCell() }
             
@@ -200,20 +201,22 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.label1.text =  "팀원 추가"
             }
             
+            
+            
             return cell
             
             
         case (0, _):
             // 2. 채널 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultChannelTableViewCell.description(), for: indexPath) as? HomeDefaultChannelTableViewCell else { return UITableViewCell() }
-            
+            cell.hideSeparator()
             return cell
             
             
         case (1, _):
             // 3. 디엠 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultDMTableViewCell.description(), for: indexPath) as? HomeDefaultDMTableViewCell else { return UITableViewCell() }
-            
+            cell.hideSeparator()
             return cell
             
             
@@ -225,6 +228,9 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        
+        
         switch (indexPath.section, indexPath.row) {
             
         case (0, 0), (1, 0):
