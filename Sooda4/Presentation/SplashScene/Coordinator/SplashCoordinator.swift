@@ -37,18 +37,7 @@ class SplashCoordinator: SplashCoordinatorProtocol {
     func start() {
         showSplashView()
     }
-    
-    // 6.
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 1. 자식 코디 다 지우기
-        childCoordinators.removeAll()
-        
-        // 2. 부모 코디에게 알리기
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self ,
-            nextFlow: nextFlow
-        )
-    }
+
     
     // 프로토콜 메서드
     func showSplashView() {

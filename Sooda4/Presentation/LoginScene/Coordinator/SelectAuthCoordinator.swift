@@ -39,17 +39,6 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         showSelectAuthView()
     }
     
-    // 6.
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 전달하는 곳
-        childCoordinators.removeAll()   // 없어 이건
-        
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self ,
-            nextFlow: nextFlow
-        )
-    }
-    
     // 프로토콜 메서드 - view
     func showSelectAuthView() {
         let selectAuthVM = SelectAuthViewModel()

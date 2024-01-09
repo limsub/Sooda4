@@ -30,15 +30,20 @@ protocol Coordinator: AnyObject {
     func finish(_ nextFlow: ChildCoordinatorTypeProtocol?)
 }
 
-// (nextFlow 매개변수 추가) -> 각 코디네이터에서 선언하기
-//extension Coordinator {
-//    func finish() {
-//        // 1. 자식 코디 다 지우기
-//        childCoordinators.removeAll()
-//        // 2. 부모 코디에게 알리기
-////        finishDelegate?.coordinatorDidFinish(childCoordinator: self)
-//    }
-//}
+// 모든 코디네이터에서 동일하기 때문에 여기서 미리 선언
+extension Coordinator {
+    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
+        // 1. 자식 코디 다 지우기
+        childCoordinators.removeAll()
+        
+        // 2. 부모 코디에게 알리기
+        finishDelegate?.coordinatorDidFinish(
+            childCoordinator: self,
+            nextFlow: nextFlow   // 이게 실행될 일 없음
+        )
+    }
+}
+
 
 
 // MARK: - Coordinator Finish Delegate

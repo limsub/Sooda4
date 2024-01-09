@@ -38,17 +38,7 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
     func start() {
         showInitialWorkSpaceView()
     }
-    
-    // 6.
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 1. 자식 코디 없음
-        
-        // 2. 부모 코디에게 알림
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self ,
-            nextFlow: nextFlow
-        )
-    }
+
     
     // 프로토콜 메서드
     func showInitialWorkSpaceView() {

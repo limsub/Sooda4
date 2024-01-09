@@ -55,16 +55,7 @@ class TabBarCoordinator: NSObject, TabBarCoordinatorProtocol {
         
         prepareTabBarController(with: controllers)
     }
-    
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        childCoordinators.removeAll()
-        
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self ,
-            nextFlow: nextFlow
-        )
-    }
-    
+
     
 }
 

@@ -43,20 +43,6 @@ class AppCoordinator: AppCoordinatorProtocol {
         showSplashFlow()
     }
     
-    // 6.
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 1. 자식 코디 다 지우기
-        childCoordinators.removeAll()
-        
-        /* 궁금한 점. navigationController에 쌓인 것들이나, present로 띄운 애들을 제거하는 과정은 필요하지 않은가?*/
-        
-        // 2. 부모 코디에게 알리기
-        finishDelegate?.coordinatorDidFinish(
-            childCoordinator: self,
-            nextFlow: nextFlow   // 이게 실행될 일 없음
-        )
-    }
-    
     
     // 프로토콜 메서드
     func showSplashFlow() {

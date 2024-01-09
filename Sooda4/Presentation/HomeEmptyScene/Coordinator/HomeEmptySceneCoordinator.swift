@@ -39,13 +39,6 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
         showHomeEmptyView()
     }
     
-    // 6.
-    func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
-        // 1. 자식 코디 지우기 -> 자식 코디 없음
-        
-        // 2. 부모 코디에게 알리기
-        finishDelegate?.coordinatorDidFinish(childCoordinator: self , nextFlow: nextFlow)
-    }
     
     // 프로토콜 메서드 - view
     func showHomeEmptyView() {
