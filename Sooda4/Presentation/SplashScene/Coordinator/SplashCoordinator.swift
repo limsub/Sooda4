@@ -71,13 +71,3 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         print("splash Coordinator deinit")
     }
 }
-
-// MARK: - Child Didfinished
-extension SplashCoordinator: CoordinatorFinishDelegate {
-    
-    func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
-        print(#function)
-        
-        print("--- 자식 코디가 없기 때문에 이게 실행되면 안된다", Swift.type(of: self))
-    }
-}
