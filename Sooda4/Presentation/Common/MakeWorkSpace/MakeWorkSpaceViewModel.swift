@@ -6,3 +6,23 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
+
+class MakeWorkSpaceViewModel: BaseViewModelType {
+    
+    
+    
+    struct Input {
+        
+    }
+    
+    struct Output {
+        
+    }
+    
+    func transform(_ input: Input) -> Output {
+        <#code#>
+    }
+}
+

@@ -18,7 +18,9 @@ enum NetworkRouter: URLRequestConvertible {
     
     
     /* === WORKSPACE === */
+    case makeWorkSpace(_ sender: MakeWorkSpaceRequestDTO)
     case myWorkSpaces
+    
     
     
     /* === 2. path === */
@@ -32,6 +34,8 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/users/login"
             
             
+        case .makeWorkSpace:
+            return "/v1/workspaces"
         case .myWorkSpaces:
             return "/v1/workspaces"
         }
@@ -41,6 +45,12 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
+        case .makeWorkSpace:
+            return [
+                "Content-Type": "multipart/form-data",
+                "Authorization": APIKey.sample,
+                "SesacKey": APIKey.key
+            ]
         default:
             return [
                 "Content-Type": "application/json",
@@ -59,6 +69,8 @@ enum NetworkRouter: URLRequestConvertible {
             return .post
         
         // WORKSPACE
+        case .makeWorkSpace:
+            return .post
         case .myWorkSpaces:
             return .get
         }
@@ -87,6 +99,14 @@ enum NetworkRouter: URLRequestConvertible {
                 "deviceToken": sender.deviceToken
             ]
             
+            
+        // WORKSPACE
+        case .makeWorkSpace(let sender):
+            return [
+                "name": sender.name,
+                "description":  sender.description,
+                "image": sender.image
+            ]
         default:
             return [:]
         }
@@ -101,6 +121,16 @@ enum NetworkRouter: URLRequestConvertible {
         }
     }
     
+    
+    /* === 7. MultiPart Form Data === */
+    var multipart: MultipartFormData {
+        
+        if self.header["Content-Type"] == "multipart/form-data" {
+            return makeMultiPartFormData()
+        }
+        
+        return MultipartFormData()
+    }
     
     /* === 7. asURLRequest === */
     func asURLRequest() throws -> URLRequest {
@@ -119,5 +149,31 @@ enum NetworkRouter: URLRequestConvertible {
         }
         
         return request
+    }
+    
+    
+    func makeMultiPartFormData() -> MultipartFormData {
+        
+        let multipartFormData = MultipartFormData()
+        
+        for (key, value) in self.parameter {
+            // 이미지 데이터인 경우
+            if let imageData = value as? Data {
+                multipartFormData.append(
+                    imageData,
+                    withName: key,
+                    fileName: "image.jpeg",
+                    mimeType: "image/jpeg"
+                )
+                
+            }
+            
+            else {
+                multipartFormData.append(
+                    "\(value)".data(using: .utf8)!,
+                    withName: key
+                )
+            }
+        }
     }
 }

@@ -6,10 +6,14 @@
 //
 
 import UIKit
+import RxSwift
+
 
 class MakeWorkSpaceViewController: BaseViewController {
     
-    let mainView = MakeWorkSpaceView()
+    private let mainView = MakeWorkSpaceView()
+    private var viewModel: MakeWorkSpaceViewModel!
+    private var disposeBag = DisposeBag()
     
     override func loadView() {
         self.view = mainView
