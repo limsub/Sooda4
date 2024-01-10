@@ -38,7 +38,10 @@ class HomeDefaultSectionTableViewCell: BaseTableViewCell {
         }
     }
     
-    func designCell(_ text: String) {
+    func designCell(_ text: String, isOpend: Bool) {
         titleLabel.setText(text)
+        
+        self.chevronImageView.transform = CGAffineTransform(rotationAngle: isOpend ? .pi/2 : 0)
+        
     }
 }

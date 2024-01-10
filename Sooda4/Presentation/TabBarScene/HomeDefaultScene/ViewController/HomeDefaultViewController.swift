@@ -147,6 +147,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(section)
         switch section {
         case 0:
             // 섹션 들어가는거 하나 빼고,
@@ -173,7 +174,12 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
     
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        print(indexPath)
         
         
         switch (indexPath.section, indexPath.row) {
@@ -184,11 +190,11 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             
             // (1). 채널 섹션
             if indexPath.section == 0 {
-                cell.designCell("채널")
+                cell.designCell("채널", isOpend: channelData.opened)
             }
             // (2). 디엠 섹션
             else {
-                cell.designCell("다이렉트 메세지")
+                cell.designCell("다이렉트 메세지", isOpend: dmData.opened)
             }
             
             cell.hideSeparator()
@@ -278,12 +284,40 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // deselect
         tableView.deselectRow(at: indexPath, animated: true)
         
         // 맨 위 클릭 -> 접었다 폈다 (단, section 0, 1)
         if indexPath.section == 0 && indexPath.row == 0 {
             channelData.opened = !channelData.opened
-            tableView.reloadSections([0], with: .none)
+            
+            if let cell = tableView.cellForRow(at: indexPath) as? HomeDefaultSectionTableViewCell {
+                
+                
+//                // 접 -> 폇
+//                if channelData.opened {
+//                    UIView.animate(withDuration: 0.2) {
+//                        cell.chevronImageView.transform = CGAffineTransform(rotationAngle: .pi / 2)
+//                    }
+//                }
+//                
+//                // 폇 -> 접
+//                else {
+//                    UIView.animate(withDuration: 0.2) {
+//                        cell.chevronImageView.transform = CGAffineTransform(rotationAngle: 0)
+//                    }
+//                }
+                
+                
+                
+                tableView.reloadSections([0], with: .none)
+            }
+            
+          
+            
+            
+//            tableView.reloadSections([0], with: .none)
         }
         else if indexPath.section == 1 && indexPath.row == 0 {
             dmData.opened = !dmData.opened
@@ -297,6 +331,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         
         
     }
+    
     
 }
 
