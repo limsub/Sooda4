@@ -9,12 +9,16 @@ import UIKit
 
 class HomeDefaultCellTitleLabel: UILabel {
     
-    convenience init(_ text: String) {
-        self.init()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        self.text = text
         setUp()
     }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     func setUp() {
         setAppFont(.body)
@@ -23,12 +27,16 @@ class HomeDefaultCellTitleLabel: UILabel {
     
     func update(_ isBold: Bool) {
         // 폰트 변경 + 색상 변경
-        
         if isBold {
             setAppFont(.bodyBold)
             textColor = UIColor.appColor(.text_primary)
         } else {
             setUp()
         }
+    }
+    
+    func setText(_ text: String) {
+        self.text = text
+        setUp()
     }
 }

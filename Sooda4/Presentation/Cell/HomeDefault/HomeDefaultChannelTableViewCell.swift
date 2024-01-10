@@ -9,22 +9,15 @@ import UIKit
 
 class HomeDefaultChannelTableViewCell: BaseTableViewCell {
     
-    let label1 = {
-        let view = UILabel()
-        view.text = "채널 셀"
-        return view
-    }()
+    let hashtagImageView = HomeDefaultHashtagImageView(frame: .zero)
+    let titleLabel = HomeDefaultCellTitleLabel()
+    let unreadCountLabel = HomeDefaultUnreadCountLabel()
     
-    let label2 = {
-        let view = UILabel()
-        view.text = "hihihih"
-        return view
-    }()
     
     override func setConfigure() {
         super.setConfigure()
         
-        [label1, label2].forEach { item  in
+        [hashtagImageView, titleLabel, unreadCountLabel].forEach { item  in
             contentView.addSubview(item)
         }
     }
@@ -32,14 +25,39 @@ class HomeDefaultChannelTableViewCell: BaseTableViewCell {
     override func setConstraints() {
         super.setConstraints()
         
-        label1.snp.makeConstraints { make in
+        hashtagImageView.snp.makeConstraints { make in
+            make.size.equalTo(18)
+            make.leading.equalTo(contentView).inset(16)
             make.centerY.equalTo(contentView)
-            make.leading.equalTo(contentView).inset(10)
         }
-        label2.snp.makeConstraints { make in
+        
+        unreadCountLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView).inset(17).priority(1000)
+            make.centerY.equalTo(contentView).priority(1000)
+////            make.width.equalTo(1)
+//            make.width.greaterThanOrEqualTo(19)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(hashtagImageView.snp.trailing).offset(16)
+            make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-16)
             make.centerY.equalTo(contentView)
-            make.trailing.equalTo(contentView).inset(10)
         }
     }
+    
+    func designCell(_ text: String, count: Int) {
+        titleLabel.setText(text)
+        unreadCountLabel.setText(count)
+        
+//        if count > 0 {
+//            hashtagImageView.update(true)
+//            titleLabel.update(true)
+//        } else {
+//            hashtagImageView.update(false)
+//            titleLabel.update(false)
+//        }
+    }
+    
+    
 }
 

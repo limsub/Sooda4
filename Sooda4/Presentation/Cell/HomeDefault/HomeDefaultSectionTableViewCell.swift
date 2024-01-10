@@ -10,7 +10,7 @@ import UIKit
 // width x 56
 class HomeDefaultSectionTableViewCell: BaseTableViewCell {
     
-    let titleLabel = HomeDefaultSectionTitleLabel(frame: .zero)
+    let titleLabel = HomeDefaultSectionTitleLabel()
     let chevronImageView = HomeDefaultSectionChevronImageView(frame: .zero)
     
     

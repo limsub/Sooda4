@@ -20,7 +20,8 @@ extension UITextField {
             
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: font as Any,
-                .paragraphStyle: style
+                .paragraphStyle: style,
+                .baselineOffset: (appFont.lineHeight - font.lineHeight) / 4
             ]
             
             let attrString = NSAttributedString(

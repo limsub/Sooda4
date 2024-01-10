@@ -209,6 +209,10 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         case (0, _):
             // 2. 채널 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultChannelTableViewCell.description(), for: indexPath) as? HomeDefaultChannelTableViewCell else { return UITableViewCell() }
+            
+            cell.designCell("hadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasfdasfasdfsafdsadfasfasdfasfdasdfasfi", count: Int.random(in: 1...100))
+            
+            
             cell.hideSeparator()
             return cell
             
