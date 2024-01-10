@@ -20,36 +20,9 @@ extension WorkSpaceInfoDTO {
     }
 }
 
-struct ChannelInfoDTO: Codable {
-    let workspace_id: Int
-    let channel_id: Int
-    let name: String
-    let description: String?
-    let owner_id: Int
-    let privateNum: String
-    let createdAt: String
-    
-    enum CodingKeys: String, CodingKey {
-        case privateNum = "private"
-        case workspace_id, channel_id, name, description, owner_id, createdAt
-    }
-}
 
-extension ChannelInfoDTO {
-    func toDomain() -> WorkSpaceChannelInfoModel {
-        return .init(
-            channelId: channel_id,
-            name: name
-        )
-    }
-}
 
-struct UserInfoDTO: Codable {
-    let user_id: Int
-    let email: String
-    let nickname: String
-    let profileImage: String?
-}
+
 
 
 
@@ -68,7 +41,7 @@ typealias MyWorkSpacesResponseDTO = [WorkSpaceInfoDTO]
 
 
 /* ========== 내가 속한 워크스페이스 한개 조회 ========== */
-struct MyOneWorkSpaceResponseDTO {
+struct MyOneWorkSpaceResponseDTO: Decodable {
     let workspace_id: Int
     let name: String
     let description: String
@@ -78,8 +51,21 @@ struct MyOneWorkSpaceResponseDTO {
     let channels: [ChannelInfoDTO]
     let workspaceMembers: [UserInfoDTO]
 }
+
+struct UserInfoDTO: Codable {
+    let user_id: Int
+    let email: String
+    let nickname: String
+    let profileImage: String?
+}
+
 extension MyOneWorkSpaceResponseDTO {
     func toDomain() -> MyOneWorkSpaceModel {
         return .init(name: name, thumbnail: thumbnail)
     }
 }
+
+// UserInfoDTO은 왜 toDomain이 없냐
+// -> 일단 워크스페이스 HomeDefaultView에서 사용자들 정보는 이용을 안해.
+
+

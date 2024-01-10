@@ -27,5 +27,6 @@ extension DMRoomInfoDTO {
 
 
 
+
 /* ========== DM 방 조회 ========== */
 typealias MyDMsResponseDTO = [DMRoomInfoDTO]
