@@ -147,7 +147,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(section)
+//        print(section)
         switch section {
         case 0:
             // 섹션 들어가는거 하나 빼고,
@@ -179,7 +179,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
-        print(indexPath)
+//        print(indexPath)
         
         
         switch (indexPath.section, indexPath.row) {

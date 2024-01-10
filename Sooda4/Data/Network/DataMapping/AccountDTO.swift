@@ -71,3 +71,17 @@ extension SignInResponseDTO {
         return .init(userId: user_id, nickname: nickname, accessToken: accessToken, refreshToken: refreshToken)
     }
 }
+
+
+
+/* =========== 내 프로필 정보 조회 ========== */
+struct MyProfileInfoDTO {
+    let user_id: Int
+    let email: String
+    let nickname: String
+    let profileImage: String?
+    let phone: String
+    let vendor: String?
+    let sesacCoin: Int
+    let createdAt: String 
+}

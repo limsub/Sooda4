@@ -217,6 +217,7 @@ class EmailLoginViewModel: BaseViewModelType {
                         // 어떤 워크스페이스인지 값전달을 어떻게 해주냐..?
                         
                         let workSpaceId = model[0].workSpaceId
+                        print("workSpace Id : \(workSpaceId)")
                         
                         owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
                     }

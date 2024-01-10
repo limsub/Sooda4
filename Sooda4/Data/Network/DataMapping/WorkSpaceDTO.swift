@@ -20,6 +20,28 @@ extension WorkSpaceInfoDTO {
     }
 }
 
+struct ChannelInfoDTO: Codable {
+    let workspace_id: Int
+    let channel_id: Int
+    let name: String
+    let description: String?
+    let owner_id: Int
+    let privateNum: String
+    let createdAt: String
+    
+    enum CodingKeys: String, CodingKey {
+        case privateNum = "private"
+        case workspace_id, channel_id, name, description, owner_id, createdAt
+    }
+}
+
+struct UserInfoDTO: Codable {
+    let user_id: Int
+    let email: String
+    let nickname: String
+    let profileImage: String?
+}
+
 
 
 
@@ -34,4 +56,17 @@ struct MakeWorkSpaceRequestDTO: Encodable {
 /* ========== 내가 속한 워크스페이스 조회 ========== */
 typealias MyWorkSpacesResponseDTO = [WorkSpaceInfoDTO]
 
+
+
+/* ========== 내가 속한 워크스페이스 한개 조회 ========== */
+struct MyOneWorkSpaceResponseDTO {
+    let workspace_id: Int
+    let name: String
+    let description: String
+    let thumbnail: String
+    let owner_id: Int
+    let createdAt: String
+    let channels: [ChannelInfoDTO]
+    let workspaceMembers: [UserInfoDTO]
+}
 
