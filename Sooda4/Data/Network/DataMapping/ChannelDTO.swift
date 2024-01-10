@@ -14,7 +14,7 @@ struct ChannelInfoDTO: Codable {
     let name: String
     let description: String?
     let owner_id: Int
-    let privateNum: String
+    let privateNum: Int
     let createdAt: String
     
     enum CodingKeys: String, CodingKey {

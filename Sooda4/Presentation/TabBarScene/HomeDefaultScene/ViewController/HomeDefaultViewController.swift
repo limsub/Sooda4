@@ -16,6 +16,14 @@ struct cellData {
 
 class HomeDefaultViewController: BaseViewController {
     
+    var viewModel: HomeDefaultViewModel!
+    
+    static func create(with viewModel: HomeDefaultViewModel) -> HomeDefaultViewController {
+        let vc = HomeDefaultViewController()
+        vc.viewModel = viewModel
+        return vc
+    }
+    
     // 섹션 1 : 채널
     // 섹션 2 : 디엠
     // 섹션 3 : 팀원 추가
@@ -74,8 +82,14 @@ class HomeDefaultViewController: BaseViewController {
         
         view.backgroundColor = .white
         
+        
+        fetchFirstData()
+        
+        
         setNavigation()
         setTableView()
+        
+        
     }
     
     func setNavigation() {
@@ -134,6 +148,11 @@ class HomeDefaultViewController: BaseViewController {
     func setTableView() {
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
+    }
+    
+    func fetchFirstData() {
+        print(#function)
+        viewModel.fetchFirstData()
     }
 }
 

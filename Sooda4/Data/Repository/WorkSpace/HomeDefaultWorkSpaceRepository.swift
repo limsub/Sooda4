@@ -16,6 +16,7 @@ class HomeDefaultWorkSpaceRepository: MyWorkSpaceRepositoryProtocol {
         NetworkManager.shared.requestCompletion(
             type: MyOneWorkSpaceResponseDTO.self,
             api: .myOneWorkSpace(requestModel)) { response in
+
                 switch response {
                 case .success(let dtoData):
                     let responseModel = dtoData.toDomain()

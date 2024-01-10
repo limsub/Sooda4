@@ -9,13 +9,14 @@ import UIKit
 
 protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     // view
-    func showHomeDefaultView()
+    func showHomeDefaultView(_ workSpaceId: Int)
     
     // flow
 }
 
 // 생성 시 반드시 데이터가 필요함. workspace_id: Int
 class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
+
     
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate?
@@ -36,14 +37,20 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     // 5.
     var workSpaceId: Int?
     func start() {
-        guard let workSpaceId else { return }
-        showHomeDefaultView()
+        guard let workSpaceId else { print("워크스페이스 아이디 안넣음!!"); return; }
+        showHomeDefaultView(workSpaceId)
     }
 
     
     // 프로토콜 메서드 - view
-    func showHomeDefaultView() {
-        let vc = HomeDefaultViewController()
+    func showHomeDefaultView(_ workSpaceId: Int) {
+        let homeDefaultVM = HomeDefaultViewModel(
+            workSpaceId: workSpaceId,
+            homeDefaultWorkSpaceUseCase: HomeDefaultWorkSpaceUseCase(
+                myWorkSpaceInfoRepository: HomeDefaultWorkSpaceRepository()
+            )
+        )
+        let vc = HomeDefaultViewController.create(with: homeDefaultVM)
         navigationController.pushViewController(vc, animated: true)
     }
 }
