@@ -15,7 +15,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     private init() { }
     
-    
+    // Single
     func request<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
         
         
@@ -35,7 +35,7 @@ class NetworkManager {
                     case .failure(let error):
                         print("(Single) 네트워크 통신 실패")
                         
-                        // Error Response타입으로 디코딩
+                        // ErrorResponse타입으로 디코딩
                         // 성공
                         if let errorCode = self.decodingErrorResponse(from: response.data) {
                             print("(Single) - 에러 디코딩 성공")
@@ -107,7 +107,7 @@ class NetworkManager {
     }
     
     
-    // multipart
+    // Single + multipart
     func requestMultiPart<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
         
         print("--------------")
@@ -148,6 +148,48 @@ class NetworkManager {
             return Disposables.create()
         }
     }
+    
+    
+    
+    // Completion
+    func requestCompletion<T: Decodable>(
+        type: T.Type,
+        api: NetworkRouter,
+        completion: (Result<T, NetworkError>) -> Void
+    ) {
+        
+        AF.request(api)
+            .validate()
+            .responseDecodable(of: T.self) { response  in
+                switch response.result {
+                case .success(let data):
+                    print("(Completion) 네트워크 통신 성공")
+                    completion(.success(data))
+                    
+                case .failure(let error):
+                    print("(Completion) 네트워크 통신 실패")
+                    
+                    // ErrorResponse 타입으로 디코딩
+                    // 디코딩 성공
+                    if let errorCode = self.decodingErrorResponse(from: response.data) {
+                        print("(Completion) - 에러 디코딩 성공")
+                        let e = NetworkError(errorCode)
+                        completion(.failure(e))
+                    }
+                    // 디코딩 실패
+                    else {
+                        print("(Completion) - 에러 디코딩 실패")
+                        let errorDescription = error.localizedDescription
+                        let e = NetworkError(errorDescription)
+                        completion(.failure(e))
+                    }
+                    
+                }
+            }
+    }
+    
+    
+    
     
     
     
