@@ -35,6 +35,15 @@ struct ChannelInfoDTO: Codable {
     }
 }
 
+extension ChannelInfoDTO {
+    func toDomain() -> WorkSpaceChannelInfoModel {
+        return .init(
+            channelId: channel_id,
+            name: name
+        )
+    }
+}
+
 struct UserInfoDTO: Codable {
     let user_id: Int
     let email: String
@@ -69,4 +78,8 @@ struct MyOneWorkSpaceResponseDTO {
     let channels: [ChannelInfoDTO]
     let workspaceMembers: [UserInfoDTO]
 }
-
+extension MyOneWorkSpaceResponseDTO {
+    func toDomain() -> MyOneWorkSpaceModel {
+        return .init(name: name, thumbnail: thumbnail)
+    }
+}

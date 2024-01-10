@@ -15,6 +15,16 @@ struct DMRoomInfoDTO: Codable {
     let user: UserInfoDTO
 }
 
+extension DMRoomInfoDTO {
+    func toDomain() -> WorkSpaceDMInfoModel {
+        return .init(
+            roomId: room_id,
+            userNickname: user.nickname,
+            userProfilImage: user.profileImage
+        )
+    }
+}
+
 
 
 /* ========== DM 방 조회 ========== */

@@ -15,6 +15,9 @@ class HomeDefaultViewModel {
 //    (GET, /v1/users/my) 을 통해 프로필 정보
     
     
+    // 그 다음
+    // (GET, /v1/workspaces/{id}/channels/{name}/unreads) 를 통해 읽지 않은 채널 채팅 개수 확인
+    // GET, /v1/workspaces/{id}/dms/{roomID}/unreads) 를 통해 읽지 않은 디엠 채팅 개수 확인
     
     
     
