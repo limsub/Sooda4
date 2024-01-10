@@ -21,15 +21,15 @@ class HomeDefaultViewController: BaseViewController {
     // 섹션 3 : 팀원 추가
     
     
-    let channelData = cellData(
-        opened: false,
-        title: "채널 - 6개",
-        sectionData: ["1", "2", "3", "ji", "hi", "as"]
+    var channelData = cellData(
+        opened: true,
+        title: "채널",
+        sectionData: ["일반", "스유 뽀개기", "앱스토어 홍보", "오픈라운지", "TIL"]
     )
-    let dmData = cellData(
+    var dmData = cellData(
         opened: true,
         title: "다이렉트 메세지 - 3개",
-        sectionData: ["a", "ab", "cde"]
+        sectionData: ["캠퍼스지킴이", "Hue", "테스트 코드 짜는 새싹이", "Jack"]
     )
     
     
@@ -152,9 +152,20 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             // 섹션 들어가는거 하나 빼고,
             // 근데 마지막에 추가하기 때문에 하나 추가하고
             // -> 쌤
-            return channelData.sectionData.count + 2
+//            return channelData.sectionData.count + 2
+            
+            if channelData.opened {
+                return channelData.sectionData.count + 2
+            } else {
+                return 1
+            }
         case 1:
-            return dmData.sectionData.count + 2
+            if dmData.opened {
+                return dmData.sectionData.count + 2
+            } else {
+                return 1
+            }
+            
         case 2:
             return 1
         default:
@@ -210,7 +221,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             // 2. 채널 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultChannelTableViewCell.description(), for: indexPath) as? HomeDefaultChannelTableViewCell else { return UITableViewCell() }
             
-            cell.designCell("hadsasdfasdfsadfasdfasdfsafasfasdfsadfsdfsadfsadfsafsadfasfsdfsadfsdafasdfsadfaasfi", count: Int.random(in: 1...100))
+            cell.designCell(channelData.sectionData[indexPath.row - 1], count: Int.random(in: 1...100))
             
             
             cell.hideSeparator()
@@ -221,7 +232,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             // 3. 디엠 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultDMTableViewCell.description(), for: indexPath) as? HomeDefaultDMTableViewCell else { return UITableViewCell() }
             
-            cell.designCell("ㅁㄴㅇㄹㅁㄴㅇㄹ", count: Int.random(in: 10000...9999999))
+            cell.designCell(dmData.sectionData[indexPath.row - 1], count: Int.random(in: 10000...9999999))
             
             cell.hideSeparator()
             return cell
@@ -264,6 +275,27 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         default:
             return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        // 맨 위 클릭 -> 접었다 폈다 (단, section 0, 1)
+        if indexPath.section == 0 && indexPath.row == 0 {
+            channelData.opened = !channelData.opened
+            tableView.reloadSections([0], with: .none)
+        }
+        else if indexPath.section == 1 && indexPath.row == 0 {
+            dmData.opened = !dmData.opened
+            tableView.reloadSections([1], with: .none)
+        }
+        
+        
+        // 맨 아래 클릭 -> 추가 (section 0, 1, 2)
+        
+        
+        
+        
     }
     
 }
