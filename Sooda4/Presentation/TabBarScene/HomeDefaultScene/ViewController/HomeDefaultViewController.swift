@@ -152,7 +152,9 @@ class HomeDefaultViewController: BaseViewController {
     
     func fetchFirstData() {
         print(#function)
-        viewModel.fetchFirstData()
+        viewModel.fetchFirstData {
+            self.mainView.tableView.reloadData()
+        }
     }
 }
 
