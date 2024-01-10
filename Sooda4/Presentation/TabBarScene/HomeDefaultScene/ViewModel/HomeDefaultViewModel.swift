@@ -225,11 +225,11 @@ class HomeDefaultViewModel {
     
     func toggleOpenedData(_ indexPath: IndexPath, completion: @escaping () -> Void) {
         
-        if indexPath.section == 0 {
+        if indexPath.section == 0 && indexPath.row == 0 {
             channelData?.isOpened.toggle()
             completion()
             
-        } else {
+        } else if indexPath.section == 1 && indexPath.row == 0 {
             dmData?.isOpend.toggle()
             completion()
             
