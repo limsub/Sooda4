@@ -15,6 +15,9 @@ protocol MyWorkSpaceRepositoryProtocol {
     // (3). 내 프로필 정보 (WorkSpaceMyProfileInfoModel)
     
     
+    // (0) 호출하면 (1) 정보 얻어낼 수 있지만! 편의를 위해 따로 호출한다
+    
+    
     func myOneWorkSpaceInfoRequest(_ requestModel: Int, completion: @escaping (Result<MyOneWorkSpaceModel, NetworkError>) -> Void)
     
     

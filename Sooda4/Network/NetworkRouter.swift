@@ -16,28 +16,63 @@ enum NetworkRouter: URLRequestConvertible {
     case requestSignUp(_ sender: SignUpRequestDTO)
     case signInRequest(_ sender: SignInRequestDTO)
     
+    case myProfileInfo
+    
     
     /* === WORKSPACE === */
     case makeWorkSpace(_ sender: MakeWorkSpaceRequestDTO)
     case myWorkSpaces
+    
+    case myOneWorkSpace(_ sender: Int)  // workSpaceId
+    
+    
+    
+    /* === CHANNEL === */
+    case workSpaceMyChannels(_ sender: Int) // workSpaceId
+    
+    
+    
+    /* === DM === */
+    case workSpaceDMs(_ sender: Int)    // workSpaceId
+    
+    
+    
     
     
     
     /* === 2. path === */
     var path: String {
         switch self {
+        // USER
         case .checkValidEmail:
             return "/v1/users/validation/email"
         case .requestSignUp:
             return "/v1/users/join"
         case .signInRequest:
             return "/v1/users/login"
+        case .myProfileInfo:
+            return "/v1/users/my"
             
             
+        // WORKSPACE
         case .makeWorkSpace:
             return "/v1/workspaces"
         case .myWorkSpaces:
             return "/v1/workspaces"
+        case .myOneWorkSpace(let workSpaceId):
+            return "/v1/workspaces/\(workSpaceId)"
+            
+            
+        // CHANNEL
+        case .workSpaceMyChannels(let workSpaceId):
+            return "/v1/workspaces/\(workSpaceId)/channels/my"
+            
+            
+            
+        // DM
+        case .workSpaceDMs(let workSpaceId):
+            return "/v1/workspaces/\(workSpaceId)/dms"
+
         }
     }
     
@@ -67,12 +102,28 @@ enum NetworkRouter: URLRequestConvertible {
         // USER
         case .checkValidEmail, .requestSignUp, .signInRequest:
             return .post
+        case .myProfileInfo:
+            return .get
         
+            
         // WORKSPACE
         case .makeWorkSpace:
             return .post
-        case .myWorkSpaces:
+        case .myWorkSpaces, .myOneWorkSpace:
             return .get
+    
+            
+            
+        // CHANNEL
+        case .workSpaceMyChannels:
+            return .get
+            
+            
+            
+        // DMs
+        case .workSpaceDMs:
+            return .get
+            
         }
     }
     
@@ -133,7 +184,8 @@ enum NetworkRouter: URLRequestConvertible {
         return MultipartFormData()
     }
     
-    /* === 7. asURLRequest === */
+    
+    /* === 최종. asURLRequest === */
     func asURLRequest() throws -> URLRequest {
         let url = URL(string: APIKey.baseURL + path)!
         
@@ -144,6 +196,7 @@ enum NetworkRouter: URLRequestConvertible {
         // paramter
         if (method == .post || method == .put)
             && self.header["Content-Type"] != "multipart/form-data" {
+            
             let jsonData = try? JSONSerialization.data(withJSONObject: parameter)
             request.httpBody = jsonData
             
