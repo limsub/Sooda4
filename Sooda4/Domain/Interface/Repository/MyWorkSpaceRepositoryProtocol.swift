@@ -9,10 +9,18 @@ import Foundation
 
 // Rx 사용 x
 protocol MyWorkSpaceRepositoryProtocol {
-    // (1). 워크스페이스의 채널 정보
-    // (2). 워크스페이스의 디엠 정보
-    // (3). 내 프로필 정보
+    // (0). 워크스페이스 정보 (MyOneWorkSpaceModel)
+    // (1). 워크스페이스의 채널 정보 (WorkSpaceChannelInfoModel)
+    // (2). 워크스페이스의 디엠 정보 (WorkSpaceDMInfoModel)
+    // (3). 내 프로필 정보 (WorkSpaceMyProfileInfoModel)
     
     
-    func workSpaceChannelsRequest(_ requestModel: Int)
+    func myOneWorkSpaceInfoRequest(_ requestModel: Int, completion: @escaping (Result<MyOneWorkSpaceModel, NetworkError>) -> Void)
+    
+    
+    func workSpaceChannelsRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceChannelInfoModel], NetworkError>) -> Void)
+    
+    func workSpaceDMsRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceDMInfoModel], NetworkError>) -> Void )
+    
+    func workSpaceMyProfileRequest(completion: @escaping (Result<WorkSpaceMyProfileInfoModel, NetworkError>) -> Void )
 }
