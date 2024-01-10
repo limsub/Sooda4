@@ -9,22 +9,18 @@ import UIKit
 
 class HomeDefaultPlusTableViewCell: BaseTableViewCell {
     
-    let label1 = {
-        let view = UILabel()
-        view.text = "플러스 셀"
+    let plusImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "icon_plus")
         return view
     }()
     
-    let label2 = {
-        let view = UILabel()
-        view.text = "hihihih"
-        return view
-    }()
+    let titleLabel = HomeDefaultCellTitleLabel()
     
     override func setConfigure() {
         super.setConfigure()
         
-        [label1, label2].forEach { item  in
+        [plusImageView, titleLabel].forEach { item  in
             contentView.addSubview(item)
         }
     }
@@ -32,14 +28,21 @@ class HomeDefaultPlusTableViewCell: BaseTableViewCell {
     override func setConstraints() {
         super.setConstraints()
         
-        label1.snp.makeConstraints { make in
+        plusImageView.snp.makeConstraints { make in
+            make.size.equalTo(18)
+            make.leading.equalTo(contentView).inset(16)
             make.centerY.equalTo(contentView)
-            make.leading.equalTo(contentView).inset(10)
         }
-        label2.snp.makeConstraints { make in
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(plusImageView.snp.trailing).offset(16)
             make.centerY.equalTo(contentView)
-            make.trailing.equalTo(contentView).inset(10)
         }
     }
+    
+    func designCell(_ text: String) {
+        titleLabel.setText(text)
+    }
+    
 }
 

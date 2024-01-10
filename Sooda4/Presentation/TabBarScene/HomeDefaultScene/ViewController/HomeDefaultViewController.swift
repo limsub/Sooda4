@@ -190,15 +190,15 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             
             // (1). 채널 섹션
             if indexPath.section == 0 {
-                cell.label1.text = "채널 추가"
+                cell.designCell("채널 추가")
             }
             // (2). 디엠 섹션
             else if indexPath.section == 1 {
-                cell.label1.text = "새 메시지 추가"
+                cell.designCell("새 매시지 시작")
             }
             // (3). 팀원 추가
             else {
-                cell.label1.text =  "팀원 추가"
+                cell.designCell("팀원 추가")
             }
             
             

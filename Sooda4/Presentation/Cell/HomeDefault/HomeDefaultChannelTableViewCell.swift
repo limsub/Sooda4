@@ -36,6 +36,8 @@ class HomeDefaultChannelTableViewCell: BaseTableViewCell {
             make.centerY.equalTo(contentView).priority(1000)
 ////            make.width.equalTo(1)
 //            make.width.greaterThanOrEqualTo(19)
+            
+            make.height.equalTo(18)
         }
         
         titleLabel.snp.makeConstraints { make in
