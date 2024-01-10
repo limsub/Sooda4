@@ -9,37 +9,51 @@ import UIKit
 
 class HomeDefaultDMTableViewCell: BaseTableViewCell {
     
-    let label1 = {
-        let view = UILabel()
-        view.text = "디엠 셀"
+    // 24 x 24
+    let profileImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "profile_No Photo A")
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 4
         return view
     }()
-    
-    let label2 = {
-        let view = UILabel()
-        view.text = "hihihih"
-        return view
-    }()
+    let titleLabel = HomeDefaultCellTitleLabel()
+    let unreadCountLabel = HomeDefaultUnreadCountLabel()
     
     override func setConfigure() {
         super.setConfigure()
         
-        [label1, label2].forEach { item  in
+        [profileImageView, titleLabel, unreadCountLabel].forEach { item  in
             contentView.addSubview(item)
         }
     }
     
+    
     override func setConstraints() {
         super.setConstraints()
         
-        label1.snp.makeConstraints { make in
+        profileImageView.snp.makeConstraints { make in
+            make.size.equalTo(24)
+            make.leading.equalTo(contentView).inset(14)
             make.centerY.equalTo(contentView)
-            make.leading.equalTo(contentView).inset(10)
         }
-        label2.snp.makeConstraints { make in
+        
+        unreadCountLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView).inset(16).priority(1000)
             make.centerY.equalTo(contentView)
-            make.trailing.equalTo(contentView).inset(10)
+            make.height.equalTo(18)
         }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(profileImageView.snp.trailing).offset(11)
+            make.centerY.equalTo(contentView)
+            make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-16).priority(500)
+        }
+    }
+    
+    func designCell(_ text: String, count: Int) {
+        titleLabel.setText(text)
+        unreadCountLabel.setText(count)
     }
 }
 

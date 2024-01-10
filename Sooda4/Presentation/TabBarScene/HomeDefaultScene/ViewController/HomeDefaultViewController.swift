@@ -210,7 +210,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             // 2. 채널 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultChannelTableViewCell.description(), for: indexPath) as? HomeDefaultChannelTableViewCell else { return UITableViewCell() }
             
-            cell.designCell("hadsfasdfasdfasdfasdfasdfasdfasdfasdfasdfasfdasfasdfsafdsadfasfasdfasfdasdfasfi", count: Int.random(in: 1...100))
+            cell.designCell("hadsasdfasdfsadfasdfasdfsafasfasdfsadfsdfsadfsadfsafsadfasfsdfsadfsdafasdfsadfaasfi", count: Int.random(in: 1...100))
             
             
             cell.hideSeparator()
@@ -220,6 +220,9 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         case (1, _):
             // 3. 디엠 셀
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeDefaultDMTableViewCell.description(), for: indexPath) as? HomeDefaultDMTableViewCell else { return UITableViewCell() }
+            
+            cell.designCell("ㅁㄴㅇㄹㅁㄴㅇㄹ", count: Int.random(in: 10000...9999999))
+            
             cell.hideSeparator()
             return cell
             

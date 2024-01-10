@@ -32,17 +32,14 @@ class HomeDefaultChannelTableViewCell: BaseTableViewCell {
         }
         
         unreadCountLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(contentView).inset(17).priority(1000)
+            make.trailing.equalTo(contentView).inset(16).priority(1000)
             make.centerY.equalTo(contentView).priority(1000)
-////            make.width.equalTo(1)
-//            make.width.greaterThanOrEqualTo(19)
-            
             make.height.equalTo(18)
         }
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(hashtagImageView.snp.trailing).offset(16)
-            make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-16)
+            make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-16).priority(500)
             make.centerY.equalTo(contentView)
         }
     }
