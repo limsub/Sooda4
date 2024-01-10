@@ -51,7 +51,7 @@ class HomeDefaultDMTableViewCell: BaseTableViewCell {
         }
     }
     
-    func designCell(_ text: String, count: Int) {
+    func designCell(image: String?, text: String, count: Int) {
         titleLabel.setText(text)
         unreadCountLabel.setText(count)
     }
