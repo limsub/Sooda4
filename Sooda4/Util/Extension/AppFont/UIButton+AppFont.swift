@@ -50,6 +50,7 @@ extension UIButton {
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font as Any,
             .paragraphStyle: style,
+            .baselineOffset: (appFont.lineHeight - font.lineHeight) / 4
         ]
 
         let attributedTitle = NSMutableAttributedString(string: title, attributes: attributes)

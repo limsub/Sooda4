@@ -16,28 +16,73 @@ enum NetworkRouter: URLRequestConvertible {
     case requestSignUp(_ sender: SignUpRequestDTO)
     case signInRequest(_ sender: SignInRequestDTO)
     
+    case myProfileInfo
+    
     
     /* === WORKSPACE === */
     case makeWorkSpace(_ sender: MakeWorkSpaceRequestDTO)
     case myWorkSpaces
+    
+    case myOneWorkSpace(_ sender: Int)  // workSpaceId
+    
+    
+    
+    
+    
+    /* === CHANNEL === */
+    case workSpaceMyChannels(_ sender: Int) // workSpaceId
+    
+    case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
+    
+    
+    /* === DM === */
+    case workSpaceDMs(_ sender: Int)    // workSpaceId
+    
+    case dmUnreadCount(_ sender: DMUnreadCountRequestDTO)
+    
+    
+    
     
     
     
     /* === 2. path === */
     var path: String {
         switch self {
+        // USER
         case .checkValidEmail:
             return "/v1/users/validation/email"
         case .requestSignUp:
             return "/v1/users/join"
         case .signInRequest:
             return "/v1/users/login"
+        case .myProfileInfo:
+            return "/v1/users/my"
             
             
+        // WORKSPACE
         case .makeWorkSpace:
             return "/v1/workspaces"
         case .myWorkSpaces:
             return "/v1/workspaces"
+        case .myOneWorkSpace(let sender):
+            return "/v1/workspaces/\(sender)"
+            
+            
+        // CHANNEL
+        case .workSpaceMyChannels(let sender):
+            return "/v1/workspaces/\(sender)/channels/my"
+            
+        case .channelUnreadCount(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
+            
+            
+            
+        // DM
+        case .workSpaceDMs(let sender):
+            return "/v1/workspaces/\(sender)/dms"
+            
+        case .dmUnreadCount(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.dmRoomId)/unreads"
         }
     }
     
@@ -67,12 +112,28 @@ enum NetworkRouter: URLRequestConvertible {
         // USER
         case .checkValidEmail, .requestSignUp, .signInRequest:
             return .post
+        case .myProfileInfo:
+            return .get
         
+            
         // WORKSPACE
         case .makeWorkSpace:
             return .post
-        case .myWorkSpaces:
+        case .myWorkSpaces, .myOneWorkSpace:
             return .get
+    
+            
+            
+        // CHANNEL
+        case .workSpaceMyChannels, .channelUnreadCount:
+            return .get
+            
+            
+            
+        // DMs
+        case .workSpaceDMs, .dmUnreadCount:
+            return .get
+            
         }
     }
     
@@ -116,6 +177,18 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 6. query === */
     var query: [String: String] {
         switch self {
+        // CHANNEL
+        case .channelUnreadCount(let sender):
+            return [
+                "after": sender.after
+            ]
+            
+        // DM
+        case .dmUnreadCount(let sender):
+            return [
+                "after": sender.after
+            ]
+            
         default:
             return [:]
         }
@@ -133,7 +206,8 @@ enum NetworkRouter: URLRequestConvertible {
         return MultipartFormData()
     }
     
-    /* === 7. asURLRequest === */
+    
+    /* === 최종. asURLRequest === */
     func asURLRequest() throws -> URLRequest {
         let url = URL(string: APIKey.baseURL + path)!
         
@@ -144,17 +218,38 @@ enum NetworkRouter: URLRequestConvertible {
         // paramter
         if (method == .post || method == .put)
             && self.header["Content-Type"] != "multipart/form-data" {
+            
             let jsonData = try? JSONSerialization.data(withJSONObject: parameter)
             request.httpBody = jsonData
             
             return request
         }
         
+        if (method == .get) {
+            if let urlString = request.url?.absoluteString {
+                var components = URLComponents(string: urlString)
+                components?.queryItems = []
+                
+                for (key, value) in query {
+                    components?.queryItems?.append(URLQueryItem(name: key, value: value))
+                }
+                
+                if let newURL = components?.url {
+                    var newURLRequest = URLRequest(url: newURL)
+                    newURLRequest.headers = header
+                    newURLRequest.method = method
+                    
+                    return newURLRequest
+                }
+            }
+            
+        }
+        
         return request
     }
     
     
-    func makeMultiPartFormData() -> MultipartFormData {
+    private func makeMultiPartFormData() -> MultipartFormData {
         
         let multipartFormData = MultipartFormData()
         
@@ -179,5 +274,11 @@ enum NetworkRouter: URLRequestConvertible {
         }
         
         return multipartFormData
+    }
+    
+    
+    private func encodingUrl(_ text: String) -> String {
+        
+        return text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
     }
 }

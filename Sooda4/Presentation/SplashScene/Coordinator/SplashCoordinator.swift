@@ -53,9 +53,8 @@ class SplashCoordinator: SplashCoordinatorProtocol {
                 self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
                 break;
                 
-            case .goTabBarScene:
-                self?.finish(AppCoordinator.ChildCoordinatorType.tabBarScene)
-                break;
+            case .goHomeDefault(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
             
             case .goHomeEmptyScene:
                 self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)

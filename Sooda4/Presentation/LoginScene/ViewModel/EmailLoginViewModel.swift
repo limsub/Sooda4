@@ -180,6 +180,8 @@ class EmailLoginViewModel: BaseViewModelType {
                 switch response {
                 case .success(let model):
                     print("로그인 성공 -> filter true")
+                    print("userId: \(model.userId)")
+                    print("userEmail: \(model.nickname)")
                     
                     // * 임시
                     APIKey.sample = model.accessToken
@@ -217,7 +219,6 @@ class EmailLoginViewModel: BaseViewModelType {
                         // 어떤 워크스페이스인지 값전달을 어떻게 해주냐..?
                         
                         let workSpaceId = model[0].workSpaceId
-                        
                         owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
                     }
                     

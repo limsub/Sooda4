@@ -71,3 +71,24 @@ extension SignInResponseDTO {
         return .init(userId: user_id, nickname: nickname, accessToken: accessToken, refreshToken: refreshToken)
     }
 }
+
+
+
+/* =========== 내 프로필 정보 조회 ========== */
+struct MyProfileInfoDTO: Decodable {
+    let user_id: Int
+    let email: String
+    let nickname: String
+    let profileImage: String?
+    let phone: String
+    let vendor: String?
+    let sesacCoin: Int
+    let createdAt: String
+}
+
+extension MyProfileInfoDTO {
+    func toDomain() -> WorkSpaceMyProfileInfoModel {
+        // HomeDefaultView에서 사용하는 사용자 정보는 사진밖에 없어
+        return .init(profileImage: profileImage)
+    }
+}
