@@ -37,14 +37,27 @@ extension ChannelInfoDTO {
 typealias MyChannelsResponseDTO = [ChannelInfoDTO]
 
 /* ========== 읽지 않은 채널 채팅 개수 ========== */
-struct ChannelUnreadCountRequestDTO {
+struct ChannelUnreadCountRequestDTO: Encodable {
     let workSpaceId: Int
     let channelName: String
     // 특정 날짜 - 일단 생략
 }
 
-struct ChannelUnreadCountResponseDTO {
+extension ChannelUnreadCountRequestDTO {
+    init(_ model: ChannelUnreadCountRequestModel) {
+        self.channelName = model.channelName
+        self.workSpaceId = model.workSpaceId
+    }
+}
+
+struct ChannelUnreadCountResponseDTO: Decodable {
     let channel_id: Int
     let name: String
     let count: Int
+}
+
+extension ChannelUnreadCountResponseDTO {
+    func toDomain() -> ChannelUnreadCountInfoModel {
+        return .init(count: count)
+    }
 }

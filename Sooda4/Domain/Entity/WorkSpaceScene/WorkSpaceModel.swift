@@ -29,7 +29,7 @@ struct MakeWorkSpaceRequestModel {
 // 필요한 데이터만 저장하자!
 struct MyOneWorkSpaceModel {
     let name: String
-    let thumbnail: String 
+    let thumbnail: String
 }
 struct WorkSpaceChannelInfoModel {
     let channelId: Int
@@ -42,4 +42,24 @@ struct WorkSpaceDMInfoModel {
 }
 struct WorkSpaceMyProfileInfoModel {
     let profileImage: String?
+}
+
+
+// 읽지 않은 채팅 개수
+struct ChannelUnreadCountRequestModel {
+    let workSpaceId: Int
+    let channelName: String
+    // 특정 날짜 -> 일단 생략
+}
+struct DMUnreadCountRequestModel {
+    let dmRoomId: Int
+    let workSpaceId: Int
+}
+
+struct ChannelUnreadCountInfoModel {
+    let count: Int
+}
+
+struct DMUnreadCountInfoModel {
+    let count: Int
 }

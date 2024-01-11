@@ -8,7 +8,10 @@
 import Foundation
 
 protocol UnreadCountRepositoryProtocol {
-    // (1). 읽지 않은 채널 채팅 개수 확인
-    // (2). 읽지 않은 디엠 채팅 개수 확인
+    // (1). 읽지 않은 채널 채팅 개수 확인 (ChannelUnreadCountInfoModel)
+    // (2). 읽지 않은 디엠 채팅 개수 확인 (DMUnreadCountInfoModel)
     
+    func channelUnreadCountRequest(_ requestModel: ChannelUnreadCountRequestModel, completion: @escaping (Result<ChannelUnreadCountInfoModel, NetworkError>) -> Void)
+    
+    func dmUnreadCountRequest(_ requestModel: DMUnreadCountRequestModel, completion: @escaping (Result<DMUnreadCountInfoModel, NetworkError>) -> Void)
 }
