@@ -76,11 +76,17 @@ class WorkSpaceListTableViewCell: BaseTableViewCell {
             make.width.equalTo(workSpaceImageView.snp.height)
             make.leading.equalTo(contentView).inset(16)
         }
+        menuButton.snp.makeConstraints { make in
+            make.size.equalTo(20)
+            make.centerY.equalTo(contentView)
+            make.trailing.equalTo(contentView).inset(18)
+        }
         
         workSpaceTitleLabel.snp.makeConstraints { make in
             make.height.equalTo(18)
             make.top.equalTo(contentView).inset(18)
             make.leading.equalTo(workSpaceImageView.snp.trailing).offset(8)
+            make.trailing.equalTo(menuButton.snp.leading).offset(-8)
         }
         
         workSpaceCreatedDateLabel.snp.makeConstraints { make in
@@ -89,11 +95,7 @@ class WorkSpaceListTableViewCell: BaseTableViewCell {
             make.height.equalTo(18)
         }
         
-        menuButton.snp.makeConstraints { make in
-            make.size.equalTo(20)
-            make.centerY.equalTo(contentView)
-            make.trailing.equalTo(contentView).inset(18)
-        }
+        
         
     }
     
@@ -101,13 +103,32 @@ class WorkSpaceListTableViewCell: BaseTableViewCell {
     
     
     
-    func designCell() {
-        // 배경 색칠 or not
+    func designCell(isSelected: Bool, model: WorkSpaceModel) {
+        
+        // 선택 여부
+        if isSelected {
+            backView.backgroundColor = UIColor.appColor(.brand_gray)
+            menuButton.isHidden = false
+        } else {
+            backView.backgroundColor = .clear
+            menuButton.isHidden = true
+        }
+        
         
         // 이미지
         
+        
         // 타이틀
+        workSpaceTitleLabel.text = model.name
+        workSpaceTitleLabel.setAppFont(.bodyBold)
+        
         
         // 날짜
+        let isoDateFormatter = ISO8601DateFormatter()
+        isoDateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = isoDateFormatter.date(from: model.createdAt) {
+            let formattedString = date.toString(of: .fullWithDot)
+            workSpaceCreatedDateLabel.text = formattedString
+        }
     }
 }

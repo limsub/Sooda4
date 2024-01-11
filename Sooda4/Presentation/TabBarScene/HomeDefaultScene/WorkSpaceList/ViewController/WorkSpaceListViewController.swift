@@ -87,14 +87,17 @@ class WorkSpaceListViewController: BaseViewController {
         
         // 테이블뷰 구성
         output.items
-            .bind(to: mainView.workSpaceTableView.rx.items(cellIdentifier: WorkSpaceListTableViewCell.description(), cellType: WorkSpaceListTableViewCell.self)) { (row, element, cell) in
+            .bind(to: mainView.workSpaceTableView.rx.items(cellIdentifier: WorkSpaceListTableViewCell.description(), cellType: WorkSpaceListTableViewCell.self)) {   (row, element, cell) in
+                
+                let isSelected = self.viewModel.checkSelectedWorkSpace(element)
+                
+                cell.designCell(isSelected: isSelected, model: element)
                 
                 cell.menuButton.rx.tap
                     .subscribe(with: self) { owner , value in
                         owner.menuButtonClicked.onNext(value)
                     }
                     .disposed(by: cell.disposeBag)
-
             }
             .disposed(by: disposeBag)
         

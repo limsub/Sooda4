@@ -60,7 +60,7 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         input.presentWorkSpaceList
             .subscribe(with: self) { owner , _ in
-                owner.didSendEventClosure?(.presentWorkSpaceListView)
+                owner.didSendEventClosure?(.presentWorkSpaceListView(workSpaceId: owner.workSpaceId))
             }
             .disposed(by: disposeBag)
         
@@ -331,6 +331,6 @@ class HomeDefaultViewModel: BaseViewModelType {
 
 extension HomeDefaultViewModel {
     enum Event {
-        case presentWorkSpaceListView
+        case presentWorkSpaceListView(workSpaceId: Int)
     }
 }

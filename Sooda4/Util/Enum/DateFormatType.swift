@@ -10,4 +10,5 @@ import Foundation
 enum DateFormatType: String {
     
     case dateToTime = "yyyy-MM-dd HH:mm:ss" 
+    case fullWithDot = "yy. MM. dd"
 }

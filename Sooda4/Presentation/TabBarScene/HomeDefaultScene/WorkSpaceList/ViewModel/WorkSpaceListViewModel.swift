@@ -16,9 +16,11 @@ class WorkSpaceListViewModel: BaseViewModelType {
     var vcViewDidLoad: ControlEvent<Void>?
     
     private let workSpaceUseCase: WorkSpaceUseCaseProtocol
+    private var selectedWorkSpaceId: Int
     
-    init(workSpaceUseCase: WorkSpaceUseCaseProtocol) {
+    init(workSpaceUseCase: WorkSpaceUseCaseProtocol, selectedWorkSpaceId: Int) {
         self.workSpaceUseCase = workSpaceUseCase
+        self.selectedWorkSpaceId = selectedWorkSpaceId
     }
     
     
@@ -68,5 +70,13 @@ class WorkSpaceListViewModel: BaseViewModelType {
         return Output(
             items: items
         )
+    }
+}
+
+
+extension WorkSpaceListViewModel {
+    func checkSelectedWorkSpace(_ model: WorkSpaceModel) -> Bool {
+        
+        return model.workSpaceId == self.selectedWorkSpaceId
     }
 }
