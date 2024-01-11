@@ -40,9 +40,11 @@ typealias MyChannelsResponseDTO = [ChannelInfoDTO]
 struct ChannelUnreadCountRequestDTO {
     let workSpaceId: Int
     let channelName: String
-    // 특정 날짜
+    // 특정 날짜 - 일단 생략
 }
 
 struct ChannelUnreadCountResponseDTO {
-    let count: Int 
+    let channel_id: Int
+    let name: String
+    let count: Int
 }

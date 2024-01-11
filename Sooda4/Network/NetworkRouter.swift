@@ -27,13 +27,18 @@ enum NetworkRouter: URLRequestConvertible {
     
     
     
+    
+    
     /* === CHANNEL === */
     case workSpaceMyChannels(_ sender: Int) // workSpaceId
     
+    case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
     
     
     /* === DM === */
     case workSpaceDMs(_ sender: Int)    // workSpaceId
+    
+    case dmUnreadCount(_ sender: DMUnreadCountRequestDTO)
     
     
     
@@ -59,20 +64,25 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces"
         case .myWorkSpaces:
             return "/v1/workspaces"
-        case .myOneWorkSpace(let workSpaceId):
-            return "/v1/workspaces/\(workSpaceId)"
+        case .myOneWorkSpace(let sender):
+            return "/v1/workspaces/\(sender)"
             
             
         // CHANNEL
-        case .workSpaceMyChannels(let workSpaceId):
-            return "/v1/workspaces/\(workSpaceId)/channels/my"
+        case .workSpaceMyChannels(let sender):
+            return "/v1/workspaces/\(sender)/channels/my"
+            
+        case .channelUnreadCount(let sender):
+            return "/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
             
             
             
         // DM
-        case .workSpaceDMs(let workSpaceId):
-            return "/v1/workspaces/\(workSpaceId)/dms"
-
+        case .workSpaceDMs(let sender):
+            return "/v1/workspaces/\(sender)/dms"
+            
+        case .dmUnreadCount(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.dmRoomId)/unreads"
         }
     }
     
@@ -115,13 +125,13 @@ enum NetworkRouter: URLRequestConvertible {
             
             
         // CHANNEL
-        case .workSpaceMyChannels:
+        case .workSpaceMyChannels, .channelUnreadCount:
             return .get
             
             
             
         // DMs
-        case .workSpaceDMs:
+        case .workSpaceDMs, .dmUnreadCount:
             return .get
             
         }
@@ -207,7 +217,7 @@ enum NetworkRouter: URLRequestConvertible {
     }
     
     
-    func makeMultiPartFormData() -> MultipartFormData {
+    private func makeMultiPartFormData() -> MultipartFormData {
         
         let multipartFormData = MultipartFormData()
         
@@ -232,5 +242,11 @@ enum NetworkRouter: URLRequestConvertible {
         }
         
         return multipartFormData
+    }
+    
+    
+    private func encodingUrl(_ text: String) -> String {
+        
+        return text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
     }
 }

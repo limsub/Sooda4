@@ -30,3 +30,17 @@ extension DMRoomInfoDTO {
 
 /* ========== DM 방 조회 ========== */
 typealias MyDMsResponseDTO = [DMRoomInfoDTO]
+
+
+/* =========== 읽지 않은 DM 채팅 개수 ========== */
+struct DMUnreadCountRequestDTO {
+    let dmRoomId: Int
+    let workSpaceId: Int
+    // 특절 날짜 - 일단 생략
+}
+
+
+struct DMUnreadCountResponseDTO {
+    let room_id: Int
+    let count: Int 
+}
