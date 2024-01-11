@@ -42,7 +42,7 @@ class WorkSpaceListViewModel: BaseViewModelType {
         
         let items = PublishSubject<[WorkSpaceModel]>()
         
-        // 워크스페이스 배열 네트워크 콜
+        // viewDidLoad -> 데이터 로드
         if vcViewDidLoad != nil {
             vcViewDidLoad!
                 .flatMap {_ in
@@ -60,10 +60,36 @@ class WorkSpaceListViewModel: BaseViewModelType {
                 .disposed(by: disposeBag)
         }
         
+        
+        // 메뉴버튼 클릭 -> 관리자 여부 확인 -> actionSheet
+        // 메뉴버튼이 클릭되었다는건, 그 워크스페이스는 현재 VM에 저장된 workSpaceId의 워크스페이스라는 뜻. 즉, 그냥 바로 사용한다.
         if input.menuButtonClicked != nil {
             input.menuButtonClicked!
-                .subscribe(with: self) { owner , _ in
-                    print("000")
+                .withLatestFrom(items)
+                .map { value in
+                    // workSpaceId를 가진 워크스페이스를 찾고,
+                    // 그 워크스페이스의 ownerId가 나인지 판단
+                    var check = false
+                    value.forEach { workspace in
+                        if (workspace.workSpaceId == self.selectedWorkSpaceId) {
+                            if workspace.ownerId == APIKey.userId {
+                                check = true
+                            }
+                        }
+                    }
+                    
+                    return check
+               }
+            
+                .subscribe(with: self) { owner , value in
+                    if value {
+                        print("내 워크스페이스다")
+                        owner.didSendEventClosure?(.showActionSheetForAdmin)
+                    } else {
+                        print("내 워크스페이스 아니다")
+                        owner.didSendEventClosure?(.showActionSheetForGeneral)
+                    }
+
                 }
                 .disposed(by: disposeBag)
         }
@@ -89,13 +115,16 @@ class WorkSpaceListViewModel: BaseViewModelType {
 
 extension WorkSpaceListViewModel {
     func checkSelectedWorkSpace(_ model: WorkSpaceModel) -> Bool {
-        
         return model.workSpaceId == self.selectedWorkSpaceId
     }
+    
 }
 
 extension WorkSpaceListViewModel {
     enum Event {
         case goBackHomeDefault(workSpaceId: Int)
+        
+        case showActionSheetForAdmin
+        case showActionSheetForGeneral
     }
 }

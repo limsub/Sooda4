@@ -61,12 +61,14 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 // (워크스페이스 리스트 중 하나 선택) dismiss되고 homeDefaultView reload
                 self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: newWorkSpaceId))  // 새로운 workspace id 전달
                 // -> 여기에 대한 처리는 HomeDefault에서 굳이굳이 케이스 나눠서 판단해보자
+                
+                
+            case .showActionSheetForAdmin:
+                print("관리자 액션 시트 띄워주기")
+                
+            case .showActionSheetForGeneral:
+                print("일반 액션 시트 띄워주기")
             }
-           
-            
-            print("kkkkkkkkkkkkkk")
-            print(event)
-            
         }
         
         
