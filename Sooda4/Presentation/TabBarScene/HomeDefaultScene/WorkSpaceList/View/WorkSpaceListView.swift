@@ -30,6 +30,8 @@ class WorkSpaceListView: BaseView {
     
     // 2.
     // - 테이블뷰
+    // 셀 height = 72
+    // 내부 UIView height 60. 좌우 padding 8 -> cornerradius
     
     // 공통
     // - 워크스페이스 추가, 도움말
