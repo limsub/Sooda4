@@ -131,19 +131,21 @@ class HomeDefaultViewModel {
         group.notify(queue: .main) {
             print("END")
             print("workSpaceId: \(self.workSpaceId)")
-//            print(self.workSpaceInfo)
+            print(self.workSpaceInfo)
 //            print(self.myProfileInfo)
 //            print(self.channelData)
 //            print(self.dmData)
             
-            
+//            
 //            self.channelData?.sectionData.forEach({ item in
-//                print(" -- channel : ", item.channelInfo.name)
+//                print(" -- channel id : ", item.channelInfo.channelId)
+//                print(" -- channel name : ", item.channelInfo.name)
 //            })
 //            self.dmData?.sectionData.forEach({ item  in
 //                print(" -- dm roomID : ", item.dmInfo.roomId)
 //                print(" -- dm name : ", item.dmInfo.userNickname)
 //            })
+            print(Date())
             completion()
         }
     }
@@ -153,6 +155,10 @@ class HomeDefaultViewModel {
     // 그 다음
     // (GET, /v1/workspaces/{id}/channels/{name}/unreads) 를 통해 읽지 않은 채널 채팅 개수 확인
     // GET, /v1/workspaces/{id}/dms/{roomID}/unreads) 를 통해 읽지 않은 디엠 채팅 개수 확인
+    
+    
+    
+    
     
     
     

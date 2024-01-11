@@ -35,3 +35,14 @@ extension ChannelInfoDTO {
 
 /* ========== 채널 조회 ========== */
 typealias MyChannelsResponseDTO = [ChannelInfoDTO]
+
+/* ========== 읽지 않은 채널 채팅 개수 ========== */
+struct ChannelUnreadCountRequestDTO {
+    let workSpaceId: Int
+    let channelName: String
+    // 특정 날짜
+}
+
+struct ChannelUnreadCountResponseDTO {
+    let count: Int 
+}
