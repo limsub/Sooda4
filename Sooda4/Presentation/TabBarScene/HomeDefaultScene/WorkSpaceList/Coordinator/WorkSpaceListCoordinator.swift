@@ -39,8 +39,42 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         showMakeWorkSpaceView()
     }
     
+    // * 필수
+    var workSpaceId: Int?
+    
     func showMakeWorkSpaceView() {
-        print(#function)
+        
+        guard let workSpaceId else { return }
+        
+        let workSpaceListVM = WorkSpaceListViewModel(
+            workSpaceUseCase: WorkSpaceUseCase(
+                workSpaceRepository: WorkSpaceRepository()
+            ),
+            selectedWorkSpaceId: workSpaceId
+        )
+        
+        workSpaceListVM.didSendEventClosure = { [weak self] event in
+            
+            
+            switch event {
+            case .goBackHomeDefault(let newWorkSpaceId):
+                // (워크스페이스 리스트 중 하나 선택) dismiss되고 homeDefaultView reload
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: newWorkSpaceId))  // 새로운 workspace id 전달
+                // -> 여기에 대한 처리는 HomeDefault에서 굳이굳이 케이스 나눠서 판단해보자
+            }
+           
+            
+            print("kkkkkkkkkkkkkk")
+            print(event)
+            
+        }
+        
+        
+        
+        let vc = WorkSpaceListViewController.create(with: workSpaceListVM)
+        
+        
+        navigationController.pushViewController(vc, animated: false)
     }
     func showEditWorkSpaceView() {
         print(#function)

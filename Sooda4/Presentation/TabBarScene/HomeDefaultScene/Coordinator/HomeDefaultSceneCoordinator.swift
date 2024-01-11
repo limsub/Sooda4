@@ -75,29 +75,53 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         // 아예 여기서부터 첫 vc를 지정해버리고 present로 띄워버림
         // 즉, start가 필요가 없어진다
         
-        let workSpaceListVM = WorkSpaceListViewModel(
-            workSpaceUseCase: WorkSpaceUseCase(
-                workSpaceRepository: WorkSpaceRepository()
-            ),
-            selectedWorkSpaceId: workSpaceId
-        )
-        let vc = WorkSpaceListViewController.create(with: workSpaceListVM)
-        let sideMenuNav = SideMenuNavigationController(rootViewController: vc)
+        // 또 특이한건, workSpaceListVM의 didSendEvent 는 부모 코디인 HomeDefault코디에서 처리한다. VM을 만드는 곳이 여기이기 때문에
+        
+        let sideMenuNav = SideMenuNavigationController(rootViewController: UIViewController())
+        
         sideMenuNav.leftSide = true
         sideMenuNav.presentationStyle = .menuSlideIn
         sideMenuNav.menuWidth = UIScreen.main.bounds.width - 76
         
         let workSpaceListCoordinator = WorkSpaceListCoordinator(sideMenuNav)
+        workSpaceListCoordinator.workSpaceId = workSpaceId // * 필수
         workSpaceListCoordinator.finishDelegate = self
         childCoordinators.append(workSpaceListCoordinator)
-//        workSpaceListCoordinator.start()    // 얘가 필요가 없는거지
+        workSpaceListCoordinator.start()    // 얘가 필요가 없는거지
         
         navigationController.present(sideMenuNav, animated: true)
     }
 }
 
+
+// MARK: - Child DidFinished
 extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
+        
+        childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
+//        navigationController.viewControllers.removeAll()  // 이걸 왜지워 근데??
+        navigationController.dismiss(animated: true)
+        
+        /* 연락이 온다 */
+        // 1. 도착지가 HomeDefault코디야. -> 다 dismiss하고 HomeDefaultView 다시 그리라는 뜻
+        if let nextFlow = nextFlow as? TabBarCoordinator.ChildCoordinatorType,
+           case .homeDefaultScene(let workSpaceId) = nextFlow {
+            // 도착지가 나야
+            // finish같은거 할 필요 없이.
+            // 지금 nav.vcs에 HomeDefaultVC가 있을거야. -> 아마 [0]일거야
+            // 걔 지우지 말고, 고대로 뷰모델 네트워크 다시 쏴서 뷰 업데이트 시켜
+            
+            // 1. HomeDefaultVC 찾아
+            navigationController.viewControllers.forEach { vc in
+                if let vc = vc as? HomeDefaultViewController {
+                    vc.viewModel.workSpaceId = workSpaceId
+                    vc.fetchFirstData()
+                }
+            }
+        }
+        
+        
+        
         print(#function)
     }
 }

@@ -13,6 +13,8 @@ class WorkSpaceListViewModel: BaseViewModelType {
     
     let disposeBag = DisposeBag()
     
+    var didSendEventClosure: ( (WorkSpaceListViewModel.Event) -> Void)?
+    
     var vcViewDidLoad: ControlEvent<Void>?
     
     private let workSpaceUseCase: WorkSpaceUseCaseProtocol
@@ -56,7 +58,6 @@ class WorkSpaceListViewModel: BaseViewModelType {
                     }
                 }
                 .disposed(by: disposeBag)
-            
         }
         
         if input.menuButtonClicked != nil {
@@ -66,6 +67,18 @@ class WorkSpaceListViewModel: BaseViewModelType {
                 }
                 .disposed(by: disposeBag)
         }
+        
+        
+        // go back
+        input.itemSelected
+            .withLatestFrom(items) { indexPath, value in
+                return value[indexPath.row]
+            }
+            .subscribe(with: self) { owner , value in
+                owner.didSendEventClosure?(.goBackHomeDefault(workSpaceId: value.workSpaceId))
+            }
+            .disposed(by: disposeBag)
+        
         
         return Output(
             items: items
@@ -78,5 +91,11 @@ extension WorkSpaceListViewModel {
     func checkSelectedWorkSpace(_ model: WorkSpaceModel) -> Bool {
         
         return model.workSpaceId == self.selectedWorkSpaceId
+    }
+}
+
+extension WorkSpaceListViewModel {
+    enum Event {
+        case goBackHomeDefault(workSpaceId: Int)
     }
 }
