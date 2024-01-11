@@ -49,11 +49,13 @@ struct WorkSpaceMyProfileInfoModel {
 struct ChannelUnreadCountRequestModel {
     let workSpaceId: Int
     let channelName: String
+    let after: String
     // 특정 날짜 -> 일단 생략
 }
 struct DMUnreadCountRequestModel {
     let dmRoomId: Int
     let workSpaceId: Int
+    let after: String 
 }
 
 struct ChannelUnreadCountInfoModel {

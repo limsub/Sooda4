@@ -147,6 +147,7 @@ class HomeDefaultViewModel {
 //            })
             print(Date())
             completion()
+            self.fetchUnreadCount()
         }
     }
     
@@ -155,6 +156,43 @@ class HomeDefaultViewModel {
     // 그 다음
     // (GET, /v1/workspaces/{id}/channels/{name}/unreads) 를 통해 읽지 않은 채널 채팅 개수 확인
     // GET, /v1/workspaces/{id}/dms/{roomID}/unreads) 를 통해 읽지 않은 디엠 채팅 개수 확인
+    
+    
+    func fetchUnreadCount() {
+        // 채널 for문
+        channelData?.sectionData.forEach({ item in
+            
+            let requestModel = ChannelUnreadCountRequestModel(
+                workSpaceId: self.workSpaceId,
+                channelName: item.channelInfo.name,
+                after: Date().toString(of: .dateToTime)
+            )
+            
+            homeDefaultWorkSpaceUseCase.channelUnreadCountRequest(requestModel) { response  in
+                
+                print("-- channel --")
+                print(response)
+            }
+        })
+        
+        
+        
+        // 디엠 for문
+        dmData?.sectionData.forEach({ item  in
+            
+            let requestModel = DMUnreadCountRequestModel(
+                dmRoomId: item.dmInfo.roomId,
+                workSpaceId: self.workSpaceId,
+                after: Date().toString(of: .dateToTime)
+            )
+            
+            homeDefaultWorkSpaceUseCase.dmUnreadCountRequest(requestModel) { response  in
+                print("-- dm --")
+                print(response)
+            }
+        })
+        
+    }
     
     
     

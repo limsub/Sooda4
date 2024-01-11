@@ -40,6 +40,7 @@ typealias MyChannelsResponseDTO = [ChannelInfoDTO]
 struct ChannelUnreadCountRequestDTO: Encodable {
     let workSpaceId: Int
     let channelName: String
+    let after: String
     // 특정 날짜 - 일단 생략
 }
 
@@ -47,6 +48,7 @@ extension ChannelUnreadCountRequestDTO {
     init(_ model: ChannelUnreadCountRequestModel) {
         self.channelName = model.channelName
         self.workSpaceId = model.workSpaceId
+        self.after = model.after
     }
 }
 

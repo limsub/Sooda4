@@ -73,7 +73,7 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces/\(sender)/channels/my"
             
         case .channelUnreadCount(let sender):
-            return "/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
             
             
             
@@ -177,6 +177,18 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 6. query === */
     var query: [String: String] {
         switch self {
+        // CHANNEL
+        case .channelUnreadCount(let sender):
+            return [
+                "after": sender.after
+            ]
+            
+        // DM
+        case .dmUnreadCount(let sender):
+            return [
+                "after": sender.after
+            ]
+            
         default:
             return [:]
         }
@@ -211,6 +223,26 @@ enum NetworkRouter: URLRequestConvertible {
             request.httpBody = jsonData
             
             return request
+        }
+        
+        if (method == .get) {
+            if let urlString = request.url?.absoluteString {
+                var components = URLComponents(string: urlString)
+                components?.queryItems = []
+                
+                for (key, value) in query {
+                    components?.queryItems?.append(URLQueryItem(name: key, value: value))
+                }
+                
+                if let newURL = components?.url {
+                    var newURLRequest = URLRequest(url: newURL)
+                    newURLRequest.headers = header
+                    newURLRequest.method = method
+                    
+                    return newURLRequest
+                }
+            }
+            
         }
         
         return request

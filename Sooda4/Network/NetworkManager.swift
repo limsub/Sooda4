@@ -161,7 +161,6 @@ class NetworkManager {
         AF.request(api)
             .validate()
             .responseDecodable(of: T.self) { response  in
-                
                 switch response.result {
                 case .success(let data):
                     print("(Completion) 네트워크 통신 성공")

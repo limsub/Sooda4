@@ -36,6 +36,7 @@ typealias MyDMsResponseDTO = [DMRoomInfoDTO]
 struct DMUnreadCountRequestDTO: Encodable {
     let dmRoomId: Int
     let workSpaceId: Int
+    let after: String
     // 특절 날짜 - 일단 생략
 }
 
@@ -43,6 +44,7 @@ extension DMUnreadCountRequestDTO {
     init(_ model: DMUnreadCountRequestModel) {
         self.dmRoomId = model.dmRoomId
         self.workSpaceId = model.workSpaceId
+        self.after = model.after
     }
 }
 

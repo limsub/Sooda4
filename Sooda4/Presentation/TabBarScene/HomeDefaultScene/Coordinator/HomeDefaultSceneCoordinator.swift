@@ -47,7 +47,8 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         let homeDefaultVM = HomeDefaultViewModel(
             workSpaceId: workSpaceId,
             homeDefaultWorkSpaceUseCase: HomeDefaultWorkSpaceUseCase(
-                myWorkSpaceInfoRepository: HomeDefaultWorkSpaceRepository()
+                myWorkSpaceInfoRepository: HomeDefaultWorkSpaceRepository(),
+                unreadCountInfoReposiotry: UnreadCountRepository()
             )
         )
         let vc = HomeDefaultViewController.create(with: homeDefaultVM)
