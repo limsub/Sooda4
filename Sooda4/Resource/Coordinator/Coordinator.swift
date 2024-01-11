@@ -74,4 +74,7 @@ enum CoordinatorType {
     // tabBar
     case homeDefault, dm, search, setting
     
+    // homeDefault
+    case workSpaceList
+    
 }

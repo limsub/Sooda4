@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import SideMenu
 
 protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     // view
     func showHomeDefaultView(_ workSpaceId: Int)
     
     // flow
+    func showWorkSpaceListFlow()
 }
 
 // 생성 시 반드시 데이터가 필요함. workspace_id: Int
@@ -51,13 +53,49 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 unreadCountInfoReposiotry: UnreadCountRepository()
             )
         )
+        homeDefaultVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .presentWorkSpaceListView:
+                self?.showWorkSpaceListFlow()
+            }
+            
+        }
         let vc = HomeDefaultViewController.create(with: homeDefaultVM)
         navigationController.pushViewController(vc, animated: true)
+    }
+    
+    
+    // 프로토콜 메서드 - flow
+    func showWorkSpaceListFlow() {
+        // sidemenunavigationController의 특성상 여기서 vc를 만들어서 넣어줘야 할 것 같다
+        // -> nav를 넘기고, 코디 안에서 start로 뷰를 따는게 아니라
+        // 아예 여기서부터 첫 vc를 지정해버리고 present로 띄워버림
+        // 즉, start가 필요가 없어진다
+        
+        let vc = WorkSpaceListViewController()
+        let sideMenuNav = SideMenuNavigationController(rootViewController: vc)
+        sideMenuNav.leftSide = true
+        sideMenuNav.presentationStyle = .menuSlideIn
+        sideMenuNav.menuWidth = UIScreen.main.bounds.width - 76
+        
+        let workSpaceListCoordinator = WorkSpaceListCoordinator(sideMenuNav)
+        workSpaceListCoordinator.finishDelegate = self
+        childCoordinators.append(workSpaceListCoordinator)
+//        workSpaceListCoordinator.start()    // 얘가 필요가 없는거지
+        
+        navigationController.present(sideMenuNav, animated: true)
     }
 }
 
 extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
         print(#function)
+    }
+}
+
+extension HomeDefaultSceneCoordinator {
+    enum ChildCoordinatorType: ChildCoordinatorTypeProtocol {
+        case workSpaceList
     }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import SideMenu
 
 struct cellData {
     var opened = Bool()
@@ -23,23 +24,7 @@ class HomeDefaultViewController: BaseViewController {
         vc.viewModel = viewModel
         return vc
     }
-    
-    // 섹션 1 : 채널
-    // 섹션 2 : 디엠
-    // 섹션 3 : 팀원 추가
-    
-    
-//    var channelData = cellData(
-//        opened: true,
-//        title: "채널",
-//        sectionData: ["일반", "스유 뽀개기", "앱스토어 홍보", "오픈라운지", "TIL"]
-//    )
-//    var dmData = cellData(
-//        opened: true,
-//        title: "다이렉트 메세지 - 3개",
-//        sectionData: ["캠퍼스지킴이", "Hue", "테스트 코드 짜는 새싹이", "Jack"]
-//    )
-    
+
     
     
     let mainView = HomeDefaultView()
@@ -88,8 +73,8 @@ class HomeDefaultViewController: BaseViewController {
         
         setNavigation()
         setTableView()
-        
-        
+ 
+        bindVM()
     }
     
     func setNavigation() {
@@ -162,6 +147,26 @@ class HomeDefaultViewController: BaseViewController {
         navigationTitleLabel.text = viewModel.workSpaceInfo?.name
 //        leftImageView.image = viewModel.workSpaceInfo?.thumbnail
 //        rightImageView.image = viewModel.myProfileInfo?.profileImage
+        
+    }
+    
+    let testButton = UIButton()
+    
+    func bindVM() {
+        testButton.backgroundColor = .red
+        view.addSubview(testButton)
+        testButton.snp.makeConstraints { make in
+            make.size.equalTo(200)
+            make.center.equalTo(view)
+        }
+        
+        
+        let input = HomeDefaultViewModel.Input(
+            presentWorkSpaceList: testButton.rx.tap
+        )
+        
+        let output = viewModel.transform(input)
+        
         
     }
 }
