@@ -44,13 +44,16 @@ extension UIViewController {
         
         let thirdButton = UIAlertAction(title: thirdTitle, style: .default) { _ in thirdCompletion() }
         
-        let fourthButton = UIAlertAction(title: fourthTitle, style: .default) { _ in fourthCompletion() }
+        let fourthButton = UIAlertAction(title: fourthTitle, style: .destructive) { _ in fourthCompletion() }
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
         
         
         actionSheet.addAction(firstButton)
         actionSheet.addAction(secondButton)
         actionSheet.addAction(thirdButton)
         actionSheet.addAction(fourthButton)
+        actionSheet.addAction(cancel)
         
         present(actionSheet, animated: true)
     }

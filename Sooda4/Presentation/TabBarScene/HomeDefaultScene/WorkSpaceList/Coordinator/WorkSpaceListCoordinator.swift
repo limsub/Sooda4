@@ -65,9 +65,21 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 
             case .showActionSheetForAdmin:
                 print("관리자 액션 시트 띄워주기")
+                self?.navigationController.showActionSheetFourSection(firstTitle: "1", firstCompletion: {
+                    print("1")
+                }, secondTitle: "2", secondCompletion: {
+                    print("2")
+                }, thirdTitle: "3", thirdCompletion: {
+                    print("3")
+                }, fourthTitle: "4") {
+                    print("4")
+                }
                 
             case .showActionSheetForGeneral:
                 print("일반 액션 시트 띄워주기")
+                self?.navigationController.showActionSheetOneSection(title: "1", completion: {
+                    print("1")
+                })
             }
         }
         
