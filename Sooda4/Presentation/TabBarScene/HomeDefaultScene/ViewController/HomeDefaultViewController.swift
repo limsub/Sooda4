@@ -167,8 +167,10 @@ class HomeDefaultViewController: BaseViewController {
         
         let output = viewModel.transform(input)
         
-        
+//        mainView.tableView.
     }
+    
+
 }
 
 extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource {
@@ -209,6 +211,10 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             let data = viewModel.channelCellData(indexPath)
             
             cell.designCell(data.0, count: data.1)
+            
+            
+            
+            
             
             cell.hideSeparator()
             return cell

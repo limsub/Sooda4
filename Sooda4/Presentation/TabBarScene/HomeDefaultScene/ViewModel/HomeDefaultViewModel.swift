@@ -53,7 +53,7 @@ class HomeDefaultViewModel: BaseViewModelType {
     }
     
     struct Output {
-        let a: String
+        let presentWorkSpaceList: ControlEvent<Void>
     }
     
     func transform(_ input: Input) -> Output {
@@ -65,7 +65,7 @@ class HomeDefaultViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
         
-        return Output(a: "hi :)")
+        return Output(presentWorkSpaceList: input.presentWorkSpaceList)
     }
     
     
