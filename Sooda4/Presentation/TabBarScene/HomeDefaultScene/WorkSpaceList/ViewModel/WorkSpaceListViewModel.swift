@@ -24,7 +24,7 @@ class WorkSpaceListViewModel: BaseViewModelType {
     
     struct Input {
         let itemSelected: ControlEvent<IndexPath>
-        let menuButtonClicked: ControlEvent<Void>?
+        let menuButtonClicked: PublishSubject<Void>?
         
         let addWorkSpaceButtonClicked: ControlEvent<Void>
         let helpButtonClicked: ControlEvent<Void>
@@ -57,7 +57,13 @@ class WorkSpaceListViewModel: BaseViewModelType {
             
         }
         
-
+        if input.menuButtonClicked != nil {
+            input.menuButtonClicked!
+                .subscribe(with: self) { owner , _ in
+                    print("000")
+                }
+                .disposed(by: disposeBag)
+        }
         
         return Output(
             items: items

@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 // 셀 height 72. 내부 색칠 뷰 height 60. -> 상하 6 패딩
 // 좌우 8 패딩
 
 class WorkSpaceListTableViewCell: BaseTableViewCell {
     
+    let disposeBag = DisposeBag()
     
     let backView = {
         let view = UIView()

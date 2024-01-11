@@ -26,7 +26,8 @@ class WorkSpaceListViewController: BaseViewController {
     
     
     // 현재 워크스페이스 셀의 메뉴 버튼 클릭 -> menuButtonClicked 실행 -> input으로 이벤트 VM에 전달
-    var menuButtonClicked: ControlEvent<Void>?
+//    var menuButtonClicked: ControlEvent<Void>?
+    var menuButtonClicked = PublishSubject<Void>()
     
     
     override func loadView() {
@@ -39,7 +40,7 @@ class WorkSpaceListViewController: BaseViewController {
         print(#function)
         
         setNavigation()
-        setTableView()
+//        setTableView()
         bindVM()
     }
     
@@ -85,7 +86,17 @@ class WorkSpaceListViewController: BaseViewController {
         
         
         // 테이블뷰 구성
-        
+        output.items
+            .bind(to: mainView.workSpaceTableView.rx.items(cellIdentifier: WorkSpaceListTableViewCell.description(), cellType: WorkSpaceListTableViewCell.self)) { (row, element, cell) in
+                
+                cell.menuButton.rx.tap
+                    .subscribe(with: self) { owner , value in
+                        owner.menuButtonClicked.onNext(value)
+                    }
+                    .disposed(by: cell.disposeBag)
+
+            }
+            .disposed(by: disposeBag)
         
         
     }
