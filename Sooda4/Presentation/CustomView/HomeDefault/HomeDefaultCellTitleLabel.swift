@@ -31,7 +31,8 @@ class HomeDefaultCellTitleLabel: UILabel {
             setAppFont(.bodyBold)
             textColor = UIColor.appColor(.text_primary)
         } else {
-            setUp()
+            setAppFont(.body)
+            textColor = UIColor.appColor(.text_secondary)
         }
     }
     

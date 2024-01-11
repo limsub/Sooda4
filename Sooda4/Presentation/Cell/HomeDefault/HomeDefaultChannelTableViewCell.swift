@@ -48,13 +48,17 @@ class HomeDefaultChannelTableViewCell: BaseTableViewCell {
         titleLabel.setText(text)
         unreadCountLabel.setText(count)
         
-//        if count > 0 {
-//            hashtagImageView.update(true)
-//            titleLabel.update(true)
-//        } else {
-//            hashtagImageView.update(false)
-//            titleLabel.update(false)
-//        }
+        // count에 따라
+        if count > 0 {
+            hashtagImageView.update(true)
+            titleLabel.update(true)
+            unreadCountLabel.isHidden = false
+        } else {
+            hashtagImageView.update(false)
+            titleLabel.update(false)
+            unreadCountLabel.isHidden = true
+        }
+
     }
     
     

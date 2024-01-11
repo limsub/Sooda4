@@ -27,6 +27,8 @@ class HomeDefaultHashtagImageView: UIImageView {
     func update(_ isBold: Bool) {
         // isBold값에 따라서 이미지 변경
         // 이게 이미지 변경하는게 나을지, 아니면 그냥 tintColor 변경하는게 나을지 고민
+        
+        image = UIImage(named: isBold ? "hashtag_thick" : "hashtag_thin")
     }
     
 }

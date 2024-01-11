@@ -54,6 +54,14 @@ class HomeDefaultDMTableViewCell: BaseTableViewCell {
     func designCell(image: String?, text: String, count: Int) {
         titleLabel.setText(text)
         unreadCountLabel.setText(count)
+        
+        if count > 0 {
+            titleLabel.update(true)
+            unreadCountLabel.isHidden = false
+        } else {
+            titleLabel.update(false)
+            unreadCountLabel.isHidden = true
+        }
     }
 }
 

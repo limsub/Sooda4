@@ -15,7 +15,7 @@ struct HomeDefaultChannelsDataModel {
     
     struct ChannelCellInfo {
         let channelInfo: WorkSpaceChannelInfoModel
-        let unreadCount: Int
+        var unreadCount: Int
     }
 }
 
@@ -26,7 +26,7 @@ struct HomeDefaultDMsDataModel {
     
     struct DMCellInfo {
         let dmInfo: WorkSpaceDMInfoModel
-        let unreadCount: Int
+        var unreadCount: Int
     }
 }
 
@@ -129,25 +129,9 @@ class HomeDefaultViewModel {
         }
         
         group.notify(queue: .main) {
-            print("END")
-            print("workSpaceId: \(self.workSpaceId)")
-            print(self.workSpaceInfo)
-//            print(self.myProfileInfo)
-//            print(self.channelData)
-//            print(self.dmData)
-            
-//            
-//            self.channelData?.sectionData.forEach({ item in
-//                print(" -- channel id : ", item.channelInfo.channelId)
-//                print(" -- channel name : ", item.channelInfo.name)
-//            })
-//            self.dmData?.sectionData.forEach({ item  in
-//                print(" -- dm roomID : ", item.dmInfo.roomId)
-//                print(" -- dm name : ", item.dmInfo.userNickname)
-//            })
-            print(Date())
-            completion()
-            self.fetchUnreadCount()
+            self.fetchUnreadCount {
+                completion()
+            }
         }
     }
     
@@ -158,9 +142,14 @@ class HomeDefaultViewModel {
     // GET, /v1/workspaces/{id}/dms/{roomID}/unreads) 를 통해 읽지 않은 디엠 채팅 개수 확인
     
     
-    func fetchUnreadCount() {
+    func fetchUnreadCount(completion: @escaping () -> Void) {
         // 채널 for문
-        channelData?.sectionData.forEach({ item in
+        
+        if channelData == nil || dmData == nil { return }
+        
+        let group = DispatchGroup()
+        
+        for (index, item) in channelData!.sectionData.enumerated() {
             
             let requestModel = ChannelUnreadCountRequestModel(
                 workSpaceId: self.workSpaceId,
@@ -168,17 +157,21 @@ class HomeDefaultViewModel {
                 after: Date().toString(of: .dateToTime)
             )
             
+            group.enter()
             homeDefaultWorkSpaceUseCase.channelUnreadCountRequest(requestModel) { response  in
                 
-                print("-- channel --")
-                print(response)
+                switch response {
+                case .success(let model):
+                    self.channelData!.sectionData[index].unreadCount = model.count
+                case .failure(let networkError):
+                    print("아직 에러처리 x")
+                }
+                
+                group.leave()
             }
-        })
+        }
         
-        
-        
-        // 디엠 for문
-        dmData?.sectionData.forEach({ item  in
+        for (index, item) in dmData!.sectionData.enumerated() {
             
             let requestModel = DMUnreadCountRequestModel(
                 dmRoomId: item.dmInfo.roomId,
@@ -186,12 +179,22 @@ class HomeDefaultViewModel {
                 after: Date().toString(of: .dateToTime)
             )
             
+            group.enter()
             homeDefaultWorkSpaceUseCase.dmUnreadCountRequest(requestModel) { response  in
-                print("-- dm --")
-                print(response)
+                switch response {
+                case .success(let model):
+                    self.dmData!.sectionData[index].unreadCount = model.count
+                case .failure(let networkError):
+                    print("아직 에러처리 x")
+                }
+                
+                group.leave()
             }
-        })
+        }
         
+        group.notify(queue: .main) {
+            completion()
+        }
     }
     
     
