@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import SideMenu
+import RxSwift
+import RxCocoa
 
 struct cellData {
     var opened = Bool()
@@ -22,6 +24,7 @@ class HomeDefaultViewController: BaseViewController {
     static func create(with viewModel: HomeDefaultViewModel) -> HomeDefaultViewController {
         let vc = HomeDefaultViewController()
         vc.viewModel = viewModel
+        
         return vc
     }
 
@@ -60,10 +63,9 @@ class HomeDefaultViewController: BaseViewController {
         self.view = mainView
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         
         view.backgroundColor = .white
         

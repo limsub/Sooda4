@@ -25,6 +25,7 @@ class WorkSpaceListView: BaseView {
     }
     
     
+    /* ===== UI 객체 ===== */
     // 1.
     // - 레이블1, 레이블2, 버튼1
     
@@ -32,6 +33,14 @@ class WorkSpaceListView: BaseView {
     // - 테이블뷰
     // 셀 height = 72
     // 내부 UIView height 60. 좌우 padding 8 -> cornerradius
+    let workSpaceTableView = {
+        let view = UITableView(frame: .zero)
+        view.register(WorkSpaceListTableViewCell.self, forCellReuseIdentifier: WorkSpaceListTableViewCell.description())
+        view.rowHeight = 72
+        view.separatorStyle = .none
+        view.showsVerticalScrollIndicator = false
+        return view
+    }()
     
     // 공통
     // - 워크스페이스 추가, 도움말
@@ -47,6 +56,9 @@ class WorkSpaceListView: BaseView {
         [addWorkSpaceButtonView, helpButtonView].forEach { item  in
             self.addSubview(item)
         }
+        
+        // 2.
+        self.addSubview(workSpaceTableView)
     }
     
     override func setConstraints() {
@@ -62,6 +74,13 @@ class WorkSpaceListView: BaseView {
             make.width.equalTo(self)
             make.height.equalTo(41)
             make.bottom.equalTo(helpButtonView.snp.top)
+        }
+        
+        // 2.
+        workSpaceTableView.snp.makeConstraints { make in
+            make.width.equalTo(self)
+            make.top.equalTo(self.safeAreaLayoutGuide)
+            make.bottom.equalTo(addWorkSpaceButtonView.snp.top)
         }
     }
     

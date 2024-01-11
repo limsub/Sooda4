@@ -25,6 +25,7 @@ class WorkSpaceListTableViewCell: BaseTableViewCell {
         let view = UIImageView()
         view.clipsToBounds = true
         view.layer.cornerRadius = 8
+        view.image = UIImage(named: "profile_No Photo A")
         return view
     }()
     

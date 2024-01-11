@@ -73,7 +73,12 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         // 아예 여기서부터 첫 vc를 지정해버리고 present로 띄워버림
         // 즉, start가 필요가 없어진다
         
-        let vc = WorkSpaceListViewController()
+        let workSpaceListVM = WorkSpaceListViewModel(
+            workSpaceUseCase: WorkSpaceUseCase(
+                workSpaceRepository: WorkSpaceRepository()
+            )
+        )
+        let vc = WorkSpaceListViewController.create(with: workSpaceListVM)
         let sideMenuNav = SideMenuNavigationController(rootViewController: vc)
         sideMenuNav.leftSide = true
         sideMenuNav.presentationStyle = .menuSlideIn

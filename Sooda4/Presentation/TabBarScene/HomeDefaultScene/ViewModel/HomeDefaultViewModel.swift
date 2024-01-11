@@ -60,7 +60,6 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         input.presentWorkSpaceList
             .subscribe(with: self) { owner , _ in
-                print("hihi")
                 owner.didSendEventClosure?(.presentWorkSpaceListView)
             }
             .disposed(by: disposeBag)
