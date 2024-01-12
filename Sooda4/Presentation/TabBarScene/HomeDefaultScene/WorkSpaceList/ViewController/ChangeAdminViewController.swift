@@ -29,6 +29,7 @@ class ChangeAdminViewController: BaseViewController {
         
         setNavigation()
         setTableView()
+        fetchData()
     }
     
     func setNavigation() {
@@ -50,6 +51,12 @@ class ChangeAdminViewController: BaseViewController {
     func setTableView() {
         mainView.memberListTableView.delegate = self
         mainView.memberListTableView.dataSource = self
+    }
+    
+    func fetchData() {
+        viewModel.fetchMemberList { [weak self ] in
+            self?.mainView.memberListTableView.reloadData()
+        }
     }
 }
 

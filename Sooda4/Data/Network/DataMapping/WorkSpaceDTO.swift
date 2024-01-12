@@ -59,6 +59,12 @@ struct UserInfoDTO: Codable {
     let profileImage: String?
 }
 
+extension UserInfoDTO {
+    func toDomain() -> WorkSpaceUserInfo {
+        return .init(userId: user_id, email: email, nickname: nickname, profileImage: profileImage)
+    }
+}
+
 extension MyOneWorkSpaceResponseDTO {
     func toDomain() -> MyOneWorkSpaceModel {
         return .init(name: name, thumbnail: thumbnail)
@@ -71,3 +77,10 @@ extension MyOneWorkSpaceResponseDTO {
 
 /* ========== 워크스페이스 멤버 조회 ========== */
 typealias WorkSpaceMembersResponseDTO = [UserInfoDTO]
+
+/* ========== 워크스페이스 관리자 권한 변경 ========== */
+struct ChangeAdminRequestDTO {
+    let id: Int
+    let user_id: Int
+}
+// Response는 WorkSpaceInfoDTO 사용

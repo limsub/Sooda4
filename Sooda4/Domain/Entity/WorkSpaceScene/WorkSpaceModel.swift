@@ -74,3 +74,9 @@ struct WorkSpaceUserInfo {
     let nickname: String
     let profileImage: String?
 }
+
+// 워크스페이스 관리자 권한 변경
+struct ChangeAdminRequestModel {
+    let workSpaceId: Int
+    let newAdminId: Int
+}

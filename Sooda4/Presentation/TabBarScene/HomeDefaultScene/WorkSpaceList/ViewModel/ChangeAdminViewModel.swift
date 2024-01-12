@@ -17,7 +17,10 @@ class ChangeAdminViewModel {
         self.handleWorkSpaceUseCase = handleWorkSpaceUseCase
     }
     
-    
+    func fetchMemberList(completion: @escaping () -> Void) {
+        
+        
+    }
     
 }
 
