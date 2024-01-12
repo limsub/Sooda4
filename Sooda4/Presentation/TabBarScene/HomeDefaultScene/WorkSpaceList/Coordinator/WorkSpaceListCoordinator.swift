@@ -65,15 +65,28 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 
             case .showActionSheetForAdmin:
                 print("관리자 액션 시트 띄워주기")
-                self?.navigationController.showActionSheetFourSection(firstTitle: "1", firstCompletion: {
-                    print("1")
-                }, secondTitle: "2", secondCompletion: {
-                    print("2")
-                }, thirdTitle: "3", thirdCompletion: {
-                    print("3")
-                }, fourthTitle: "4") {
-                    print("4")
-                }
+//                self?.navigationController.showActionSheetFourSection(firstTitle: "1", firstCompletion: {
+//                    print("1")
+//                }, secondTitle: "2", secondCompletion: {
+//                    print("2")
+//                }, thirdTitle: "3", thirdCompletion: {
+//                    print("3")
+//                }, fourthTitle: "4") {
+//                    print("4")
+//                }
+                
+//                self?.navigationController.showCustomAlertOneActionViewController(title: "워크스페이스 나가기", message: "정말 이 워크스페이스를 삭제하시겠습니까? 삭제 시 채널/멤버/채팅 등 워크스페이스 내의 모든 정보가 삭제되며 복구할 수 없습니다", completion: {
+//                    print("hi")
+//                })
+                
+                self?.navigationController.showCustomAlertTwoActionViewController()
+                                
+                
+                
+                
+                
+                
+                
                 
             case .showActionSheetForGeneral:
                 print("일반 액션 시트 띄워주기")
