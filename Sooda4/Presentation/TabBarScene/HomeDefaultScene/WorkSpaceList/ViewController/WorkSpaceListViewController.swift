@@ -19,7 +19,6 @@ class WorkSpaceListViewController: BaseViewController {
     
     static func create(with viewModel: WorkSpaceListViewModel) -> WorkSpaceListViewController {
         let vc = WorkSpaceListViewController()
-        viewModel.vcViewDidLoad = vc.rx.viewDidLoad
         vc.viewModel = viewModel
         return vc
     }
@@ -28,6 +27,7 @@ class WorkSpaceListViewController: BaseViewController {
     // 현재 워크스페이스 셀의 메뉴 버튼 클릭 -> menuButtonClicked 실행 -> input으로 이벤트 VM에 전달
 //    var menuButtonClicked: ControlEvent<Void>?
     var menuButtonClicked = PublishSubject<Void>()
+    var loadData = PublishSubject<Void>()
     
     
     override func loadView() {
@@ -42,6 +42,8 @@ class WorkSpaceListViewController: BaseViewController {
         setNavigation()
 //        setTableView()
         bindVM()
+        
+        loadData.onNext(()) // 데이터 로드 (viewDidLoad 대신 사용)
     }
     
     func setNavigation() {
@@ -76,6 +78,7 @@ class WorkSpaceListViewController: BaseViewController {
     func bindVM() {
         
         let input = WorkSpaceListViewModel.Input(
+            loadData: self.loadData,
             itemSelected: mainView.workSpaceTableView.rx.itemSelected,
             menuButtonClicked: menuButtonClicked,
             addWorkSpaceButtonClicked: mainView.addWorkSpaceButtonView.sButton.rx.tap,

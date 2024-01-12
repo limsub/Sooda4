@@ -15,8 +15,6 @@ class WorkSpaceListViewModel: BaseViewModelType {
     
     var didSendEventClosure: ( (WorkSpaceListViewModel.Event) -> Void)?
     
-    var vcViewDidLoad: ControlEvent<Void>?
-    
     private let workSpaceUseCase: WorkSpaceUseCaseProtocol
     private var selectedWorkSpaceId: Int
     
@@ -27,6 +25,7 @@ class WorkSpaceListViewModel: BaseViewModelType {
     
     
     struct Input {
+        let loadData: PublishSubject<Void>
         let itemSelected: ControlEvent<IndexPath>
         let menuButtonClicked: PublishSubject<Void>?
         
@@ -40,26 +39,23 @@ class WorkSpaceListViewModel: BaseViewModelType {
     
     func transform(_ input: Input) -> Output {
         
+        
         let items = PublishSubject<[WorkSpaceModel]>()
         
-        // viewDidLoad -> 데이터 로드
-        if vcViewDidLoad != nil {
-            vcViewDidLoad!
-                .flatMap {_ in
-                    self.workSpaceUseCase.myWorkSpacesRequest()
-                }
-                .subscribe(with: self) { owner , response in
-                    
-                    switch response {
-                    case .success(let model):
-                        items.onNext(model)
-                    case .failure(let error):
-                        print("에러 예외처리 아직 안함")
-                    }
-                }
-                .disposed(by: disposeBag)
-        }
         
+        input.loadData
+            .flatMap { _ in
+                self.workSpaceUseCase.myWorkSpacesRequest()
+            }
+            .subscribe(with: self) { owner , response  in
+                switch response {
+                case .success(let model):
+                    items.onNext(model)
+                case .failure(let error):
+                    print("아직 에러처리 안함")
+                }
+            }
+            .disposed(by: disposeBag)
         
         // 메뉴버튼 클릭 -> 관리자 여부 확인 -> actionSheet
         // 메뉴버튼이 클릭되었다는건, 그 워크스페이스는 현재 VM에 저장된 workSpaceId의 워크스페이스라는 뜻. 즉, 그냥 바로 사용한다.

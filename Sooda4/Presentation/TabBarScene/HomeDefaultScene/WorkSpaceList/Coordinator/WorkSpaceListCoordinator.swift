@@ -291,18 +291,19 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                     self?.navigationController.viewControllers.forEach { vc in
                         if let vc = vc as? WorkSpaceListViewController
                         {
-                            
-                            vc.viewDidLoad()
-                            
-                            
+                            // workSpaceListView의 items 새로 불러주기 <- rx로 테이블뷰 연결되어 있음.
+                            vc.loadData.onNext(())  // items 새로 부르라는 의미
+                            // -> 다시 메뉴버튼 클릭하면 관리자 모드로 나오지 말아야 한다
+                            print("토스트 메세지도 띄워주기 - '워크스페이스 관리자가 변경되었습니다' ")
                         }
                     }
                     
+                    
                 } else {
                     print("관리자 변경 못하고 돌아왔다!!")
-                    self?.navigationController.dismiss(animated: true)
-                    
                 }
+                
+                self?.navigationController.dismiss(animated: true)  // 관리자 변경 페이지 내려주는 건 동일
             
             }
             
