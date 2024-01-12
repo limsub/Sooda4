@@ -16,7 +16,10 @@ class NetworkManager {
     private init() { }
     
     // Single
-    func request<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
+    func request<T: Decodable>(
+        type: T.Type,
+        api: NetworkRouter
+    ) -> Single< Result<T, NetworkError> > {
         
         
         return Single< Result<T, NetworkError> >.create { single in
@@ -60,9 +63,11 @@ class NetworkManager {
     }
     
     
-    // 빈 데이터가 응답으로 오는 경우 (ex. 이메일 유효성 검사)
+    // 빈 데이터가 응답으로 오는 경우 (ex. 이메일 유효성 검사, 워크스페이스 삭제)
     // -> statusCode로 성공 실패 구분.
-    func requestEmptyResponse(api: NetworkRouter) -> Single< Result<String, NetworkError> > {
+    func requestEmptyResponse(
+        api: NetworkRouter
+    ) -> Single< Result<String, NetworkError> > {
         
         return Single< Result<String, NetworkError> >.create { single in
             
@@ -108,7 +113,10 @@ class NetworkManager {
     
     
     // Single + multipart
-    func requestMultiPart<T: Decodable>(type: T.Type, api: NetworkRouter) -> Single< Result<T, NetworkError> > {
+    func requestMultiPart<T: Decodable>(
+        type: T.Type,
+        api: NetworkRouter
+    ) -> Single< Result<T, NetworkError> > {
         
         print("--------------")
         
@@ -189,6 +197,47 @@ class NetworkManager {
     }
     
     
+    func requestCompletionEmptyResponse(
+        api: NetworkRouter,
+        completion: @escaping (Result<String, NetworkError>) -> Void
+    ) {
+        AF.request(api)
+            .validate()
+            .response { response in
+                let statusCode = response.response?.statusCode
+                
+                print("code : ", statusCode)
+                
+                if statusCode == 200 {
+                    print("(Completion - EmptyResponse) 네트워크 통신 성공")
+                    completion(.success("good"))
+                }
+                else {
+                    let result = response.result
+                    
+                    if case .failure(let error) = result {
+                        print("(Completion - EmptyResponse) 네트워크 통신 실패")
+                        
+                        // ErrorResponse 타입으로 디코딩 성공
+                        if let errorCode = self.decodingErrorResponse(from: response.data) {
+                            print("(Completion - EmptyResponse) 에러 디코딩 성공")
+                            let e = NetworkError(errorCode)
+                            completion(.failure(e))
+                        }
+                        
+                        // ErrorResponse 타입으로 디코딩 실패
+                        else {
+                            print("(Completion - EmptyResponse) 에러 디코딩 실패")
+                            
+                            let errorDescription = error.localizedDescription
+                            let e = NetworkError(errorDescription)
+                            completion(.failure(e))
+                        }
+                    }
+                }
+                
+            }
+    }
     
     
     

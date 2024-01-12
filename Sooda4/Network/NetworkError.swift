@@ -17,6 +17,7 @@ enum NetworkError: Error {
     case E11    // 잘못된 요청
     case E12    // 중복 데이터
     
+    case E14    // 권한없음 (관리자 아닌데 삭제하려고 함)
     case E15    // 요청 거절 (채널 관리자)
     
     case E21    // 새싹코인 부족 (워크스페이스 생성)

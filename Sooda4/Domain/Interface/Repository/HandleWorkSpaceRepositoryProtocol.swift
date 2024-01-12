@@ -20,6 +20,6 @@ protocol HandleWorkSpaceRepositoryProtocol {
     
     func leaveWorkSpaceRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceModel], NetworkError>) -> Void)
     
-    
+    func deleteWorkSpaceRequest(_ requestModel: Int, completion: @escaping (Result<String, NetworkError>) -> Void)
 
 }
