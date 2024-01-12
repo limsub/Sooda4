@@ -44,6 +44,14 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         // 여기다 이렇게 써두니까 그냥 개판이고만. Layer 분리 전혀 안되네..
     }
     
+    
+    // 이런 식으로 할 수 있지 않을까...?
+    convenience init(_ a: Int, nav: UINavigationController) {
+        self.init(nav)
+        
+        self.workSpaceId = a
+    }
+    
     // 3.
     var childCoordinators: [Coordinator] = []
     
@@ -267,12 +275,28 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         print(#function)
         
         let changeAdminVM = ChangeAdminViewModel(
+            workSpaceId: self.workSpaceId!,
             // 자기 쓰는거 전달해줌.
             handleWorkSpaceUseCase: self.handleWorkSpaceUseCase
         )
         let changeAdminVC = ChangeAdminViewController.create(with: changeAdminVM)
         
         changeAdminVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .goBackWorkSpaceList(let changeSuccess):
+                if changeSuccess {
+                     print("관리자 변경 하고 돌아왔다!")
+                    
+                } else {
+                    print("관리자 변경 못하고 돌아왔다!!")
+                    self?.navigationController.dismiss(animated: true)
+                    
+                }
+            
+            }
+            
+            
             print("hi")
         }
         

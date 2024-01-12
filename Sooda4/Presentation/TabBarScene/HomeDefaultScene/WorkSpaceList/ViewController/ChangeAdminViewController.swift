@@ -54,8 +54,21 @@ class ChangeAdminViewController: BaseViewController {
     }
     
     func fetchData() {
-        viewModel.fetchMemberList { [weak self ] in
-            self?.mainView.memberListTableView.reloadData()
+        viewModel.fetchMemberList { [weak self] value in
+            if value {
+                print("워크스페이스 멤버 리스트 확인. 테이블뷰 리로드")
+                self?.mainView.memberListTableView.reloadData()
+            } else {
+                print("워크스페이스 멤버 리스트 없다. 얼럿 띄워주기")
+                self?.showCustomAlertOneActionViewController(
+                    title: "워크스페이스 관리자 변경 불가",
+                    message: "워크스페이스 멤버가 없어 관리자 변경을 할 수 없습니다. 새로운 멤버를 워크스페이스에 초대해보세요") {
+                        self?.dismiss(animated: false)
+                        self?.viewModel.sendAction(event: .goBackWorkSpaceList(changeSuccess: false))
+                    }
+                // 얼럿 띄워주기 : 권한 줄 멤버가 없다
+            }
+            
         }
     }
 }
@@ -63,12 +76,15 @@ class ChangeAdminViewController: BaseViewController {
 extension ChangeAdminViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return viewModel.numberOfRows()
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MemberListTableViewCell.description(), for: indexPath) as? MemberListTableViewCell else { return UITableViewCell() }
+        
+        let userInfo = viewModel.userInfo(indexPath)
+        cell.designCell(userInfo)
         
         return cell
     }

@@ -69,4 +69,16 @@ class MemberListTableViewCell: BaseTableViewCell {
         
         contentView.backgroundColor = UIColor.appColor(.background_primary)
     }
+    
+    func designCell(_ model: WorkSpaceUserInfo) {
+        // 1. 이미지
+        
+        // 2. 이름
+        nameLabel.text = model.nickname
+        nameLabel.setAppFont(.bodyBold)
+        
+        // 3. 이메일
+        emailLabel.text = model.email
+        emailLabel.setAppFont(.body)
+    }
 }
