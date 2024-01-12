@@ -13,7 +13,11 @@ protocol WorkSpaceListCoordinatorProtocol: Coordinator {
     // UseCase 하나를 가지고 있는 걸로 하자.
     var handleWorkSpaceUseCase: HandleWorkSpaceUseCaseProtocol { get set }
     
+    
+    
     // view
+    func showWorkSpaceListView()
+    
     func showMakeWorkSpaceView()
     
     func showEditWorkSpaceView()
@@ -46,13 +50,13 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     
     // 5.
     func start() {
-        showMakeWorkSpaceView()
+        showWorkSpaceListView()
     }
     
     // * 필수
     var workSpaceId: Int?
     
-    func showMakeWorkSpaceView() {
+    func showWorkSpaceListView() {
         
         guard let workSpaceId else { return }
         
@@ -105,9 +109,17 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         
         navigationController.pushViewController(vc, animated: false)
     }
+    
+    
+    
+    func showMakeWorkSpaceView() {
+        print(#function)
+    }
+    
     func showEditWorkSpaceView() {
         print(#function)
     }
+    
     func showExitWorkSpaceView(isAdmin: Bool) {
         // 관리자 -> 나가기 불가능 oneAction
         // 일반  -> 나가기 가능   twoAction
@@ -172,8 +184,11 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         }
         print(#function)
     }
+    
     func showDeleteWorkSpaceView() {
         print(#function)
+        
+        
     }
     func showChangeAdminView() {
         print(#function)
