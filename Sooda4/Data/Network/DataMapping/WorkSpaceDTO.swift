@@ -69,3 +69,5 @@ extension MyOneWorkSpaceResponseDTO {
 // -> 일단 워크스페이스 HomeDefaultView에서 사용자들 정보는 이용을 안해.
 
 
+/* ========== 워크스페이스 멤버 조회 ========== */
+typealias WorkSpaceMembersResponseDTO = [UserInfoDTO]

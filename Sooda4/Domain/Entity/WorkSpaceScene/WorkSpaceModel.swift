@@ -65,3 +65,12 @@ struct ChannelUnreadCountInfoModel {
 struct DMUnreadCountInfoModel {
     let count: Int
 }
+
+
+// 워크스페이스 멤버 조회
+struct WorkSpaceUserInfo {
+    let userId: Int
+    let email: String
+    let nickname: String
+    let profileImage: String?
+}

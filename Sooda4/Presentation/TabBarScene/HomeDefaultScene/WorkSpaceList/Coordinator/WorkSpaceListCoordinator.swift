@@ -91,6 +91,8 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                     
                 }, thirdTitle: "워크스페이스 관리자 변경", thirdCompletion: {
                     print("3")
+                    self?.showChangeAdminView()
+                    
                 }, fourthTitle: "워크스페이스 삭제") {
                     print("4")
                     self?.showDeleteWorkSpaceView()
@@ -119,9 +121,11 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         print(#function)
     }
     
+    
     func showEditWorkSpaceView() {
         print(#function)
     }
+    
     
     func showExitWorkSpaceView(isAdmin: Bool) {
         // 관리자 -> 나가기 불가능 oneAction
@@ -195,6 +199,7 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         print(#function)
     }
     
+    
     func showDeleteWorkSpaceView() {
         print(#function)
         // 관리자일 때만 실행되는 코드이기 때문에, 따로 분기처리할 필요 없다
@@ -256,8 +261,23 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         
         
     }
+    
+    
     func showChangeAdminView() {
         print(#function)
+        
+        let changeAdminVM = ChangeAdminViewModel(
+            // 자기 쓰는거 전달해줌.
+            handleWorkSpaceUseCase: self.handleWorkSpaceUseCase
+        )
+        let changeAdminVC = ChangeAdminViewController.create(with: changeAdminVM)
+        
+        changeAdminVM.didSendEventClosure = { [weak self] event in
+            print("hi")
+        }
+        
+        let nav = UINavigationController(rootViewController: changeAdminVC)
+        navigationController.present(nav, animated: true)
     }
 }
 

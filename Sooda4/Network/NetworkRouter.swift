@@ -27,6 +27,8 @@ enum NetworkRouter: URLRequestConvertible {
     
     case deleteWorkSpace(_ sender: Int) // workSpaceId
     
+    case workSpaceMembers(_ sender: Int) // workSpaceId
+    
     case leaveWorkSpace(_ sender: Int)  // workSpaceId
     
     
@@ -71,6 +73,8 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces/\(sender)"
         case .deleteWorkSpace(let sender):
             return "/v1/workspaces/\(sender)"
+        case .workSpaceMembers(let sender):
+            return "/v1/workspaces/\(sender)/members"
         case .leaveWorkSpace(let sender):
             return "/v1/workspaces/\(sender)/leave"
             
@@ -126,7 +130,7 @@ enum NetworkRouter: URLRequestConvertible {
         // WORKSPACE
         case .makeWorkSpace:
             return .post
-        case .myWorkSpaces, .myOneWorkSpace, .leaveWorkSpace:
+        case .myWorkSpaces, .myOneWorkSpace, .leaveWorkSpace, .workSpaceMembers:
             return .get
         case .deleteWorkSpace:
             return .delete
