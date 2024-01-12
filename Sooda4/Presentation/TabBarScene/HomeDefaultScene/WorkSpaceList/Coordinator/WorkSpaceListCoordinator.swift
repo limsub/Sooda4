@@ -11,6 +11,7 @@ import UIKit
 protocol WorkSpaceListCoordinatorProtocol: Coordinator {
     // 팝업창을 UIVC 메서드로 구현했기 때문에, 팝업창 내에서 일어나는 일들을 여기 코디네이터에서 처리해줘야 함 <- 워크스페이스 나가기 / 삭제
     // UseCase 하나를 가지고 있는 걸로 하자.
+    var handleWorkSpaceUseCase: HandleWorkSpaceUseCaseProtocol { get set }
     
     // view
     func showMakeWorkSpaceView()
@@ -23,6 +24,8 @@ protocol WorkSpaceListCoordinatorProtocol: Coordinator {
 
 class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     
+    var handleWorkSpaceUseCase: HandleWorkSpaceUseCaseProtocol
+    
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate?
     
@@ -30,6 +33,9 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     var navigationController: UINavigationController
     required init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
+        handleWorkSpaceUseCase = HandleWorkSpaceUseCase(
+            handleWorkSpaceRepository: HandleWorkSpaceRepository()
+        )
     }
     
     // 3.
@@ -121,19 +127,40 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 cancelButtonTitle: "취소") {
                     // 나가기
                     
-                    // 로직 정리
-                    // 1. 나가기 네트워크 콜
-                    // 2. 실패
-                    
                     // 코디네이터에서 이런 식으로 네트워크 콜 하고 있는게 문제가 있는 것 같다.
                     // 근데 내가 팝업창을 요따구로 구현해둬서, 따로 VC, VM이 있는 구조가 아니기 때문에 어쩔 수 없다고 판단함.
-                    // 예외적으로 여기서만 NetworkManager에 직접 접근한다
-                    
-                    NetworkManager.shared.requestCompletion(
-                        type: <#T##Decodable.Protocol#>,
-                        api: <#T##NetworkRouter#>) { <#Result<Decodable, NetworkError>#> in
-                            <#code#>
+                    // 예외적으로 여기 코디에서만 UseCase를 활용하자
+                    self.handleWorkSpaceUseCase.leaveWorkSpaceRequest(self.workSpaceId!) { response  in
+                        switch response {
+                        case .success(let model):
+                            // 남은 워크스페이스 유무에 따라 어디로 갈 지 정해진다.
+                            if model.isEmpty {
+                                print("남은 워크스페이스가 없다. Home Empty로 가자")
+                            } else {
+                                print("남은 워크스페이스 중 created가 가장 최근 날짜(createdAt)에 생성된 워크스페이스로 가야하는데 지금 일단 귀찮아서 배열 첫 번째 워크스페이스로 감")
+                                
+                                /* 여기서 뒤로 돌아가는 로직은 워크스페이스 선택했을 때와 동일함 */
+                                
+                                let newWorkSpaceId = model.first!.workSpaceId
+                                self.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: newWorkSpaceId))
+                            }
+                            
+                        case .failure(let networkError):
+                            // 관리자인 채널이 하나 있어서 실패한 경우에는 채널 관리자 때문이라고 토스트 메세지 띄워주기
+                            
+                            if case .E15 = networkError {
+                                print("채널 관리자입니다!!")
+                                
+                            } else {
+                                print("그냥 에러남")
+                            }
+                            
+                            self.navigationController.dismiss(animated: false)
+                            
                         }
+                    }
+                    
+                    
                     
                 } cancelCompletion: {
                     // 취소

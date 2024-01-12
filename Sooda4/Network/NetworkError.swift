@@ -17,6 +17,8 @@ enum NetworkError: Error {
     case E11    // 잘못된 요청
     case E12    // 중복 데이터
     
+    case E15    // 요청 거절 (채널 관리자)
+    
     case E21    // 새싹코인 부족 (워크스페이스 생성)
     
     init(_ error: String) {
@@ -25,6 +27,7 @@ enum NetworkError: Error {
         case "E03": self = .E03
         case "E11": self = .E11
         case "E12": self = .E12
+        case "E15": self = .E15
         case "E21": self = .E21
             
         default: self = .unknown(message: error)
