@@ -122,6 +122,16 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
         
         
         
+        // 2. 도착지가 HomeEmpty코디야 -> (더 위로 올라가) -> 나중에 분기처리 else 하나로 가능할듯?
+        if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
+           case .homeEmptyScene = nextFlow {
+            print("홈디폴트 코디 : finish 실행")
+            self.finish(nextFlow)
+        }
+        
+        
+        
+        
         print(#function)
     }
 }

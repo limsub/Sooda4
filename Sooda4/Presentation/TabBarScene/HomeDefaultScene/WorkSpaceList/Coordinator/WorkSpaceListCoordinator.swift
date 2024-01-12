@@ -148,6 +148,11 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                             // 남은 워크스페이스 유무에 따라 어디로 갈 지 정해진다.
                             if model.isEmpty {
                                 print("남은 워크스페이스가 없다. Home Empty로 가자")
+                                print("워크스페이스코디 : finish 실행")
+                                self.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
+                                
+                                
+                                
                             } else {
                                 print("남은 워크스페이스 중 created가 가장 최근 날짜(createdAt)에 생성된 워크스페이스로 가야하는데 지금 일단 귀찮아서 배열 첫 번째 워크스페이스로 감")
                                 
@@ -187,6 +192,9 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     
     func showDeleteWorkSpaceView() {
         print(#function)
+        // 관리자일 때만 실행되는 코드이기 때문에, 따로 분기처리할 필요 없다
+        
+
         
         
     }

@@ -66,6 +66,7 @@ class AppCoordinator: AppCoordinatorProtocol {
     func showHomeEmptyFlow() {
         print(#function)
         
+        
         let homeEmptyCoordinator = HomeEmptySceneCoordinator(navigationController)
         homeEmptyCoordinator.finishDelegate = self
         childCoordinators.append(homeEmptyCoordinator)
@@ -76,6 +77,7 @@ class AppCoordinator: AppCoordinatorProtocol {
         print(#function)
         
         let tabBarCoordinator = TabBarCoordinator(navigationController)
+        tabBarCoordinator.finishDelegate = self
         tabBarCoordinator.workSpaceId = workSpaceId
         childCoordinators.append(tabBarCoordinator)
         tabBarCoordinator.start()
@@ -107,6 +109,8 @@ extension AppCoordinator: CoordinatorFinishDelegate {
          3. 부모 타고 가야 하는 코디 -> 없음
          */
         
+        print("앱코디 : didfinish 받음")
+        
         // 1 .Child
         if let nextFlow = nextFlow as? ChildCoordinatorType {
             switch nextFlow {
@@ -120,6 +124,7 @@ extension AppCoordinator: CoordinatorFinishDelegate {
                 print("이것도 실행되면 안된다. 탭바 코디 중 정확히 어디로 갈지 전달받아야 한다")
                 
             case .homeEmptyScene:
+                print("앱코디 : show homeempty flow")
                 self.showHomeEmptyFlow()
                 
             }
