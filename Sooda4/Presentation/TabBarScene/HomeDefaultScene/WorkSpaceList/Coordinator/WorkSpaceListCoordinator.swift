@@ -145,7 +145,9 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                     // 코디네이터에서 이런 식으로 네트워크 콜 하고 있는게 문제가 있는 것 같다.
                     // 근데 내가 팝업창을 요따구로 구현해둬서, 따로 VC, VM이 있는 구조가 아니기 때문에 어쩔 수 없다고 판단함.
                     // 예외적으로 여기 코디에서만 UseCase를 활용하자
-                    self.handleWorkSpaceUseCase.leaveWorkSpaceRequest(self.workSpaceId!) { response  in
+                    self.handleWorkSpaceUseCase.leaveWorkSpaceRequest(
+                        self.workSpaceId!
+                    ) { response  in
                         switch response {
                         case .success(let model):
                             // 남은 워크스페이스 유무에 따라 어디로 갈 지 정해진다.
@@ -207,8 +209,41 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
             okButtonTitle: "삭제",
             cancelButtonTitle: "취소") {
                 print("삭제 클릭")
+                
+                self.handleWorkSpaceUseCase.deleteWorkSpaceRequest(
+                    self.workSpaceId!
+                ) { response  in
+                    switch response {
+                    case .success:
+                        print("워크스페이스 삭제 성공. 내 워크스페이스 조회 통신 시도")
+                        
+                        self.handleWorkSpaceUseCase.myWorkSpaceRequest { response  in
+                            switch response {
+                            case .success(let model):
+                                print("내 워크스페이스 조회 성공")
+                                
+                            case .failure(let error):
+                                print("내 워크스페이스 조회 실팬")
+                                
+                            }
+                        }
+                        
+                        
+                        
+                    case .failure(let networkError):
+                        print("워크스페이스 삭제 실패")
+                        
+                    }
+                }
+                
+         
+                
+                
+                
             } cancelCompletion: {
                 print("취소 클릭")
+                
+                self.navigationController.dismiss(animated: false)
             }
 
 
