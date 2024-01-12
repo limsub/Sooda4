@@ -222,23 +222,29 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                             case .success(let model):
                                 print("내 워크스페이스 조회 성공")
                                 
+                                if model.isEmpty {
+                                    print("남은 워크스페이스가 없다. Home Empty로 가자")
+                                    self.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
+                                    
+                                } else {
+                                    print("남은 워크스페이스 중 created가 가장 최근 날짜(createdAt)에 생성된 워크스페이스로 가야하는데 지금 일단 귀찮아서 배열 첫 번째 워크스페이스로 감")
+                                    
+                                    /* 여기서 뒤로 돌아가는 로직은 워크스페이스 선택했을 때와 동일함 */
+                                    
+                                    let newWorkSpaceId = model.first!.workSpaceId
+                                    self.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: newWorkSpaceId))
+                                }
+
                             case .failure(let error):
-                                print("내 워크스페이스 조회 실팬")
-                                
+                                print("내 워크스페이스 조회 실패")
+                                self.navigationController.dismiss(animated: false)
                             }
                         }
-                        
-                        
-                        
                     case .failure(let networkError):
                         print("워크스페이스 삭제 실패")
-                        
+                        self.navigationController.dismiss(animated: false)
                     }
                 }
-                
-         
-                
-                
                 
             } cancelCompletion: {
                 print("취소 클릭")
