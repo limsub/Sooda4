@@ -9,6 +9,9 @@ import UIKit
 
 
 protocol WorkSpaceListCoordinatorProtocol: Coordinator {
+    // 팝업창을 UIVC 메서드로 구현했기 때문에, 팝업창 내에서 일어나는 일들을 여기 코디네이터에서 처리해줘야 함 <- 워크스페이스 나가기 / 삭제
+    // UseCase 하나를 가지고 있는 걸로 하자.
+    
     // view
     func showMakeWorkSpaceView()
     
@@ -119,6 +122,18 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                     // 나가기
                     
                     // 로직 정리
+                    // 1. 나가기 네트워크 콜
+                    // 2. 실패
+                    
+                    // 코디네이터에서 이런 식으로 네트워크 콜 하고 있는게 문제가 있는 것 같다.
+                    // 근데 내가 팝업창을 요따구로 구현해둬서, 따로 VC, VM이 있는 구조가 아니기 때문에 어쩔 수 없다고 판단함.
+                    // 예외적으로 여기서만 NetworkManager에 직접 접근한다
+                    
+                    NetworkManager.shared.requestCompletion(
+                        type: <#T##Decodable.Protocol#>,
+                        api: <#T##NetworkRouter#>) { <#Result<Decodable, NetworkError>#> in
+                            <#code#>
+                        }
                     
                 } cancelCompletion: {
                     // 취소
@@ -137,3 +152,6 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         print(#function)
     }
 }
+
+
+
