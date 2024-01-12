@@ -13,8 +13,8 @@ class CustomAlertTwoActionViewController: BaseViewController {
         title: String,
         message: String,
         okButtonTitle: String,
-        cancelButtonTitle: String,
         okCompletion: @escaping () -> Void,
+        cancelButtonTitle: String,
         cancelCompletion: @escaping () -> Void
     ) {
         self.init()
@@ -81,7 +81,9 @@ class CustomAlertTwoActionViewController: BaseViewController {
     
     lazy var cancelButton = {
         let view = SignUpActiveButton("취소") // 타이틀 바꿀 예정
-        view.update(.disabled)
+//        view.update(.disabled)    // 이걸로 해두면 클릭 자체가 불가능
+        view.update(.enabled)
+        view.backgroundColor = UIColor.appColor(.brand_inactive)
         view.addTarget(self , action: #selector(cancelButtonClicked), for: .touchUpInside)
         return view
     }()

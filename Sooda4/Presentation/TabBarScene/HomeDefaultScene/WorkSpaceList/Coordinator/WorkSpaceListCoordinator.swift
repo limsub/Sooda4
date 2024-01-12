@@ -11,8 +11,9 @@ import UIKit
 protocol WorkSpaceListCoordinatorProtocol: Coordinator {
     // view
     func showMakeWorkSpaceView()
+    
     func showEditWorkSpaceView()
-    func showExitWorkSpaceView()    // 팝업
+    func showExitWorkSpaceView(isAdmin: Bool)    // 팝업
     func showDeleteWorkSpaceView()  // 팝업
     func showChangeAdminView()
 }
@@ -65,33 +66,25 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 
             case .showActionSheetForAdmin:
                 print("관리자 액션 시트 띄워주기")
-//                self?.navigationController.showActionSheetFourSection(firstTitle: "1", firstCompletion: {
-//                    print("1")
-//                }, secondTitle: "2", secondCompletion: {
-//                    print("2")
-//                }, thirdTitle: "3", thirdCompletion: {
-//                    print("3")
-//                }, fourthTitle: "4") {
-//                    print("4")
-//                }
-                
-//                self?.navigationController.showCustomAlertOneActionViewController(title: "워크스페이스 나가기", message: "정말 이 워크스페이스를 삭제하시겠습니까? 삭제 시 채널/멤버/채팅 등 워크스페이스 내의 모든 정보가 삭제되며 복구할 수 없습니다", completion: {
-//                    print("hi")
-//                })
-                
-                self?.navigationController.showCustomAlertTwoActionViewController()
+                self?.navigationController.showActionSheetFourSection(
+                    firstTitle: "워크스페이스 편집", firstCompletion: {
+                    print("1")
+                }, secondTitle: "워크스페이스 나가기", secondCompletion: {
+                    print("2")
+                    self?.showExitWorkSpaceView(isAdmin: true)
+                    
+                    
+                }, thirdTitle: "워크스페이스 관리자 변경", thirdCompletion: {
+                    print("3")
+                }, fourthTitle: "워크스페이스 삭제") {
+                    print("4")
+                }
                                 
-                
-                
-                
-                
-                
-                
                 
             case .showActionSheetForGeneral:
                 print("일반 액션 시트 띄워주기")
-                self?.navigationController.showActionSheetOneSection(title: "1", completion: {
-                    print("1")
+                self?.navigationController.showActionSheetOneSection(title: "워크스페이스 나가기", completion: {
+                    self?.showExitWorkSpaceView(isAdmin: false)
                 })
             }
         }
@@ -106,7 +99,35 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     func showEditWorkSpaceView() {
         print(#function)
     }
-    func showExitWorkSpaceView() {
+    func showExitWorkSpaceView(isAdmin: Bool) {
+        // 관리자 -> 나가기 불가능 oneAction
+        // 일반  -> 나가기 가능   twoAction
+        
+        if isAdmin {
+            navigationController.showCustomAlertOneActionViewController(
+                title: "워크스페이스 나가기",
+                message: "회원님은 워크스페이스 관리자입니다. 워크스페이스 관리자를 다른 멤버로 변경한 후 나갈 수 있습니다") {
+                    self.navigationController.dismiss(animated: false)
+                }
+            
+        } else {
+            navigationController.showCustomAlertTwoActionViewController(
+                title: "워크스페이스 나가기",
+                message: "정말 이 워크스페이스를 떠나시겠습니까?",
+                okButtonTitle: "나가기",
+                cancelButtonTitle: "취소") {
+                    // 나가기
+                    
+                    // 로직 정리
+                    
+                } cancelCompletion: {
+                    // 취소
+                    self.navigationController.dismiss(animated: false)
+                    
+                }
+
+            
+        }
         print(#function)
     }
     func showDeleteWorkSpaceView() {

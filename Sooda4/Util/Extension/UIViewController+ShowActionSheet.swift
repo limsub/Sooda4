@@ -65,22 +65,31 @@ extension UIViewController {
         completion: @escaping () -> Void
     ) {
         
-        let vc = CustomAlertOneActionViewController(title: title, message: message, completion: completion)
+        let vc = CustomAlertOneActionViewController(
+            title: title,
+            message: message,
+            completion: completion
+        )
         present(vc, animated: false)
     }
     
+    
     func showCustomAlertTwoActionViewController(
+        title: String,
+        message: String,
+        okButtonTitle: String,
+        cancelButtonTitle: String,
+        okCompletion: @escaping () -> Void,
+        cancelCompletion: @escaping () -> Void
     ) {
         let vc = CustomAlertTwoActionViewController(
-            title: "as",
-            message: "asdafs",
-            okButtonTitle: "adsf",
-            cancelButtonTitle: "asdf") {
-                print("aadsf")
-            } cancelCompletion: {
-                print("asdfasf")
-            }
-
+            title: title,
+            message: message,
+            okButtonTitle: okButtonTitle,
+            okCompletion: okCompletion,
+            cancelButtonTitle: cancelButtonTitle,
+            cancelCompletion: cancelCompletion
+        )
         
         present(vc, animated: false)
     }
