@@ -42,6 +42,39 @@ class ChangeAdminViewModel {
         }
     }
     
+    func changeAdmin(indexPath: IndexPath, completion: @escaping (Bool) -> Void) {
+        
+        let requestModel = ChangeAdminRequestModel(
+            workSpaceId: workSpaceId,
+            newAdminId: items[indexPath.row].userId
+        )
+        
+        handleWorkSpaceUseCase.changeAdminWorkSpace(
+            requestModel
+        ) { response in
+            
+            switch response {
+            case .success(let model):
+                print("성공")
+                
+                completion(true)    // view dismiss
+                
+                self.didSendEventClosure?(.goBackWorkSpaceList(changeSuccess: true))
+                
+            case .failure(let networkError):
+                print("에러났슈 : \(networkError.localizedDescription)")
+                completion(false)
+                
+            }
+            
+            
+            
+                print(response)
+            
+            
+        }
+    }
+    
 }
 
 
@@ -52,6 +85,9 @@ extension ChangeAdminViewModel {
     }
     func userInfo(_ indexPath: IndexPath) -> WorkSpaceUserInfo {
         return items[indexPath.row]
+    }
+    func userName(_ indexPath: IndexPath) -> String {
+        return items[indexPath.row].nickname
     }
 }
 

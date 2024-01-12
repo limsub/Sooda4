@@ -88,4 +88,35 @@ extension ChangeAdminViewController: UITableViewDelegate, UITableViewDataSource 
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        print(indexPath)
+        let name = viewModel.userName(indexPath)
+        
+        showCustomAlertTwoActionViewController(
+            title: "\(name) 님을 관리자로 지정하시겠습니까?",
+            message:
+            """
+            워크스페이스 관리자는 다음과 같은 권한이 있습니다
+            - 워크스페이스 이름 또는 설명 변경
+            - 워크스페이스 삭제
+            - 워크스페이스 멤버 초대
+            """,
+            okButtonTitle: "확인",
+            cancelButtonTitle: "취소") {
+                
+                self.viewModel.changeAdmin(indexPath: indexPath) { value in
+                    if value {
+                        self.navigationController?.dismiss(animated: false)
+                        
+                    } else {
+                        // 네트워크 콜 실패
+                    }
+                }
+                
+            } cancelCompletion: {
+                self.navigationController?.dismiss(animated: false)
+            }
+    }
 }

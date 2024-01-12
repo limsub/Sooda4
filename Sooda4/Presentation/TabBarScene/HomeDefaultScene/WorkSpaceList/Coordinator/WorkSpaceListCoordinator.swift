@@ -286,7 +286,17 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
             switch event {
             case .goBackWorkSpaceList(let changeSuccess):
                 if changeSuccess {
-                     print("관리자 변경 하고 돌아왔다!")
+                    print("관리자 변경 하고 돌아왔다!")
+                    // 새롭게 데이터 받기. (이제 메뉴버튼 누르면 actionSheet 메뉴 하나만 나와야 함)
+                    self?.navigationController.viewControllers.forEach { vc in
+                        if let vc = vc as? WorkSpaceListViewController
+                        {
+                            
+                            vc.viewDidLoad()
+                            
+                            
+                        }
+                    }
                     
                 } else {
                     print("관리자 변경 못하고 돌아왔다!!")
