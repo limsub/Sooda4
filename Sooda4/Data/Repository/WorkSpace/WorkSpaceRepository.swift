@@ -10,7 +10,8 @@ import RxSwift
 import RxCocoa
 
 class WorkSpaceRepository: WorkSpaceRepositoryProtocol {
-    // 1. 내가 속한 워크스페이스 조회
+    
+    // 1. 내가 속한 워크스페이스 조회 - Single
     func myWorkSpaceRequest() -> Single< Result<[WorkSpaceModel], NetworkError> > {
         
         
@@ -33,4 +34,22 @@ class WorkSpaceRepository: WorkSpaceRepositoryProtocol {
             
         }
     }
+    
+    // 2. 내가 속한 워크스페이스 조회 - Completion
+    func myWorkSpaceRequest(completion: @escaping (Result<[WorkSpaceModel], NetworkError>) -> Void) {
+        
+        NetworkManager.shared.requestCompletion(
+            type: MyWorkSpacesResponseDTO.self ,
+            api: .myWorkSpaces) { response  in
+                switch response {
+                case .success(let dtoData):
+                    let responseModel = dtoData.map { $0.toDomain() }
+                    completion(.success(responseModel))
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    
 }

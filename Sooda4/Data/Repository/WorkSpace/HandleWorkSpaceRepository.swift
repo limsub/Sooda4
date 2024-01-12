@@ -34,7 +34,10 @@ class HandleWorkSpaceRepository: HandleWorkSpaceRepositoryProtocol {
         // - 응답 : nil
     func deleteWorkSpaceRequest(_ requestModel: Int, completion: @escaping (Result<String, NetworkError>) -> Void) {
         
-        NetworkManager.shared.
+        NetworkManager.shared.requestCompletionEmptyResponse(
+            api: .deleteWorkSpace(requestModel),
+            completion: completion
+        )
     }
     
 }

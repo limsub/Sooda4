@@ -38,8 +38,10 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     required init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
         handleWorkSpaceUseCase = HandleWorkSpaceUseCase(
-            handleWorkSpaceRepository: HandleWorkSpaceRepository()
+            handleWorkSpaceRepository: HandleWorkSpaceRepository(),
+            workSpaceRepository: WorkSpaceRepository()
         )
+        // 여기다 이렇게 써두니까 그냥 개판이고만. Layer 분리 전혀 안되네..
     }
     
     // 3.
@@ -91,6 +93,7 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                     print("3")
                 }, fourthTitle: "워크스페이스 삭제") {
                     print("4")
+                    self?.showDeleteWorkSpaceView()
                 }
                                 
                 
@@ -194,6 +197,20 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         print(#function)
         // 관리자일 때만 실행되는 코드이기 때문에, 따로 분기처리할 필요 없다
         
+        // "나가기" 클릭했을 때와 거의 비슷.
+        // 단, 여기서는 추가로 남은 워크스페이스 정보에 대한 네트워크 콜을 해야 함
+        
+        
+        navigationController.showCustomAlertTwoActionViewController(
+            title: "워크스페이스 삭제",
+            message: "정말 이 워크스페이스를 삭제하시겠습니까? 삭제 시 채널/멤버/채팅 등 워크스페이스 내의 모든 정보가 삭제되며 복구할 수 없습니다",
+            okButtonTitle: "삭제",
+            cancelButtonTitle: "취소") {
+                print("삭제 클릭")
+            } cancelCompletion: {
+                print("취소 클릭")
+            }
+
 
         
         
