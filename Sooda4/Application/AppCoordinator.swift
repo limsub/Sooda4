@@ -99,6 +99,8 @@ extension AppCoordinator: CoordinatorFinishDelegate {
 
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
         navigationController.viewControllers.removeAll()
+        navigationController.setNavigationBarHidden(false , animated: false)
+        
         // present된 애들도 없애줘야 하지 않을까..? navigationController.dismiss??
         // -> 일단 이 navController에서 present된 애들은 없어. LoginScene에서는 dismiss 해주고 있다.
         

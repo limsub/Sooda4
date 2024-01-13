@@ -46,10 +46,10 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     
     
     // 이런 식으로 할 수 있지 않을까...?
-    convenience init(_ a: Int, nav: UINavigationController) {
+    convenience init(_ workSpaceId: Int?, nav: UINavigationController) {
         self.init(nav)
         
-        self.workSpaceId = a
+        self.workSpaceId = workSpaceId  // nil이면 HomeEmpty에서 온겨
     }
     
     // 3.
@@ -63,18 +63,17 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         showWorkSpaceListView()
     }
     
-    // * 필수
+    // * 필수 는 아니고, nil이면 HomeEmpty에서 왔다고 판단함
     var workSpaceId: Int?
     
     func showWorkSpaceListView() {
         
-        guard let workSpaceId else { return }
         
         let workSpaceListVM = WorkSpaceListViewModel(
             workSpaceUseCase: WorkSpaceUseCase(
                 workSpaceRepository: WorkSpaceRepository()
             ),
-            selectedWorkSpaceId: workSpaceId
+            selectedWorkSpaceId: workSpaceId    // nil이면 알아서 vm에서 homeempty에서 왔다고 판단
         )
         
         workSpaceListVM.didSendEventClosure = { [weak self] event in
@@ -118,11 +117,21 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         }
         
         
-        
-        let vc = WorkSpaceListViewController.create(with: workSpaceListVM)
-        
-        
-        navigationController.pushViewController(vc, animated: false)
+        if workSpaceId == nil {
+            let v = WorkSpaceListView(.empty)
+            let vc = WorkSpaceListViewController.create(
+                with: workSpaceListVM,
+                view: v
+            )
+            navigationController.pushViewController(vc, animated: false)
+        } else {
+            let v = WorkSpaceListView(.notEmpty)
+            let vc = WorkSpaceListViewController.create(
+                with: workSpaceListVM,
+                view: v
+            )
+            navigationController.pushViewController(vc, animated: true)
+        }
     }
     
     

@@ -11,14 +11,18 @@ import RxCocoa
 
 class WorkSpaceListViewController: BaseViewController {
     
-    let mainView = WorkSpaceListView()
+    var mainView: WorkSpaceListView!
     var viewModel: WorkSpaceListViewModel!
     
     let disposeBag = DisposeBag()
     
     
-    static func create(with viewModel: WorkSpaceListViewModel) -> WorkSpaceListViewController {
+    static func create(
+        with viewModel: WorkSpaceListViewModel,
+        view: WorkSpaceListView
+    ) -> WorkSpaceListViewController {
         let vc = WorkSpaceListViewController()
+        vc.mainView = view
         vc.viewModel = viewModel
         return vc
     }
@@ -37,10 +41,7 @@ class WorkSpaceListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(#function)
-        
         setNavigation()
-//        setTableView()
         bindVM()
         
         loadData.onNext(()) // 데이터 로드 (viewDidLoad 대신 사용)
@@ -79,11 +80,7 @@ class WorkSpaceListViewController: BaseViewController {
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
     
-    func setTableView() {
-        mainView.workSpaceTableView.delegate = self
-        mainView.workSpaceTableView.dataSource = self
-    }
-    
+
     func bindVM() {
         
         let input = WorkSpaceListViewModel.Input(
@@ -91,6 +88,7 @@ class WorkSpaceListViewController: BaseViewController {
             itemSelected: mainView.workSpaceTableView.rx.itemSelected,
             menuButtonClicked: menuButtonClicked,
             addWorkSpaceButtonClicked: mainView.addWorkSpaceButtonView.sButton.rx.tap,
+            addWorkSpaceButtonClicked2: mainView.addWorkSpaceButton.rx.tap,
             helpButtonClicked: mainView.helpButtonView.sButton.rx.tap
         )
         
@@ -114,19 +112,5 @@ class WorkSpaceListViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         
-    }
-}
-
-extension WorkSpaceListViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: WorkSpaceListTableViewCell.description(), for: indexPath) as? WorkSpaceListTableViewCell else { return UITableViewCell() }
-        
-        return cell
     }
 }
