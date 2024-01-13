@@ -12,6 +12,7 @@ import RxCocoa
 protocol MakeWorkSpaceUseCaseProtocol {
     /* === 네트워크 === */
     func makeWorkSpaceRequest(_ requestModel: MakeWorkSpaceRequestModel) -> Single< Result< WorkSpaceModel, NetworkError> >
+    func myOneWorkSpaceInfoRequest(_ requestModel: Int) -> Single<Result<MyOneWorkSpaceModel, NetworkError>>
     func editWorkSpaceRequest(_ requestModel: EditWorkSpaceRequestModel) -> Single< Result<WorkSpaceModel, NetworkError> >
 }
 
@@ -31,7 +32,10 @@ class MakeWorkSpaceUseCase: MakeWorkSpaceUseCaseProtocol {
     }
     
     func editWorkSpaceRequest(_ requestModel: EditWorkSpaceRequestModel) -> Single<Result<WorkSpaceModel, NetworkError>> {
-        
         return makeWorkSpaceRepository.editWorkSpaceRequest(requestModel)
+    }
+    
+    func myOneWorkSpaceInfoRequest(_ requestModel: Int) -> Single<Result<MyOneWorkSpaceModel, NetworkError>> {
+        return makeWorkSpaceRepository.myOneWorkSpaceInfoRequest(requestModel)
     }
 }

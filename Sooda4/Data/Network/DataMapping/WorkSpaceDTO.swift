@@ -44,7 +44,7 @@ typealias MyWorkSpacesResponseDTO = [WorkSpaceInfoDTO]
 struct MyOneWorkSpaceResponseDTO: Decodable {
     let workspace_id: Int
     let name: String
-    let description: String
+    let description: String?
     let thumbnail: String
     let owner_id: Int
     let createdAt: String
@@ -67,7 +67,7 @@ extension UserInfoDTO {
 
 extension MyOneWorkSpaceResponseDTO {
     func toDomain() -> MyOneWorkSpaceModel {
-        return .init(name: name, thumbnail: thumbnail)
+        return .init(name: name, description: description, thumbnail: thumbnail)
     }
 }
 

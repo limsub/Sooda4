@@ -92,6 +92,8 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 self?.navigationController.showActionSheetFourSection(
                     firstTitle: "워크스페이스 편집", firstCompletion: {
                     print("1")
+                        self?.showEditWorkSpaceView()
+                        
                 }, secondTitle: "워크스페이스 나가기", secondCompletion: {
                     print("2")
                     self?.showExitWorkSpaceView(isAdmin: true)
@@ -139,6 +141,19 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         // 다른 점은, 여기서는 Rx 이용. Single 네트워크 통신. (커스텀 얼럿 창이 없어)
         
         
+        let editWorkSpaceVM = MakeWorkSpaceViewModel(
+            makeWorkSpaceUseCase: MakeWorkSpaceUseCase(
+                makeWorkSpaceRepository: MakeWorkSpaceRepository()
+            ),
+            type: .edit(workSpaceId: self.workSpaceId!))
+        let editWorkSpaceVC = MakeWorkSpaceViewController.create(with: editWorkSpaceVM)
+        
+        editWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            print(event)
+        }
+        
+        let nav = UINavigationController(rootViewController: editWorkSpaceVC)
+        navigationController.present(nav, animated: true)
     }
     
     
@@ -302,6 +317,8 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                             vc.loadData.onNext(())  // items 새로 부르라는 의미
                             // -> 다시 메뉴버튼 클릭하면 관리자 모드로 나오지 말아야 한다
                             print("토스트 메세지도 띄워주기 - '워크스페이스 관리자가 변경되었습니다' ")
+                            
+                            print("------------------------------------ 코디네이터가 가지고 있는 변수도 바꿔야해----------------------------------------------------------------")
                         }
                     }
                     

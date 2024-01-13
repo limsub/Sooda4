@@ -29,16 +29,25 @@ enum ResultMakeWorkSpace {
 
 class MakeWorkSpaceViewModel: BaseViewModelType {
     
+    enum OperationType {
+        case make
+        case edit(workSpaceId: Int)
+    }
+    
     private var disposeBag = DisposeBag()
     private let makeWorkSpaceUseCase: MakeWorkSpaceUseCase
+    let type: OperationType
     
     var didSendEventClosure: ( (MakeWorkSpaceViewModel.Event) -> Void)?
     
-    init(makeWorkSpaceUseCase: MakeWorkSpaceUseCase) {
+    init(makeWorkSpaceUseCase: MakeWorkSpaceUseCase, type: OperationType) {
         self.makeWorkSpaceUseCase = makeWorkSpaceUseCase
+        self.type = type
     }
-    
+   
     let imageData = PublishSubject<Data>()
+    
+
     
     
     struct Input {
@@ -48,32 +57,64 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
     }
     
     struct Output {
+        let initialModel: PublishSubject<MyOneWorkSpaceModel>   // 만약 "수정하기"로 들어왓으면, 여기서 초기 데이터 전달. "생성하기"로 들어오면 아무 이벤트 x
+        
         let enabledCompleteButton: BehaviorSubject<Bool>
         let resultLogin: PublishSubject<ResultMakeWorkSpace>
     }
     
     func transform(_ input: Input) -> Output {
+        
+        let initialModel = PublishSubject<MyOneWorkSpaceModel>()
         let enabledCompleteButton = BehaviorSubject(value: true)
         let resultLogin = PublishSubject<ResultMakeWorkSpace>()
         
         
+        // "편집"일 때만! 초기 데이터 전달
+        if case .edit(let workSpaceId) = type {
+            print("- 편집하러 들어왔기 때문에 워크스페이스 정보 네트워크 콜 쏜다")
+            Observable<Int>.just(workSpaceId)
+                .flatMap { value in
+                    self.makeWorkSpaceUseCase.myOneWorkSpaceInfoRequest(value)
+                }
+                .subscribe(with: self) { owner , response in
+                    switch response {
+                    case .success(let model):
+                        initialModel.onNext(model)
+                        
+                    case .failure(let networkError):
+                        print("에러났슈 : \(networkError.localizedDescription)")
+                    }
+                }
+                .disposed(by: disposeBag)
+        }
+
+        
+        
+        /* --- 테스트용 --- */
+        input.nameText
+            .distinctUntilChanged()
+            .subscribe(with: self) { owner , value in
+                print(" - nameText 인풋 이벤트 받음 : \(value)")
+            }
+            .disposed(by: disposeBag)
+        input.descriptionText
+            .distinctUntilChanged()
+            .subscribe(with: self) { owner , value in
+                print(" - descriptionText 인풋 이벤트 받음 : \(value)")
+            }
+            .disposed(by: disposeBag)
+        /* -------------- */
+        
+        //
         let requestModel = Observable.combineLatest(input.nameText, input.descriptionText, imageData) { v1, v2, v3 in
             return MakeWorkSpaceRequestModel(name: v1, description: v2, image: v3)
         }
         
-        // descriptionText는 없어도 돼!
-        
-
-        requestModel.subscribe(with: self) { owner , value  in
-            print(value)
-        }.disposed(by: disposeBag)
-        
-        
-        
-        
         input.completeButtonClicked
             .withLatestFrom(requestModel)
-            .flatMap { value in self.makeWorkSpaceUseCase.makeWorkSpaceRequest(value)
+            .flatMap { value in 
+                self.makeWorkSpaceUseCase.makeWorkSpaceRequest(value)
             }
             .subscribe(with: self) { owner , response in
                 print(response)
@@ -98,6 +139,7 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
         
         
         return Output(
+            initialModel: initialModel,
             enabledCompleteButton: enabledCompleteButton,
             resultLogin: resultLogin
         )

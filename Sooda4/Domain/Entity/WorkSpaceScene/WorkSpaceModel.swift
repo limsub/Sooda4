@@ -37,6 +37,7 @@ struct EditWorkSpaceRequestModel {
 // 필요한 데이터만 저장하자!
 struct MyOneWorkSpaceModel {
     let name: String
+    let description: String?
     let thumbnail: String
 }
 struct WorkSpaceChannelInfoModel {

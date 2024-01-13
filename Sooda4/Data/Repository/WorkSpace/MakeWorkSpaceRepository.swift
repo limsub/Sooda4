@@ -36,6 +36,26 @@ class MakeWorkSpaceRepository: MakeWorkSpaceRepositoryProtocol {
         }
     }
     
+    // (2) - 1. 워크스페이스 정보
+    func myOneWorkSpaceInfoRequest(_ requestModel: Int) -> Single< Result<MyOneWorkSpaceModel, NetworkError> > {
+        
+        return NetworkManager.shared.request(
+            type: MyOneWorkSpaceResponseDTO.self,
+            api: .myOneWorkSpace(requestModel)
+        )
+        .map { result in
+            switch result {
+            case .success(let dtoData):
+                let responseModel = dtoData.toDomain()
+                return .success(responseModel)
+                
+            case .failure(let networkError):
+                return .failure(networkError)
+            }
+            
+        }
+    }
+    
     // (2). 워크스페이스 편집
     func editWorkSpaceRequest(_ requestModel: EditWorkSpaceRequestModel) -> Single<Result<WorkSpaceModel, NetworkError>> {
         

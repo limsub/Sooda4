@@ -58,7 +58,8 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
         let makeWorkSpaceVM = MakeWorkSpaceViewModel(
             makeWorkSpaceUseCase: MakeWorkSpaceUseCase(
                 makeWorkSpaceRepository: MakeWorkSpaceRepository()
-            )
+            ),
+            type: .make
         )
         makeWorkSpaceVM.didSendEventClosure = { [weak self] event in
             switch event {
