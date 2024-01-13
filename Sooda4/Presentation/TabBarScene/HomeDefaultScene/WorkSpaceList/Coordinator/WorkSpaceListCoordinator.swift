@@ -135,7 +135,8 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     func showEditWorkSpaceView() {
         print(#function)
         // 관리자 권한 변경과 로직이 거의 비슷
-        // 성공하고 돌아오면 토스트 메세지 + 테이블뷰 리로드
+        // 성공하고 돌아오면 토스트 메세지 + 테이블뷰 리로드 (네트워크 재통신)
+        // - 와 근데 이 때, 이 뒤에 있는 HomeDefault까지 리로드 시켜줘야 함. 가능?
         // 실패하고 돌아오면 그냥 x
         
         // 다른 점은, 여기서는 Rx 이용. Single 네트워크 통신. (커스텀 얼럿 창이 없어)

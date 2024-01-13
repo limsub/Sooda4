@@ -88,7 +88,22 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
                 }
                 .disposed(by: disposeBag)
         }
-
+        // 이미지 데이터는 따로 프로퍼티가 있기 때문에 초기 데이터가 로드되었으면 바로 Data 받는다
+        initialModel
+            .flatMap {
+                self.makeWorkSpaceUseCase.loadImageData(endURLString: $0.thumbnail)
+            }
+            .subscribe(with: self) { owner , response in
+                switch response {
+                case .success(let data):
+                    self.imageData.onNext(data)
+                    
+                case .failure(let error):
+                    print("에러났슈 : \(error)")
+                }
+            }
+            .disposed(by: disposeBag)
+        
         
         
         /* --- 테스트용 --- */
@@ -145,6 +160,8 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
         )
     }
 }
+
+
 
 extension MakeWorkSpaceViewModel {
     enum Event {
