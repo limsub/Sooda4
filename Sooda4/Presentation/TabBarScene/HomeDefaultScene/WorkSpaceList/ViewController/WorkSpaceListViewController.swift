@@ -44,6 +44,15 @@ class WorkSpaceListViewController: BaseViewController {
         bindVM()
         
         loadData.onNext(()) // 데이터 로드 (viewDidLoad 대신 사용)
+        
+        
+        navigationController?.navigationBar.clipsToBounds = true
+        view.backgroundColor = .red
+        
+        
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 25
+        view.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
     }
     
     func setNavigation() {

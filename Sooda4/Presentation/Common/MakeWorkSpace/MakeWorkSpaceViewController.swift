@@ -124,6 +124,16 @@ class MakeWorkSpaceViewController: BaseViewController {
                 owner.mainView.completeButton.update(value ? .enabled : .disabled)
             }
             .disposed(by: disposeBag)
+        
+        
+        
+        output.resultMakeWorkSpace
+            .subscribe(with: self) { owner , result in
+                print("토스트 : \(result.toastMessage)")
+            }
+            .disposed(by: disposeBag)
+        
+        
     }
     
     @objc
