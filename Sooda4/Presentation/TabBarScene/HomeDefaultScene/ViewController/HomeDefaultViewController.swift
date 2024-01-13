@@ -59,10 +59,16 @@ class HomeDefaultViewController: BaseViewController {
         return view
     }()
     
+    // side menu present할 때 HomeDefault 블러처리 하기 위함
+    let aView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.appColor(.brand_black).withAlphaComponent(0.5)
+        return view
+    }()
+    
     override func loadView() {
         self.view = mainView
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,6 +83,25 @@ class HomeDefaultViewController: BaseViewController {
         setTableView()
  
         bindVM()
+        
+        addBlurView()
+        showBlurView(false)
+        
+        SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: view)
+    }
+
+    func addBlurView() {
+        UIApplication.shared.keyWindow!.bringSubviewToFront(aView)
+//        if let window = UIApplication.shared.windows.first {
+//            window.addSubview(aView)
+//            aView.snp.makeConstraints { make in
+//                make.edges.equalTo(window)
+//            }
+//        }
+    }
+    
+    func showBlurView(_ show: Bool) {
+        aView.isHidden = !show
     }
     
     func setNavigation() {

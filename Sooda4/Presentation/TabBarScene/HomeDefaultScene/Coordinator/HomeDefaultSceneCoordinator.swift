@@ -75,19 +75,46 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         // 아예 여기서부터 첫 vc를 지정해버리고 present로 띄워버림
         // 즉, start가 필요가 없어진다
         
-        // 또 특이한건, workSpaceListVM의 didSendEvent 는 부모 코디인 HomeDefault코디에서 처리한다. VM을 만드는 곳이 여기이기 때문에
+
         
         let sideMenuNav = SideMenuNavigationController(rootViewController: UIViewController())
         
         sideMenuNav.leftSide = true
         sideMenuNav.presentationStyle = .menuSlideIn
         sideMenuNav.menuWidth = UIScreen.main.bounds.width - 76
+        SideMenuManager.default.leftMenuNavigationController = sideMenuNav
         
         let workSpaceListCoordinator = WorkSpaceListCoordinator(sideMenuNav)
         workSpaceListCoordinator.workSpaceId = workSpaceId // * 필수
         workSpaceListCoordinator.finishDelegate = self
         childCoordinators.append(workSpaceListCoordinator)
-        workSpaceListCoordinator.start()    // 얘가 필요가 없는거지
+        workSpaceListCoordinator.start()
+        
+        
+        
+        
+//        sideMenuNav.navigationBar.clipsToBounds = true
+//        sideMenuNav.navigationBar.layer.cornerRadius = 20
+//        sideMenuNav.navigationBar.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+        
+        
+        // 자.
+        // blurView가 좀 화나긴 하는데 일단,
+        
+        // 띄울 때 isHidden = false
+            // -> present할 때
+        // 없어질 때 isHiddent = true
+            // -> WorkListView가 viewWillDisappear
+        
+        
+//        navigationController.viewControllers.forEach { vc in
+//            if let vc = vc as? HomeDefaultViewController {
+//                vc.showBlurView(true)
+//            }
+//        }
+        
+        
+
         
         navigationController.present(sideMenuNav, animated: true)
     }
