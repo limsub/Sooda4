@@ -86,6 +86,9 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
             switch event {
             case .goHomeDefaultView(let workSpaceId):
                 self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+                
+            default:
+                break
             }
             
         }

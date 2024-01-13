@@ -66,6 +66,8 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
             case .goHomeDefaultView(let workSpaceId):
                 self?.navigationController.dismiss(animated: true)
                 self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+                
+            default: break;
             }
         }
         

@@ -81,6 +81,13 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
                     switch response {
                     case .success(let model):
                         initialModel.onNext(model)
+                        print("0-----0")
+                        print(model.thumbnail)
+                        print("0-----0")
+                        
+                        // /static/workspaceThumbnail/1705103897177.png
+                        // /static/workspaceThumbnail/1705122291159.png
+                        // /static/workspaceThumbnail/1705122437325.jpeg
                         
                     case .failure(let networkError):
                         print("에러났슈 : \(networkError.localizedDescription)")
@@ -121,36 +128,63 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         /* -------------- */
         
-        //
-        let requestModel = Observable.combineLatest(input.nameText, input.descriptionText, imageData) { v1, v2, v3 in
-            return MakeWorkSpaceRequestModel(name: v1, description: v2, image: v3)
+        
+        
+        // 워크스페이스 생성
+        if case .make = type {
+            let makeRequestModel = Observable.combineLatest(input.nameText, input.descriptionText, imageData) { v1, v2, v3 in
+                return MakeWorkSpaceRequestModel(name: v1, description: v2, image: v3)
+            }
+            input.completeButtonClicked
+                .withLatestFrom(makeRequestModel)
+                .flatMap { value in
+                    self.makeWorkSpaceUseCase.makeWorkSpaceRequest(value)
+                }
+                .subscribe(with: self) { owner , response in
+                    switch response {
+                    case .success(let model):
+                        print("새로운 워크스페이스 생성!")
+                        
+                        // 생성 시에는 추가적인 API 호출 없이 방금 만든 워크스페이스 페이지로 이동
+                        let workSpaceId = model.workSpaceId
+                        owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
+                            // 코디네이터마다 잘 대응했는지 체크하기
+                        
+                    case .failure(let networkError):
+                        print("명세서 나오면 구현 예정")
+                        break
+                    }
+                    
+                }
+                .disposed(by: disposeBag)
         }
         
-        input.completeButtonClicked
-            .withLatestFrom(requestModel)
-            .flatMap { value in 
-                self.makeWorkSpaceUseCase.makeWorkSpaceRequest(value)
+        // 워크스페이스 수정
+        if case .edit(let workSpaceId) = type {
+            
+            let editRequestModel = Observable.combineLatest(input.nameText, input.descriptionText, imageData) { v1, v2, v3 in
+                return EditWorkSpaceRequestModel(workSpaceId: workSpaceId, name: v1, description: v2, image: v3)
             }
-            .subscribe(with: self) { owner , response in
-                print(response)
-                
-                // 성공적으로 만들었다 -> 화면 전환 Home Default
-                
-                
-                switch response {
-                case .success(let model):
-                    
-                    // 생성 시에는 추가적인 API 호출 없이 방금 만든 워크스페이스 페이지로 이동
-                    let workSpaceId = model.workSpaceId
-                    owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
-                    
-                case .failure(let networkError):
-                    print("명세서 나오면 구현 예정")
-                    break
+            input.completeButtonClicked
+                .withLatestFrom(editRequestModel)
+                .flatMap { value in
+                    self.makeWorkSpaceUseCase.editWorkSpaceRequest(value)
                 }
-                
-            }
-            .disposed(by: disposeBag)
+                .subscribe(with: self) { owner , response  in
+                    switch response {
+                    case .success:
+                        print("기존 워크스페이스 수정!")
+                        owner.didSendEventClosure?(.goBackWorkListView)
+                        
+                        
+                    case .failure(let networkError):
+                        print("에러났슈")
+                    }
+                }
+                .disposed(by: disposeBag)
+        }
+        
+        
         
         
         return Output(
@@ -166,6 +200,7 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
 extension MakeWorkSpaceViewModel {
     enum Event {
         case goHomeDefaultView(workSpaceId: Int)
+        case goBackWorkListView
     }
 }
 
