@@ -19,6 +19,7 @@ struct cellData {
 
 class HomeDefaultViewController: BaseViewController {
     
+    let mainView = HomeDefaultView()
     var viewModel: HomeDefaultViewModel!
     
     static func create(with viewModel: HomeDefaultViewModel) -> HomeDefaultViewController {
@@ -30,10 +31,11 @@ class HomeDefaultViewController: BaseViewController {
 
     
     
-    let mainView = HomeDefaultView()
+    
     
     
     // Navigation 영역의 객체들
+    let customNavigationItemView = UIButton()
     let leftImageView = {
         let view = UIImageView()
         view.clipsToBounds = true
@@ -41,14 +43,12 @@ class HomeDefaultViewController: BaseViewController {
         view.image = UIImage(named: "profile_No Photo A")
         return view
     }()
-
     let navigationTitleLabel = {
         let view = UILabel()
         view.text = "iOS Developers Study"
         view.setAppFont(.title1)
         return view
     }()
-    
     let rightImageView = {
         let view = UIImageView()
         view.clipsToBounds = true
@@ -59,7 +59,9 @@ class HomeDefaultViewController: BaseViewController {
         return view
     }()
     
-    // side menu present할 때 HomeDefault 블러처리 하기 위함
+    
+    
+    // side menu present할 때 HomeDefault 블러처리 하기 위함 -> 실패
     let aView = {
         let view = UIView()
         view.backgroundColor = UIColor.appColor(.brand_black).withAlphaComponent(0.5)
@@ -113,7 +115,6 @@ class HomeDefaultViewController: BaseViewController {
         let navHeight = navigationBar.frame.size.height
         let navWidth = navigationBar.frame.size.width
         
-        let customNavigationItemView = UIView()
         customNavigationItemView.backgroundColor = .white
         
         customNavigationItemView.addSubview(leftImageView)
@@ -144,7 +145,7 @@ class HomeDefaultViewController: BaseViewController {
 
         let leftBarBtn = UIBarButtonItem(customView: customNavigationItemView)
         navigationItem.leftBarButtonItem = leftBarBtn
-        
+ 
         
         //
         let navigationBarAppearance = UINavigationBarAppearance()
@@ -156,6 +157,7 @@ class HomeDefaultViewController: BaseViewController {
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
+
     
     func setTableView() {
         mainView.tableView.delegate = self
@@ -170,26 +172,16 @@ class HomeDefaultViewController: BaseViewController {
     }
     
     func updateNavigationView() {
-        
         navigationTitleLabel.text = viewModel.workSpaceInfo?.name
 //        leftImageView.image = viewModel.workSpaceInfo?.thumbnail
 //        rightImageView.image = viewModel.myProfileInfo?.profileImage
         
     }
     
-    let testButton = UIButton()
-    
+
     func bindVM() {
-        testButton.backgroundColor = .red
-        view.addSubview(testButton)
-        testButton.snp.makeConstraints { make in
-            make.size.equalTo(200)
-            make.center.equalTo(view)
-        }
-        
-        
         let input = HomeDefaultViewModel.Input(
-            presentWorkSpaceList: testButton.rx.tap
+            presentWorkSpaceList: customNavigationItemView.rx.tap
         )
         
         let output = viewModel.transform(input)
