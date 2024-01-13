@@ -128,7 +128,7 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
-        navigationController.viewControllers.removeAll() 
+        navigationController.viewControllers.removeAll()
         navigationController.dismiss(animated: true)
         
         /* 연락이 온다 */

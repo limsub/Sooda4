@@ -121,5 +121,14 @@ extension HomeEmptySceneCoordinator: CoordinatorFinishDelegate {
         }
         navigationController.viewControllers.removeAll()
         navigationController.dismiss(animated: true)
+        
+        
+        // Child는 WorkSpaceList밖에 없음
+        // 거기서 할 건 새로운 워크스페이스 만드는거밖에 없고
+        // 그럼 일단 거기서 끝났으면 앱코디.탭바코디.홈디폴트 가 nextFlow일거야
+        // 얘 입장에선 그럼 부모로 넘겨주고 얘도 죽을 수밖에 없어
+        finish(nextFlow)
+        
+        
     }
 }
