@@ -30,7 +30,9 @@ class ChangeAdminViewModel {
             switch response {
             case .success(let model):
                 self.items = model.filter {
-                    $0.userId != APIKey.userId
+                    // * 임시
+                    $0.userId != UserDefaults.standard.integer(forKey: "userID")
+//                    $0.userId != APIKey.userId
                 }
                 completion(!self.items.isEmpty)
                 

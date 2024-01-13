@@ -68,7 +68,8 @@ class WorkSpaceListViewModel: BaseViewModelType {
                     var check = false
                     value.forEach { workspace in
                         if (workspace.workSpaceId == self.selectedWorkSpaceId) {
-                            if workspace.ownerId == APIKey.userId {
+                            // * 임시
+                            if workspace.ownerId == UserDefaults.standard.integer(forKey: "userID") {
                                 check = true
                             }
                         }

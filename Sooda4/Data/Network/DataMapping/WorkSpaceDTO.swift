@@ -75,8 +75,19 @@ extension MyOneWorkSpaceResponseDTO {
 // -> 일단 워크스페이스 HomeDefaultView에서 사용자들 정보는 이용을 안해.
 
 
+/* ========== 워크스페이스 편집 ========== */
+struct EditWorkSpaceRequestDTO: Encodable {
+    let workSpaceId: Int
+    let name: String
+    let description: String?
+    let image: Data
+}
+// Response는 WorkSpaceInfoDTO 사용
+
+
 /* ========== 워크스페이스 멤버 조회 ========== */
 typealias WorkSpaceMembersResponseDTO = [UserInfoDTO]
+
 
 /* ========== 워크스페이스 관리자 권한 변경 ========== */
 struct ChangeAdminRequestDTO {

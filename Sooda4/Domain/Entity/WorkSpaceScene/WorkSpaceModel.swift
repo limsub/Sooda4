@@ -21,6 +21,14 @@ struct WorkSpaceModel {
 struct MakeWorkSpaceRequestModel {
     let name: String
     let description: String
+    let image: Data
+}
+
+// 워크스페이스 편집
+struct EditWorkSpaceRequestModel {
+    let workSpaceId: Int
+    let name: String
+    let description: String
     let image: Data // UIImage
 }
 
