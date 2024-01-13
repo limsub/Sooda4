@@ -37,7 +37,7 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
     // 4.
     var type: CoordinatorType = .homeEmptyScene
     
-    // 5. - 두 개 필요 (HomeEmptyView)
+    // 5. - 두 개 필요 (HomeEmptyView) -> ??
     func start() {
         showHomeEmptyView()
     }

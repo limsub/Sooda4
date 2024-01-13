@@ -66,8 +66,12 @@ class HomeEmptyViewController: BaseViewController {
     func setNavigation() {
         
         guard let navigationBar = navigationController?.navigationBar else {
+            print("qqqqqq")
             return
         }
+        
+        print(#function)
+        print(navigationController)
         
         let navHeight = navigationBar.frame.size.height
         let navWidth = navigationBar.frame.size.width

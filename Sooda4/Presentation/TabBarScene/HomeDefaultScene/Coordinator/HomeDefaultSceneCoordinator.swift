@@ -156,7 +156,7 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
             self.finish(nextFlow)
         }
         
-        print(#function)
+//        print(#function)
     }
 }
 
