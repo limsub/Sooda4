@@ -44,8 +44,14 @@ class WorkSpaceListView: BaseView {
     
     // 공통
     // - 워크스페이스 추가, 도움말
+    // - 가짜뷰
     let addWorkSpaceButtonView = WorkSpaceListCustomButton(text: "워크스페이스 추가", imageName: "icon_plus")
     let helpButtonView = WorkSpaceListCustomButton(text: "도움말", imageName: "icon_help")
+    let fakeBackView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.appColor(.background_primary)
+        return view
+    }()
     
     
     
@@ -53,7 +59,7 @@ class WorkSpaceListView: BaseView {
         super.setConfigure()
         
         // 공통
-        [addWorkSpaceButtonView, helpButtonView].forEach { item  in
+        [fakeBackView, addWorkSpaceButtonView, helpButtonView].forEach { item  in
             self.addSubview(item)
         }
         
@@ -74,6 +80,10 @@ class WorkSpaceListView: BaseView {
             make.width.equalTo(self)
             make.height.equalTo(41)
             make.bottom.equalTo(helpButtonView.snp.top)
+        }
+        fakeBackView.snp.makeConstraints { make in
+            make.height.equalTo(60)
+            make.top.horizontalEdges.equalTo(self)
         }
         
         // 2.

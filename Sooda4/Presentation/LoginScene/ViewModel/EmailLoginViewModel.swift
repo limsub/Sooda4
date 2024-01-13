@@ -187,6 +187,8 @@ class EmailLoginViewModel: BaseViewModelType {
                     UserDefaults.standard.setValue(model.userId, forKey: "userID")
                     UserDefaults.standard.setValue(model.accessToken, forKey: "accessToken")
                     
+                    APIKey.sample = model.accessToken
+                    
                     print("토큰 업데이트! : \(model.accessToken)")
                     
                     
