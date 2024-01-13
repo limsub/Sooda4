@@ -150,6 +150,27 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         let editWorkSpaceVC = MakeWorkSpaceViewController.create(with: editWorkSpaceVM)
         
         editWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            // 여기서 받는건 goBackWorkListView. (수정하기 성공 후 금의환향)
+            print("수정하기 성공했고 WorkListView로 돌아오자!")
+            print("해야 할 일 1. WorkListView 리로드  2. 뒤에 HomeDefault 리로드")
+            
+            switch event {
+            case .goBackWorkListView:
+                self?.navigationController.viewControllers.forEach({ vc in
+                    if let vc = vc as? WorkSpaceListViewController {
+                        vc.loadData.onNext(())
+                        
+                        print("토스트 메세지도 띄워주기 - '워크스페이스가 편집되었습니다'")
+                    }
+                })
+                
+                
+            default: break
+            }
+            
+            self?.navigationController.dismiss(animated: true)  // 수정하기 페이지 내려주기
+            
+            
             print(event)
         }
         
