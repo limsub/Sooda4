@@ -184,8 +184,10 @@ class EmailLoginViewModel: BaseViewModelType {
                     print("userEmail: \(model.nickname)")
                     
                     // * 임시
-                    APIKey.sample = model.accessToken
-                    print("토큰 업데이트! : \(APIKey.sample)")
+                    UserDefaults.standard.setValue(model.userId, forKey: "userID")
+                    UserDefaults.standard.setValue(model.accessToken, forKey: "accessToken")
+                    
+                    print("토큰 업데이트! : \(model.accessToken)")
                     
                     
                     return true

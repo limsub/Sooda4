@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SideMenu
 
 final class OnboardingViewController: BaseViewController {
     
@@ -29,11 +30,13 @@ final class OnboardingViewController: BaseViewController {
         mainView.nextButton.addTarget(self, action: #selector(buttonClicked), for: .touchUpInside)
         
         title = "온보딩 뷰"
+        
     }
-    
+        
     @objc
     func buttonClicked() {
         viewModel.didSendEventClosure?(.presentSelectAuthView)
     }
     
 }
+

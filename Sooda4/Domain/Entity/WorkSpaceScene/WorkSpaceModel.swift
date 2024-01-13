@@ -21,6 +21,14 @@ struct WorkSpaceModel {
 struct MakeWorkSpaceRequestModel {
     let name: String
     let description: String
+    let image: Data
+}
+
+// 워크스페이스 편집
+struct EditWorkSpaceRequestModel {
+    let workSpaceId: Int
+    let name: String
+    let description: String
     let image: Data // UIImage
 }
 
@@ -29,6 +37,7 @@ struct MakeWorkSpaceRequestModel {
 // 필요한 데이터만 저장하자!
 struct MyOneWorkSpaceModel {
     let name: String
+    let description: String?
     let thumbnail: String
 }
 struct WorkSpaceChannelInfoModel {
@@ -64,4 +73,19 @@ struct ChannelUnreadCountInfoModel {
 
 struct DMUnreadCountInfoModel {
     let count: Int
+}
+
+
+// 워크스페이스 멤버 조회
+struct WorkSpaceUserInfo {
+    let userId: Int
+    let email: String
+    let nickname: String
+    let profileImage: String?
+}
+
+// 워크스페이스 관리자 권한 변경
+struct ChangeAdminRequestModel {
+    let workSpaceId: Int
+    let newAdminId: Int
 }

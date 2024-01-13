@@ -136,10 +136,22 @@ extension TabBarCoordinator {
 
 extension TabBarCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
-        print(#function)
+        
+        childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
+        navigationController.viewControllers.removeAll()
+        
+        
+        
+        // 나중에 분기처리 깔끔하게 정리하기
+        
+        
+        // 1. workspacelist에서 워크스페이스 싹 다 제거해서 더 이상 남은 워크스페이스 없는 경우. (nextFlow = 앱코디.차일드.홈엠티)
+        if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
+           case .homeEmptyScene = nextFlow {
+            print("탭바 코디 : finish 실행")
+            self.finish(nextFlow)
+        }
     }
-    
-    
 }
 
 extension TabBarCoordinator: UITabBarControllerDelegate {

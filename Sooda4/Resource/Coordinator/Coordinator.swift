@@ -39,7 +39,7 @@ extension Coordinator {
         // 2. 부모 코디에게 알리기
         finishDelegate?.coordinatorDidFinish(
             childCoordinator: self,
-            nextFlow: nextFlow   // 이게 실행될 일 없음
+            nextFlow: nextFlow  
         )
     }
 }
@@ -73,5 +73,8 @@ enum CoordinatorType {
     
     // tabBar
     case homeDefault, dm, search, setting
+    
+    // homeDefault
+    case workSpaceList
     
 }

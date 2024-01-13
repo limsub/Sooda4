@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 
 struct HomeDefaultChannelsDataModel {
@@ -31,9 +33,11 @@ struct HomeDefaultDMsDataModel {
 }
 
 
-class HomeDefaultViewModel {
+class HomeDefaultViewModel: BaseViewModelType {
     
     private let homeDefaultWorkSpaceUseCase: HomeDefaultWorkSpaceUseCaseProtocol
+    
+    var didSendEventClosure: ( (HomeDefaultViewModel.Event) -> Void)?
     
     var workSpaceId: Int
     
@@ -42,11 +46,42 @@ class HomeDefaultViewModel {
         self.workSpaceId = workSpaceId
     }
     
+    
+    
+    struct Input {
+        let presentWorkSpaceList: ControlEvent<Void>
+    }
+    
+    struct Output {
+        let presentWorkSpaceList: ControlEvent<Void>
+    }
+    
+    func transform(_ input: Input) -> Output {
+        
+        input.presentWorkSpaceList
+            .subscribe(with: self) { owner , _ in
+                owner.didSendEventClosure?(.presentWorkSpaceListView(workSpaceId: owner.workSpaceId))
+            }
+            .disposed(by: disposeBag)
+        
+        return Output(presentWorkSpaceList: input.presentWorkSpaceList)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     // 뷰를 그려주기 위한 데이터
     var workSpaceInfo: MyOneWorkSpaceModel? // 네비게이션 - 이미지, 타이틀
     var myProfileInfo: WorkSpaceMyProfileInfoModel?  // 네비게이션 - 이미지
     var channelData: HomeDefaultChannelsDataModel?
     var dmData: HomeDefaultDMsDataModel?
+    
+    
+    private var disposeBag = DisposeBag()
     
     
     
@@ -292,4 +327,10 @@ class HomeDefaultViewModel {
     }
     
     
+}
+
+extension HomeDefaultViewModel {
+    enum Event {
+        case presentWorkSpaceListView(workSpaceId: Int)
+    }
 }

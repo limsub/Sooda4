@@ -11,6 +11,9 @@ import RxCocoa
 
 protocol WorkSpaceRepositoryProtocol {
     
-    // (1). 내가 속한 워크스페이스 조회
+    // (1). 내가 속한 워크스페이스 조회 - Single
     func myWorkSpaceRequest() -> Single< Result<[WorkSpaceModel], NetworkError> >
+    
+    // (2). 내가 속한 워크스페이스 조회 - Completion
+    func myWorkSpaceRequest(completion: @escaping (Result<[WorkSpaceModel], NetworkError>) -> Void)
 }

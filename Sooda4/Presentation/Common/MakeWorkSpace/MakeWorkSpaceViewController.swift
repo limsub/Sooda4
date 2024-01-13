@@ -10,16 +10,25 @@ import RxSwift
 import RxCocoa
 import PhotosUI
 
+// 워크스페이스 만들기 / 수정하기 같이 쓰자
+
+
 
 class MakeWorkSpaceViewController: BaseViewController {
+    
+
     
     private let mainView = MakeWorkSpaceView()
     private var viewModel: MakeWorkSpaceViewModel!
     private var disposeBag = DisposeBag()
     
+    
     static func create(with viewModel: MakeWorkSpaceViewModel) -> MakeWorkSpaceViewController {
+        // viewModel을 생성할 때, OperationType을 지정함
+        
         let vc = MakeWorkSpaceViewController()
         vc.viewModel = viewModel
+
         return vc
     }
     
@@ -31,6 +40,7 @@ class MakeWorkSpaceViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation()
+        settingType(type: viewModel.type)
         setPHPicker()
         bindVM()
     }
@@ -49,6 +59,25 @@ class MakeWorkSpaceViewController: BaseViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
+    }
+    
+    func settingType(type: MakeWorkSpaceViewModel.OperationType) {
+        // 만들러 왔는지 수정하러 왔는지에 따라
+        if case .make = type {
+            // view
+            mainView.completeButton.setTitle("완료", for: .normal)
+            mainView.completeButton.setUp()
+            
+            // vc
+            navigationItem.title = "만들러 옴"
+        } else {
+            // view
+            mainView.completeButton.setTitle("저장", for: .normal)    // 이게 원래 디폴트
+            mainView.completeButton.setUp()
+            
+            // vc
+            navigationItem.title = "수정하러 옴"
+        }
     }
     
     func setPHPicker() {
@@ -75,6 +104,21 @@ class MakeWorkSpaceViewController: BaseViewController {
         
         let output = viewModel.transform(input)
         
+        
+        // initialData가 있으면, 초기 뷰 세팅해주기
+        output.initialModel
+            .subscribe(with: self) { owner , value in
+                print("----- 이니셜 데이터가 있다!!----")
+                // 이미지도 띄워주기
+                owner.mainView.nameTextField.text = value.name
+                owner.mainView.nameTextField.sendActions(for: .valueChanged)
+                owner.mainView.descriptionTextField.text = value.description
+                owner.mainView.descriptionTextField.sendActions(for: .valueChanged)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        
         output.enabledCompleteButton
             .subscribe(with: self) { owner , value in
                 owner.mainView.completeButton.update(value ? .enabled : .disabled)
@@ -97,6 +141,9 @@ class MakeWorkSpaceViewController: BaseViewController {
         present(picker, animated: true)
     }
 }
+
+
+
 
 extension MakeWorkSpaceViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {

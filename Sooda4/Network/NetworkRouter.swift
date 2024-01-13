@@ -22,11 +22,14 @@ enum NetworkRouter: URLRequestConvertible {
     /* === WORKSPACE === */
     case makeWorkSpace(_ sender: MakeWorkSpaceRequestDTO)
     case myWorkSpaces
-    
     case myOneWorkSpace(_ sender: Int)  // workSpaceId
+    case editWorkSpace(_ sender: EditWorkSpaceRequestDTO)
+    case deleteWorkSpace(_ sender: Int) // workSpaceId
     
+    case workSpaceMembers(_ sender: Int) // workSpaceId
     
-    
+    case leaveWorkSpace(_ sender: Int)  // workSpaceId
+    case changeAdminWorkSpace(_ sender: ChangeAdminRequestDTO)
     
     
     /* === CHANNEL === */
@@ -66,6 +69,16 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces"
         case .myOneWorkSpace(let sender):
             return "/v1/workspaces/\(sender)"
+        case .editWorkSpace(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)"
+        case .deleteWorkSpace(let sender):
+            return "/v1/workspaces/\(sender)"
+        case .workSpaceMembers(let sender):
+            return "/v1/workspaces/\(sender)/members"
+        case .leaveWorkSpace(let sender):
+            return "/v1/workspaces/\(sender)/leave"
+        case .changeAdminWorkSpace(let sender):
+            return "/v1/workspaces/\(sender.id)/change/admin/\(sender.user_id)"
             
             
         // CHANNEL
@@ -90,16 +103,17 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
-        case .makeWorkSpace:
+        case .makeWorkSpace, .editWorkSpace:
             return [
                 "Content-Type": "multipart/form-data",
-                "Authorization": APIKey.sample,
+                "Authorization": UserDefaults.standard.string(forKey: "accessToken")!, // * 임시
                 "SesacKey": APIKey.key
             ]
+            // 로그인일 때는 토큰 필요 없지않나?
         default:
             return [
                 "Content-Type": "application/json",
-                "Authorization": APIKey.sample,
+                "Authorization": UserDefaults.standard.string(forKey: "accessToken")!, // * 임시
                 "SesacKey": APIKey.key
             ]
         }
@@ -119,8 +133,12 @@ enum NetworkRouter: URLRequestConvertible {
         // WORKSPACE
         case .makeWorkSpace:
             return .post
-        case .myWorkSpaces, .myOneWorkSpace:
+        case .myWorkSpaces, .myOneWorkSpace, .leaveWorkSpace, .workSpaceMembers:
             return .get
+        case .deleteWorkSpace:
+            return .delete
+        case .editWorkSpace, .changeAdminWorkSpace:
+            return .put
     
             
             
@@ -168,6 +186,13 @@ enum NetworkRouter: URLRequestConvertible {
                 "description":  sender.description,
                 "image": sender.image
             ]
+        case .editWorkSpace(let sender):
+            return [
+                "name": sender.name,
+                "description": sender.description,
+                "image": sender.image
+            ]
+        
         default:
             return [:]
         }

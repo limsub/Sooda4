@@ -58,13 +58,16 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
         let makeWorkSpaceVM = MakeWorkSpaceViewModel(
             makeWorkSpaceUseCase: MakeWorkSpaceUseCase(
                 makeWorkSpaceRepository: MakeWorkSpaceRepository()
-            )
+            ),
+            type: .make
         )
         makeWorkSpaceVM.didSendEventClosure = { [weak self] event in
             switch event {
             case .goHomeDefaultView(let workSpaceId):
                 self?.navigationController.dismiss(animated: true)
                 self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+                
+            default: break;
             }
         }
         

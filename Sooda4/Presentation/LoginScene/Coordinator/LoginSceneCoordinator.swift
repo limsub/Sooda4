@@ -101,12 +101,14 @@ extension LoginSceneCoordinator: CoordinatorFinishDelegate {
         print("로그인씬코디 : 자식 코디가 끝났다는 소식 들었다. nextFlow : \(nextFlow)")
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
-        navigationController.viewControllers.removeAll()
+        navigationController.viewControllers.removeAll()  // 이걸 왜지우지?????!?!?!?
+        // -> 사실상 자식 코디로 연결된 애는 딱 하나이고, 걔가 죽었다는 뜻은 걔한테 연결된 뷰컨들을 다 지워야 해
+        // 지워지지 말아야 할 애들이 붙어있을 리가 없지. 붙어있으면 애초에 구현할 때 문제가 있었던거야
         navigationController.dismiss(animated: true)
         
         
         /*
-         LoginScene 코디에게 연락이 온다
+         LoginScene 코디에게(to LoginScene) 연락이 온다
          1. Child
          2. Child의 Child -> 없음
          3. 부모 타고 가야 하는 코디

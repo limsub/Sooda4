@@ -369,8 +369,10 @@ class SignUpViewModel: BaseViewModelType {
                     // 1. signUpView dismiss  2. selectAuthView dismiss  3. intialWorkSpaceView push
                     
                     // 임시
-                    APIKey.sample = model.token.accessToken
-                    print("토큰 업데이트! : \(APIKey.sample)")
+//                    APIKey.sample = model.token.accessToken
+                    UserDefaults.standard.setValue(model.userId, forKey: "userID")
+                    UserDefaults.standard.setValue(model.token.accessToken, forKey: "accessToken")
+                    print("토큰 업데이트! : \(model.token.accessToken)")
                     
                     owner.didSendEventClosure?(.goInitialWorkSpace)
                     
