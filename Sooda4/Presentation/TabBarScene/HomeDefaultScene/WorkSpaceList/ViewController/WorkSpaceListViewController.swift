@@ -88,6 +88,7 @@ class WorkSpaceListViewController: BaseViewController {
             itemSelected: mainView.workSpaceTableView.rx.itemSelected,
             menuButtonClicked: menuButtonClicked,
             addWorkSpaceButtonClicked: mainView.addWorkSpaceButtonView.sButton.rx.tap,
+            addWorkSpaceButtonClicked2: mainView.addWorkSpaceButton.rx.tap,
             helpButtonClicked: mainView.helpButtonView.sButton.rx.tap
         )
         

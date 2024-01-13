@@ -29,6 +29,25 @@ class WorkSpaceListView: BaseView {
     /* ===== UI 객체 ===== */
     // 1.
     // - 레이블1, 레이블2, 버튼1
+    let firstLabel = {
+        let view = UILabel()
+        view.text = "레이블 1"
+        view.backgroundColor = .gray
+        return view
+    }()
+    let secondLabel = {
+        let view = UILabel()
+        view.text = "레이블 2"
+        view.backgroundColor = .green
+        return view
+    }()
+    let addWorkSpaceButton = {
+        let view = UIButton()
+        view.setTitle("워크스페이스 만들기", for: .normal)
+        view.backgroundColor = .red
+        return view
+    }()
+    
     
     // 2.
     // - 테이블뷰
@@ -64,6 +83,11 @@ class WorkSpaceListView: BaseView {
             self.addSubview(item)
         }
         
+        // 1.
+        [firstLabel, secondLabel, addWorkSpaceButton].forEach { item  in
+            self.addSubview(item)
+        }
+        
         // 2.
         self.addSubview(workSpaceTableView)
     }
@@ -87,6 +111,26 @@ class WorkSpaceListView: BaseView {
             make.top.horizontalEdges.equalTo(self)
         }
         
+        // 1.
+        firstLabel.snp.makeConstraints { make in
+            make.height.equalTo(100)
+            make.width.equalTo(200)
+            make.centerX.equalTo(self)
+            make.top.equalTo(self).inset(100)
+        }
+        secondLabel.snp.makeConstraints { make in
+            make.height.equalTo(100)
+            make.width.equalTo(200)
+            make.centerX.equalTo(self)
+            make.top.equalTo(firstLabel.snp.bottom).offset(20)
+        }
+        addWorkSpaceButton.snp.makeConstraints { make in
+            make.height.equalTo(100)
+            make.width.equalTo(200)
+            make.centerX.equalTo(self)
+            make.top.equalTo(secondLabel.snp.bottom).offset(20)
+        }
+        
         // 2.
         workSpaceTableView.snp.makeConstraints { make in
             make.width.equalTo(self)
@@ -102,6 +146,20 @@ class WorkSpaceListView: BaseView {
     }
     
     func setUp() {
-        
+        switch type {
+        case .empty:
+            firstLabel.isHidden = false
+            secondLabel.isHidden = false
+            addWorkSpaceButton.isHidden = false
+            
+            workSpaceTableView.isHidden = true
+            
+        case .notEmpty:
+            firstLabel.isHidden = true
+            secondLabel.isHidden = true
+            addWorkSpaceButton.isHidden = true
+            
+            workSpaceTableView.isHidden = false
+        }
     }
 }
