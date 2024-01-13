@@ -103,6 +103,14 @@ class WorkSpaceListViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
+        // 워크스페이스 추가
+        input.addWorkSpaceButtonClicked
+            .subscribe(with: self) { owner , _ in
+                
+                owner.didSendEventClosure?(.presentMakeWorkSpace)
+            }
+            .disposed(by: disposeBag)
+        
         return Output(
             items: items
         )
@@ -123,5 +131,7 @@ extension WorkSpaceListViewModel {
         
         case showActionSheetForAdmin
         case showActionSheetForGeneral
+        
+        case presentMakeWorkSpace
     }
 }

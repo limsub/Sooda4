@@ -91,20 +91,16 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 print("관리자 액션 시트 띄워주기")
                 self?.navigationController.showActionSheetFourSection(
                     firstTitle: "워크스페이스 편집", firstCompletion: {
-                    print("1")
                         self?.showEditWorkSpaceView()
                         
                 }, secondTitle: "워크스페이스 나가기", secondCompletion: {
-                    print("2")
                     self?.showExitWorkSpaceView(isAdmin: true)
                     
                     
                 }, thirdTitle: "워크스페이스 관리자 변경", thirdCompletion: {
-                    print("3")
                     self?.showChangeAdminView()
                     
                 }, fourthTitle: "워크스페이스 삭제") {
-                    print("4")
                     self?.showDeleteWorkSpaceView()
                 }
                                 
@@ -114,6 +110,10 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                 self?.navigationController.showActionSheetOneSection(title: "워크스페이스 나가기", completion: {
                     self?.showExitWorkSpaceView(isAdmin: false)
                 })
+                
+            case .presentMakeWorkSpace:
+                self?.showMakeWorkSpaceView()
+                
             }
         }
         
@@ -129,6 +129,26 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     
     func showMakeWorkSpaceView() {
         print(#function)
+        
+        let makeWorkSpaceVM = MakeWorkSpaceViewModel(
+            makeWorkSpaceUseCase: MakeWorkSpaceUseCase(
+                makeWorkSpaceRepository: MakeWorkSpaceRepository()
+            ),
+            type: .make
+        )
+        let makeWorkSpaceVC = MakeWorkSpaceViewController.create(with: makeWorkSpaceVM)
+        
+        makeWorkSpaceVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goHomeDefaultView(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
+            default:
+                break
+            }
+        }
+        
+        let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
+        navigationController.present(nav, animated: true)
     }
     
     
