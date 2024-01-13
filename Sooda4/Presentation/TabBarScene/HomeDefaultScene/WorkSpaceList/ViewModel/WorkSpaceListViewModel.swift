@@ -16,11 +16,15 @@ class WorkSpaceListViewModel: BaseViewModelType {
     var didSendEventClosure: ( (WorkSpaceListViewModel.Event) -> Void)?
     
     private let workSpaceUseCase: WorkSpaceUseCaseProtocol
-    private var selectedWorkSpaceId: Int
+    private var selectedWorkSpaceId: Int?   // nil이면 HomeEmpty에서 온걸로
     
-    init(workSpaceUseCase: WorkSpaceUseCaseProtocol, selectedWorkSpaceId: Int) {
+    init(workSpaceUseCase: WorkSpaceUseCaseProtocol, selectedWorkSpaceId: Int?) {
         self.workSpaceUseCase = workSpaceUseCase
         self.selectedWorkSpaceId = selectedWorkSpaceId
+        
+        print("WorkSpaceListViewModel init")
+        print(workSpaceUseCase)
+        print(selectedWorkSpaceId)
     }
     
     

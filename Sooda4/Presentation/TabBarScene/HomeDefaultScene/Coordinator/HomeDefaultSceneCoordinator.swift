@@ -84,8 +84,10 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         sideMenuNav.menuWidth = UIScreen.main.bounds.width - 76
         SideMenuManager.default.leftMenuNavigationController = sideMenuNav
         
-        let workSpaceListCoordinator = WorkSpaceListCoordinator(sideMenuNav)
-        workSpaceListCoordinator.workSpaceId = workSpaceId // * 필수
+        let workSpaceListCoordinator = WorkSpaceListCoordinator(
+            workSpaceId,
+            nav: sideMenuNav
+        )
         workSpaceListCoordinator.finishDelegate = self
         childCoordinators.append(workSpaceListCoordinator)
         workSpaceListCoordinator.start()
@@ -126,7 +128,7 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
-//        navigationController.viewControllers.removeAll()  // 이걸 왜지워 근데??
+        navigationController.viewControllers.removeAll() 
         navigationController.dismiss(animated: true)
         
         /* 연락이 온다 */

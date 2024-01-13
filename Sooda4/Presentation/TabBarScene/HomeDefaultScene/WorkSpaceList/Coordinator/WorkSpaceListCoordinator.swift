@@ -46,10 +46,10 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
     
     
     // 이런 식으로 할 수 있지 않을까...?
-    convenience init(_ a: Int, nav: UINavigationController) {
+    convenience init(_ workSpaceId: Int?, nav: UINavigationController) {
         self.init(nav)
         
-        self.workSpaceId = a
+        self.workSpaceId = workSpaceId  // nil이면 HomeEmpty에서 온겨
     }
     
     // 3.
@@ -63,12 +63,11 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         showWorkSpaceListView()
     }
     
-    // * 필수
+    // * 필수 는 아니고, nil이면 HomeEmpty에서 왔다고 판단함
     var workSpaceId: Int?
     
     func showWorkSpaceListView() {
         
-        guard let workSpaceId else { return }
         
         let workSpaceListVM = WorkSpaceListViewModel(
             workSpaceUseCase: WorkSpaceUseCase(

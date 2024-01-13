@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SideMenu
 
 // MARK: - HomeEmptyScene Coordinator Protocol
 protocol HomeEmptySceneCoordinatorProtocol: Coordinator {
@@ -13,6 +14,8 @@ protocol HomeEmptySceneCoordinatorProtocol: Coordinator {
     // view
     func showHomeEmptyView()
     func showMakeWorkSpaceView()
+    
+    func showWorkSpaceFlow()
 }
 
 
@@ -44,14 +47,22 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
     func showHomeEmptyView() {
         print(#function)
         
-        let homeEmptyVC = HomeEmptyViewController()
+        let homeEmptyVM = HomeEmptyViewModel()
+        homeEmptyVM.didSendEventClosure = { [weak self] event in
         
-        homeEmptyVC.k = { [weak self] in
-            self?.showMakeWorkSpaceView()
-            
+            switch event {
+            case .showMakeWorkSpace:
+                self?.showMakeWorkSpaceView()
+                
+            case .showWorkSpaceList:
+                print("0000000")
+                self?.showWorkSpaceFlow()
+            }
         }
         
-        navigationController.pushViewController(homeEmptyVC, animated: true)
+    
+        let homeEmptyVC = HomeEmptyViewController.create(with: homeEmptyVM)
+        navigationController.pushViewController(homeEmptyVC, animated: false)
     }
     
     func showMakeWorkSpaceView() {
@@ -76,5 +87,39 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
         let nav = UINavigationController(rootViewController: makeWorkSpaceVC)
         
         navigationController.present(nav, animated: true)
+    }
+    
+    func showWorkSpaceFlow() {
+        print(#function)
+        
+        let sideMenuNav = SideMenuNavigationController(rootViewController: UIViewController())
+        
+        sideMenuNav.leftSide = true
+        sideMenuNav.presentationStyle = .menuSlideIn
+        sideMenuNav.menuWidth = UIScreen.main.bounds.width - 76
+        SideMenuManager.default.leftMenuNavigationController = sideMenuNav
+        
+        let workSpaceListCoordinator = WorkSpaceListCoordinator(
+            nil,
+            nav: sideMenuNav
+        )
+        workSpaceListCoordinator.finishDelegate = self
+        childCoordinators.append(workSpaceListCoordinator)
+        workSpaceListCoordinator.start()
+        
+        navigationController.present(sideMenuNav, animated: true)
+    }
+}
+
+
+// MARK: - Child DidFinished
+extension HomeEmptySceneCoordinator: CoordinatorFinishDelegate {
+    func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
+        
+        childCoordinators = childCoordinators.filter {
+            $0.type != childCoordinator.type
+        }
+        navigationController.viewControllers.removeAll()
+        navigationController.dismiss(animated: true)
     }
 }

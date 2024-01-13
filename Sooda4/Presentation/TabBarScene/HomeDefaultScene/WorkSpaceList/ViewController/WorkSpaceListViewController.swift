@@ -37,10 +37,7 @@ class WorkSpaceListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print(#function)
-        
         setNavigation()
-//        setTableView()
         bindVM()
         
         loadData.onNext(()) // 데이터 로드 (viewDidLoad 대신 사용)
@@ -79,11 +76,7 @@ class WorkSpaceListViewController: BaseViewController {
         navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
     
-    func setTableView() {
-        mainView.workSpaceTableView.delegate = self
-        mainView.workSpaceTableView.dataSource = self
-    }
-    
+
     func bindVM() {
         
         let input = WorkSpaceListViewModel.Input(
@@ -114,19 +107,5 @@ class WorkSpaceListViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         
-    }
-}
-
-extension WorkSpaceListViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: WorkSpaceListTableViewCell.description(), for: indexPath) as? WorkSpaceListTableViewCell else { return UITableViewCell() }
-        
-        return cell
     }
 }
