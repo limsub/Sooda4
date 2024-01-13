@@ -73,7 +73,7 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
             workSpaceUseCase: WorkSpaceUseCase(
                 workSpaceRepository: WorkSpaceRepository()
             ),
-            selectedWorkSpaceId: workSpaceId
+            selectedWorkSpaceId: workSpaceId    // nil이면 알아서 vm에서 homeempty에서 왔다고 판단
         )
         
         workSpaceListVM.didSendEventClosure = { [weak self] event in
@@ -117,11 +117,21 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
         }
         
         
-        
-        let vc = WorkSpaceListViewController.create(with: workSpaceListVM)
-        
-        
-        navigationController.pushViewController(vc, animated: false)
+        if workSpaceId == nil {
+            let v = WorkSpaceListView(.empty)
+            let vc = WorkSpaceListViewController.create(
+                with: workSpaceListVM,
+                view: v
+            )
+            navigationController.pushViewController(vc, animated: false)
+        } else {
+            let v = WorkSpaceListView(.notEmpty)
+            let vc = WorkSpaceListViewController.create(
+                with: workSpaceListVM,
+                view: v
+            )
+            navigationController.pushViewController(vc, animated: true)
+        }
     }
     
     

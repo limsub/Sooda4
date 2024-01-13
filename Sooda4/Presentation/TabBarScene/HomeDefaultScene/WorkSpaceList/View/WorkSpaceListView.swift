@@ -16,12 +16,13 @@ class WorkSpaceListView: BaseView {
     
     // 1. 워크스페이스가 없는 경우
     // 2. 워크스페이스가 있는 경우
-    var type: WorkSpaceEmptyOrNot?
+    var type: WorkSpaceEmptyOrNot = .empty
     
     convenience init(_ type: WorkSpaceEmptyOrNot) {
         self.init()
         
         self.type = type
+        setUp()
     }
     
     
@@ -94,10 +95,13 @@ class WorkSpaceListView: BaseView {
         }
     }
     
-    
     override func setting() {
         super.setting()
         
         self.backgroundColor = .white
+    }
+    
+    func setUp() {
+        
     }
 }

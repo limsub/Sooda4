@@ -11,14 +11,18 @@ import RxCocoa
 
 class WorkSpaceListViewController: BaseViewController {
     
-    let mainView = WorkSpaceListView()
+    var mainView: WorkSpaceListView!
     var viewModel: WorkSpaceListViewModel!
     
     let disposeBag = DisposeBag()
     
     
-    static func create(with viewModel: WorkSpaceListViewModel) -> WorkSpaceListViewController {
+    static func create(
+        with viewModel: WorkSpaceListViewModel,
+        view: WorkSpaceListView
+    ) -> WorkSpaceListViewController {
         let vc = WorkSpaceListViewController()
+        vc.mainView = view
         vc.viewModel = viewModel
         return vc
     }
