@@ -120,8 +120,6 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
             }
         }
         
-        
-        
         // 2. 도착지가 HomeEmpty코디야 -> (더 위로 올라가) -> 나중에 분기처리 else 하나로 가능할듯?
         if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
            case .homeEmptyScene = nextFlow {
@@ -129,10 +127,22 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
             self.finish(nextFlow)
         }
         
-        
-        
-        
         print(#function)
+    }
+}
+
+extension HomeDefaultSceneCoordinator {
+    // ex). 워크스페이스리스트에서 워크스페이스 수정하고 난 후
+    // - 워크스페이스리스트 뷰가 떠있긴 해야 해
+    // - 근데 뒤에 있는 HomeDefault도 수정된 워크스페이스 이름으로 업데이트가 되어야 해.
+    // => 즉, dismiss나 차일드코디 지우진 말고, HomeDefault 업데이트만 해줘
+    // 일단 지금은 요 한 경우 때문에 구현하는데 나중에 이거랑 비슷한 게 필요하면 여기서 쓰자잉
+    func reloadHomeDefault() {
+        navigationController.viewControllers.forEach { vc in
+            if let vc = vc as? HomeDefaultViewController {
+                vc.fetchFirstData()
+            }
+        }
     }
 }
 

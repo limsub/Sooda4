@@ -161,6 +161,11 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
                         vc.loadData.onNext(())
                         
                         print("토스트 메세지도 띄워주기 - '워크스페이스가 편집되었습니다'")
+                        
+                        // 뒤에 있는 HomeDefualt 업데이트좀 시켜봐라
+                        if let homeDefaultCoordinator = self?.finishDelegate as? HomeDefaultSceneCoordinator {
+                            homeDefaultCoordinator.reloadHomeDefault()
+                        }
                     }
                 })
                 
