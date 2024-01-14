@@ -113,7 +113,27 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     func showMakeChannelView() {
         
         guard let workSpaceId else { return }
-        let makeChannelVM = MakeChannelViewModel(workSpaceId: workSpaceId)
+        
+        let makeChannelVM = MakeChannelViewModel(
+            makeChannelUseCase: MakeChannelUseCase(
+                makeChannelRepository: MakeChannelRepository()
+            ),
+            workSpaceId: workSpaceId
+        )
+        makeChannelVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goBackHomeDefault:
+                
+                self?.navigationController.viewControllers.forEach({ vc in
+                    if let vc = vc as? HomeDefaultViewController {
+                        vc.fetchFirstData()
+                    }
+                })
+                
+                self?.navigationController.dismiss(animated: true)
+            }
+        }
+        
         let makeChannelVC = MakeChannelViewController.create(with: makeChannelVM)
         let nav = UINavigationController(rootViewController: makeChannelVC)
         

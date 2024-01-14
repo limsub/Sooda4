@@ -33,11 +33,16 @@ enum ResultMakeChannel {
 
 class MakeChannelViewModel: BaseViewModelType {
     
+    private let makeChannelUseCase: MakeChannelUseCaseProtocol
+    
     private var disposeBag = DisposeBag()
+    
+    var didSendEventClosure: ( (MakeChannelViewModel.Event) -> Void )?
     
     private let workSpaceId: Int
     
-    init(workSpaceId: Int) {
+    init(makeChannelUseCase: MakeChannelUseCaseProtocol, workSpaceId: Int) {
+        self.makeChannelUseCase = makeChannelUseCase
         self.workSpaceId = workSpaceId
     }
     
@@ -58,7 +63,49 @@ class MakeChannelViewModel: BaseViewModelType {
         let resultMakeChannel = PublishSubject<ResultMakeChannel>()
         
         
-        //
+        // 버튼 활성화
+        input.nameText
+            .subscribe(with: self) { owner , value in
+                enabledCompleteButton.onNext(!value.isEmpty)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        // 버튼 클릭
+        input.completeButtonClicked
+            .withLatestFrom(input.nameText)
+            .filter { value in
+                if value.count >= 1 && value.count <= 30 {
+                    return true
+                } else {
+                    resultMakeChannel.onNext(.invalid)
+                    return false
+                }
+            }
+            .withLatestFrom(input.descriptionText) { v1, v2 in
+                return MakeChannelRequestModel(
+                    workSpaceId: self.workSpaceId,
+                    channelName: v1,
+                    channelDescription: v2
+                )
+            }
+            .flatMap {
+                self.makeChannelUseCase.makeChannelRequest($0)
+            }
+            .subscribe(with: self) { owner , response in
+                switch response {
+                case .success:
+                    resultMakeChannel.onNext(.success)  // 의미 없음
+                    
+                    owner.didSendEventClosure?(.goBackHomeDefault)
+                    
+                case .failure(let networkError):
+                    resultMakeChannel.onNext(.failure(error: networkError))
+                }
+                print(response)
+            }
+            .disposed(by: disposeBag)
+        
         
         
         
@@ -66,5 +113,11 @@ class MakeChannelViewModel: BaseViewModelType {
             enabledCompleteButton: enabledCompleteButton,
             resultMakeChannel: resultMakeChannel
         )
+    }
+}
+
+extension MakeChannelViewModel {
+    enum Event {
+        case goBackHomeDefault
     }
 }

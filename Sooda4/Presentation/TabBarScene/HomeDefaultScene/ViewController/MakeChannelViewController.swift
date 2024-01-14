@@ -31,6 +31,7 @@ class MakeChannelViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation("채널 생성")
+        bindVM()
     }
     
     func bindVM() {
