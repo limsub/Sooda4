@@ -22,7 +22,11 @@ struct WorkSpaceChannelInfoModel {
     let name: String
 }
 
-
+// path로 workspaceId랑 channel name 있는 것들
+struct ChannelDetailRequestModel {
+    let workSpaceId: Int
+    let channelName: String 
+}
 
 // 채널 생성
 struct MakeChannelRequestModel {

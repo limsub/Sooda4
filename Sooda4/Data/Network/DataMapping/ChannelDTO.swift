@@ -81,3 +81,20 @@ extension ChannelUnreadCountResponseDTO {
         return .init(count: count)
     }
 }
+
+
+
+
+struct ChannelDetailRequestDTO {
+    let workSpaceId: Int
+    let channelName: String
+}
+extension ChannelDetailRequestDTO {
+    init(_ model: ChannelDetailRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.channelName = model.channelName
+    }
+}
+/* ========== 채널 멤버 조회 ========== */
+// 요청은 ChannelDetailReqeustDTO 사용
+typealias ChannelMembersResponseDTO = [UserInfoDTO]

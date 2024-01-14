@@ -12,6 +12,7 @@ import RxCocoa
 protocol ExploreChannelUseCaseProtocol {
     /* === 네트워크 === */
     func allChannelRequest(_ requestModel: Int) -> Single< Result<[WorkSpaceChannelInfoModel], NetworkError> >
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceUserInfo], NetworkError> >
 }
 
 
@@ -29,6 +30,11 @@ class ExploreChannelUseCase: ExploreChannelUseCaseProtocol {
     func allChannelRequest(_ requestModel: Int) -> Single<Result<[WorkSpaceChannelInfoModel], NetworkError>> {
         
         return exploreChannelRepository.workSpaceAllChannelsRequest(requestModel)
+    }
+    
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single<Result<[WorkSpaceUserInfo], NetworkError>> {
+        
+        return exploreChannelRepository.channelMembersRequest(requestModel)
     }
     
 }

@@ -12,6 +12,7 @@ import RxCocoa
 // 필요한 네트워크
 // 1. 채널 모두 불러오기
 // 2. 특정 채널에 내가 속해있는지 확인하기
+
 // 3. 특정 채널에 조인하기 -> 채팅 보면 알아서 조인된다. 즉, 화면전환 시키고 네트워크 콜 쏘자
 // -> 굳이 1. 조인하기, 2. 채팅 조회하기 이렇게 나눠두지 않은 것 같음.
 
@@ -75,6 +76,8 @@ class ExploreChannelViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
 
+        
+        
         input.joinChannel
             .subscribe(with: self) { owner , value in
                 print("채널 이름 \(value) 에 조인한다. 화면 전환")

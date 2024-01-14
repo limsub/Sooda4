@@ -29,4 +29,24 @@ class ExploreChannelRepository: ExploreChannelRepositoryProtocol {
             }
         }
     }
+    
+    // 2. 특정 채널의 멤버 조회
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceUserInfo], NetworkError> > {
+        
+        let requestDto = ChannelDetailRequestDTO(requestModel)
+        
+        return NetworkManager.shared.request(
+            type: ChannelMembersResponseDTO.self,
+            api: .channelMembers(requestDto)
+        )
+        .map { result in
+            switch result {
+            case .success(let dtoData):
+                let responseModel = dtoData.map { $0.toDomain() }
+                return .success(responseModel)
+            case .failure(let networkError):
+                return .failure(networkError)
+            }
+        }
+    }
 }
