@@ -19,7 +19,7 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     
     // flow
     func showWorkSpaceListFlow(workSpaceId: Int)
-    func showExploreChannelFlow()
+    func showExploreChannelFlow(workSpaceId: Int)
 }
 
 // 생성 시 반드시 데이터가 필요함. workspace_id: Int
@@ -74,7 +74,10 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 self?.showMakeChannelView()
                 
             case .goExploreChannelFlow:
-                self?.showExploreChannelFlow()
+                self?.showExploreChannelFlow(workSpaceId: (self?.workSpaceId)!)
+                // 뭐가 맞는지를 모르겠네
+                // 1. 어차피 프로퍼티로 가지고 있는거 쓸건데 굳이 매개변수 만드나
+                // 2. 그래도 쓰는게 맞나
             }
             
         }
@@ -195,8 +198,18 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         navigationController.present(sideMenuNav, animated: true)
     }
     
-    func showExploreChannelFlow() {
+    func showExploreChannelFlow(workSpaceId: Int) {
         print(#function)
+        
+        
+        let nav = UINavigationController()
+        let exploreChannelCoordinator = ExploreChannelCoordinator(workSpaceId: workSpaceId, nav: nav)
+        exploreChannelCoordinator.finishDelegate = self
+        childCoordinators.append(exploreChannelCoordinator)
+        exploreChannelCoordinator.start()
+        
+        nav.modalPresentationStyle = .fullScreen
+        navigationController.present(exploreChannelCoordinator.navigationController, animated: true)
     }
 }
 

@@ -52,6 +52,11 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
     // 프로토콜 메서드 - view
     func showExploreChannelView(_ workSpaceId: Int) {
         print(#function)
+        
+        let exploreChannelVM = ExploreChannelViewModel()
+        let exploreChannelVC = ExploreChannelViewController.create(with: exploreChannelVM)
+        
+        navigationController.pushViewController(exploreChannelVC, animated: false)
     }
     
     func showJoinChannelView(_ workSpaceId: Int, channelId: Int) {
