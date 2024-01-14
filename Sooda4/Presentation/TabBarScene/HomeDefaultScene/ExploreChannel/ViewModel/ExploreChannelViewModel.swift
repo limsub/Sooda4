@@ -22,6 +22,8 @@ class ExploreChannelViewModel: BaseViewModelType {
     private var exploreChannelUseCase: ExploreChannelUseCaseProtocol
     
     private var disposeBag = DisposeBag()
+    
+    var didSendEventClosure: ( (ExploreChannelViewModel.Event) -> Void )?
 
     
     init(workSpaceId: Int, exploreChannelUseCase: ExploreChannelUseCaseProtocol) {
@@ -88,6 +90,7 @@ class ExploreChannelViewModel: BaseViewModelType {
                         print("이미 소속된 채널이다")
                         
                         // 화면 전환 시켜주기
+                        owner.didSendEventClosure?(.goChannelChatting(channelName: "하이"))
                         
                     } else {
                         print("소속되지 않은 채널이다")
@@ -105,6 +108,8 @@ class ExploreChannelViewModel: BaseViewModelType {
         input.joinChannel
             .subscribe(with: self) { owner , value in
                 print("채널 이름 \(value) 에 조인한다. 화면 전환")
+                
+                owner.didSendEventClosure?(.goChannelChatting(channelName: "하이"))
             }
             .disposed(by: disposeBag)
         
@@ -113,5 +118,11 @@ class ExploreChannelViewModel: BaseViewModelType {
             items: items,
             notJoinedChannel: notJoinedChannel
         )
+    }
+}
+
+extension ExploreChannelViewModel {
+    enum Event {
+        case goChannelChatting(channelName: String)
     }
 }

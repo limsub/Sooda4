@@ -13,13 +13,14 @@ protocol ExploreChannelCoordinatorProtocol: Coordinator {
     
     // view
     func showExploreChannelView(_ workSpaceId: Int) // firstView
-    func showJoinChannelView(_ workSpaceId: Int, channelId: Int)
+    func showChannelChattingView(_ workSpaceId: Int, channelName: String)
     func showDetailChannelView(_ workSpaceId: Int, channelId: Int, isAdmin: Bool)
     
     
 }
 
 class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
+    
     
     var workSpaceId: Int?
     
@@ -55,13 +56,26 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         
         let exploreChannelVM = ExploreChannelViewModel(
             workSpaceId: workSpaceId, exploreChannelUseCase: ExploreChannelUseCase(exploreChannelRepository: ExploreChannelRepository()))
+        
+        exploreChannelVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goChannelChatting(let channelName):
+                self?.showChannelChattingView((self?.workSpaceId)!, channelName: channelName)
+            }
+            
+        }
+        
         let exploreChannelVC = ExploreChannelViewController.create(with: exploreChannelVM)
         
         navigationController.pushViewController(exploreChannelVC, animated: false)
     }
     
-    func showJoinChannelView(_ workSpaceId: Int, channelId: Int) {
+    func showChannelChattingView(_ workSpaceId: Int, channelName: String ) {
         print(#function)
+        
+        let channelChattingVC = ChannelChattingViewController()
+        
+        navigationController.pushViewController(channelChattingVC, animated: true)
     }
     
     func showDetailChannelView(_ workSpaceId: Int, channelId: Int, isAdmin: Bool) {
