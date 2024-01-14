@@ -33,6 +33,7 @@ enum NetworkRouter: URLRequestConvertible {
     
     
     /* === CHANNEL === */
+    case makeChannel(_ sender: MakeChannelRequestDTO)
     case workSpaceMyChannels(_ sender: Int) // workSpaceId
     
     case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
@@ -84,6 +85,8 @@ enum NetworkRouter: URLRequestConvertible {
             
             
         // CHANNEL
+        case .makeChannel(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels"
         case .workSpaceMyChannels(let sender):
             return "/v1/workspaces/\(sender)/channels/my"
             
@@ -145,6 +148,8 @@ enum NetworkRouter: URLRequestConvertible {
             
             
         // CHANNEL
+        case .makeChannel:
+            return .post
         case .workSpaceMyChannels, .channelUnreadCount:
             return .get
             
@@ -198,6 +203,14 @@ enum NetworkRouter: URLRequestConvertible {
             return [
                 "email": sender.email
             ]
+            
+            
+        // CHANNEL
+        case .makeChannel(let sender):
+            return [
+                "name": sender.channelName,
+                "description": sender.channelDescription
+            ]
         
         default:
             return [:]
@@ -241,8 +254,6 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 최종. asURLRequest === */
     func asURLRequest() throws -> URLRequest {
         let url = URL(string: APIKey.baseURL + path)!
-        
-        print("para : \(parameter)")
         
         var request = URLRequest(url: url)
         request.headers = header

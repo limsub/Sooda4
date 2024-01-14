@@ -33,8 +33,24 @@ extension ChannelInfoDTO {
 }
 
 
+/* ========== 채널 생성 ========== */
+struct MakeChannelRequestDTO {
+    let workSpaceId: Int
+    let channelName: String
+    let channelDescription: String?
+}
+extension MakeChannelRequestDTO {
+    init(_ model: MakeChannelRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.channelName = model.channelName
+        self.channelDescription = model.channelDescription
+    }
+}
+
+
 /* ========== 채널 조회 ========== */
 typealias MyChannelsResponseDTO = [ChannelInfoDTO]
+
 
 /* ========== 읽지 않은 채널 채팅 개수 ========== */
 struct ChannelUnreadCountRequestDTO: Encodable {
@@ -43,7 +59,6 @@ struct ChannelUnreadCountRequestDTO: Encodable {
     let after: String
     // 특정 날짜 - 일단 생략
 }
-
 extension ChannelUnreadCountRequestDTO {
     init(_ model: ChannelUnreadCountRequestModel) {
         self.channelName = model.channelName

@@ -31,7 +31,9 @@ class HomeDefaultViewController: BaseViewController {
         return vc
     }
 
-    
+    // Action Sheet의 버튼 클릭 이벤트를 Input으로 전달하기 위함. 한 번 거쳤다 가는 느낌으로 이해하기
+    let makeChannelEvent = PublishSubject<Void>()
+    let exploreCannelEvent = PublishSubject<Void>()
     
     
     
@@ -135,7 +137,9 @@ class HomeDefaultViewController: BaseViewController {
     func bindVM() {
         let input = HomeDefaultViewModel.Input(
             presentWorkSpaceList: customNavigationItemView.rx.tap,
-            tableViewItemSelected: mainView.tableView.rx.itemSelected
+            tableViewItemSelected: mainView.tableView.rx.itemSelected,
+            presentMakeChannel: makeChannelEvent,
+            presentExploreChannel: exploreCannelEvent
         )
         
         let output = viewModel.transform(input)
@@ -160,7 +164,6 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         
         return viewModel.numberOfRowsInSection(section: section)
     }
-    
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -239,6 +242,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         }
     }
     
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         // deselect
@@ -252,6 +256,16 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         
         
         // 2. 맨 아래 클릭 -> 추가 (section 0, 1, 2)
+        // 2 - 1. 채널 추가 -> Action Sheet -> 여기서 선택 시 VM으로 전달 후 -> 코디로 전달
+        if indexPath.section == 0
+        && viewModel.checkCellType(indexPath: indexPath) == .plusCell {
+            showActionSheetTwoSection(firstTitle: "채널 생성", firstCompletion: {
+                self.makeChannelEvent.onNext(())
+            }, secondTitle: "채널 탐색") {
+                self.exploreCannelEvent.onNext(())
+            }
+        }
+        
         // 2 - 3. 팀원 추가 -> 새로운 뷰 present -> 코디로 전달할 필요 -> VM에서 전달. -> rx Input / Output 구현
     
         

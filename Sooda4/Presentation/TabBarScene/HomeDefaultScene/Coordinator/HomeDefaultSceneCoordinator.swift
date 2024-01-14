@@ -14,8 +14,12 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     
     func showInviteMemberView()
     
+    func showMakeChannelView()
+
+    
     // flow
     func showWorkSpaceListFlow(workSpaceId: Int)
+    func showExploreChannelFlow()
 }
 
 // 생성 시 반드시 데이터가 필요함. workspace_id: Int
@@ -65,12 +69,19 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 
             case .presentInviteMemberView:
                 self?.showInviteMemberView()
+                
+            case .presentMakeChannelView:
+                self?.showMakeChannelView()
+                
+            case .goExploreChannelFlow:
+                self?.showExploreChannelFlow()
             }
             
         }
         let vc = HomeDefaultViewController.create(with: homeDefaultVM)
         navigationController.pushViewController(vc, animated: true)
     }
+    
     
     func showInviteMemberView() {
         print(#function)
@@ -97,6 +108,37 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         
         let nav = UINavigationController(rootViewController: inviteMemberVC)
         navigationController.present(nav, animated: true)
+    }
+    
+    func showMakeChannelView() {
+        
+        guard let workSpaceId else { return }
+        
+        let makeChannelVM = MakeChannelViewModel(
+            makeChannelUseCase: MakeChannelUseCase(
+                makeChannelRepository: MakeChannelRepository()
+            ),
+            workSpaceId: workSpaceId
+        )
+        makeChannelVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goBackHomeDefault:
+                
+                self?.navigationController.viewControllers.forEach({ vc in
+                    if let vc = vc as? HomeDefaultViewController {
+                        vc.fetchFirstData()
+                    }
+                })
+                
+                self?.navigationController.dismiss(animated: true)
+            }
+        }
+        
+        let makeChannelVC = MakeChannelViewController.create(with: makeChannelVM)
+        let nav = UINavigationController(rootViewController: makeChannelVC)
+        
+        navigationController.present(nav, animated: true)
+        print(#function)
     }
     
     
@@ -151,6 +193,10 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
 
         
         navigationController.present(sideMenuNav, animated: true)
+    }
+    
+    func showExploreChannelFlow() {
+        print(#function)
     }
 }
 

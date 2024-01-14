@@ -25,6 +25,31 @@ extension UIViewController {
         present(actionSheet, animated: true)
     }
     
+    func showActionSheetTwoSection(
+        firstTitle: String, 
+        firstCompletion: @escaping () -> Void,
+        secondTitle: String,
+        secondCompletion: @escaping () -> Void
+    ) {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let firstButton = UIAlertAction(title: firstTitle, style: .default) { _ in
+            firstCompletion()
+        }
+        
+        let secondButton = UIAlertAction(title: secondTitle, style: .default) { _ in
+            secondCompletion()
+        }
+        
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        
+        actionSheet.addAction(firstButton)
+        actionSheet.addAction(secondButton)
+        actionSheet.addAction(cancel)
+        
+        present(actionSheet, animated: true)
+    }
+    
     
     func showActionSheetFourSection(
         firstTitle: String,
