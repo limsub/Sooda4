@@ -32,4 +32,27 @@ class MakeChannelViewController: BaseViewController {
         
         setNavigation("채널 생성")
     }
+    
+    func bindVM() {
+        
+        let input = MakeChannelViewModel.Input(
+            nameText: mainView.nameTextField.rx.text.orEmpty,
+            descriptionText: mainView.descriptionTextField.rx.text.orEmpty,
+            completeButtonClicked: mainView.completeButton.rx.tap
+        )
+        
+        let output = viewModel.transform(input)
+        
+        output.enabledCompleteButton
+            .subscribe(with: self) { owner , value in
+                owner.mainView.completeButton.update(value ? .enabled : .disabled)
+            }
+            .disposed(by: disposeBag)
+        
+        output.resultMakeChannel
+            .subscribe(with: self) { owner , result in
+                print("토스트 메세지 : \(result.toastMessage)")
+            }
+            .disposed(by: disposeBag)
+    }
 }
