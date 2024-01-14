@@ -76,6 +76,14 @@ struct DMUnreadCountInfoModel {
 }
 
 
+// 워크스페이스 멤버 초대
+struct InviteWorkSpaceMemberRequestModel {
+    let workSpaceId: Int
+    let email: String
+}
+// 응답은 WorkSpaceUserInfo 가져다 사용
+
+
 // 워크스페이스 멤버 조회
 struct WorkSpaceUserInfo {
     let userId: Int
@@ -83,6 +91,7 @@ struct WorkSpaceUserInfo {
     let nickname: String
     let profileImage: String?
 }
+
 
 // 워크스페이스 관리자 권한 변경
 struct ChangeAdminRequestModel {

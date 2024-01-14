@@ -25,7 +25,7 @@ enum NetworkRouter: URLRequestConvertible {
     case myOneWorkSpace(_ sender: Int)  // workSpaceId
     case editWorkSpace(_ sender: EditWorkSpaceRequestDTO)
     case deleteWorkSpace(_ sender: Int) // workSpaceId
-    
+    case inviteWorkSpaceMember(_ sender: InviteWorkSpaceMemberRequestDTO)    // email
     case workSpaceMembers(_ sender: Int) // workSpaceId
     
     case leaveWorkSpace(_ sender: Int)  // workSpaceId
@@ -73,6 +73,8 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces/\(sender.workSpaceId)"
         case .deleteWorkSpace(let sender):
             return "/v1/workspaces/\(sender)"
+        case .inviteWorkSpaceMember(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/members"
         case .workSpaceMembers(let sender):
             return "/v1/workspaces/\(sender)/members"
         case .leaveWorkSpace(let sender):
@@ -131,7 +133,7 @@ enum NetworkRouter: URLRequestConvertible {
         
             
         // WORKSPACE
-        case .makeWorkSpace:
+        case .makeWorkSpace, .inviteWorkSpaceMember:
             return .post
         case .myWorkSpaces, .myOneWorkSpace, .leaveWorkSpace, .workSpaceMembers:
             return .get
@@ -192,6 +194,10 @@ enum NetworkRouter: URLRequestConvertible {
                 "description": sender.description,
                 "image": sender.image
             ]
+        case .inviteWorkSpaceMember(let sender):
+            return [
+                "email": sender.email
+            ]
         
         default:
             return [:]
@@ -235,6 +241,8 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 최종. asURLRequest === */
     func asURLRequest() throws -> URLRequest {
         let url = URL(string: APIKey.baseURL + path)!
+        
+        print("para : \(parameter)")
         
         var request = URLRequest(url: url)
         request.headers = header

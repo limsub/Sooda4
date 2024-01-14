@@ -81,6 +81,7 @@ class WorkSpaceListCoordinator: WorkSpaceListCoordinatorProtocol {
             
             switch event {
             case .goBackHomeDefault(let newWorkSpaceId):
+                print("워크스페이스리스트코디 : event 받음 : \(event)")
                 // (워크스페이스 리스트 중 하나 선택) dismiss되고 homeDefaultView reload
                 self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: newWorkSpaceId))  // 새로운 workspace id 전달
                 // -> 여기에 대한 처리는 HomeDefault에서 굳이굳이 케이스 나눠서 판단해보자
