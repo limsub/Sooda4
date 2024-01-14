@@ -23,6 +23,9 @@ class ExploreChannelViewController: BaseViewController {
         return vc
     }
     
+    var loadData = PublishSubject<Void>()       // 테이블뷰에 띄울 데이터 로드
+    var joinChannel = PublishSubject<String>()    // 확인 버튼을 눌렀을 때 이벤트
+    
     
     override func loadView() {
         self.view = mainView
@@ -33,15 +36,48 @@ class ExploreChannelViewController: BaseViewController {
         
         setNavigation("채널 탐색")
         bindVM()
+        loadData.onNext(())
     }
     
-    let a = BehaviorSubject(value: ["a", "asbd", "adfas"])
     
     func bindVM() {
-        a.bind(to: mainView.tableView.rx.items(cellIdentifier: HomeDefaultChannelTableViewCell.description(), cellType: HomeDefaultChannelTableViewCell.self)) { (row, element, cell) in
-            
-            cell.designWithBold(element)
-        }
-        .disposed(by: disposeBag)
+        
+        let input = ExploreChannelViewModel.Input(
+            loadData: self.loadData,
+            itemSelected: mainView.tableView.rx.itemSelected,
+            joinChannel: self.joinChannel
+        )
+        
+        let output = viewModel.transform(input)
+        
+        output.items
+            .bind(to: mainView.tableView.rx.items(cellIdentifier: HomeDefaultChannelTableViewCell.description(), cellType: HomeDefaultChannelTableViewCell.self)) { (row, element, cell) in
+                
+                cell.designWithBold(element.name)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        
+        output.notJoinedChannel
+            .subscribe(with: self) { owner , value in
+                self.showCustomAlertTwoActionViewController(
+                    title: "채널 참여",
+                    message: "[\(value.name)] 채널에 참여하시겠습니까?",
+                    okButtonTitle: "확인",
+                    cancelButtonTitle: "취소") {
+                        print("확인 누름")
+                        owner.joinChannel.onNext(value.name) // 해당 채널에 새로 조인하겠다.
+                        self.dismiss(animated: false)
+                        
+                    } cancelCompletion: {
+                        print("취소 누름")
+                        self.dismiss(animated: false)
+                    }
+            }
+            .disposed(by: disposeBag)
+        
+        
+        
     }
 }

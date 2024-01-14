@@ -53,7 +53,8 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
     func showExploreChannelView(_ workSpaceId: Int) {
         print(#function)
         
-        let exploreChannelVM = ExploreChannelViewModel()
+        let exploreChannelVM = ExploreChannelViewModel(
+            workSpaceId: workSpaceId, exploreChannelUseCase: ExploreChannelUseCase(exploreChannelRepository: ExploreChannelRepository()))
         let exploreChannelVC = ExploreChannelViewController.create(with: exploreChannelVM)
         
         navigationController.pushViewController(exploreChannelVC, animated: false)
