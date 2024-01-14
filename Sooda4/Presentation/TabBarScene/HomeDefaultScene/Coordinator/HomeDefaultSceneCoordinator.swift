@@ -111,6 +111,13 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     }
     
     func showMakeChannelView() {
+        
+        guard let workSpaceId else { return }
+        let makeChannelVM = MakeChannelViewModel(workSpaceId: workSpaceId)
+        let makeChannelVC = MakeChannelViewController.create(with: makeChannelVM)
+        let nav = UINavigationController(rootViewController: makeChannelVC)
+        
+        navigationController.present(nav, animated: true)
         print(#function)
     }
     
