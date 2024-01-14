@@ -65,18 +65,42 @@ class ExploreChannelViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
+        var selectedChannel = WorkSpaceChannelInfoModel(channelId: 0, name: "")
+        
         input.itemSelected
             .withLatestFrom(items) { v1, v2 in
-                return v2[v1.row]
+                
+                selectedChannel = v2[v1.row]
+                
+                return ChannelDetailRequestModel(
+                    workSpaceId: self.workSpaceId,
+                    channelName: v2[v1.row].name
+                )
             }
-            .subscribe(with: self) { owner , value in
-                print("포함 안되어있다고 일단 보내보자")
-                print(value)
-                notJoinedChannel.onNext(value)
+            .flatMap {
+                self.exploreChannelUseCase.channelMembersRequest($0)
             }
-            .disposed(by: disposeBag)
-
+            .subscribe(with: self) { owner , response in
+                switch response  {
+                case .success(let model):
+                    // * 임시
+                    if owner.exploreChannelUseCase.checkAlreadyJoinedChannel(userId: 154, memberArr: model) {
+                        print("이미 소속된 채널이다")
+                        
+                        // 화면 전환 시켜주기
+                        
+                    } else {
+                        print("소속되지 않은 채널이다")
+                        notJoinedChannel.onNext(selectedChannel)
+                    }
+                    
+                    
+                case .failure(let networkError):
+                    print("멤버 불러오는데 에러남 : \(networkError)")
+                }
+            }
         
+            
         
         input.joinChannel
             .subscribe(with: self) { owner , value in
