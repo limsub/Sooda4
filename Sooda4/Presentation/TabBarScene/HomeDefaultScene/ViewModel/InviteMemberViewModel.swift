@@ -55,6 +55,7 @@ class InviteMemberViewModel: BaseViewModelType {
     private var disposeBag = DisposeBag()
     
 //    private let inviteMemberUseCase:
+    private let inviteMemberUseCase: 
     
     struct Input {
         let emailText: ControlProperty<String>

@@ -85,6 +85,20 @@ struct EditWorkSpaceRequestDTO: Encodable {
 // Response는 WorkSpaceInfoDTO 사용
 
 
+/* ========== 워크스페이스 멤버 초대 ========== */
+struct InviteWorkSpaceMemberRequestDTO {
+    let workSpaceId: Int
+    let email: String
+}
+extension InviteWorkSpaceMemberRequestDTO {
+    init(_ model: InviteWorkSpaceMemberRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.email = model.email
+    }
+}
+// Responsesms UserInfoDTO 사용
+
+
 /* ========== 워크스페이스 멤버 조회 ========== */
 typealias WorkSpaceMembersResponseDTO = [UserInfoDTO]
 
