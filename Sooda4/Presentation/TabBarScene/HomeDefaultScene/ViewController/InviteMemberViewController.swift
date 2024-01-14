@@ -29,5 +29,17 @@ class InviteMemberViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation("팀원 초대")
+        bindVM()
+    }
+    
+    func bindVM() {
+        let input = InviteMemberViewModel.Input(
+            emailText: mainView.emailTextField.rx.text.orEmpty,
+            completeButtonClicked: mainView.completeButton.rx.tap
+        )
+        
+        let output = viewModel.transform(input)
+        
+        
     }
 }

@@ -16,6 +16,7 @@ enum NetworkError: Error {
     case E03    // (로그인 실패)
     case E11    // 잘못된 요청
     case E12    // 중복 데이터
+    case E13    // 존재하지 않는 데이터
     
     case E14    // 권한없음 (관리자 아닌데 삭제하려고 함)
     case E15    // 요청 거절 (채널 관리자)
