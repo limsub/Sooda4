@@ -75,12 +75,18 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     func showInviteMemberView() {
         print(#function)
         
-//        let inviteMemberVM
-//        
-//        inviteMemberVM.didSendEventClosure
-//        
-//        let vc
-//        navigationController.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: <#T##Bool#>)
+        let inviteMemberVM = InviteMemberViewModel()
+        let inviteMemberVC = InviteMemberViewController.create(with: inviteMemberVM)
+        
+        inviteMemberVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goBackHomeDefault:
+                self?.navigationController.dismiss(animated: true)
+            }
+        }
+        
+        let nav = UINavigationController(rootViewController: inviteMemberVC)
+        navigationController.present(nav, animated: true)
     }
     
     

@@ -44,6 +44,7 @@ class HomeDefaultViewModel: BaseViewModelType {
     init(workSpaceId: Int, homeDefaultWorkSpaceUseCase: HomeDefaultWorkSpaceUseCaseProtocol) {
         self.homeDefaultWorkSpaceUseCase = homeDefaultWorkSpaceUseCase
         self.workSpaceId = workSpaceId
+        
     }
     
     
@@ -102,6 +103,8 @@ class HomeDefaultViewModel: BaseViewModelType {
 //    (GET, /v1/workspaces/{id}/dms) 을 통해 다이렉트 메시지 정보
 //    (GET, /v1/users/my) 을 통해 프로필 정보
     func fetchFirstData(completion: @escaping () -> Void) {
+        print("----- 홈디폴트 워크스페이스 아이디 : \(workSpaceId) ----- ")
+
         
         let group = DispatchGroup()
         

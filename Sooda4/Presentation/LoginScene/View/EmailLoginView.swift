@@ -54,7 +54,7 @@ class EmailLoginView: BaseView {
         }
         
         completeButton.snp.makeConstraints { make in
-            make.bottom.equalTo(safeAreaLayoutGuide).inset(p)
+            make.bottom.equalTo(self.safeAreaLayoutGuide).inset(p)
             make.horizontalEdges.equalTo(self).inset(p)
             make.height.equalTo(h)
         }

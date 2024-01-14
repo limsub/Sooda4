@@ -9,7 +9,9 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class InviteViewModel: BaseViewModelType {
+class InviteMemberViewModel: BaseViewModelType {
+    
+    var didSendEventClosure: ( (InviteMemberViewModel.Event) -> Void )?
     
     struct Input {
         let emailText: ControlProperty<String>
@@ -26,5 +28,11 @@ class InviteViewModel: BaseViewModelType {
         return Output(
             result: result
         )
+    }
+}
+
+extension InviteMemberViewModel {
+    enum Event {
+        case goBackHomeDefault
     }
 }
