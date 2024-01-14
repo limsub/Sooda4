@@ -9,9 +9,27 @@ import UIKit
 
 class ExploreChannelView: BaseView {
     
-    override func setting() {
-        super.setting()
+    let tableView = {
+        let view = UITableView(frame: .zero)
+        view.register(HomeDefaultChannelTableViewCell.self , forCellReuseIdentifier: HomeDefaultChannelTableViewCell.description())
+        view.backgroundColor = .red
+        view.separatorStyle = .none
+        return view
+    }()
+    
+    override func setConfigure() {
+        super.setConfigure()
         
-        self.backgroundColor = .red
+        self.addSubview(tableView)
     }
+    
+    override func setConstraints() {
+        super.setConstraints()
+        
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(self.safeAreaLayoutGuide)
+        }
+    }
+    
+    
 }

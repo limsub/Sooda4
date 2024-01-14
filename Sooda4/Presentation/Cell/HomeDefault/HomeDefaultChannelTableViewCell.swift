@@ -58,7 +58,15 @@ class HomeDefaultChannelTableViewCell: BaseTableViewCell {
             titleLabel.update(false)
             unreadCountLabel.isHidden = true
         }
-
+    }
+    
+    // 채널 탐색에서 사용하는 경우 -> 무조건 다 진하게
+    func designWithBold(_ text: String) {
+        titleLabel.setText(text)
+        
+        hashtagImageView.update(true)
+        titleLabel.update(true)
+        unreadCountLabel.isHidden = true
     }
     
     

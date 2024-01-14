@@ -31,5 +31,17 @@ class ExploreChannelViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setNavigation("채널 탐색")
+        bindVM()
+    }
+    
+    let a = BehaviorSubject(value: ["a", "asbd", "adfas"])
+    
+    func bindVM() {
+        a.bind(to: mainView.tableView.rx.items(cellIdentifier: HomeDefaultChannelTableViewCell.description(), cellType: HomeDefaultChannelTableViewCell.self)) { (row, element, cell) in
+            
+            cell.designWithBold(element)
+        }
+        .disposed(by: disposeBag)
     }
 }
