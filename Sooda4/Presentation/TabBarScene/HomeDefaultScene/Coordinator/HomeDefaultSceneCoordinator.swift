@@ -144,7 +144,7 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
     func coordinatorDidFinish(childCoordinator: Coordinator, nextFlow: ChildCoordinatorTypeProtocol?) {
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
-        navigationController.viewControllers.removeAll()
+//        navigationController.viewControllers.removeAll()  // 이걸 해버리면 남아있던 HomeDefault도 날라가. 근데 아마 여기서 얘를 날릴 일은 없을 것 같아. 어차피 얘가 베이스로 깔려있고 위에 present 이것저것 해주고 있어서 ㅇㅇ
         navigationController.dismiss(animated: true)
         
         /* 연락이 온다 */
