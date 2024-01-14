@@ -89,6 +89,8 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         inviteMemberVM.didSendEventClosure = { [weak self] event in
             switch event {
             case .goBackHomeDefault:
+                // 새롭게 멤버가 초대되었다 -> HomeDefault 뷰를 다시 그릴 필요는 없다.
+                // 홈화면에 멤버 관련해서 뭐가 나오는게 없거등
                 self?.navigationController.dismiss(animated: true)
             }
         }
