@@ -11,8 +11,9 @@ import RxCocoa
 
 class InviteMemberViewController: BaseViewController {
     
-    let mainView = InviteMemberView()
-    var viewModel: InviteMemberViewModel!
+    private let mainView = InviteMemberView()
+    private var viewModel: InviteMemberViewModel!
+    private var disposeBag = DisposeBag()
     
     static func create(with viewModel: InviteMemberViewModel) -> InviteMemberViewController {
         let vc = InviteMemberViewController()
@@ -40,6 +41,16 @@ class InviteMemberViewController: BaseViewController {
         
         let output = viewModel.transform(input)
         
+        output.enabledCompleteButton
+            .subscribe(with: self) { owner , value in
+                owner.mainView.completeButton.update(value ? .enabled : .disabled)
+            }
+            .disposed(by: disposeBag)
         
+        output.resultInviteMember
+            .subscribe(with: self) { owner , result in
+                print("토스트 메세지 - \(result.toastMessage)")
+            }
+            .disposed(by: disposeBag)
     }
 }

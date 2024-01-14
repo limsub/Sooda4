@@ -74,7 +74,7 @@ enum NetworkRouter: URLRequestConvertible {
         case .deleteWorkSpace(let sender):
             return "/v1/workspaces/\(sender)"
         case .inviteWorkSpaceMember(let sender):
-            return "/v1/workspaces/\(sender.email)/members"
+            return "/v1/workspaces/\(sender.workSpaceId)/members"
         case .workSpaceMembers(let sender):
             return "/v1/workspaces/\(sender)/members"
         case .leaveWorkSpace(let sender):
@@ -241,6 +241,8 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 최종. asURLRequest === */
     func asURLRequest() throws -> URLRequest {
         let url = URL(string: APIKey.baseURL + path)!
+        
+        print("para : \(parameter)")
         
         var request = URLRequest(url: url)
         request.headers = header

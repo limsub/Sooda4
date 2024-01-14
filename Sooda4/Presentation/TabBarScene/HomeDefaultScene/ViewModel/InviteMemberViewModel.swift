@@ -55,7 +55,13 @@ class InviteMemberViewModel: BaseViewModelType {
     private var disposeBag = DisposeBag()
     
 //    private let inviteMemberUseCase:
-    private let inviteMemberUseCase: 
+    private let inviteMemberUseCase: InviteWorkSpaceMemberUseCaseProtocol
+    private let workSpaceId: Int
+    
+    init(workSpaceId: Int, inviteMemberUseCase: InviteWorkSpaceMemberUseCaseProtocol) {
+        self.inviteMemberUseCase = inviteMemberUseCase
+        self.workSpaceId = workSpaceId
+    }
     
     struct Input {
         let emailText: ControlProperty<String>
@@ -77,14 +83,49 @@ class InviteMemberViewModel: BaseViewModelType {
         input.emailText
             .subscribe(with: self) { owner , value in
                 // 이메일 형식
-//                validEmail.onNext(/*usecase.check(value)*/)
-                
+                validEmail.onNext(owner.inviteMemberUseCase.checkEmailFormat(value))
+
                 // 버튼 활성화
                 enabledCompleteButton.onNext(!value.isEmpty)
             }
             .disposed(by: disposeBag)
         
         
+        
+        // 버튼 클릭 -> 멤버 초대 네트워크 통신
+        input.completeButtonClicked
+            .withLatestFrom(validEmail)
+            .filter { value in
+                if value {
+                    return true
+                } else {
+                    resultInviteMember.onNext(.invalid)
+                    return false
+                }
+            }
+            .withLatestFrom(input.emailText) { _, value  in
+                print(value)
+                return InviteWorkSpaceMemberRequestModel(
+                    workSpaceId: self.workSpaceId,
+                    email: value
+                )
+            }
+            .flatMap { self.inviteMemberUseCase.inviteMemberRequest($0) }
+            .subscribe(with: self) { owner , response in
+                switch response {
+                case .success:
+                    resultInviteMember.onNext(.success)
+                    // 사실 성공일 때는 이거 보내는 게 별 의미가 없어
+                    
+                    owner.didSendEventClosure?(.goBackHomeDefault)
+                    
+                case .failure(let networkError):
+                    resultInviteMember.onNext(.failure(error: networkError))
+                }
+                print(response)
+            }
+            .disposed(by: disposeBag)
+            
         
         
         return Output(

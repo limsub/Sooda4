@@ -75,7 +75,15 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     func showInviteMemberView() {
         print(#function)
         
-        let inviteMemberVM = InviteMemberViewModel()
+        // workSpaceId가 nil이면 이게 열리면 안돼
+        guard let workSpaceId else { return }
+        
+        let inviteMemberVM = InviteMemberViewModel(
+            workSpaceId: workSpaceId,
+            inviteMemberUseCase: InviteWorkSpaceMemberUseCase(
+                inviteWorkSpaceMemberRepository: InviteWorkSpaceMemberRepository()
+            )
+        )
         let inviteMemberVC = InviteMemberViewController.create(with: inviteMemberVM)
         
         inviteMemberVM.didSendEventClosure = { [weak self] event in
