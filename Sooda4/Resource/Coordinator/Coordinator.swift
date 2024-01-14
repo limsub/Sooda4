@@ -75,6 +75,6 @@ enum CoordinatorType {
     case homeDefault, dm, search, setting
     
     // homeDefault
-    case workSpaceList
+    case workSpaceList, exploreChannel
     
 }
