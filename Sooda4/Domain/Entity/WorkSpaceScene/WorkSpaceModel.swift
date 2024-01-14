@@ -40,10 +40,7 @@ struct MyOneWorkSpaceModel {
     let description: String?
     let thumbnail: String
 }
-struct WorkSpaceChannelInfoModel {
-    let channelId: Int
-    let name: String
-}
+
 struct WorkSpaceDMInfoModel {
     let roomId: Int
     let userNickname: String

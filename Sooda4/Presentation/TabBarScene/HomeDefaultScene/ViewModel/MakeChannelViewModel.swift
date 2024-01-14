@@ -58,7 +58,7 @@ class MakeChannelViewModel: BaseViewModelType {
         let resultMakeChannel = PublishSubject<ResultMakeChannel>()
         
         
-        // 
+        //
         
         
         
