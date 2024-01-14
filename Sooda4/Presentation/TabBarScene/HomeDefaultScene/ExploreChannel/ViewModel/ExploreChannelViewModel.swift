@@ -20,6 +20,8 @@ class ExploreChannelViewModel: BaseViewModelType {
     
     func transform(_ input: Input) -> Output {
         
+        
+        
         return Output(b: input.a)
     }
 }

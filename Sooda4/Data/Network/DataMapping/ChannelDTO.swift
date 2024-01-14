@@ -48,7 +48,10 @@ extension MakeChannelRequestDTO {
 }
 
 
-/* ========== 채널 조회 ========== */
+/* ========== 모든 채널 조회 ========== */
+typealias WorkSpaceAllChannelsResponseDTO = [ChannelInfoDTO]
+
+/* ========== 내가 속한 채널 조회 ========== */
 typealias MyChannelsResponseDTO = [ChannelInfoDTO]
 
 
