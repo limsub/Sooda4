@@ -39,27 +39,13 @@ class MakeWorkSpaceViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigation()
+        setNavigation("워크스페이스 생성")
         settingType(type: viewModel.type)
         setPHPicker()
         bindVM()
     }
     
-    func setNavigation() {
-        navigationItem.title = "워크스페이스 생성"
-        if let sheetPresentationController {
-            sheetPresentationController.prefersGrabberVisible = true
-        }
-        
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .white
-//        navigationBarAppearance.shadowColor = .clear
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
-    }
+
     
     func settingType(type: MakeWorkSpaceViewModel.OperationType) {
         // 만들러 왔는지 수정하러 왔는지에 따라

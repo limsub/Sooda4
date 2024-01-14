@@ -27,25 +27,10 @@ class ChangeAdminViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigation()
+
+        setNavigation("워크스페이스 관리자 변경")
         setTableView()
         fetchData()
-    }
-    
-    func setNavigation() {
-        navigationItem.title = "워크스페이스 관리자 변경"
-        if let sheetPresentationController {
-            sheetPresentationController.prefersGrabberVisible = true
-        }
-        
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .white
-//        navigationBarAppearance.shadowColor = .clear
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
     
     func setTableView() {

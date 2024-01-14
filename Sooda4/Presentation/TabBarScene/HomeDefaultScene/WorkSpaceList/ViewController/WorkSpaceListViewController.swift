@@ -41,7 +41,7 @@ class WorkSpaceListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigation()
+        setLargeTitleNavigation("워크스페이스")
         bindVM()
         
         loadData.onNext(()) // 데이터 로드 (viewDidLoad 대신 사용)
@@ -54,30 +54,6 @@ class WorkSpaceListViewController: BaseViewController {
         view.clipsToBounds = true
         view.layer.cornerRadius = 25
         view.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMaxXMinYCorner]
-    }
-    
-    func setNavigation() {
-        let titleLabel = UILabel()
-        titleLabel.text = "워크스페이스"
-        titleLabel.setAppFont(.title1)
-        
-        let titleView = UIView()
-        titleView.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(10)
-            make.centerY.equalToSuperview()
-        }
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleView)
-        
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = UIColor.appColor(.background_primary)
-//        navigationBarAppearance.shadowColor = .clear
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
     
 

@@ -28,25 +28,10 @@ class SignUpViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setNavigation()
+        setNavigation("회원가입")
         bindVM()
     }
-    
-    func setNavigation() {
-        navigationItem.title = "회원가입"
-        if let sheetPresentationController {
-            sheetPresentationController.prefersGrabberVisible = true
-        }
-        
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .white
-//        navigationBarAppearance.shadowColor = .clear
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
-    }
+
     
     func bindVM() {
         let input = SignUpViewModel.Input(

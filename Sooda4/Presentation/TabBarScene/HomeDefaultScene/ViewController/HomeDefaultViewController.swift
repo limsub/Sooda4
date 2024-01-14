@@ -22,6 +22,8 @@ class HomeDefaultViewController: BaseViewController {
     let mainView = HomeDefaultView()
     var viewModel: HomeDefaultViewModel!
     
+    let disposeBag = DisposeBag()
+    
     static func create(with viewModel: HomeDefaultViewModel) -> HomeDefaultViewController {
         let vc = HomeDefaultViewController()
         vc.viewModel = viewModel
@@ -79,85 +81,36 @@ class HomeDefaultViewController: BaseViewController {
         
         
         fetchFirstData()
-        
-        
-        setNavigation()
+    
+        setCustomNavigation(
+            customNavigationItemView: customNavigationItemView,
+            leftImageView: leftImageView,
+            navigationTitleLabel: navigationTitleLabel,
+            rightImageView: rightImageView
+        )
         setTableView()
  
         bindVM()
         
-        addBlurView()
+//        addBlurView()
         showBlurView(false)
         
         SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: view)
     }
 
-    func addBlurView() {
-        UIApplication.shared.keyWindow!.bringSubviewToFront(aView)
-//        if let window = UIApplication.shared.windows.first {
-//            window.addSubview(aView)
-//            aView.snp.makeConstraints { make in
-//                make.edges.equalTo(window)
-//            }
-//        }
-    }
+//    func addBlurView() {
+//        UIApplication.shared.keyWindow!.bringSubviewToFront(aView)
+////        if let window = UIApplication.shared.windows.first {
+////            window.addSubview(aView)
+////            aView.snp.makeConstraints { make in
+////                make.edges.equalTo(window)
+////            }
+////        }
+//    }
     
     func showBlurView(_ show: Bool) {
         aView.isHidden = !show
     }
-    
-    func setNavigation() {
-        
-        guard let navigationBar = navigationController?.navigationBar else {
-            return
-        }
-        
-        let navHeight = navigationBar.frame.size.height
-        let navWidth = navigationBar.frame.size.width
-        
-        customNavigationItemView.backgroundColor = .white
-        
-        customNavigationItemView.addSubview(leftImageView)
-        customNavigationItemView.addSubview(navigationTitleLabel)
-        customNavigationItemView.addSubview(rightImageView)
-        
-        customNavigationItemView.snp.makeConstraints { make in
-            make.width.equalTo(navWidth)
-            make.height.equalTo(navHeight)
-        }
-        
-        
-        leftImageView.snp.makeConstraints { make in
-            make.size.equalTo(32)
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview()
-        }
-        rightImageView.snp.makeConstraints { make in
-            make.size.equalTo(32)
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
-        }
-        navigationTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(leftImageView.snp.trailing).offset(8)
-            make.trailing.equalTo(rightImageView.snp.leading).offset(-8)
-            make.centerY.equalToSuperview()
-        }
-
-        let leftBarBtn = UIBarButtonItem(customView: customNavigationItemView)
-        navigationItem.leftBarButtonItem = leftBarBtn
- 
-        
-        //
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .white
-//        navigationBarAppearance.shadowColor = .clear
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
-    }
-
     
     func setTableView() {
         mainView.tableView.delegate = self
@@ -181,12 +134,14 @@ class HomeDefaultViewController: BaseViewController {
 
     func bindVM() {
         let input = HomeDefaultViewModel.Input(
-            presentWorkSpaceList: customNavigationItemView.rx.tap
+            presentWorkSpaceList: customNavigationItemView.rx.tap,
+            tableViewItemSelected: mainView.tableView.rx.itemSelected
         )
         
         let output = viewModel.transform(input)
         
-//        mainView.tableView.
+        
+        
     }
     
 
@@ -289,7 +244,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         // deselect
         tableView.deselectRow(at: indexPath, animated: true)
         
-        // 1. 접었다 폈다
+        // 1. 접었다 폈다 (-> 단순 테이블뷰 리로드)
         viewModel.toggleOpenedData(indexPath) {
             tableView.reloadSections([indexPath.section], with: .none)
         }
@@ -297,6 +252,7 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         
         
         // 2. 맨 아래 클릭 -> 추가 (section 0, 1, 2)
+        // 2 - 3. 팀원 추가 -> 새로운 뷰 present -> 코디로 전달할 필요 -> VM에서 전달. -> rx Input / Output 구현
     
         
     }

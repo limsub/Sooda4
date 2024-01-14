@@ -10,7 +10,9 @@ import SideMenu
 
 protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     // view
-    func showHomeDefaultView(_ workSpaceId: Int)
+    func showHomeDefaultView(_ workSpaceId: Int) // firstView
+    
+    func showInviteMemberView()
     
     // flow
     func showWorkSpaceListFlow(workSpaceId: Int)
@@ -60,11 +62,25 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
             switch event {
             case .presentWorkSpaceListView(let workSpaceId):
                 self?.showWorkSpaceListFlow(workSpaceId: workSpaceId)
+                
+            case .presentInviteMemberView:
+                self?.showInviteMemberView()
             }
             
         }
         let vc = HomeDefaultViewController.create(with: homeDefaultVM)
         navigationController.pushViewController(vc, animated: true)
+    }
+    
+    func showInviteMemberView() {
+        print(#function)
+        
+//        let inviteMemberVM
+//        
+//        inviteMemberVM.didSendEventClosure
+//        
+//        let vc
+//        navigationController.pushViewController(<#T##viewController: UIViewController##UIViewController#>, animated: <#T##Bool#>)
     }
     
     

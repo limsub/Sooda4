@@ -47,9 +47,10 @@ class HomeDefaultViewModel: BaseViewModelType {
     }
     
     
-    
+    /* ===== input / output pattern ===== */
     struct Input {
         let presentWorkSpaceList: ControlEvent<Void>
+        let tableViewItemSelected: ControlEvent<IndexPath>
     }
     
     struct Output {
@@ -64,14 +65,23 @@ class HomeDefaultViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
         
-        return Output(presentWorkSpaceList: input.presentWorkSpaceList)
+        
+        input.tableViewItemSelected
+            .subscribe(with: self) { owner , indexPath in
+                
+                // 팀원 추가
+                if indexPath.section == 2 && indexPath.row == 0 {
+                    owner.didSendEventClosure?(.presentInviteMemberView)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        return Output(
+            presentWorkSpaceList: input.presentWorkSpaceList
+        )
     }
     
-    
-    
-    
-    
-    
+ 
     
     
     // 뷰를 그려주기 위한 데이터
@@ -235,7 +245,8 @@ class HomeDefaultViewModel: BaseViewModelType {
     
     
     
-    
+    /* ===== 화면 전환 시점 VC에게 전달받고, 코디네이터에게 전달해주기 (1. 팀웥 추가) ===== */
+//    func go
     
     
     
@@ -332,5 +343,6 @@ class HomeDefaultViewModel: BaseViewModelType {
 extension HomeDefaultViewModel {
     enum Event {
         case presentWorkSpaceListView(workSpaceId: Int)
+        case presentInviteMemberView
     }
 }

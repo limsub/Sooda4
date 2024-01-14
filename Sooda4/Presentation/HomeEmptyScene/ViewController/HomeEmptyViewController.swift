@@ -32,7 +32,7 @@ class HomeEmptyViewController: BaseViewController {
     }()
     let navigationTitleLabel = {
         let view = UILabel()
-        view.text = "iOS Developers Study"
+        view.text = "No WorkSpace"
         view.setAppFont(.title1)
         return view
     }()
@@ -59,64 +59,14 @@ class HomeEmptyViewController: BaseViewController {
         view.backgroundColor = .green
 
        
-        setNavigation()
+//        setNavigation()
+        setCustomNavigation(
+            customNavigationItemView: customNavigationItemView,
+            leftImageView: leftImageView,
+            navigationTitleLabel: navigationTitleLabel,
+            rightImageView: rightImageView
+        )
         bindVM()
-    }
-    
-    func setNavigation() {
-        
-        guard let navigationBar = navigationController?.navigationBar else {
-            print("qqqqqq")
-            return
-        }
-        
-        print(#function)
-        print(navigationController)
-        
-        let navHeight = navigationBar.frame.size.height
-        let navWidth = navigationBar.frame.size.width
-        
-        customNavigationItemView.backgroundColor = .white
-        
-        customNavigationItemView.addSubview(leftImageView)
-        customNavigationItemView.addSubview(navigationTitleLabel)
-        customNavigationItemView.addSubview(rightImageView)
-        
-        customNavigationItemView.snp.makeConstraints { make in
-            make.width.equalTo(navWidth)
-            make.height.equalTo(navHeight)
-        }
-        
-        
-        leftImageView.snp.makeConstraints { make in
-            make.size.equalTo(32)
-            make.centerY.equalToSuperview()
-            make.leading.equalToSuperview()
-        }
-        rightImageView.snp.makeConstraints { make in
-            make.size.equalTo(32)
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
-        }
-        navigationTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(leftImageView.snp.trailing).offset(8)
-            make.trailing.equalTo(rightImageView.snp.leading).offset(-8)
-            make.centerY.equalToSuperview()
-        }
-
-        let leftBarBtn = UIBarButtonItem(customView: customNavigationItemView)
-        navigationItem.leftBarButtonItem = leftBarBtn
- 
-        
-        //
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.configureWithOpaqueBackground()
-        navigationBarAppearance.backgroundColor = .white
-//        navigationBarAppearance.shadowColor = .clear
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactScrollEdgeAppearance = navigationBarAppearance
     }
     
     func bindVM() {
