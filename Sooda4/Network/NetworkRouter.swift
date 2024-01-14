@@ -242,8 +242,6 @@ enum NetworkRouter: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
         let url = URL(string: APIKey.baseURL + path)!
         
-        print("para : \(parameter)")
-        
         var request = URLRequest(url: url)
         request.headers = header
         request.method = method

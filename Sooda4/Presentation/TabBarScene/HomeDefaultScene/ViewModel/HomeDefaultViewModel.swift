@@ -51,7 +51,10 @@ class HomeDefaultViewModel: BaseViewModelType {
     /* ===== input / output pattern ===== */
     struct Input {
         let presentWorkSpaceList: ControlEvent<Void>
-        let tableViewItemSelected: ControlEvent<IndexPath>
+        let tableViewItemSelected: ControlEvent<IndexPath>  // 일단 팀원 추가
+        
+        let presentMakeChannel: PublishSubject<Void>
+        let presentExploreChannel: PublishSubject<Void>
     }
     
     struct Output {
@@ -59,7 +62,7 @@ class HomeDefaultViewModel: BaseViewModelType {
     }
     
     func transform(_ input: Input) -> Output {
-        
+        // 슬라이드 메뉴로 워크스페이스 리스트
         input.presentWorkSpaceList
             .subscribe(with: self) { owner , _ in
                 owner.didSendEventClosure?(.presentWorkSpaceListView(workSpaceId: owner.workSpaceId))
@@ -67,6 +70,7 @@ class HomeDefaultViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
+        // 셀 선택 시 이벤트 (1. 팀원 추가)
         input.tableViewItemSelected
             .subscribe(with: self) { owner , indexPath in
                 
@@ -76,6 +80,25 @@ class HomeDefaultViewModel: BaseViewModelType {
                 }
             }
             .disposed(by: disposeBag)
+        
+        
+        // 채널 생성 present (액션시트에서 눌린 이벤트 받음)
+        input.presentMakeChannel
+            .subscribe(with: self) { owner , _ in
+                print("-- vm : 채널 생성 present")
+                owner.didSendEventClosure?(.presentMakeChannelView)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        // 채널 탐색 present (액션시트에서 눌린 이벤트 받음)
+        input.presentExploreChannel
+            .subscribe(with: self) { owner, _ in
+                print("-- vm : 채널 탐색 present")
+                owner.didSendEventClosure?(.goExploreChannelFlow)
+            }
+            .disposed(by: disposeBag)
+        
         
         return Output(
             presentWorkSpaceList: input.presentWorkSpaceList
@@ -248,8 +271,6 @@ class HomeDefaultViewModel: BaseViewModelType {
     
     
     
-    /* ===== 화면 전환 시점 VC에게 전달받고, 코디네이터에게 전달해주기 (1. 팀웥 추가) ===== */
-//    func go
     
     
     
@@ -347,5 +368,8 @@ extension HomeDefaultViewModel {
     enum Event {
         case presentWorkSpaceListView(workSpaceId: Int)
         case presentInviteMemberView
+        
+        case presentMakeChannelView
+        case goExploreChannelFlow
     }
 }
