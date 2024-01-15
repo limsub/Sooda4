@@ -9,20 +9,15 @@ import UIKit
 
 class ChannelSettingViewController: BaseViewController {
     
-    struct ButtonInfo {
-        let title: String
-        let isRed: Bool
+    private let mainView = ChannelSettingView()
+    private var viewModel: ChannelSettingViewModel!
+    
+    static func create(with viewModel: ChannelSettingViewModel) -> ChannelSettingViewController {
+        let vc = ChannelSettingViewController()
+        vc.viewModel = viewModel
+        return vc
     }
-    let handleButtonData = [
-        ButtonInfo(title: "채널 편집", isRed: false),
-        ButtonInfo(title: "채널에서 나가기", isRed: false),
-        ButtonInfo(title: "채널 관리자 변경", isRed: false),
-        ButtonInfo(title: "채널 삭제", isRed: true )
-    ]
     
-    var isOpen = false
-    
-    let mainView = ChannelSettingView()
     
     override func loadView() {
         self.view = mainView
@@ -32,13 +27,19 @@ class ChannelSettingViewController: BaseViewController {
         super.viewDidLoad()
         
         setTableView()
+        fetchData()
     }
     
     func setTableView() {
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
     }
-    
+        
+    func fetchData() {
+        viewModel.fetchData {
+            self.mainView.tableView.reloadData()
+        }
+    }
     
 }
 
@@ -51,78 +52,71 @@ extension ChannelSettingViewController: UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0: return 1
-        case 1: return (isOpen) ? 2 : 1
-        case 2: return 4    // 관리자 여부에 따라 1 or 4 (vm에 저장)
-        default: return 0
-        }
+        viewModel.numberOfRowsInSection(section: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        switch (indexPath.section, indexPath.row) {
-            
-        case (0, 0):
+        let sectionType = viewModel.sectionType(indexPath: indexPath)
+        
+        switch sectionType {
+        case .info:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingChannelInfoTableViewCell.description()) as? ChannelSettingChannelInfoTableViewCell else { return UITableViewCell() }
             
-            return cell
+            let data = viewModel.channelInfoForInfoCell()
+            cell.designCell(name: data.0, description: data.1)
             
-        case (1, 0):
+            return cell
+        case .memberFolding:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingMemberFoldingTableViewCell.description()) as? ChannelSettingMemberFoldingTableViewCell else { return UITableViewCell() }
-        
+            
+            let data = viewModel.memberCountForFoldingCell()
+            cell.designCell(count: data)
             
             return cell
-            
-        case (1, 1):
+        case .members:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingMembersTableViewCell.description()) as? ChannelSettingMembersTableViewCell else { return UITableViewCell() }
             
-            
+            let data = viewModel.memberInfoForMembersCell()
+            cell.items = data
+            cell.reloadCollectionView()
             
             return cell
-            
-        case (2, _):
+        case .button:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingHandleChannelTableViewCell.description()) as? ChannelSettingHandleChannelTableViewCell else { return UITableViewCell() }
             
-            let element = handleButtonData[indexPath.row]
-            
-            cell.designCell(text: element.title, isRed: element.isRed)
-            
+            let data = viewModel.buttonDataForButtonCell(indexPath: indexPath)
+            cell.designCell(text: data.0, isRed: data.1)
             
             return cell
-            
-        default: return UITableViewCell()
         }
+
     }
     
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        switch (indexPath.section, indexPath.row) {
-            
-        case (0, 0): return UITableView.automaticDimension
-
-            
-        case (1, 0): return 56
-
-            
-        case (1, 1): return UITableView.automaticDimension
-   
-            
-        case (2, _): return 52
-            
-            
-        default: return 0
+        let sectionType = viewModel.sectionType(indexPath: indexPath)
+        
+        switch sectionType {
+        case .info:
+            return UITableView.automaticDimension
+        case .memberFolding:
+            return 56
+        case .members:
+            return UITableView.automaticDimension
+        case .button:
+            return 52
         }
     }
     
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if (indexPath.section, indexPath.row) == (1, 0) {
-            self.isOpen.toggle()
-            
-            mainView.tableView.reloadSections([indexPath.section], with: .none)
+        viewModel.toggleOpenValue(indexPath: indexPath) {
+            self.mainView.tableView.reloadSections([indexPath.section], with: .none)
         }
+        
     }
     
 }

@@ -55,7 +55,9 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
         }
     }
     
-    func designCell(imageUrl: String, name: String) {
+    func designCell(imageUrl: String?, name: String) {
+        // * 이미지 넣어주기
+        
         nameLabel.text = name
         nameLabel.textAlignment = .center
         nameLabel.setAppFont(.body)

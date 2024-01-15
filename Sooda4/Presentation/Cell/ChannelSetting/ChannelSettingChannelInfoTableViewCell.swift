@@ -49,4 +49,11 @@ class ChannelSettingChannelInfoTableViewCell: BaseTableViewCell {
         }
     }
     
+    func designCell(name: String, description: String) {
+        nameLabel.text = "# \(name)"
+        nameLabel.setAppFont(.title2)
+        descriptionLabel.text = description
+        descriptionLabel.setAppFont(.body)
+    }
+    
 }

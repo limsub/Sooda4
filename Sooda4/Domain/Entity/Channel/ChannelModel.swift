@@ -56,6 +56,7 @@ typealias ChannelChattingResponseModel = [ChannelChattingModel]
 struct OneChannelInfoModel {
     let channelName: String
     let channelDescription: String
+    let ownerId: Int
     
     let users: [WorkSpaceUserInfo]
 }

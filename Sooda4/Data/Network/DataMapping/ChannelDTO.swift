@@ -105,6 +105,7 @@ extension OneChannelResponseDTO {
         return .init(
             channelName: name,
             channelDescription: description,
+            ownerId: owner_id,
             users: channelMembers.map { $0.toDomain() }
         )
     }

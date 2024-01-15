@@ -46,4 +46,9 @@ class ChannelSettingMemberFoldingTableViewCell: BaseTableViewCell {
             make.trailing.equalTo(contentView).inset(16)
         }
     }
+    
+    func designCell(count: Int) {
+        memberCountLabel.text = "멤버 (\(count))"
+        memberCountLabel.setAppFont(.title2)
+    }
 }

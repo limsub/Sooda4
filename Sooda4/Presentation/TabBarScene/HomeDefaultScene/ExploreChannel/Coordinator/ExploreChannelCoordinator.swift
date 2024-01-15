@@ -99,7 +99,13 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
     func showChannelSettingView(_ workSpaceId: Int, channelName: String, isAdmin: Bool) {
         print(#function)
         
-        let channelSettingVC = ChannelSettingViewController()
+        let channelSettingVM = ChannelSettingViewModel(
+            workSpaceId: workSpaceId,
+            channelName: channelName,
+            channelSettingUseCase: ChannelSettingUseCase(channelSettingRepository: ChannelSettingRepository())
+        )
+        
+        let channelSettingVC = ChannelSettingViewController.create(with: channelSettingVM)
         
         navigationController.pushViewController(channelSettingVC, animated: true)
     }

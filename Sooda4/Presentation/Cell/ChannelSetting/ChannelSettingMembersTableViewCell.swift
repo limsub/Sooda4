@@ -12,8 +12,8 @@ import UIKit
 // 직접 멤버 카운트와 셀 높이 계산해서 지정해주는 게 더 나을 것 같음
 class ChannelSettingMembersTableViewCell: BaseTableViewCell {
     
-    // 컬렉션뷰에 띄울 데이터를 가지고 있어야 한다..
-    let items = ["Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데"]
+    var items: [WorkSpaceUserInfo] = []
+    
     
     // 좌우 여백 6. 높이 cell과 동일
     lazy var collectionView = {
@@ -46,12 +46,13 @@ class ChannelSettingMembersTableViewCell: BaseTableViewCell {
     override func setting() {
         super.setting()
         
-        setCollectionViewHeight()
+        self.collectionView.heightAnchor.constraint(equalToConstant: 900).isActive = true
     }
     
     // 외부에서 접근
     func reloadCollectionView() {
         self.collectionView.reloadData()
+        setCollectionViewHeight()
     }
 }
 
@@ -80,6 +81,9 @@ extension ChannelSettingMembersTableViewCell {
         let lineCnt = itemCnt / 5 + (itemCnt % 5 == 0 ? 0 : 1)
         let height: CGFloat = CGFloat(lineCnt * 91)
         
+        print("===========\(itemCnt)================")
+        print("===========\(height)================")
+        
         self.collectionView.heightAnchor.constraint(equalToConstant: height).isActive = true
         
     }
@@ -98,8 +102,12 @@ extension ChannelSettingMembersTableViewCell: UICollectionViewDataSource {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChannelSettingMemberCollectionViewCell.description(), for: indexPath) as? ChannelSettingMemberCollectionViewCell else { return UICollectionViewCell() }
         
-        cell.designCell(imageUrl: "", name: items[indexPath.row])
+        let data = items[indexPath.row]
         
+        cell.designCell(
+            imageUrl: data.profileImage,
+            name: data.nickname
+        )
         
         return cell
     }
