@@ -26,6 +26,8 @@ class SplashViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(" ---------- \(Date().toString(of: .dateToTime)) ---------- ")
+        
         title = "스플래시 뷰"
          
         mainView.tempLabel.setAppFont(.title1)
