@@ -68,8 +68,17 @@ class ChannelChattingViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
         
+        
+        input.channelSettingButtonClicked
+            .subscribe(with: self) { owner , _ in
+                owner.didSendEventClosure?(.goChannelSetting(workSpaceId: 103, channelName: "DmakeChannel"))
+            }
+            .disposed(by: disposeBag)
+        
         return Output(b: "hi")
     }
+    
+    
 }
 
 extension ChannelChattingViewModel {

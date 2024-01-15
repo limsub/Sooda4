@@ -11,7 +11,7 @@ class ChannelSettingViewController: BaseViewController {
     
     
     lazy var collectionView = { [self] in
-        let view = UICollectionView(frame: .zero, collectionViewLayout: configurePinterestLayout())
+        let view = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
         view.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "hi")
         
         view.backgroundColor = .red
@@ -26,6 +26,9 @@ class ChannelSettingViewController: BaseViewController {
         
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: 50, height: 50)
+        
+        layout.minimumLineSpacing = 1
+        layout.minimumInteritemSpacing = 1
         
         
         return layout
@@ -43,8 +46,13 @@ class ChannelSettingViewController: BaseViewController {
         
         view.addSubview(collectionView)
         
+        let heightCnt = arrayCnt / 6 + (arrayCnt % 6 == 0 ? 0 : 1)
+        
+        print(heightCnt)
+        
         collectionView.snp.makeConstraints { make in
             make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(heightCnt * 50)
 //            make.height.greaterThanOrEqualTo(100)
 //            make.height.equalTo(100)
         }
@@ -56,38 +64,6 @@ class ChannelSettingViewController: BaseViewController {
     }
     
     
-    
-    // 9/26
-    func configurePinterestLayout() -> UICollectionViewLayout {
-    
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .estimated(150))
-        
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        
-        let groupSIze = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(150))
-        
-        // 다른 함수 사용
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSIze,
-            repeatingSubitem: item,
-            count: 2
-        )
-        group.interItemSpacing = .fixed(10)
-            
-        // section: 그룹을 감싼다
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
-        section.interGroupSpacing = 10
-        
-        let configuration = UICollectionViewCompositionalLayoutConfiguration()
-        configuration.scrollDirection = .vertical
-        
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        layout.configuration = configuration
-        
-
-        return layout
-    }
 }
 
 extension ChannelSettingViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

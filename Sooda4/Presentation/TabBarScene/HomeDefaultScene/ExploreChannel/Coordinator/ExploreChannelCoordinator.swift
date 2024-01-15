@@ -85,10 +85,8 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
                 // finish(homeDefault)
                 break
             case .goChannelSetting(let workSpaceId, let channelName):
-                self?.showChannelChattingView(
-                    workSpaceId,
-                    channelName: channelName
-                )
+                self?.showChannelSettingView(workSpaceId, channelName: channelName, isAdmin: true)
+        
             }
             
         }
