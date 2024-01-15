@@ -32,6 +32,26 @@ extension ChannelInfoDTO {
     }
 }
 
+struct ChannelChattingDTO: Decodable {
+    let channel_id: Int
+    let channelName: String
+    let chat_id: Int
+    let content: String?
+    let createdAt: String
+    let files: [String]
+    let user: UserInfoDTO   // user_id, email, nickname, profileImage
+}
+extension ChannelChattingDTO {
+    func toDomain() -> ChannelChattingModel {
+        return .init(
+            content: content,
+            files: files,
+            userName: user.nickname,
+            userImage: user.profileImage
+        )
+    }
+}
+
 
 /* ========== 채널 생성 ========== */
 struct MakeChannelRequestDTO {
@@ -48,8 +68,29 @@ extension MakeChannelRequestDTO {
 }
 
 
-/* ========== 채널 조회 ========== */
+/* ========== 모든 채널 조회 ========== */
+typealias WorkSpaceAllChannelsResponseDTO = [ChannelInfoDTO]
+
+/* ========== 내가 속한 채널 조회 ========== */
 typealias MyChannelsResponseDTO = [ChannelInfoDTO]
+
+
+/* ========== 채널 채팅 조회 ========== */
+struct ChannelChattingRequestDTO: Encodable {
+    let workSpaceId: Int
+    let channelName: String
+    let cursor_date: String
+}
+extension ChannelChattingRequestDTO {
+    init(_ model: ChannelChattingRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.channelName = model.channelName
+        self.cursor_date = model.cursor_date
+    }
+}
+typealias ChannelChattingResponseDTO = [ChannelChattingDTO]
+
+
 
 
 /* ========== 읽지 않은 채널 채팅 개수 ========== */
@@ -78,3 +119,20 @@ extension ChannelUnreadCountResponseDTO {
         return .init(count: count)
     }
 }
+
+
+
+
+struct ChannelDetailRequestDTO {
+    let workSpaceId: Int
+    let channelName: String
+}
+extension ChannelDetailRequestDTO {
+    init(_ model: ChannelDetailRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.channelName = model.channelName
+    }
+}
+/* ========== 채널 멤버 조회 ========== */
+// 요청은 ChannelDetailReqeustDTO 사용
+typealias ChannelMembersResponseDTO = [UserInfoDTO]

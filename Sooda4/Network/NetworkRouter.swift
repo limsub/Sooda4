@@ -34,9 +34,13 @@ enum NetworkRouter: URLRequestConvertible {
     
     /* === CHANNEL === */
     case makeChannel(_ sender: MakeChannelRequestDTO)
+    case workSpaceAllChannels(_ sender: Int) // workSpaceId
     case workSpaceMyChannels(_ sender: Int) // workSpaceId
     
+    case channelChattings(_ sender: ChannelChattingRequestDTO)
     case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
+    
+    case channelMembers(_ sender: ChannelDetailRequestDTO)
     
     
     /* === DM === */
@@ -87,12 +91,19 @@ enum NetworkRouter: URLRequestConvertible {
         // CHANNEL
         case .makeChannel(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels"
+        case .workSpaceAllChannels(let sender):
+            return "/v1/workspaces/\(sender)/channels"
         case .workSpaceMyChannels(let sender):
             return "/v1/workspaces/\(sender)/channels/my"
             
+            // * 임시 - 채널이름 한글일 수도 있어서 인코딩해야함.
+        case .channelChattings(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/chats"
+            
         case .channelUnreadCount(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
-            
+        case .channelMembers(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/members"
             
             
         // DM
@@ -150,7 +161,7 @@ enum NetworkRouter: URLRequestConvertible {
         // CHANNEL
         case .makeChannel:
             return .post
-        case .workSpaceMyChannels, .channelUnreadCount:
+        case .workSpaceAllChannels, .workSpaceMyChannels, .channelChattings, .channelMembers, .channelUnreadCount:
             return .get
             
             
@@ -222,6 +233,10 @@ enum NetworkRouter: URLRequestConvertible {
     var query: [String: String] {
         switch self {
         // CHANNEL
+        case .channelChattings(let sender):
+            return [
+                "cursor_date": sender.cursor_date
+            ]
         case .channelUnreadCount(let sender):
             return [
                 "after": sender.after
