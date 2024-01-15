@@ -55,7 +55,16 @@ class ChannelChattingViewModel: BaseViewModelType {
                 self.channelChattingUseCase.channelChattingRequest(requestModel)
             }
             .subscribe(with: self) { owner , response in
-                print(response)
+                
+                switch response {
+                case .success(let model):
+                    print("채널 채팅 조회 네트워크 통신 성공")
+                    print(model)
+                    
+                case .failure(let networkError):
+                    print("채널 채팅 조회 네트워크 통신 실패")
+                    print(networkError)
+                }
             }
             .disposed(by: disposeBag)
         

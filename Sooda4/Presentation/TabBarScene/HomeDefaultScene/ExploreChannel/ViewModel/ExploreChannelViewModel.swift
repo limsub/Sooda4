@@ -88,7 +88,7 @@ class ExploreChannelViewModel: BaseViewModelType {
                 switch response  {
                 case .success(let model):
                     // * 임시
-                    if owner.exploreChannelUseCase.checkAlreadyJoinedChannel(userId: 154, memberArr: model) {
+                    if owner.exploreChannelUseCase.checkAlreadyJoinedChannel(userId: 44, memberArr: model) {
                         print("이미 소속된 채널이다. 바로 화면 전환 시도한다")
                         
                         owner.didSendEventClosure?(.goChannelChatting(channelName: selectedChannel.name))
