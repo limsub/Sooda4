@@ -36,6 +36,7 @@ enum NetworkRouter: URLRequestConvertible {
     case makeChannel(_ sender: MakeChannelRequestDTO)
     case workSpaceAllChannels(_ sender: Int) // workSpaceId
     case workSpaceMyChannels(_ sender: Int) // workSpaceId
+    case oneChannel(_ sender: ChannelDetailRequestDTO)
     
     case channelChattings(_ sender: ChannelChattingRequestDTO)
     case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
@@ -97,6 +98,10 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces/\(sender)/channels/my"
             
             // * 임시 - 채널이름 한글일 수도 있어서 인코딩해야함.
+        case .oneChannel(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)"
+            
+            
         case .channelChattings(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/chats"
             
@@ -161,7 +166,7 @@ enum NetworkRouter: URLRequestConvertible {
         // CHANNEL
         case .makeChannel:
             return .post
-        case .workSpaceAllChannels, .workSpaceMyChannels, .channelChattings, .channelMembers, .channelUnreadCount:
+        case .workSpaceAllChannels, .workSpaceMyChannels, .oneChannel, .channelChattings, .channelMembers, .channelUnreadCount:
             return .get
             
             

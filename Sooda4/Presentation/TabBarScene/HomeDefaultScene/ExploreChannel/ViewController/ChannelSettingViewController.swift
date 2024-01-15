@@ -9,91 +9,113 @@ import UIKit
 
 class ChannelSettingViewController: BaseViewController {
     
+    private let mainView = ChannelSettingView()
+    private var viewModel: ChannelSettingViewModel!
     
-    lazy var collectionView = { [self] in
-        let view = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
-        view.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "hi")
-        
-        view.backgroundColor = .red
-        
-        return view
-    }()
-    
-    let arrayCnt = 20
-    
-    func createLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 50, height: 50)
-        
-        layout.minimumLineSpacing = 1
-        layout.minimumInteritemSpacing = 1
-        
-        
-        return layout
+    static func create(with viewModel: ChannelSettingViewModel) -> ChannelSettingViewController {
+        let vc = ChannelSettingViewController()
+        vc.viewModel = viewModel
+        return vc
     }
     
+    
+    override func loadView() {
+        self.view = mainView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        setTableView()
+        fetchData()
     }
     
-    override func setting() {
-        super.setting()
+    func setTableView() {
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
+    }
         
-        view.addSubview(collectionView)
-        
-        let heightCnt = arrayCnt / 6 + (arrayCnt % 6 == 0 ? 0 : 1)
-        
-        print(heightCnt)
-        
-        collectionView.snp.makeConstraints { make in
-            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(heightCnt * 50)
-//            make.height.greaterThanOrEqualTo(100)
-//            make.height.equalTo(100)
+    func fetchData() {
+        viewModel.fetchData {
+            self.mainView.tableView.reloadData()
         }
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        
     }
-    
     
 }
 
-extension ChannelSettingViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+extension ChannelSettingViewController: UITableViewDelegate, UITableViewDataSource {
     
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return arrayCnt
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "hi", for: indexPath)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        viewModel.numberOfRowsInSection(section: section)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        cell.backgroundColor = .gray
+        let sectionType = viewModel.sectionType(indexPath: indexPath)
         
-        return cell
+        switch sectionType {
+        case .info:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingChannelInfoTableViewCell.description()) as? ChannelSettingChannelInfoTableViewCell else { return UITableViewCell() }
+            
+            let data = viewModel.channelInfoForInfoCell()
+            cell.designCell(name: data.0, description: data.1)
+            
+            return cell
+        case .memberFolding:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingMemberFoldingTableViewCell.description()) as? ChannelSettingMemberFoldingTableViewCell else { return UITableViewCell() }
+            
+            let data = viewModel.memberCountForFoldingCell()
+            cell.designCell(count: data)
+            
+            return cell
+        case .members:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingMembersTableViewCell.description()) as? ChannelSettingMembersTableViewCell else { return UITableViewCell() }
+            
+            let data = viewModel.memberInfoForMembersCell()
+            cell.items = data
+            cell.reloadCollectionView()
+            
+            return cell
+        case .button:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingHandleChannelTableViewCell.description()) as? ChannelSettingHandleChannelTableViewCell else { return UITableViewCell() }
+            
+            let data = viewModel.buttonDataForButtonCell(indexPath: indexPath)
+            cell.designCell(text: data.0, isRed: data.1)
+            
+            return cell
+        }
+
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        let sectionType = viewModel.sectionType(indexPath: indexPath)
         
-        // 한 줄에 6개 들어간다고 치고, 셀 하나당 높이 50이라면,
-        let height = arrayCnt / 6 + (arrayCnt % 6 == 0 ? 0 : 1)
+        switch sectionType {
+        case .info:
+            return UITableView.automaticDimension
+        case .memberFolding:
+            return 56
+        case .members:
+            return UITableView.automaticDimension
+        case .button:
+            return 52
+        }
+    }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        return CGSize(
-            width: collectionView.bounds.width,
-            height: CGFloat(height)
-        )
+        viewModel.toggleOpenValue(indexPath: indexPath) {
+            self.mainView.tableView.reloadSections([indexPath.section], with: .none)
+        }
         
     }
     
