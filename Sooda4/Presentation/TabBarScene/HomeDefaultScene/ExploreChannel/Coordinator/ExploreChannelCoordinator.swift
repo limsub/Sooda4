@@ -14,7 +14,7 @@ protocol ExploreChannelCoordinatorProtocol: Coordinator {
     // view
     func showExploreChannelView(_ workSpaceId: Int) // firstView
     func showChannelChattingView(_ workSpaceId: Int, channelName: String)
-    func showDetailChannelView(_ workSpaceId: Int, channelId: Int, isAdmin: Bool)
+    func showChannelSettingView(_ workSpaceId: Int, channelName: String, isAdmin: Bool)
     
     
 }
@@ -73,12 +73,35 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
     func showChannelChattingView(_ workSpaceId: Int, channelName: String ) {
         print(#function)
         
-        let channelChattingVC = ChannelChattingViewController()
+        let channelChattingVM = ChannelChattingViewModel(
+            workSpaceId: workSpaceId,
+            channelName: channelName
+        )
+        
+        channelChattingVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goBackHomeDefault(let workSpaceId):
+                // finish(homeDefault)
+                break
+            case .goChannelSetting(let workSpaceId, let channelName):
+                self?.showChannelChattingView(
+                    workSpaceId,
+                    channelName: channelName
+                )
+            }
+            
+        }
+        
+        let channelChattingVC = ChannelChattingViewController.create(with: channelChattingVM)
         
         navigationController.pushViewController(channelChattingVC, animated: true)
     }
     
-    func showDetailChannelView(_ workSpaceId: Int, channelId: Int, isAdmin: Bool) {
+    func showChannelSettingView(_ workSpaceId: Int, channelName: String, isAdmin: Bool) {
         print(#function)
+        
+        let channelSettingVC = ChannelSettingViewController()
+        
+        navigationController.pushViewController(channelSettingVC, animated: true)
     }
 }

@@ -25,7 +25,7 @@ struct WorkSpaceChannelInfoModel {
 // path로 workspaceId랑 channel name 있는 것들
 struct ChannelDetailRequestModel {
     let workSpaceId: Int
-    let channelName: String 
+    let channelName: String
 }
 
 // 채널 생성
@@ -35,3 +35,17 @@ struct MakeChannelRequestModel {
     let channelDescription: String? // 근데 아마 orEmpty로 가져오기 때문에 무조건 스트링이 들어가긴 할거야.... 어떡해야 할라나.. 음
 }
 // 응답은 WorkSpaceChannelInfoModel (<- ChnnelInfoDTO)
+
+
+// 채널 채팅 조회
+struct ChannelChattingRequestModel {
+    let workSpaceId: Int
+    let channelName: String
+    let cursor_date: String
+}
+struct ChannelChattingResponseModel {
+    let content: String?
+    let files: [String]
+    let userName: String
+    let userImage: String?
+}
