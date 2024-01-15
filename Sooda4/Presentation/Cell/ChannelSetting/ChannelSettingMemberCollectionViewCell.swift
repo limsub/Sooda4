@@ -51,6 +51,7 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(profileImageView.snp.bottom).offset(4)
             make.horizontalEdges.equalTo(contentView).inset(8)
+            make.centerX.equalTo(contentView)
         }
     }
     

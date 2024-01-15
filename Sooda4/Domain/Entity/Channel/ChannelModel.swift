@@ -50,3 +50,12 @@ struct ChannelChattingModel {
     let userImage: String?
 }
 typealias ChannelChattingResponseModel = [ChannelChattingModel]
+
+
+// 채널 정보 조회 (ChannelSettingView)
+struct OneChannelInfoModel {
+    let channelName: String
+    let channelDescription: String
+    
+    let users: [WorkSpaceUserInfo]
+}

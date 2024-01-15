@@ -98,8 +98,6 @@ extension ChannelSettingMembersTableViewCell: UICollectionViewDataSource {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChannelSettingMemberCollectionViewCell.description(), for: indexPath) as? ChannelSettingMemberCollectionViewCell else { return UICollectionViewCell() }
         
-        print(#function)
-        
         cell.designCell(imageUrl: "", name: items[indexPath.row])
         
         

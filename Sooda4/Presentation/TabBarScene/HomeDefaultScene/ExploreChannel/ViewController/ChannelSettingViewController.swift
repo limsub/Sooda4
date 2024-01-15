@@ -20,6 +20,8 @@ class ChannelSettingViewController: BaseViewController {
         ButtonInfo(title: "채널 삭제", isRed: true )
     ]
     
+    var isOpen = false
+    
     let mainView = ChannelSettingView()
     
     override func loadView() {
@@ -51,7 +53,7 @@ extension ChannelSettingViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 1
-        case 1: return 2
+        case 1: return (isOpen) ? 2 : 1
         case 2: return 4    // 관리자 여부에 따라 1 or 4 (vm에 저장)
         default: return 0
         }
@@ -112,8 +114,15 @@ extension ChannelSettingViewController: UITableViewDelegate, UITableViewDataSour
             
         default: return 0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        
+        if (indexPath.section, indexPath.row) == (1, 0) {
+            self.isOpen.toggle()
+            
+            mainView.tableView.reloadSections([indexPath.section], with: .none)
+        }
     }
     
 }
