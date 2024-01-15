@@ -24,7 +24,7 @@ class ExploreChannelViewController: BaseViewController {
     }
     
     var loadData = PublishSubject<Void>()       // 테이블뷰에 띄울 데이터 로드
-    var joinChannel = PublishSubject<String>()    // 확인 버튼을 눌렀을 때 이벤트
+    var joinChannel = PublishSubject<WorkSpaceChannelInfoModel>()    // 확인 버튼을 눌렀을 때 이벤트
     
     
     override func loadView() {
@@ -58,7 +58,7 @@ class ExploreChannelViewController: BaseViewController {
             .disposed(by: disposeBag)
         
         
-        
+        // 만약 소속되지 않은 채널을 클릭했을 때, 해당 채널에 대한 정보와 함께 이벤트를 받는다.
         output.notJoinedChannel
             .subscribe(with: self) { owner , value in
                 self.showCustomAlertTwoActionViewController(
@@ -67,7 +67,7 @@ class ExploreChannelViewController: BaseViewController {
                     okButtonTitle: "확인",
                     cancelButtonTitle: "취소") {
                         print("확인 누름")
-                        owner.joinChannel.onNext(value.name) // 해당 채널에 새로 조인하겠다.
+                        owner.joinChannel.onNext(value) // 해당 채널에 새로 조인하겠다.
                         self.dismiss(animated: false)
                         
                     } cancelCompletion: {

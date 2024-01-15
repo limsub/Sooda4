@@ -36,7 +36,7 @@ class ExploreChannelViewModel: BaseViewModelType {
     struct Input {
         let loadData: PublishSubject<Void>
         let itemSelected: ControlEvent<IndexPath>
-        let joinChannel: PublishSubject<String> // 채널은 이름 가지고 통신함
+        let joinChannel: PublishSubject<WorkSpaceChannelInfoModel> // 채널은 이름 가지고 통신함
     }
     struct Output {
         let items: PublishSubject<[WorkSpaceChannelInfoModel]>
@@ -67,11 +67,13 @@ class ExploreChannelViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
+        // 선택한 채널 정보를 여기에 저장해두고, 필요 시 사용
         var selectedChannel = WorkSpaceChannelInfoModel(channelId: 0, name: "")
         
         input.itemSelected
             .withLatestFrom(items) { v1, v2 in
                 
+                // 나중에 쓰려고 채널 정보 저장.
                 selectedChannel = v2[v1.row]
                 
                 return ChannelDetailRequestModel(
@@ -87,10 +89,9 @@ class ExploreChannelViewModel: BaseViewModelType {
                 case .success(let model):
                     // * 임시
                     if owner.exploreChannelUseCase.checkAlreadyJoinedChannel(userId: 154, memberArr: model) {
-                        print("이미 소속된 채널이다")
+                        print("이미 소속된 채널이다. 바로 화면 전환 시도한다")
                         
-                        // 화면 전환 시켜주기
-                        owner.didSendEventClosure?(.goChannelChatting(channelName: "하이"))
+                        owner.didSendEventClosure?(.goChannelChatting(channelName: selectedChannel.name))
                         
                     } else {
                         print("소속되지 않은 채널이다")
@@ -102,14 +103,16 @@ class ExploreChannelViewModel: BaseViewModelType {
                     print("멤버 불러오는데 에러남 : \(networkError)")
                 }
             }
+            .disposed(by: disposeBag)
         
             
         
+        // 소속되지 않은 채널에 대해, 조인하겠다고 이벤트를 받는다.
         input.joinChannel
             .subscribe(with: self) { owner , value in
-                print("채널 이름 \(value) 에 조인한다. 화면 전환")
+                print("채널 이름 \(value.name) 에 조인한다. 화면 전환")
                 
-                owner.didSendEventClosure?(.goChannelChatting(channelName: "하이"))
+                owner.didSendEventClosure?(.goChannelChatting(channelName: value.name))
             }
             .disposed(by: disposeBag)
         
