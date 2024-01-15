@@ -88,7 +88,8 @@ typealias MyChannelsResponseDTO = [ChannelInfoDTO]
 
 
 /* ========== 특정 채널 조회 ========== */
-struct OneChannelResponseDTO {
+// 요청은 ChannelDetailRequestDTO 사용
+struct OneChannelResponseDTO: Decodable {
     let workspace_id: Int
     let channel_id: Int
     let name: String
