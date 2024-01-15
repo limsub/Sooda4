@@ -9,91 +9,110 @@ import UIKit
 
 class ChannelSettingViewController: BaseViewController {
     
-    
-    lazy var collectionView = { [self] in
-        let view = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
-        view.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "hi")
-        
-        view.backgroundColor = .red
-        
-        return view
-    }()
-    
-    let arrayCnt = 20
-    
-    func createLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: 50, height: 50)
-        
-        layout.minimumLineSpacing = 1
-        layout.minimumInteritemSpacing = 1
-        
-        
-        return layout
+    struct ButtonInfo {
+        let title: String
+        let isRed: Bool
     }
+    let handleButtonData = [
+        ButtonInfo(title: "채널 편집", isRed: false),
+        ButtonInfo(title: "채널에서 나가기", isRed: false),
+        ButtonInfo(title: "채널 관리자 변경", isRed: false),
+        ButtonInfo(title: "채널 삭제", isRed: true )
+    ]
     
+    let mainView = ChannelSettingView()
+    
+    override func loadView() {
+        self.view = mainView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        setTableView()
     }
     
-    override func setting() {
-        super.setting()
-        
-        view.addSubview(collectionView)
-        
-        let heightCnt = arrayCnt / 6 + (arrayCnt % 6 == 0 ? 0 : 1)
-        
-        print(heightCnt)
-        
-        collectionView.snp.makeConstraints { make in
-            make.top.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(heightCnt * 50)
-//            make.height.greaterThanOrEqualTo(100)
-//            make.height.equalTo(100)
-        }
-        
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        
+    func setTableView() {
+        mainView.tableView.delegate = self
+        mainView.tableView.dataSource = self
     }
     
     
 }
 
-extension ChannelSettingViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+extension ChannelSettingViewController: UITableViewDelegate, UITableViewDataSource {
     
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        return arrayCnt
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 3
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "hi", for: indexPath)
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0: return 1
+        case 1: return 2
+        case 2: return 4    // 관리자 여부에 따라 1 or 4 (vm에 저장)
+        default: return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        cell.backgroundColor = .gray
+        switch (indexPath.section, indexPath.row) {
+            
+        case (0, 0):
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingChannelInfoTableViewCell.description()) as? ChannelSettingChannelInfoTableViewCell else { return UITableViewCell() }
+            
+            return cell
+            
+        case (1, 0):
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingMemberFoldingTableViewCell.description()) as? ChannelSettingMemberFoldingTableViewCell else { return UITableViewCell() }
         
-        return cell
+            
+            return cell
+            
+        case (1, 1):
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingMembersTableViewCell.description()) as? ChannelSettingMembersTableViewCell else { return UITableViewCell() }
+            
+            
+            
+            return cell
+            
+        case (2, _):
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingHandleChannelTableViewCell.description()) as? ChannelSettingHandleChannelTableViewCell else { return UITableViewCell() }
+            
+            let element = handleButtonData[indexPath.row]
+            
+            cell.designCell(text: element.title, isRed: element.isRed)
+            
+            
+            return cell
+            
+        default: return UITableViewCell()
+        }
     }
     
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        switch (indexPath.section, indexPath.row) {
+            
+        case (0, 0): return UITableView.automaticDimension
+
+            
+        case (1, 0): return 56
+
+            
+        case (1, 1): return UITableView.automaticDimension
+   
+            
+        case (2, _): return 52
+            
+            
+        default: return 0
+        }
         
-        // 한 줄에 6개 들어간다고 치고, 셀 하나당 높이 50이라면,
-        let height = arrayCnt / 6 + (arrayCnt % 6 == 0 ? 0 : 1)
-        
-        return CGSize(
-            width: collectionView.bounds.width,
-            height: CGFloat(height)
-        )
         
     }
     

@@ -28,11 +28,27 @@ class ChannelSettingView: BaseView {
     // 하지만 멤버(14) 셀은 선택 가능해야 함...
     
     
-    
-    
     let tableView = {
         let view = UITableView(frame: .zero)
         
+        view.register(
+            ChannelSettingChannelInfoTableViewCell.self,
+            forCellReuseIdentifier: ChannelSettingChannelInfoTableViewCell.description()
+        )
+        view.register(
+            ChannelSettingMemberFoldingTableViewCell.self,
+            forCellReuseIdentifier: ChannelSettingMemberFoldingTableViewCell.description()
+        )
+        view.register(
+            ChannelSettingMembersTableViewCell.self,
+            forCellReuseIdentifier: ChannelSettingMembersTableViewCell.description()
+        )
+        view.register(
+            ChannelSettingHandleChannelTableViewCell.self,
+            forCellReuseIdentifier: ChannelSettingHandleChannelTableViewCell.description()
+        )
+        
+        view.backgroundColor = .brown
         
         return view
     }()
