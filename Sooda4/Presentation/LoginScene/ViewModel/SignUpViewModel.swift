@@ -368,11 +368,13 @@ class SignUpViewModel: BaseViewModelType {
                     // 회원가입 성공 -> SelectAuth코디 종료 -> InitialWorkSpace 코디 실행
                     // 1. signUpView dismiss  2. selectAuthView dismiss  3. intialWorkSpaceView push
                     
-                    // 임시
-//                    APIKey.sample = model.token.accessToken
-                    UserDefaults.standard.setValue(model.userId, forKey: "userID")
-                    UserDefaults.standard.setValue(model.token.accessToken, forKey: "accessToken")
-                    print("토큰 업데이트! : \(model.token.accessToken)")
+                    KeychainStorage.shared.accessToken = model.token.accessToken
+                    KeychainStorage.shared.refreshToken = model.token.refreshToken
+                    KeychainStorage.shared._id = model.userId
+                    
+                    print(" --- 토큰 업데이트 --- ")
+                    KeychainStorage.shared.printTokens()
+                    
                     
                     owner.didSendEventClosure?(.goInitialWorkSpace)
                     

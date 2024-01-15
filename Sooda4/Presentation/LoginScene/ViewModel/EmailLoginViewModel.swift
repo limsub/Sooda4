@@ -180,17 +180,14 @@ class EmailLoginViewModel: BaseViewModelType {
                 switch response {
                 case .success(let model):
                     print("로그인 성공 -> filter true")
-                    print("userId: \(model.userId)")
-                    print("userEmail: \(model.nickname)")
                     
-                    // * 임시
-                    UserDefaults.standard.setValue(model.userId, forKey: "userID")
-                    UserDefaults.standard.setValue(model.accessToken, forKey: "accessToken")
+                    // keychain 업데이트
+                    KeychainStorage.shared.accessToken = model.accessToken
+                    KeychainStorage.shared.refreshToken = model.refreshToken
+                    KeychainStorage.shared._id = model.userId
                     
-                    APIKey.sample = model.accessToken
-                    
-                    print("토큰 업데이트! : \(model.accessToken)")
-                    
+                    print("--- 토큰 업데이트 ---")
+                    KeychainStorage.shared.printTokens()
                     
                     return true
                     

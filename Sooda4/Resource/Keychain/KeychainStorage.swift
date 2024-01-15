@@ -48,9 +48,9 @@ final class KeychainStorage {
     }
     
     
-    var _id: String? {
+    var _id: Int? {
         get {
-            KeychainWrapper.standard.string(forKey: KeychainTokens.userIdKey)
+            KeychainWrapper.standard.integer(forKey: KeychainTokens.userIdKey)
         }
         set {
             if let value = newValue {
@@ -68,7 +68,7 @@ final class KeychainStorage {
     func printTokens() {
         let accessToken = accessToken ?? "저장된 엑세스 토큰이 없습니다"
         let refreshToken = refreshToken ?? "저장된 리프레시 토큰이 없습니다"
-        let userId = _id ?? "저장된 유저 아이디가 없습니다"
+        let userId = _id ?? -999
         
         print("엑세스 토큰 : \(accessToken)")
         print("리프레시 토큰 : \(refreshToken)")
