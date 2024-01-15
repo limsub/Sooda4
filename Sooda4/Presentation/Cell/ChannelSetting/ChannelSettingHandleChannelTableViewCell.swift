@@ -32,5 +32,6 @@ class ChannelSettingHandleChannelTableViewCell: BaseTableViewCell {
     
     func designCell(text: String, isRed: Bool) {
         handleButton.setUp(text: text, isRed: isRed)
+        
     }
 }

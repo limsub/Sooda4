@@ -13,7 +13,7 @@ import UIKit
 class ChannelSettingMembersTableViewCell: BaseTableViewCell {
     
     // 컬렉션뷰에 띄울 데이터를 가지고 있어야 한다..
-    let items = ["james", "jordan", "hiHI", "james", "jordan", "hiHI", "james", "jordan", "hiHI", "james", "jordan", "hiHI", "james", "jordan", "hiHI", "james", "jordan", "hiHI", "james", "jordan", "hiHI"]
+    let items = ["Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "Hue", "Jack", "Bran", "Kokojong", "아아아아아", "닉네임짓기 싫은데"]
     
     // 좌우 여백 6. 높이 cell과 동일
     lazy var collectionView = {
@@ -24,9 +24,7 @@ class ChannelSettingMembersTableViewCell: BaseTableViewCell {
         view.isScrollEnabled = false
         
         view.dataSource = self
-        
-        view.heightAnchor.constraint(equalToConstant: 200).isActive = true
-        
+
         return view
     }()
     
@@ -45,6 +43,11 @@ class ChannelSettingMembersTableViewCell: BaseTableViewCell {
         }
     }
     
+    override func setting() {
+        super.setting()
+        
+        setCollectionViewHeight()
+    }
     
     // 외부에서 접근
     func reloadCollectionView() {
@@ -54,7 +57,7 @@ class ChannelSettingMembersTableViewCell: BaseTableViewCell {
 
 
 extension ChannelSettingMembersTableViewCell {
-    func createMemberCollectionViewLayout() -> UICollectionViewFlowLayout {
+    private func createMemberCollectionViewLayout() -> UICollectionViewFlowLayout {
         
         let layout = UICollectionViewFlowLayout()
         
@@ -64,6 +67,21 @@ extension ChannelSettingMembersTableViewCell {
         layout.minimumInteritemSpacing = 0
         
         return layout
+    }
+    
+    func setCollectionViewHeight() {
+        
+        // 셀 하나당 높이 91.
+        // 맨 위 셀과 맨 아래 셀 기준 컬렉션뷰 자체에 패딩 0
+        // 한 줄에 셀 5개 기준
+        
+        
+        let itemCnt = items.count
+        let lineCnt = itemCnt / 5 + (itemCnt % 5 == 0 ? 0 : 1)
+        let height: CGFloat = CGFloat(lineCnt * 91)
+        
+        self.collectionView.heightAnchor.constraint(equalToConstant: height).isActive = true
+        
     }
 }
 
@@ -82,7 +100,8 @@ extension ChannelSettingMembersTableViewCell: UICollectionViewDataSource {
         
         print(#function)
         
-        cell.nameLabel.text = items[indexPath.row]
+        cell.designCell(imageUrl: "", name: items[indexPath.row])
+        
         
         return cell
     }

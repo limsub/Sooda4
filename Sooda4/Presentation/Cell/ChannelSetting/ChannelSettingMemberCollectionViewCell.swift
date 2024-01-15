@@ -25,6 +25,7 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
     let nameLabel = {
         let view = UILabel()
         view.text = "Sam"
+        view.textAlignment = .center
         view.setAppFont(.body)
         view.numberOfLines = 2
         return view
@@ -51,5 +52,11 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
             make.top.equalTo(profileImageView.snp.bottom).offset(4)
             make.horizontalEdges.equalTo(contentView).inset(8)
         }
+    }
+    
+    func designCell(imageUrl: String, name: String) {
+        nameLabel.text = name
+        nameLabel.textAlignment = .center
+        nameLabel.setAppFont(.body)
     }
 }

@@ -50,6 +50,8 @@ class ChannelSettingView: BaseView {
         
         view.backgroundColor = .brown
         
+        view.separatorStyle = .none
+        
         return view
     }()
     
