@@ -161,7 +161,7 @@ enum NetworkRouter: URLRequestConvertible {
         // CHANNEL
         case .makeChannel:
             return .post
-        case .workSpaceAllChannels, .workSpaceMyChannels, .channelMembers, .channelUnreadCount:
+        case .workSpaceAllChannels, .workSpaceMyChannels, .channelChattings, .channelMembers, .channelUnreadCount:
             return .get
             
             

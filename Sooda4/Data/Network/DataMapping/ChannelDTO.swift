@@ -42,7 +42,7 @@ struct ChannelChattingDTO: Decodable {
     let user: UserInfoDTO   // user_id, email, nickname, profileImage
 }
 extension ChannelChattingDTO {
-    func toDomain() -> ChannelChattingResponseModel {
+    func toDomain() -> ChannelChattingModel {
         return .init(
             content: content,
             files: files,

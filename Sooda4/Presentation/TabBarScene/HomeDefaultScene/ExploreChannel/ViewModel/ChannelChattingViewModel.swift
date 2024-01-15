@@ -20,9 +20,12 @@ class ChannelChattingViewModel: BaseViewModelType {
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
-    init(workSpaceId: Int, channelName: String) {
+    private var channelChattingUseCase: ChannelChattingUseCaseProtocol
+    
+    init(workSpaceId: Int, channelName: String, channelChattingUseCase: ChannelChattingUseCaseProtocol) {
         self.workSpaceId = workSpaceId
         self.channelName = channelName
+        self.channelChattingUseCase = channelChattingUseCase
     }
     
     // 처음 들어왔을 때 -> 채팅 조회 api
@@ -41,9 +44,18 @@ class ChannelChattingViewModel: BaseViewModelType {
     func transform(_ input: Input) -> Output {
         
         // 채널 채팅 조회
+        let requestModel = ChannelChattingRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName,
+            cursor_date: "" // Date().toString(of: .dateToTime)
+        )
+
         input.loadData
-            .subscribe(with: self) { owner , _ in
-                print("채널 채팅 조회하기")
+            .flatMap { _ in
+                self.channelChattingUseCase.channelChattingRequest(requestModel)
+            }
+            .subscribe(with: self) { owner , response in
+                print(response)
             }
             .disposed(by: disposeBag)
         

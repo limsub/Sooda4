@@ -75,7 +75,8 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         
         let channelChattingVM = ChannelChattingViewModel(
             workSpaceId: workSpaceId,
-            channelName: channelName
+            channelName: channelName,
+            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
         )
         
         channelChattingVM.didSendEventClosure = { [weak self] event in
