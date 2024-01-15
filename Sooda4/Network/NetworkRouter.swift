@@ -124,17 +124,22 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
+        case .checkValidEmail, .signInRequest, .requestSignUp:
+            return [
+                "Content-Type": "application/json",
+                "SesacKey": APIKey.key
+            ]
         case .makeWorkSpace, .editWorkSpace:
             return [
                 "Content-Type": "multipart/form-data",
-                "Authorization": APIKey.sample ,
+                "Authorization": KeychainStorage.shared.accessToken ?? "" ,
                 "SesacKey": APIKey.key
             ]
             // 로그인일 때는 토큰 필요 없지않나?
         default:
             return [
                 "Content-Type": "application/json",
-                "Authorization": APIKey.sample, // * 임시
+                "Authorization": KeychainStorage.shared.accessToken ?? "",
                 "SesacKey": APIKey.key
             ]
         }

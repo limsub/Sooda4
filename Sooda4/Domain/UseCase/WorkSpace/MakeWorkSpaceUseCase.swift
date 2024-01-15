@@ -48,7 +48,7 @@ class MakeWorkSpaceUseCase: MakeWorkSpaceUseCaseProtocol {
             let imageURL = URL(string: imageURLString)
             
             let header = [
-                "Authorization": UserDefaults.standard.string(forKey: "accessToken")!, // * 임시
+                "Authorization": KeychainStorage.shared.accessToken ?? "",
                 "SesacKey": APIKey.key
             ]
             
