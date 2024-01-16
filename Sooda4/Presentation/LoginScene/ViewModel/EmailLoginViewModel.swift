@@ -153,7 +153,7 @@ class EmailLoginViewModel: BaseViewModelType {
                 }
             }
             .withLatestFrom(textSet) { validValue, textValues in
-                let requestModel = SignInRequestModel(
+                let requestModel = EmailLoginRequestModel(
                     email: textValues.0,
                     password: textValues.1,
                     deviceToken: "hi"
@@ -162,7 +162,7 @@ class EmailLoginViewModel: BaseViewModelType {
                 return requestModel
             }
             .flatMap {
-                self.signUpUseCase.signInRequest($0)
+                self.signUpUseCase.emailLoginRequest($0)
             }
         
         // subscribe -> filter로 수정.
@@ -180,17 +180,14 @@ class EmailLoginViewModel: BaseViewModelType {
                 switch response {
                 case .success(let model):
                     print("로그인 성공 -> filter true")
-                    print("userId: \(model.userId)")
-                    print("userEmail: \(model.nickname)")
                     
-                    // * 임시
-                    UserDefaults.standard.setValue(model.userId, forKey: "userID")
-                    UserDefaults.standard.setValue(model.accessToken, forKey: "accessToken")
+                    // keychain 업데이트
+                    KeychainStorage.shared.accessToken = model.accessToken
+                    KeychainStorage.shared.refreshToken = model.refreshToken
+                    KeychainStorage.shared._id = model.userId
                     
-                    APIKey.sample = model.accessToken
-                    
-                    print("토큰 업데이트! : \(model.accessToken)")
-                    
+                    print("--- 토큰 업데이트 ---")
+                    KeychainStorage.shared.printTokens()
                     
                     return true
                     

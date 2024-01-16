@@ -24,7 +24,7 @@ class NetworkManager {
         
         return Single< Result<T, NetworkError> >.create { single in
             
-            AF.request(api)
+            AF.request(api, interceptor: NetworkRequestInterceptor())
                 .validate()
                 .responseDecodable(of: T.self) { response in
                     
@@ -37,6 +37,9 @@ class NetworkManager {
                         
                     case .failure(let error):
                         print("(Single) 네트워크 통신 실패")
+                        print("-----")
+                        print(error)
+                        print("-----")
                         
                         // ErrorResponse타입으로 디코딩
                         // 성공
@@ -124,7 +127,8 @@ class NetworkManager {
             
             AF.upload(
                 multipartFormData: api.multipart,
-                with: api
+                with: api,
+                interceptor: NetworkRequestInterceptor()
             )
             .validate()
             .responseDecodable(of: T.self) { response  in

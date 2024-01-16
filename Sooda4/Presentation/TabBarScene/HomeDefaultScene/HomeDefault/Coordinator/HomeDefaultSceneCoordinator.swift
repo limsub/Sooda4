@@ -78,6 +78,9 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 // 뭐가 맞는지를 모르겠네
                 // 1. 어차피 프로퍼티로 가지고 있는거 쓸건데 굳이 매개변수 만드나
                 // 2. 그래도 쓰는게 맞나
+                
+            case .goBackOnboarding:     // 로그아웃
+                self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
             }
             
         }
@@ -221,6 +224,9 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
 //        navigationController.viewControllers.removeAll()  // 이걸 해버리면 남아있던 HomeDefault도 날라가. 근데 아마 여기서 얘를 날릴 일은 없을 것 같아. 어차피 얘가 베이스로 깔려있고 위에 present 이것저것 해주고 있어서 ㅇㅇ
         navigationController.dismiss(animated: true)
+        
+        
+        
         
         /* 연락이 온다 */
         // 1. 도착지가 HomeDefault코디야. -> 다 dismiss하고 HomeDefaultView 다시 그리라는 뜻

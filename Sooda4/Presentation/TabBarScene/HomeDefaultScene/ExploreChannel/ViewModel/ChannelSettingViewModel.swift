@@ -53,7 +53,7 @@ class ChannelSettingViewModel {
             case .success(let model):
                 self.channelInfoData = model
                 // * 임시
-                if model.ownerId == 154 {
+                if model.ownerId == KeychainStorage.shared._id ?? -1 {
                     self.isAdmin = true
                 } else {
                     self.isAdmin = false
@@ -98,7 +98,7 @@ extension ChannelSettingViewModel {
     }
     
     // info 셀에 들어가는 데이터
-    func channelInfoForInfoCell() -> (String, String) {
+    func channelInfoForInfoCell() -> (String, String?) {
         guard let channelInfoData else { return ("-1", "-1")}
         
         return (channelInfoData.channelName, channelInfoData.channelDescription)

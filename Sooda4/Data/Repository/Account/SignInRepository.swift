@@ -11,7 +11,7 @@ import RxCocoa
 
 class SignInRepository: SignInRepositoryProtocol {
     
-    func signInRequest(_ requestModel: SignInRequestModel) -> Single<Result<SignInResponseModel, NetworkError>> {
+    func signInRequest(_ requestModel: EmailLoginRequestModel) -> Single<Result<EmailLoginResponseModel, NetworkError>> {
         
         // 1. requestDTO 변환
         let dto = SignInRequestDTO(
@@ -23,7 +23,7 @@ class SignInRepository: SignInRepositoryProtocol {
         // 2. 요청
         return NetworkManager.shared.request(
             type: SignInResponseDTO.self,
-            api: .signInRequest(dto)
+            api: .emailLoginRequest(dto)
         )
         .map { result in
             switch result {

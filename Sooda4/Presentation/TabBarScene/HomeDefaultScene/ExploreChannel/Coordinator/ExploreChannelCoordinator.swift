@@ -61,6 +61,9 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
             switch event {
             case .goChannelChatting(let channelName):
                 self?.showChannelChattingView((self?.workSpaceId)!, channelName: channelName)
+                
+            case .goBackHomeDefault(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
             }
             
         }

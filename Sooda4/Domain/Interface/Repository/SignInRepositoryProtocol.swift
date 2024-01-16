@@ -11,5 +11,5 @@ import RxCocoa
 
 protocol SignInRepositoryProtocol {
     // (1). 이메일 로그인
-    func signInRequest(_ requestModel: SignInRequestModel) -> Single< Result<SignInResponseModel, NetworkError> >
+    func signInRequest(_ requestModel: EmailLoginRequestModel) -> Single< Result<EmailLoginResponseModel, NetworkError> >
 }

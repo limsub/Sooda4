@@ -139,7 +139,8 @@ class HomeDefaultViewController: BaseViewController {
             presentWorkSpaceList: customNavigationItemView.rx.tap,
             tableViewItemSelected: mainView.tableView.rx.itemSelected,
             presentMakeChannel: makeChannelEvent,
-            presentExploreChannel: exploreCannelEvent
+            presentExploreChannel: exploreCannelEvent,
+            logoutButtonClicked: mainView.floatingButton.rx.tap
         )
         
         let output = viewModel.transform(input)
