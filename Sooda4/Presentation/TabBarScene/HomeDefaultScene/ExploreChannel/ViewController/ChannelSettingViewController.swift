@@ -64,7 +64,7 @@ extension ChannelSettingViewController: UITableViewDelegate, UITableViewDataSour
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelSettingChannelInfoTableViewCell.description()) as? ChannelSettingChannelInfoTableViewCell else { return UITableViewCell() }
             
             let data = viewModel.channelInfoForInfoCell()
-            cell.designCell(name: data.0, description: data.1)
+            cell.designCell(name: data.0, description: data.1 ?? "")
             
             return cell
         case .memberFolding:

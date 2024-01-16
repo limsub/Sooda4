@@ -93,7 +93,7 @@ struct OneChannelResponseDTO: Decodable {
     let workspace_id: Int
     let channel_id: Int
     let name: String
-    let description: String
+    let description: String?
     let owner_id: Int
 //    let private: Int
     let createdAt: String

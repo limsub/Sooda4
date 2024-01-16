@@ -98,7 +98,7 @@ extension ChannelSettingViewModel {
     }
     
     // info 셀에 들어가는 데이터
-    func channelInfoForInfoCell() -> (String, String) {
+    func channelInfoForInfoCell() -> (String, String?) {
         guard let channelInfoData else { return ("-1", "-1")}
         
         return (channelInfoData.channelName, channelInfoData.channelDescription)
