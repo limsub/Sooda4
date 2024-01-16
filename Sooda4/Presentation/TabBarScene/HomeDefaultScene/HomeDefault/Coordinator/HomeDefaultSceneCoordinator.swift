@@ -78,6 +78,9 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 // 뭐가 맞는지를 모르겠네
                 // 1. 어차피 프로퍼티로 가지고 있는거 쓸건데 굳이 매개변수 만드나
                 // 2. 그래도 쓰는게 맞나
+                
+            case .goBackOnboarding:     // 로그아웃
+                self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
             }
             
         }

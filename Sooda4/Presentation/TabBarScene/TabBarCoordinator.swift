@@ -151,6 +151,13 @@ extension TabBarCoordinator: CoordinatorFinishDelegate {
             print("탭바 코디 : finish 실행")
             self.finish(nextFlow)
         }
+        
+        // 2. 로그아웃해서 LoginScene으로 돌아가는 경우
+        if let nextFlow = nextFlow as? AppCoordinator.ChildCoordinatorType,
+           case .loginScene = nextFlow {
+            self.finish(nextFlow)
+        }
+        
     }
 }
 

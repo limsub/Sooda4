@@ -53,11 +53,20 @@ class HomeDefaultView: BaseView {
         return view
     }()
     
+    let floatingButton = {
+        let view = UIButton()
+        view.backgroundColor = .red
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 27
+        return view
+    }()
+    
     
     override func setConfigure() {
         super.setConfigure()
         
         self.addSubview(tableView)
+        self.addSubview(floatingButton)
     }
     
     override func setConstraints() {
@@ -65,6 +74,10 @@ class HomeDefaultView: BaseView {
         
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(self.safeAreaLayoutGuide)
+        }
+        floatingButton.snp.makeConstraints { make in
+            make.size.equalTo(54)
+            make.trailing.bottom.equalTo(self.safeAreaLayoutGuide).inset(16)
         }
     }
     

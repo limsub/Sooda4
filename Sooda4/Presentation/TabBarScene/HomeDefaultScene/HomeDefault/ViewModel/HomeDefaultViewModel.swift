@@ -55,6 +55,8 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         let presentMakeChannel: PublishSubject<Void>
         let presentExploreChannel: PublishSubject<Void>
+        
+        let logoutButtonClicked: ControlEvent<Void>
     }
     
     struct Output {
@@ -96,6 +98,12 @@ class HomeDefaultViewModel: BaseViewModelType {
             .subscribe(with: self) { owner, _ in
                 print("-- vm : 채널 탐색 present")
                 owner.didSendEventClosure?(.goExploreChannelFlow)
+            }
+            .disposed(by: disposeBag)
+        
+        input.logoutButtonClicked
+            .subscribe(with: self) { owner , _ in
+                owner.didSendEventClosure?(.goBackOnboarding)
             }
             .disposed(by: disposeBag)
         
@@ -371,5 +379,7 @@ extension HomeDefaultViewModel {
         
         case presentMakeChannelView
         case goExploreChannelFlow
+        
+        case goBackOnboarding
     }
 }
