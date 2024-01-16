@@ -11,6 +11,8 @@ import Alamofire
 enum NetworkRouter: URLRequestConvertible {
     
     /* ========== case ========== */
+    /* === AUTH === */
+    case refresh
     /* === USER === */
     case requestSignUp(_ sender: SignUpRequestDTO)
     case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)
@@ -59,6 +61,11 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 2. path === */
     var path: String {
         switch self {
+        // AUTH
+        case .refresh:
+            return "/v1/auth/refresh"
+            
+            
         // USER
         case .checkValidEmail:
             return "/v1/users/validation/email"
@@ -152,6 +159,10 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 4. method === */
     var method: HTTPMethod {
         switch self {
+        // AUTH
+        case .refresh:
+            return .get
+            
         // USER
         case .checkValidEmail, .requestSignUp, .emailLoginRequest:
             return .post
