@@ -70,8 +70,7 @@ class WorkSpaceListViewModel: BaseViewModelType {
                         var check = false
                         value.forEach { workspace in
                             if (workspace.workSpaceId == self.selectedWorkSpaceId) {
-                                // * 임시
-                                if workspace.ownerId == UserDefaults.standard.integer(forKey: "userID") {
+                                if workspace.ownerId == KeychainStorage.shared._id {
                                     check = true
                                 }
                             }

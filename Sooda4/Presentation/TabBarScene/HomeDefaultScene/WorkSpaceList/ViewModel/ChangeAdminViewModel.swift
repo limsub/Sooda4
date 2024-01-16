@@ -29,11 +29,12 @@ class ChangeAdminViewModel {
             
             switch response {
             case .success(let model):
+                
+                // 본인이 아닌 사람들 리스트
                 self.items = model.filter {
-                    // * 임시
-                    $0.userId != UserDefaults.standard.integer(forKey: "userID")
-//                    $0.userId != APIKey.userId
+                    $0.userId != KeychainStorage.shared._id
                 }
+                
                 completion(!self.items.isEmpty)
                 
             case .failure(let error):

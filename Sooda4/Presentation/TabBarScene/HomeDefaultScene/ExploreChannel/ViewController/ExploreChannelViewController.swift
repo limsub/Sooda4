@@ -26,6 +26,8 @@ class ExploreChannelViewController: BaseViewController {
     var loadData = PublishSubject<Void>()       // 테이블뷰에 띄울 데이터 로드
     var joinChannel = PublishSubject<WorkSpaceChannelInfoModel>()    // 확인 버튼을 눌렀을 때 이벤트
     
+    // 네비게이션 x 버튼
+    let xButton = UIBarButtonItem(image: UIImage(named: "icon_close")?.withTintColor(.black), style: .plain, target: nil, action: nil)
     
     override func loadView() {
         self.view = mainView
@@ -35,6 +37,7 @@ class ExploreChannelViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation("채널 탐색")
+        setNavigationXButton()
         bindVM()
         loadData.onNext(())
     }
@@ -43,6 +46,7 @@ class ExploreChannelViewController: BaseViewController {
     func bindVM() {
         
         let input = ExploreChannelViewModel.Input(
+            xButtonClicked: xButton.rx.tap,
             loadData: self.loadData,
             itemSelected: mainView.tableView.rx.itemSelected,
             joinChannel: self.joinChannel
@@ -79,5 +83,9 @@ class ExploreChannelViewController: BaseViewController {
         
         
         
+    }
+    
+    func setNavigationXButton() {
+        navigationItem.leftBarButtonItem = xButton
     }
 }

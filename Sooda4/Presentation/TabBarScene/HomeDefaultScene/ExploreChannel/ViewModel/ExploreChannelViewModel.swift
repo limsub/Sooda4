@@ -34,6 +34,7 @@ class ExploreChannelViewModel: BaseViewModelType {
     
     
     struct Input {
+        let xButtonClicked: ControlEvent<Void>
         let loadData: PublishSubject<Void>
         let itemSelected: ControlEvent<IndexPath>
         let joinChannel: PublishSubject<WorkSpaceChannelInfoModel> // 채널은 이름 가지고 통신함
@@ -48,6 +49,13 @@ class ExploreChannelViewModel: BaseViewModelType {
         
         let items = PublishSubject<[WorkSpaceChannelInfoModel]>()
         let notJoinedChannel = PublishSubject<WorkSpaceChannelInfoModel>()
+        
+        // xButton 누르면 HomeDefault
+        input.xButtonClicked
+            .subscribe(with: self) { owner , _ in
+                owner.didSendEventClosure?(.goBackHomeDefault(workSpaceId: self.workSpaceId))
+            }
+            .disposed(by: disposeBag)
         
         
         // 데이터 로드
@@ -87,12 +95,14 @@ class ExploreChannelViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , response in
                 switch response  {
                 case .success(let model):
-                    // * 임시
-                    if owner.exploreChannelUseCase.checkAlreadyJoinedChannel(userId: 44, memberArr: model) {
+                    
+                    if owner.exploreChannelUseCase.checkAlreadyJoinedChannel(
+                        userId: KeychainStorage.shared._id ?? -1,
+                        memberArr: model
+                    ) {
                         print("이미 소속된 채널이다. 바로 화면 전환 시도한다")
                         
                         owner.didSendEventClosure?(.goChannelChatting(channelName: selectedChannel.name))
-                        
                     } else {
                         print("소속되지 않은 채널이다")
                         notJoinedChannel.onNext(selectedChannel)
@@ -127,5 +137,6 @@ class ExploreChannelViewModel: BaseViewModelType {
 extension ExploreChannelViewModel {
     enum Event {
         case goChannelChatting(channelName: String)
+        case goBackHomeDefault(workSpaceId: Int)
     }
 }

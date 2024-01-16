@@ -53,7 +53,7 @@ class ChannelSettingViewModel {
             case .success(let model):
                 self.channelInfoData = model
                 // * 임시
-                if model.ownerId == 154 {
+                if model.ownerId == KeychainStorage.shared._id ?? -1 {
                     self.isAdmin = true
                 } else {
                     self.isAdmin = false
