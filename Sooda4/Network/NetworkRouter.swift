@@ -224,7 +224,7 @@ enum NetworkRouter: URLRequestConvertible {
         // WORKSPACE
         case .makeWorkSpace(let sender):
             return [
-                "name": sender.name,
+                "name": "", //sender.name,
                 "description":  sender.description,
                 "image": sender.image
             ]
