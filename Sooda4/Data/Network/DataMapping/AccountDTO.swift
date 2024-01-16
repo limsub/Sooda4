@@ -67,7 +67,7 @@ struct SignInResponseDTO: Decodable {
 
 // mapping to Domain
 extension SignInResponseDTO {
-    func toDomain() -> SignInResponseModel {
+    func toDomain() -> EmailLoginResponseModel {
         return .init(userId: user_id, nickname: nickname, accessToken: accessToken, refreshToken: refreshToken)
     }
 }

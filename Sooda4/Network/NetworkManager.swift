@@ -37,6 +37,9 @@ class NetworkManager {
                         
                     case .failure(let error):
                         print("(Single) 네트워크 통신 실패")
+                        print("-----")
+                        print(error)
+                        print("-----")
                         
                         // ErrorResponse타입으로 디코딩
                         // 성공

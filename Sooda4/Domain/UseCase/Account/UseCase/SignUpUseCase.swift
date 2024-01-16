@@ -16,7 +16,7 @@ protocol SignUpUseCaseProtocol {
     
     func requestSignUp(_ requestModel: SignUpRequestModel) -> Single< Result< SignUpResponseModel, NetworkError> >
     
-    func signInRequest(_ requestModel: SignInRequestModel) -> Single< Result< SignInResponseModel, NetworkError> >
+    func emailLoginRequest(_ requestModel: EmailLoginRequestModel) -> Single< Result< EmailLoginResponseModel, NetworkError> >
     
     
     /* === 로직 === */
@@ -57,7 +57,7 @@ class SignUpUseCase: SignUpUseCaseProtocol {
     }
     
     // (3). 이메일 로그인
-    func signInRequest(_ requestModel: SignInRequestModel) -> Single<Result<SignInResponseModel, NetworkError>> {
+    func emailLoginRequest(_ requestModel: EmailLoginRequestModel) -> Single<Result<EmailLoginResponseModel, NetworkError>> {
         
         return signInRepository.signInRequest(requestModel)
     }

@@ -153,7 +153,7 @@ class EmailLoginViewModel: BaseViewModelType {
                 }
             }
             .withLatestFrom(textSet) { validValue, textValues in
-                let requestModel = SignInRequestModel(
+                let requestModel = EmailLoginRequestModel(
                     email: textValues.0,
                     password: textValues.1,
                     deviceToken: "hi"
@@ -162,7 +162,7 @@ class EmailLoginViewModel: BaseViewModelType {
                 return requestModel
             }
             .flatMap {
-                self.signUpUseCase.signInRequest($0)
+                self.signUpUseCase.emailLoginRequest($0)
             }
         
         // subscribe -> filter로 수정.

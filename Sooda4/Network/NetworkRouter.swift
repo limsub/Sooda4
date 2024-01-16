@@ -12,9 +12,11 @@ enum NetworkRouter: URLRequestConvertible {
     
     /* ========== case ========== */
     /* === USER === */
-    case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)
     case requestSignUp(_ sender: SignUpRequestDTO)
-    case signInRequest(_ sender: SignInRequestDTO)
+    case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)
+    case emailLoginRequest(_ sender: SignInRequestDTO)
+    
+    case logoutRequest
     
     case myProfileInfo
     
@@ -62,8 +64,10 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/users/validation/email"
         case .requestSignUp:
             return "/v1/users/join"
-        case .signInRequest:
+        case .emailLoginRequest:
             return "/v1/users/login"
+        case .logoutRequest:
+            return "/v1/users/logout"
         case .myProfileInfo:
             return "/v1/users/my"
             
@@ -124,7 +128,7 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 3. header === */
     var header: HTTPHeaders {
         switch self {
-        case .checkValidEmail, .signInRequest, .requestSignUp:
+        case .checkValidEmail, .emailLoginRequest, .requestSignUp:
             return [
                 "Content-Type": "application/json",
                 "SesacKey": APIKey.key
@@ -135,7 +139,6 @@ enum NetworkRouter: URLRequestConvertible {
                 "Authorization": KeychainStorage.shared.accessToken ?? "" ,
                 "SesacKey": APIKey.key
             ]
-            // 로그인일 때는 토큰 필요 없지않나?
         default:
             return [
                 "Content-Type": "application/json",
@@ -150,9 +153,9 @@ enum NetworkRouter: URLRequestConvertible {
     var method: HTTPMethod {
         switch self {
         // USER
-        case .checkValidEmail, .requestSignUp, .signInRequest:
+        case .checkValidEmail, .requestSignUp, .emailLoginRequest:
             return .post
-        case .myProfileInfo:
+        case .myProfileInfo, .logoutRequest:
             return .get
         
             
@@ -199,7 +202,7 @@ enum NetworkRouter: URLRequestConvertible {
                 "phone": sender.phone,
                 "deviceToken": sender.deviceToken
             ]
-        case .signInRequest(let sender):
+        case .emailLoginRequest(let sender):
             return [
                 "email": sender.email,
                 "password": sender.password,
@@ -283,7 +286,7 @@ enum NetworkRouter: URLRequestConvertible {
         var request = URLRequest(url: url)
         request.headers = header
         request.method = method
-        
+
         
         // paramter
         if (method == .post || method == .put)

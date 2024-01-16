@@ -101,9 +101,16 @@ class HomeDefaultViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
         
+        
+        // 임시 로그아웃
         input.logoutButtonClicked
-            .subscribe(with: self) { owner , _ in
+            .flatMap {
+                NetworkManager.shared.requestEmptyResponse(api: .logoutRequest)
+            }
+            .subscribe(with: self) { owner , response in
+                print(response)
                 owner.didSendEventClosure?(.goBackOnboarding)
+                
             }
             .disposed(by: disposeBag)
         
