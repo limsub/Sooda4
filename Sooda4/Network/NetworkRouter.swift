@@ -42,6 +42,7 @@ enum NetworkRouter: URLRequestConvertible {
     case workSpaceMyChannels(_ sender: Int) // workSpaceId
     case oneChannel(_ sender: ChannelDetailRequestDTO)
     case editChannel(_ sender: EditChannelRequestDTO)
+    case deleteChannel(_ sender: ChannelDetailRequestDTO)
     
     case channelChattings(_ sender: ChannelChattingRequestDTO)
     case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
@@ -110,11 +111,13 @@ enum NetworkRouter: URLRequestConvertible {
         case .workSpaceMyChannels(let sender):
             return "/v1/workspaces/\(sender)/channels/my"
             
-            // * 임시 - 채널이름 한글일 수도 있어서 인코딩해야함.
+            // * 임시 - 채널이름 인코딩 안되는게 있음 'B -> 1/17 modified'
         case .oneChannel(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))"
         case .editChannel(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))"
+        case .deleteChannel(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)"
             
             
         case .channelChattings(let sender):
@@ -194,6 +197,8 @@ enum NetworkRouter: URLRequestConvertible {
             return .post
         case .workSpaceAllChannels, .workSpaceMyChannels, .oneChannel, .channelChattings, .channelMembers, .leaveChannel, .channelUnreadCount:
             return .get
+        case .deleteChannel:
+            return .delete
         case .editChannel:
             return .put
             

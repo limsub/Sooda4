@@ -237,7 +237,6 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         
         for (index, item) in channelData!.sectionData.enumerated() {
-            print("channelData : \(index) \(channelData?.sectionData[index].channelInfo.name)")
             
             let requestModel = ChannelUnreadCountRequestModel(
                 workSpaceId: self.workSpaceId,
@@ -251,11 +250,11 @@ class HomeDefaultViewModel: BaseViewModelType {
                 switch response {
                 case .success(let model):
                     self.channelData!.sectionData[index].unreadCount = model.count
-                    
-                    print("---index : \(index) / count : \(model.count)")
-                    
+                                        
                     
                 case .failure(let networkError):
+                    print("--- 에러 발생 ---")
+                    print("채널 정보 : \(self.channelData?.sectionData[index].channelInfo)")
                     print("아직 에러처리 x : \(networkError)")
                 }
                 
