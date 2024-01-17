@@ -6,9 +6,15 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 
 class ChannelSettingViewModel {
+    
+    var didSendEventClosure: ( (ChannelSettingViewModel.Event) -> Void )?
+    
+    private var disposeBag = DisposeBag()
     
     // 초기 데이터
     let workSpaceId: Int
@@ -139,4 +145,100 @@ extension ChannelSettingViewModel {
             completion()
         }
     }
+}
+
+// Event
+extension ChannelSettingViewModel {
+    enum Event {
+        case presentEditChannel(workSpaceId: Int, channelName: String)
+        case presentChangeAdminChannel(workSpaceId: Int, channelName: String)
+    }
+}
+
+// Input / Output
+extension ChannelSettingViewModel: BaseViewModelType {
+    
+    struct Input {
+        let buttonClicked: PublishSubject<IndexPath>
+        
+        let leaveChannel: PublishSubject<Void>  // 채널 나감 (팝업에서 ok 클릭)
+        let deleteChanel: PublishSubject<Void>
+    }
+    
+    struct Output {
+        let showPopupLeaveChannel: PublishSubject<Bool> // 채널 나가기 팝업 띄우기 -> true일 때 관리자, false일 때 일반
+        
+        let showPopupDeleteChannel: PublishSubject<Void> // 반드시 관리자
+    }
+    
+    func transform(_ input: Input) -> Output {
+        
+        let showPopupLeaveChannel = PublishSubject<Bool>()
+        let showPopupDeleteChannel = PublishSubject<Void>()
+        
+        
+        // 버튼 클릭
+        input.buttonClicked
+            .subscribe(with: self) { owner , indexPath in
+                
+                // 관리자
+                if owner.isAdmin {
+                    switch indexPath.row {
+                    case 0: // 채널 편집
+                        print("(관리자) 채널 편집 채널 편집")
+                        
+                    case 1: // 채널 나가기
+                        print("(관리자) 채널 나가 채널 나가")
+                        showPopupLeaveChannel.onNext(true)
+                        
+                    case 2: // 채널 관리자 변경
+                        print("(관리자) 채널 관리자 변경 채널 관리자 변경")
+                        
+                    case 3: // 채널 삭제
+                        print("(관리자) 채널 삭제 채널 삭제")
+                        showPopupDeleteChannel.onNext(())
+                        
+                    default: break
+                    }
+                }
+                
+                // 일반
+                else {
+                    switch indexPath.row {
+                    case 0: // 채널 나가기
+                        print("(일반) 채널 나가 채널 나가")
+                        showPopupLeaveChannel.onNext(false)
+                    
+                    default: break
+                    }
+                }
+                
+            }
+            .disposed(by: disposeBag)
+        
+        
+        
+        // 채널 나가기 -> 네트워크 콜 200 -> HomeDefault (reload)
+        input.leaveChannel
+            .subscribe(with: self) { owner , _ in
+                print("나가")
+            }
+            .disposed(by: disposeBag)
+        
+        
+        // 채널 삭제 -> 네트워크 콜 200 -> HomeDefault (reload)
+        input.deleteChanel
+            .subscribe(with: self) { owner , _ in
+                print("삭제")
+            }
+            .disposed(by: disposeBag)
+        
+        
+        return Output(
+            showPopupLeaveChannel: showPopupLeaveChannel,
+            showPopupDeleteChannel: showPopupDeleteChannel
+        )
+    }
+    
+    
 }

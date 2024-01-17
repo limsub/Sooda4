@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 // 버튼 높이 44 + 위아래 패딩 4 -> 셀 높이 52
 // 버튼 좌우 패딩 24. 셀은 너비 screen에 동일
@@ -13,6 +15,17 @@ import UIKit
 class ChannelSettingHandleChannelTableViewCell: BaseTableViewCell {
     
     let handleButton = ChannelSettingHandleButton()
+    
+    var disposeBag = DisposeBag()
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        disposeBag = DisposeBag()
+    }
+    
+    
+    
     
     override func setConfigure() {
         super.setConfigure()

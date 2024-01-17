@@ -16,7 +16,12 @@ protocol ExploreChannelCoordinatorProtocol: Coordinator {
     func showChannelChattingView(_ workSpaceId: Int, channelName: String)
     func showChannelSettingView(_ workSpaceId: Int, channelName: String, isAdmin: Bool)
     
-    // setting 세부 뷰
+    
+    
+    // setting 세부 뷰 (나가기, 삭제는 VC 에서 팝업으로 처리)
+    // workspace 할 때, 여기서 UseCase를 쓰는 게 별로였음.
+    func showEditChannelView(_ workSpaceId: Int, channelName: String)
+    func showChangeAdminView(_ workSpaceId: Int, channelName: String)
     
 }
 
@@ -109,8 +114,32 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
             channelSettingUseCase: ChannelSettingUseCase(channelSettingRepository: ChannelSettingRepository())
         )
         
+        channelSettingVM.didSendEventClosure = { [weak self] event in
+            
+            // 채널 편집,  채널 관리자 변경 (나가기, 삭제는 VC에서 처리)
+            switch event {
+            case .presentChangeAdminChannel(let workSpaceId, let channelName):
+                self?.showChangeAdminView(workSpaceId, channelName: channelName)
+                
+            case .presentEditChannel(let workSpaceId, let channelName):
+                self?.showEditChannelView(workSpaceId, channelName: channelName)
+            }
+        }
+        
         let channelSettingVC = ChannelSettingViewController.create(with: channelSettingVM)
         
         navigationController.pushViewController(channelSettingVC, animated: true)
+    }
+    
+    func showEditChannelView(_ workSpaceId: Int, channelName: String) {
+        print(#function)
+        
+        
+    }
+    
+    func showChangeAdminView(_ workSpaceId: Int, channelName: String) {
+        print(#function)
+        
+        
     }
 }
