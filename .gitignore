@@ -1,18 +1,41 @@
+# Created by https://www.toptal.com/developers/gitignore/api/swift,xcode,swiftpackagemanager,macos
+# Edit at https://www.toptal.com/developers/gitignore?templates=swift,xcode,swiftpackagemanager,macos
 
-# Created by https://www.toptal.com/developers/gitignore/api/xcode,swift,swiftpackagemanager
-# Edit at https://www.toptal.com/developers/gitignore?templates=xcode,swift,swiftpackagemanager
-
-### Project Directory ###
-
-# APIKey
 APIKey.swift
 
-# Fonts
-SF-Pro.ttf
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
 
 
-# SwiftLint
-.swiftlint.yml
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+### macOS Patch ###
+# iCloud generated files
+*.icloud
 
 ### Swift ###
 # Xcode
@@ -21,7 +44,6 @@ SF-Pro.ttf
 
 ## User settings
 xcuserdata/
-
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
@@ -113,9 +135,9 @@ xcuserdata
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
-
+!*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-# End of https://www.toptal.com/developers/gitignore/api/xcode,swift,swiftpackagemanager
+# End of https://www.toptal.com/developers/gitignore/api/swift,xcode,swiftpackagemanager,macos
