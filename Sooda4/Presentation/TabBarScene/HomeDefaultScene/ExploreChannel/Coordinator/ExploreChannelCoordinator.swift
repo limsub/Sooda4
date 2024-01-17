@@ -185,6 +185,28 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
             channelName: channelName,
             handleChannelUseCase: HandleChannelUseCase(handleChannelRepository: HandleChannelRepository())
         )
+        changeAdminChannelVM.didSendEventClosure = { [weak self] event in
+            
+            switch event {
+            case .goBackChannelSetting:
+                print("---123-132-")
+
+                
+                
+                // channel setting view를 업데이트시켜줘야 함
+                self?.navigationController.viewControllers.forEach({ vc in
+                    
+                    if let vc = vc as? ChannelSettingViewController {
+                        
+                        vc.reloadData(
+                            workSpaceId: workSpaceId,
+                            channelName: nil
+                        )
+                    }
+                })
+                
+            }
+        }
             
         let changeAdminChannelVC = ChangeAdminChannelViewController.create(with: changeAdminChannelVM)
         

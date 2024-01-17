@@ -53,9 +53,13 @@ class ChannelSettingViewController: BaseViewController {
         }
     }
     
-    func reloadData(workSpaceId: Int, channelName: String) {
+    func reloadData(workSpaceId: Int, channelName: String?) {
         
-        viewModel.channelName = channelName
+        // 채널 편집으로 돌아올 때는 새로운 채널 이름을 물고 오고,
+        // 관리자 변경으로 돌아올 때는 nil을 넣어서 온다.
+        if let channelName {
+            viewModel.channelName = channelName
+        }
         
         viewModel.fetchData { [weak self] in
             self?.mainView.tableView.reloadData()

@@ -104,6 +104,7 @@ extension ChangeAdminChannelViewController: UITableViewDelegate, UITableViewData
                         self.viewModel.sendAction(event: .goBackChannelSetting)
                         print("토스트메세지 띄워주기토스트메세지 띄워주기토스트메세지 띄워주기토스트메세지 띄워주기토스트메세지 띄워주기")
                         self.dismiss(animated: false)
+                        self.dismiss(animated: true)
                     } else {
                         print("실패!")
                     }
