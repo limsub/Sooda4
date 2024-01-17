@@ -164,3 +164,9 @@ extension ChannelUnreadCountResponseDTO {
 /* ========== 채널 멤버 조회 ========== */
 // 요청은 ChannelDetailReqeustDTO 사용
 typealias ChannelMembersResponseDTO = [UserInfoDTO]
+
+
+
+/* ========== 채널 퇴장 ========== */
+// 요청은 ChannelDetailRequestDTO 사용
+typealias LeaveChannelResponseDTO = [ChannelInfoDTO]

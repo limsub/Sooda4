@@ -172,10 +172,10 @@
 		485AABCD2B57721600CC9D89 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 485AABCC2B57721600CC9D89 /* RxSwift */; };
 		485AABD02B57721F00CC9D89 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 485AABCF2B57721F00CC9D89 /* Alamofire */; };
 		485AABD32B57722A00CC9D89 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 485AABD22B57722A00CC9D89 /* SnapKit */; };
-		485AABDC2B57728B00CC9D89 /* SplashCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABD52B57728A00CC9D89 /* SplashCoordinator.swift */; };
-		485AABDD2B57728B00CC9D89 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABD72B57728B00CC9D89 /* SplashViewController.swift */; };
-		485AABDE2B57728B00CC9D89 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABD92B57728B00CC9D89 /* SplashView.swift */; };
-		485AABDF2B57728B00CC9D89 /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABDB2B57728B00CC9D89 /* SplashViewModel.swift */; };
+		485AABE82B5777DB00CC9D89 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABE12B5777DB00CC9D89 /* SplashViewController.swift */; };
+		485AABE92B5777DB00CC9D89 /* SplashViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABE32B5777DB00CC9D89 /* SplashViewModel.swift */; };
+		485AABEA2B5777DB00CC9D89 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABE52B5777DB00CC9D89 /* SplashView.swift */; };
+		485AABEB2B5777DB00CC9D89 /* SplashCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 485AABE72B5777DB00CC9D89 /* SplashCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -338,10 +338,10 @@
 		485AABA52B5771A000CC9D89 /* UILabel+AppFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UILabel+AppFont.swift"; sourceTree = "<group>"; };
 		485AABA62B5771A000CC9D89 /* UIFont+AppFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+AppFont.swift"; sourceTree = "<group>"; };
 		485AABA72B5771A000CC9D89 /* UITextField+AppFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+AppFont.swift"; sourceTree = "<group>"; };
-		485AABD52B57728A00CC9D89 /* SplashCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashCoordinator.swift; sourceTree = "<group>"; };
-		485AABD72B57728B00CC9D89 /* SplashViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
-		485AABD92B57728B00CC9D89 /* SplashView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
-		485AABDB2B57728B00CC9D89 /* SplashViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
+		485AABE12B5777DB00CC9D89 /* SplashViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		485AABE32B5777DB00CC9D89 /* SplashViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashViewModel.swift; sourceTree = "<group>"; };
+		485AABE52B5777DB00CC9D89 /* SplashView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		485AABE72B5777DB00CC9D89 /* SplashCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SplashCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -566,10 +566,10 @@
 		48267DF62B47B06500B30D6C /* SplashScene */ = {
 			isa = PBXGroup;
 			children = (
-				485AABD42B57728A00CC9D89 /* Coordinator */,
-				485AABD82B57728B00CC9D89 /* View */,
-				485AABD62B57728B00CC9D89 /* ViewController */,
-				485AABDA2B57728B00CC9D89 /* ViewModel */,
+				485AABE62B5777DB00CC9D89 /* Coordinator */,
+				485AABE42B5777DB00CC9D89 /* View */,
+				485AABE02B5777DB00CC9D89 /* ViewController */,
+				485AABE22B5777DB00CC9D89 /* ViewModel */,
 			);
 			path = SplashScene;
 			sourceTree = "<group>";
@@ -1276,39 +1276,39 @@
 			path = AppFont;
 			sourceTree = "<group>";
 		};
-		485AABD42B57728A00CC9D89 /* Coordinator */ = {
+		485AABE02B5777DB00CC9D89 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				485AABD52B57728A00CC9D89 /* SplashCoordinator.swift */,
-			);
-			path = Coordinator;
-			sourceTree = "<group>";
-		};
-		485AABD62B57728B00CC9D89 /* ViewController */ = {
-			isa = PBXGroup;
-			children = (
-				485AABD72B57728B00CC9D89 /* SplashViewController.swift */,
+				485AABE12B5777DB00CC9D89 /* SplashViewController.swift */,
 			);
 			name = ViewController;
-			path = ../../../../../Sooda4/Presentation/SplashScene/ViewController;
+			path = "../../../../../Sooda4 깃 난리치기 전 작업내용/Presentation/SplashScene/ViewController";
 			sourceTree = "<group>";
 		};
-		485AABD82B57728B00CC9D89 /* View */ = {
+		485AABE22B5777DB00CC9D89 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				485AABD92B57728B00CC9D89 /* SplashView.swift */,
-			);
-			name = View;
-			path = ../../../../../Sooda4/Presentation/SplashScene/View;
-			sourceTree = "<group>";
-		};
-		485AABDA2B57728B00CC9D89 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				485AABDB2B57728B00CC9D89 /* SplashViewModel.swift */,
+				485AABE32B5777DB00CC9D89 /* SplashViewModel.swift */,
 			);
 			name = ViewModel;
-			path = ../../../../../Sooda4/Presentation/SplashScene/ViewModel;
+			path = "../../../../../Sooda4 깃 난리치기 전 작업내용/Presentation/SplashScene/ViewModel";
+			sourceTree = "<group>";
+		};
+		485AABE42B5777DB00CC9D89 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				485AABE52B5777DB00CC9D89 /* SplashView.swift */,
+			);
+			name = View;
+			path = "../../../../../Sooda4 깃 난리치기 전 작업내용/Presentation/SplashScene/View";
+			sourceTree = "<group>";
+		};
+		485AABE62B5777DB00CC9D89 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				485AABE72B5777DB00CC9D89 /* SplashCoordinator.swift */,
+			);
+			path = Coordinator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1445,14 +1445,12 @@
 				485AAB352B57712C00CC9D89 /* SignUpViewModel.swift in Sources */,
 				485AAB392B57712C00CC9D89 /* InitialWorkSpaceCoordinator.swift in Sources */,
 				485AAB7B2B57714E00CC9D89 /* MakeWorkSpaceUseCase.swift in Sources */,
-				485AABDC2B57728B00CC9D89 /* SplashCoordinator.swift in Sources */,
 				485AAB072B57712C00CC9D89 /* SignUpTextField.swift in Sources */,
 				485AAA6B2B57710B00CC9D89 /* MakeWorkSpaceRepository.swift in Sources */,
 				485AAB1D2B57712C00CC9D89 /* ChangeAdminViewController.swift in Sources */,
 				485AAA452B5770E300CC9D89 /* NetworkManager.swift in Sources */,
 				485AAB9A2B57719900CC9D89 /* TextFieldEnabledType.swift in Sources */,
 				485AAB652B57714600CC9D89 /* WorkSpaceRepositoryProtocol.swift in Sources */,
-				485AABDF2B57728B00CC9D89 /* SplashViewModel.swift in Sources */,
 				485AAB002B57712C00CC9D89 /* ChannelSettingChannelInfoTableViewCell.swift in Sources */,
 				485AAB862B57716900CC9D89 /* BaseViewModelType.swift in Sources */,
 				485AAB0B2B57712C00CC9D89 /* HomeDefaultHashtagImageView.swift in Sources */,
@@ -1502,6 +1500,7 @@
 				485AAA462B5770E300CC9D89 /* APIKey.swift in Sources */,
 				485AAB662B57714600CC9D89 /* HandleWorkSpaceRepositoryProtocol.swift in Sources */,
 				485AAB622B57714600CC9D89 /* ChannelChattingRepositoryProtocol.swift in Sources */,
+				485AABE92B5777DB00CC9D89 /* SplashViewModel.swift in Sources */,
 				485AABAF2B5771A000CC9D89 /* UILabel+AppFont.swift in Sources */,
 				485AAB9B2B57719900CC9D89 /* DateFormatType.swift in Sources */,
 				485AAB992B57719900CC9D89 /* ValidSignUp.swift in Sources */,
@@ -1511,6 +1510,7 @@
 				485AAB412B57712C00CC9D89 /* EmailLoginViewController.swift in Sources */,
 				485AAAF72B57712C00CC9D89 /* CustomAlertOneActionViewController.swift in Sources */,
 				485AAB372B57712C00CC9D89 /* OnboardingViewModel.swift in Sources */,
+				485AABEB2B5777DB00CC9D89 /* SplashCoordinator.swift in Sources */,
 				485AABA92B5771A000CC9D89 /* Reactive+UIViewController.swift in Sources */,
 				485AAB4B2B57713D00CC9D89 /* WorkSpaceModel.swift in Sources */,
 				485AAB1B2B57712C00CC9D89 /* WorkSpaceListView.swift in Sources */,
@@ -1518,15 +1518,15 @@
 				485AAB672B57714600CC9D89 /* InviteWorkSpaeMemberRepositoryProtocol.swift in Sources */,
 				485AAA502B57710200CC9D89 /* ErrorResponseDTO.swift in Sources */,
 				485AAB642B57714600CC9D89 /* UnreadCountRepositoryProtocol.swift in Sources */,
-				485AABDE2B57728B00CC9D89 /* SplashView.swift in Sources */,
+				485AABEA2B5777DB00CC9D89 /* SplashView.swift in Sources */,
 				485AAA6E2B57710B00CC9D89 /* SignUpRepository.swift in Sources */,
 				48267DF32B47AD9E00B30D6C /* Coordinator.swift in Sources */,
 				485AAB7F2B57714E00CC9D89 /* MakeChannelUseCase.swift in Sources */,
 				485AAA512B57710200CC9D89 /* ChannelDTO.swift in Sources */,
+				485AABE82B5777DB00CC9D89 /* SplashViewController.swift in Sources */,
 				485AAB282B57712C00CC9D89 /* HomeDefaultViewModel.swift in Sources */,
 				485AAB212B57712C00CC9D89 /* ExploreChannelCoordinator.swift in Sources */,
 				485AAB132B57712C00CC9D89 /* HomeEmptyViewController.swift in Sources */,
-				485AABDD2B57728B00CC9D89 /* SplashViewController.swift in Sources */,
 				485AAB252B57712C00CC9D89 /* ChannelChattingViewController.swift in Sources */,
 				48267DDA2B46EEC800B30D6C /* ColorSet.swift in Sources */,
 				485AAB882B57716900CC9D89 /* BaseView.swift in Sources */,

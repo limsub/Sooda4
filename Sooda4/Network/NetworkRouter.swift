@@ -46,6 +46,7 @@ enum NetworkRouter: URLRequestConvertible {
     case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
     
     case channelMembers(_ sender: ChannelDetailRequestDTO)
+    case leaveChannel(_ sender: ChannelDetailRequestDTO)
     
     
     /* === DM === */
@@ -120,6 +121,9 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
         case .channelMembers(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/members"
+        case .leaveChannel(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/leave"
+            
             
             
         // DM
@@ -185,7 +189,7 @@ enum NetworkRouter: URLRequestConvertible {
         // CHANNEL
         case .makeChannel:
             return .post
-        case .workSpaceAllChannels, .workSpaceMyChannels, .oneChannel, .channelChattings, .channelMembers, .channelUnreadCount:
+        case .workSpaceAllChannels, .workSpaceMyChannels, .oneChannel, .channelChattings, .channelMembers, .leaveChannel, .channelUnreadCount:
             return .get
             
             
