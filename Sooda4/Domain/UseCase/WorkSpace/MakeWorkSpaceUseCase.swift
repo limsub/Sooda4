@@ -15,6 +15,10 @@ protocol MakeWorkSpaceUseCaseProtocol {
     func makeWorkSpaceRequest(_ requestModel: MakeWorkSpaceRequestModel) -> Single< Result< WorkSpaceModel, NetworkError> >
     func myOneWorkSpaceInfoRequest(_ requestModel: Int) -> Single<Result<MyOneWorkSpaceModel, NetworkError>>
     func editWorkSpaceRequest(_ requestModel: EditWorkSpaceRequestModel) -> Single< Result<WorkSpaceModel, NetworkError> >
+    
+    
+    /* === 로직 === */
+    func loadImageData(endURLString: String) -> Single< Result<Data, Error> >
 }
 
 class MakeWorkSpaceUseCase: MakeWorkSpaceUseCaseProtocol {

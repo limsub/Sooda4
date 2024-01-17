@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 class ChannelSettingRepository: ChannelSettingRepositoryProtocol {
     
@@ -28,6 +30,28 @@ class ChannelSettingRepository: ChannelSettingRepositoryProtocol {
                     completion(.failure(networkError))
                 }
             }
+    }
+    
+    func oneChannelInfoRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<OneChannelInfoModel, NetworkError> > {
+        
+        let dto = ChannelDetailRequestDTO(requestModel)
+        
+        return NetworkManager.shared.request(
+            type: OneChannelResponseDTO.self,
+            api: .oneChannel(dto)
+        )
+        .map { response in
+            switch response {
+            case .success(let dtoData):
+                let responseModel = dtoData.toDomain()
+                
+                return .success(responseModel)
+                
+            case .failure(let networkError):
+                return .failure(networkError)
+            }
+        }
+        
     }
     
 }

@@ -133,13 +133,33 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
     
     func showEditChannelView(_ workSpaceId: Int, channelName: String) {
         print(#function)
+        // 채널 편집 화면
         
+        let editChannelVM = MakeChannelViewModel(
+            makeChannelUseCase: MakeChannelUseCase(
+                makeChannelRepository: MakeChannelRepository(),
+                oneChannelInfoRepository: ChannelSettingRepository()
+            ),
+            workSpaceId: workSpaceId,
+            type: .edit(workSpaceId: workSpaceId, channelName: channelName)
+        )
+        editChannelVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goBackHomeDefault:
+                print("고 홈 디폴트")
+                break;
+            }
+        }
         
+        let editChannelVC = MakeChannelViewController.create(with: editChannelVM)
+        let nav = UINavigationController(rootViewController: editChannelVC)
+        
+        navigationController.present(nav, animated: true)
     }
     
     func showChangeAdminView(_ workSpaceId: Int, channelName: String) {
         print(#function)
-        
+        // 채널 관리자 변경 화면
         
     }
 }

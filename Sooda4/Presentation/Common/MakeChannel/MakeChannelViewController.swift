@@ -44,6 +44,14 @@ class MakeChannelViewController: BaseViewController {
         
         let output = viewModel.transform(input)
         
+        // initialData가 있으면 초기 뷰 세팅해주기!
+        output.initialModel
+            .subscribe(with: self) { owner , value in
+                print("--- 이니셜 데이터가 있다!")
+                print(value)
+            }
+            .disposed(by: disposeBag)
+        
         output.enabledCompleteButton
             .subscribe(with: self) { owner , value in
                 owner.mainView.completeButton.update(value ? .enabled : .disabled)

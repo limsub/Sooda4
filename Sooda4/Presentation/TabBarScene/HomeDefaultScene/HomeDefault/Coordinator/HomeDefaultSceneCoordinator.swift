@@ -122,9 +122,11 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         
         let makeChannelVM = MakeChannelViewModel(
             makeChannelUseCase: MakeChannelUseCase(
-                makeChannelRepository: MakeChannelRepository()
+                makeChannelRepository: MakeChannelRepository(),
+                oneChannelInfoRepository: ChannelSettingRepository()
             ),
-            workSpaceId: workSpaceId
+            workSpaceId: workSpaceId,
+            type: .make
         )
         makeChannelVM.didSendEventClosure = { [weak self] event in
             switch event {

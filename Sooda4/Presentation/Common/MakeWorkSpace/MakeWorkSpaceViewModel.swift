@@ -55,13 +55,13 @@ class MakeWorkSpaceViewModel: BaseViewModelType {
     }
     
     private var disposeBag = DisposeBag()
-    private let makeWorkSpaceUseCase: MakeWorkSpaceUseCase
+    private let makeWorkSpaceUseCase: MakeWorkSpaceUseCaseProtocol
     let type: OperationType
     
     var didSendEventClosure: ( (MakeWorkSpaceViewModel.Event) -> Void)?
     
     
-    init(makeWorkSpaceUseCase: MakeWorkSpaceUseCase, type: OperationType) {
+    init(makeWorkSpaceUseCase: MakeWorkSpaceUseCaseProtocol, type: OperationType) {
         self.makeWorkSpaceUseCase = makeWorkSpaceUseCase
         self.type = type
     }

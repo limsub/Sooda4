@@ -33,18 +33,29 @@ enum ResultMakeChannel {
 
 class MakeChannelViewModel: BaseViewModelType {
     
-    private let makeChannelUseCase: MakeChannelUseCaseProtocol
+    enum OperationType {
+        case make
+        case edit(workSpaceId: Int, channelName: String)
+    }
+    
     
     private var disposeBag = DisposeBag()
+    private let makeChannelUseCase: MakeChannelUseCaseProtocol
+    let type: OperationType
     
     var didSendEventClosure: ( (MakeChannelViewModel.Event) -> Void )?
     
     private let workSpaceId: Int
     
-    init(makeChannelUseCase: MakeChannelUseCaseProtocol, workSpaceId: Int) {
+    init(makeChannelUseCase: MakeChannelUseCaseProtocol,
+         workSpaceId: Int,
+         type: OperationType
+    ) {
         self.makeChannelUseCase = makeChannelUseCase
         self.workSpaceId = workSpaceId
+        self.type = type
     }
+    
     
     struct Input {
         let nameText: ControlProperty<String>
@@ -53,18 +64,58 @@ class MakeChannelViewModel: BaseViewModelType {
     }
     
     struct Output {
+        let initialModel: PublishSubject<OneChannelInfoModel>
+        // 만약 "수정하기"로 들어왔으면 여기서 초기 데이터 전달. "생성하기"로 들어오면 아무 이벤트 x
+        
         let enabledCompleteButton: BehaviorSubject<Bool>
         let resultMakeChannel: PublishSubject<ResultMakeChannel>
     }
     
     func transform(_ input: Input) -> Output {
         
+        let initialModel = PublishSubject<OneChannelInfoModel>()
         let enabledCompleteButton = BehaviorSubject(value: false)
         let resultMakeChannel = PublishSubject<ResultMakeChannel>()
         
         
+        // "편집"일 때! 초기 데이터 전달
+        if case .edit(let workSpaceId, let channelName) = type {
+            print("- 편집하러 들어왔기 때문에 채널 정보 네트워크 콜 쏜다")
+            
+            
+            
+            Observable<(Int, String)>.just((workSpaceId, channelName))
+                .flatMap { value in
+                    self.makeChannelUseCase.oneChannelInfoRequest(ChannelDetailRequestModel(workSpaceId: value.0, channelName: value.1))
+                }
+                .subscribe(with: self) { owner , response in
+                    print("초기 데이터를 위해 채널 정보 콜")
+                    print(response)
+                }
+                .disposed(by: disposeBag)
+        }
+        
+        
+        /* --- 테스트용 --- */
+        input.nameText
+            .distinctUntilChanged()
+            .subscribe(with: self) { owner , value in
+                print("-- nameText 인풋 : \(value)")
+            }
+            .disposed(by: disposeBag)
+        
+        input.descriptionText
+            .distinctUntilChanged()
+            .subscribe(with: self) { owner , value in
+                print("-- description 인풋 : \(value)")
+            }
+            .disposed(by: disposeBag)
+        /* ------------- */
+        
+        
         // 버튼 활성화
         input.nameText
+            .distinctUntilChanged()
             .subscribe(with: self) { owner , value in
                 enabledCompleteButton.onNext(!value.isEmpty)
             }
@@ -110,6 +161,7 @@ class MakeChannelViewModel: BaseViewModelType {
         
         
         return Output(
+            initialModel: initialModel,
             enabledCompleteButton: enabledCompleteButton,
             resultMakeChannel: resultMakeChannel
         )

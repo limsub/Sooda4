@@ -186,6 +186,10 @@ extension ChannelSettingViewModel: BaseViewModelType {
                     switch indexPath.row {
                     case 0: // 채널 편집
                         print("(관리자) 채널 편집 채널 편집")
+                        owner.didSendEventClosure?(.presentEditChannel(
+                            workSpaceId: owner.workSpaceId,
+                            channelName: owner.channelName
+                        ))
                         
                     case 1: // 채널 나가기
                         print("(관리자) 채널 나가 채널 나가")
@@ -193,6 +197,10 @@ extension ChannelSettingViewModel: BaseViewModelType {
                         
                     case 2: // 채널 관리자 변경
                         print("(관리자) 채널 관리자 변경 채널 관리자 변경")
+                        owner.didSendEventClosure?(.presentChangeAdminChannel(
+                            workSpaceId: owner.workSpaceId,
+                            channelName: owner.channelName
+                        ))
                         
                     case 3: // 채널 삭제
                         print("(관리자) 채널 삭제 채널 삭제")
