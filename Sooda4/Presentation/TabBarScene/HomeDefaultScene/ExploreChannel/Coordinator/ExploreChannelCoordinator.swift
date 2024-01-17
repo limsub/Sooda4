@@ -163,8 +163,12 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         print(#function)
         // 채널 관리자 변경 화면
         
-        let changeAdminChannelVM = ChangeAdminChannelViewModel()
-        
+        let changeAdminChannelVM = ChangeAdminChannelViewModel(
+            workSpaceId: workSpaceId,
+            channelName: channelName,
+            handleChannelUseCase: HandleChannelUseCase(handleChannelRepository: HandleChannelRepository())
+        )
+            
         let changeAdminChannelVC = ChangeAdminChannelViewController.create(with: changeAdminChannelVM)
         
         let nav = UINavigationController(rootViewController: changeAdminChannelVC)
