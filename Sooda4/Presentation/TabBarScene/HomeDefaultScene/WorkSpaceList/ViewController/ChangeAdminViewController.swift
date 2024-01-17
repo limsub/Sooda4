@@ -7,6 +7,9 @@
 
 import UIKit
 
+// 워크스페이스 관리자 권한 변경 -> rx 안쓰고 delegate로 처리
+// 채널 관리자 권한 변경 -> rx 사용
+
 class ChangeAdminViewController: BaseViewController {
     
     var viewModel: ChangeAdminViewModel!

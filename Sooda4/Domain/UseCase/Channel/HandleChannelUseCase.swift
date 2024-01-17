@@ -15,10 +15,13 @@ protocol HandleChannelUseCaseProtocol {
     func editChannelRequest(_ requestModel: EditChannelRequestModel) -> Single< Result<WorkSpaceChannelInfoModel, NetworkError> >
     // 2. 채널 나가기
     func leaveChannelRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceChannelInfoModel], NetworkError> >
+    
     // 3 - 1. 채널 멤버 조회
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceUserInfo], NetworkError> >
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void)
+    
     // 3 - 2. 채널 관리자 권한 변경
-    func changeAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel) -> Single< Result<WorkSpaceChannelInfoModel, NetworkError> >
+    func chanegAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel, completion: @escaping (Result<WorkSpaceChannelInfoModel, NetworkError>) -> Void)
+    
     // 4. 채널 삭제
     func deleteChannelRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<String, NetworkError> >
 }
@@ -49,16 +52,17 @@ class HandleChannelUseCase: HandleChannelUseCaseProtocol {
     }
     
     // 3 - 1. 채널 멤버 조회
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> RxSwift.Single<Result<[WorkSpaceUserInfo], NetworkError>> {
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void) {
         
-        return handleChannelRepository.channelMembersRequest(requestModel)
+        
     }
     
+    
     // 3 - 2. 채널 관리자 권한 변경
-    func changeAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel) -> RxSwift.Single<Result<WorkSpaceChannelInfoModel, NetworkError>> {
+    func chanegAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel, completion: @escaping (Result<WorkSpaceChannelInfoModel, NetworkError>) -> Void) {
         
-        return handleChannelRepository.changeAdminChannelRequest(requestModel)
     }
+    
     
     // 4. 채널 삭제
     func deleteChannelRequest(_ requestModel: ChannelDetailRequestModel) -> RxSwift.Single<Result<String, NetworkError>> {

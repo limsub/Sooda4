@@ -11,15 +11,21 @@ import RxCocoa
 
 class ChangeAdminChannelViewModel: BaseViewModelType {
     
-//    var didSendEventClosure: ( (ChangeAdminViewModel.Event) -> Void )?
-//    
-//    
-//    let workSpaceId: Int
-//    let channelName: String
-//    
+    var didSendEventClosure: ( (ChangeAdminViewModel.Event) -> Void )?
+        
+    private let workSpaceId: Int
+    private let channelName: String
+    
+    private var handleChannelUseCase: HandleChannelUseCaseProtocol
+
     var items: [WorkSpaceUserInfo] = []
     
-    
+    init(workSpaceId: Int, channelName: String, handleChannelUseCase: HandleChannelUseCaseProtocol, items: [WorkSpaceUserInfo]) {
+        self.workSpaceId = workSpaceId
+        self.channelName = channelName
+        self.handleChannelUseCase = handleChannelUseCase
+        self.items = items
+    }
     
     struct Input {
         let a: String

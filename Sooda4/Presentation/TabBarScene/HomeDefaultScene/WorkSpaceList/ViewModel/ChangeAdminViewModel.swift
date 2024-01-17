@@ -69,12 +69,6 @@ class ChangeAdminViewModel {
                 completion(false)
                 
             }
-            
-            
-            
-                print(response)
-            
-            
         }
     }
     

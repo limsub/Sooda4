@@ -9,6 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+// 워크스페이스 관리자 권한 변경 -> rx 안쓰고 delegate로 처리
+// 채널 관리자 권한 변경 -> rx 사용
+
 class ChangeAdminChannelViewController: BaseViewController {
     
     private var viewModel: ChangeAdminChannelViewModel!
@@ -38,6 +41,10 @@ class ChangeAdminChannelViewController: BaseViewController {
     }
     
     func fetchData() {
+        
+    }
+    
+    func bindVM() {
         
     }
 }

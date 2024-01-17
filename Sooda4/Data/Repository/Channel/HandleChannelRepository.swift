@@ -109,50 +109,47 @@ class HandleChannelRepository: HandleChannelRepositoryProtocol {
     }
     
     
+    
     // 3 - 1. 채널 멤버 조회
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> RxSwift.Single<Result<[WorkSpaceUserInfo], NetworkError>> {
+    func channelMembersRequest(_requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void) {
         
-        let dto = ChannelDetailRequestDTO(requestModel)
+        let dto = ChannelDetailRequestDTO(_requestModel)
         
-        return NetworkManager.shared.request(
+        NetworkManager.shared.requestCompletion(
             type: ChannelMembersResponseDTO.self,
-            api: .channelMembers(dto)
-        )
-        .map { response in
-            switch response {
-            case .success(let dtoData):
-                let responseModel = dtoData.map { $0.toDomain() }
-                return .success(responseModel)
-                
-            case .failure(let networkError):
-                return .failure(networkError)
+            api: .channelMembers(dto)) { response in
+                switch response {
+                case .success(let dtoData):
+                    let responseModel = dtoData.map { $0.toDomain() }
+                    completion(.success(responseModel))
+                    
+                case .failure(let networkError):
+                    completion(.failure(networkError))
+                }
                 
             }
-        }
     }
+
     
     
     // 3 - 2. 채널 관리자 권한 변경
-    func changeAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel) -> RxSwift.Single<Result<WorkSpaceChannelInfoModel, NetworkError>> {
+    func changeAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel, completion: @escaping (Result<WorkSpaceChannelInfoModel, NetworkError>) -> Void) {
         
         let dto = ChangeAdminChannelRequestDTO(requestModel)
         
-        return NetworkManager.shared.request(
+        NetworkManager.shared.requestCompletion(
             type: ChangeAdminChannelResponseDTO.self,
-            api: .changeAdminChannel(dto)
-        )
-        .map { response in
-            switch response {
-            case .success(let dtoData):
-                let responseModel = dtoData.toDomain()
-                return .success(responseModel)
-                
-            case .failure(let networkError):
-                return .failure(networkError)
+            api: .changeAdminChannel(dto)) { response  in
+                switch response {
+                case .success(let dtoData):
+                    let responseModel = dtoData.toDomain()
+                    completion(.success(responseModel))
+                case .failure(let networkError):
+                    completion(.failure(networkError))
+                }
             }
-        }
-        
     }
+    
     
     
     // 4. 채널 삭제
