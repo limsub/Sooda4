@@ -112,20 +112,20 @@ enum NetworkRouter: URLRequestConvertible {
             
             // * 임시 - 채널이름 한글일 수도 있어서 인코딩해야함.
         case .oneChannel(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))"
         case .editChannel(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))"
             
             
         case .channelChattings(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/chats"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/chats"
             
         case .channelUnreadCount(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/unreads"
         case .channelMembers(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/members"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/members"
         case .leaveChannel(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/leave"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/leave"
             
             
             
@@ -377,6 +377,6 @@ enum NetworkRouter: URLRequestConvertible {
     
     private func encodingUrl(_ text: String) -> String {
         
-        return text.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        return text.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? ""
     }
 }

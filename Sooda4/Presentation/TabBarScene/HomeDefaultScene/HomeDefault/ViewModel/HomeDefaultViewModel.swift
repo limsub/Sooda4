@@ -235,7 +235,9 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         let group = DispatchGroup()
         
+        
         for (index, item) in channelData!.sectionData.enumerated() {
+            print("channelData : \(index) \(channelData?.sectionData[index].channelInfo.name)")
             
             let requestModel = ChannelUnreadCountRequestModel(
                 workSpaceId: self.workSpaceId,
@@ -249,8 +251,12 @@ class HomeDefaultViewModel: BaseViewModelType {
                 switch response {
                 case .success(let model):
                     self.channelData!.sectionData[index].unreadCount = model.count
+                    
+                    print("---index : \(index) / count : \(model.count)")
+                    
+                    
                 case .failure(let networkError):
-                    print("아직 에러처리 x")
+                    print("아직 에러처리 x : \(networkError)")
                 }
                 
                 group.leave()
@@ -338,6 +344,8 @@ class HomeDefaultViewModel: BaseViewModelType {
     
     func channelCellData(_ indexPath: IndexPath) -> (String, Int) {
         guard let channelData else { return ("", 0) }
+        
+        print("--- indexPath : \(indexPath) / channelData : \(channelData.sectionData[indexPath.row - 1])")
         
         return (
             channelData.sectionData[indexPath.row - 1].channelInfo.name,
