@@ -24,7 +24,7 @@ class NetworkManager {
         
         return Single< Result<T, NetworkError> >.create { single in
             
-            AF.request(api, interceptor: NetworkRequestInterceptor())
+            AF.request(api/*, interceptor: NetworkRequestInterceptor()*/ )
                 .validate()
                 .responseDecodable(of: T.self) { response in
                     
@@ -127,8 +127,7 @@ class NetworkManager {
             
             AF.upload(
                 multipartFormData: api.multipart,
-                with: api,
-                interceptor: NetworkRequestInterceptor()
+                with: api
             )
             .validate()
             .responseDecodable(of: T.self) { response  in

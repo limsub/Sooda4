@@ -41,6 +41,7 @@ class MakeChannelViewModel: BaseViewModelType {
     
     private var disposeBag = DisposeBag()
     private let makeChannelUseCase: MakeChannelUseCaseProtocol
+    private let handleChannelUseCase: HandleChannelUseCaseProtocol
     let type: OperationType
     
     var didSendEventClosure: ( (MakeChannelViewModel.Event) -> Void )?
@@ -48,10 +49,12 @@ class MakeChannelViewModel: BaseViewModelType {
     private let workSpaceId: Int
     
     init(makeChannelUseCase: MakeChannelUseCaseProtocol,
+         handleChannelUseCase: HandleChannelUseCaseProtocol,
          workSpaceId: Int,
          type: OperationType
     ) {
         self.makeChannelUseCase = makeChannelUseCase
+        self.handleChannelUseCase = handleChannelUseCase
         self.workSpaceId = workSpaceId
         self.type = type
     }
@@ -90,7 +93,15 @@ class MakeChannelViewModel: BaseViewModelType {
                 }
                 .subscribe(with: self) { owner , response in
                     print("초기 데이터를 위해 채널 정보 콜")
-                    print(response)
+                    
+                    switch response {
+                    case .success(let model):
+                        initialModel.onNext(model)
+                        
+                    case .failure(let networkError):
+                        print("에러났슈 : \(networkError)")
+                    }
+
                 }
                 .disposed(by: disposeBag)
         }
@@ -123,40 +134,80 @@ class MakeChannelViewModel: BaseViewModelType {
         
         
         // 버튼 클릭
-        input.completeButtonClicked
-            .withLatestFrom(input.nameText)
-            .filter { value in
-                if value.count >= 1 && value.count <= 30 {
-                    return true
-                } else {
-                    resultMakeChannel.onNext(.invalid)
-                    return false
-                }
-            }
-            .withLatestFrom(input.descriptionText) { v1, v2 in
-                return MakeChannelRequestModel(
-                    workSpaceId: self.workSpaceId,
-                    channelName: v1,
-                    channelDescription: v2
-                )
-            }
-            .flatMap {
-                self.makeChannelUseCase.makeChannelRequest($0)
-            }
-            .subscribe(with: self) { owner , response in
-                switch response {
-                case .success:
-                    resultMakeChannel.onNext(.success)  // 의미 없음
-                    
-                    owner.didSendEventClosure?(.goBackHomeDefault)
-                    
-                case .failure(let networkError):
-                    resultMakeChannel.onNext(.failure(error: networkError))
-                }
-                print(response)
-            }
-            .disposed(by: disposeBag)
         
+        // 채널 생성
+        if case .make = type {
+            input.completeButtonClicked
+                .withLatestFrom(input.nameText)
+                .filter { value in
+                    if value.count >= 1 && value.count <= 30 {
+                        return true
+                    } else {
+                        resultMakeChannel.onNext(.invalid)
+                        return false
+                    }
+                }
+                .withLatestFrom(input.descriptionText) { v1, v2 in
+                    return MakeChannelRequestModel(
+                        workSpaceId: self.workSpaceId,
+                        channelName: v1,
+                        channelDescription: v2
+                    )
+                }
+                .flatMap {
+                    self.makeChannelUseCase.makeChannelRequest($0)
+                }
+                .subscribe(with: self) { owner , response in
+                    switch response {
+                    case .success:
+                        resultMakeChannel.onNext(.success)  // 의미 없음
+                        
+                        owner.didSendEventClosure?(.goBackHomeDefault)
+                        
+                    case .failure(let networkError):
+                        resultMakeChannel.onNext(.failure(error: networkError))
+                    }
+                    print(response)
+                }
+                .disposed(by: disposeBag)
+        }
+        
+        if case .edit(let workSpaceId, let channelName) = type {
+            input.completeButtonClicked
+                .withLatestFrom(input.nameText)
+                .filter { value in
+                    if value.count >= 1 && value.count <= 30 {
+                        return true
+                    } else {
+                        resultMakeChannel.onNext(.invalid)
+                        return false
+                    }
+                }
+                .withLatestFrom(input.descriptionText) { v1, v2 in
+                    return EditChannelRequestModel(
+                        workSpaceId: workSpaceId,
+                        channelName: channelName,
+                        newChannelName: v1,
+                        newDesciption: v2
+                    )
+                }
+                .flatMap {
+                    self.handleChannelUseCase.editChannelRequest($0)
+                }
+                .subscribe(with: self) { owner , response in
+                    switch response {
+                    case .success:
+                        print("채널 수정 완료!!")
+                        owner.didSendEventClosure?(.goBackHomeDefault)
+                        
+                    case .failure(let networkError):
+                        print("에러났슈 : \(networkError)")
+                        
+                    }
+                }
+                .disposed(by: disposeBag)
+                
+        }
         
         
         

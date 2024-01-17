@@ -125,6 +125,7 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 makeChannelRepository: MakeChannelRepository(),
                 oneChannelInfoRepository: ChannelSettingRepository()
             ),
+            handleChannelUseCase: HandleChannelUseCase(handleChannelRepository: HandleChannelRepository()),
             workSpaceId: workSpaceId,
             type: .make
         )

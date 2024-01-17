@@ -141,6 +141,7 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
                 makeChannelRepository: MakeChannelRepository(),
                 oneChannelInfoRepository: ChannelSettingRepository()
             ),
+            handleChannelUseCase: HandleChannelUseCase(handleChannelRepository: HandleChannelRepository()),
             workSpaceId: workSpaceId,
             type: .edit(workSpaceId: workSpaceId, channelName: channelName)
         )

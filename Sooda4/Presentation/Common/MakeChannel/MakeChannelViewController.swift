@@ -9,6 +9,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+// 채널 만들기 / 수정하기 같이 쓴다
+
 class MakeChannelViewController: BaseViewController {
     
     private let mainView = MakeChannelView()
@@ -31,7 +33,24 @@ class MakeChannelViewController: BaseViewController {
         super.viewDidLoad()
         
         setNavigation("채널 생성")
+        settingType(type: viewModel.type)
         bindVM()
+    }
+    
+    func settingType(type: MakeChannelViewModel.OperationType) {
+        if case .make = type {
+            mainView.completeButton.setTitle("생성", for: .normal)
+            mainView.completeButton.setUp()
+            
+            navigationItem.title = "만들러 옴"
+        }
+        
+        else {
+            mainView.completeButton.setTitle("완료", for: .normal)
+            mainView.completeButton.setUp()
+            
+            navigationItem.title = "수정하러 옴"
+        }
     }
     
     func bindVM() {
@@ -48,7 +67,12 @@ class MakeChannelViewController: BaseViewController {
         output.initialModel
             .subscribe(with: self) { owner , value in
                 print("--- 이니셜 데이터가 있다!")
-                print(value)
+                
+                owner.mainView.nameTextField.text = value.channelName
+                owner.mainView.nameTextField.sendActions(for: .valueChanged)
+                
+                owner.mainView.descriptionTextField.text = value.channelDescription
+                owner.mainView.descriptionTextField.sendActions(for: .valueChanged)
             }
             .disposed(by: disposeBag)
         
