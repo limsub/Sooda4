@@ -14,6 +14,8 @@ class ChannelSettingViewModel {
     
     var didSendEventClosure: ( (ChannelSettingViewModel.Event) -> Void )?
     
+    var handleChannelUseCase: HandleChannelUseCaseProtocol
+    
     private var disposeBag = DisposeBag()
     
     // 초기 데이터
@@ -21,10 +23,11 @@ class ChannelSettingViewModel {
     let channelName: String
     let channelSettingUseCase: ChannelSettingUseCaseProtocol
     
-    init(workSpaceId: Int, channelName: String, channelSettingUseCase: ChannelSettingUseCaseProtocol) {
+    init(workSpaceId: Int, channelName: String, channelSettingUseCase: ChannelSettingUseCaseProtocol, handleChannelUseCase: HandleChannelUseCaseProtocol) {
         self.workSpaceId = workSpaceId
         self.channelName = channelName
         self.channelSettingUseCase = channelSettingUseCase
+        self.handleChannelUseCase = handleChannelUseCase
     }
     
     // 뷰에 띄울 데이터
@@ -225,10 +228,19 @@ extension ChannelSettingViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
+        let requestModel = ChannelDetailRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName
+        )
+        
         
         // 채널 나가기 -> 네트워크 콜 200 -> HomeDefault (reload)
         input.leaveChannel
-            .subscribe(with: self) { owner , _ in
+            .flatMap {
+                self.handleChannelUseCase.leaveChannelRequest(requestModel)
+            }
+            .subscribe(with: self) { owner , response in
+                print(response)
                 print("나가")
             }
             .disposed(by: disposeBag)
@@ -236,7 +248,11 @@ extension ChannelSettingViewModel: BaseViewModelType {
         
         // 채널 삭제 -> 네트워크 콜 200 -> HomeDefault (reload)
         input.deleteChanel
-            .subscribe(with: self) { owner , _ in
+            .flatMap {
+                self.handleChannelUseCase.deleteChannelRequest(requestModel)
+            }
+            .subscribe(with: self) { owner , response in
+                print(response)
                 print("삭제")
             }
             .disposed(by: disposeBag)

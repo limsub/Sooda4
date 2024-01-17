@@ -111,7 +111,8 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         let channelSettingVM = ChannelSettingViewModel(
             workSpaceId: workSpaceId,
             channelName: channelName,
-            channelSettingUseCase: ChannelSettingUseCase(channelSettingRepository: ChannelSettingRepository())
+            channelSettingUseCase: ChannelSettingUseCase(channelSettingRepository: ChannelSettingRepository()),
+            handleChannelUseCase: HandleChannelUseCase(handleChannelRepository: HandleChannelRepository())
         )
         
         channelSettingVM.didSendEventClosure = { [weak self] event in
