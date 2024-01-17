@@ -20,7 +20,7 @@ class ChannelSettingViewModel {
     
     // 초기 데이터
     let workSpaceId: Int
-    let channelName: String
+    var channelName: String
     let channelSettingUseCase: ChannelSettingUseCaseProtocol
     
     init(workSpaceId: Int, channelName: String, channelSettingUseCase: ChannelSettingUseCaseProtocol, handleChannelUseCase: HandleChannelUseCaseProtocol) {
@@ -61,7 +61,10 @@ class ChannelSettingViewModel {
             switch response {
             case .success(let model):
                 self.channelInfoData = model
-                // * 임시
+                
+                print("channelInfoData 업데이트!")
+                print(model)
+
                 if model.ownerId == KeychainStorage.shared._id ?? -1 {
                     self.isAdmin = true
                 } else {

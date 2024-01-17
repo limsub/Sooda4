@@ -196,9 +196,9 @@ class MakeChannelViewModel: BaseViewModelType {
                 }
                 .subscribe(with: self) { owner , response in
                     switch response {
-                    case .success:
+                    case .success(let model):
                         print("채널 수정 완료!!")
-                        owner.didSendEventClosure?(.goBackHomeDefault)
+                        owner.didSendEventClosure?(.goBackChannelSetting(newChannelName: model.name))
                         
                     case .failure(let networkError):
                         print("에러났슈 : \(networkError)")
@@ -222,5 +222,6 @@ class MakeChannelViewModel: BaseViewModelType {
 extension MakeChannelViewModel {
     enum Event {
         case goBackHomeDefault
+        case goBackChannelSetting(newChannelName: String)
     }
 }

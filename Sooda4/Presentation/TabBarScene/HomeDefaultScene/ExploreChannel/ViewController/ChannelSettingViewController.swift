@@ -53,6 +53,16 @@ class ChannelSettingViewController: BaseViewController {
         }
     }
     
+    func reloadData(workSpaceId: Int, channelName: String) {
+        
+        viewModel.channelName = channelName
+        
+        viewModel.fetchData { [weak self] in
+            self?.mainView.tableView.reloadData()
+            
+        }
+    }
+    
     func bindVM() {
         let input = ChannelSettingViewModel.Input(
             buttonClicked: buttonClicked,

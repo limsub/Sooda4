@@ -140,6 +140,8 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 })
                 
                 self?.navigationController.dismiss(animated: true)
+                
+            default: break
             }
         }
         

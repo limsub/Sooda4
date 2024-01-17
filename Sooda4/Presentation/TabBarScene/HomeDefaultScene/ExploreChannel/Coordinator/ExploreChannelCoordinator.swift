@@ -150,9 +150,23 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         )
         editChannelVM.didSendEventClosure = { [weak self] event in
             switch event {
-            case .goBackHomeDefault:
-                print("고 홈 디폴트")
-                break;
+            case .goBackChannelSetting(let newChannelName):
+                print("---123-132-")
+                self?.navigationController.dismiss(animated: true)
+                
+                // channel setting view를 업데이트시켜줘야 함
+                self?.navigationController.viewControllers.forEach({ vc in
+                    
+                    if let vc = vc as? ChannelSettingViewController {
+                        
+                        vc.reloadData(
+                            workSpaceId: workSpaceId,
+                            channelName: newChannelName
+                        )
+                    }
+                })
+                
+            default: break
             }
         }
         
