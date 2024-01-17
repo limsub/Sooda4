@@ -168,21 +168,26 @@ typealias ChannelMembersResponseDTO = [UserInfoDTO]
 
 
 /* ========== 채널 편집 ========== */
-struct EditChannelRequestDTO {
+struct EditChannelRequestDTO: Encodable {
     let workSpaceId: Int
     let channelName: String
     let newChannelName: String
     let newDescription: String?
 }
+extension EditChannelRequestDTO {
+    init(_ model: EditChannelRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.channelName = model.channelName
+        self.newChannelName = model.newChannelName
+        self.newDescription = model.newDesciption
+    }
+}
 typealias EditChannelResponseDTO = ChannelInfoDTO
 
 
-
-/* ========== 채널 편집 ========== */
-// 요청은 ChannelDetialReqeustDTO 사용
-
-
-
+/* ========== 채널 삭제 ========== */
+// 요청은 ChannelDetailRequestDTO 사용
+// 응답 Empty Response
 
 
 
@@ -197,5 +202,12 @@ struct ChangeAdminChannelRequestDTO {
     let workSpaceId: Int
     let nextAdminUserId: Int
     let channelName: String
+}
+extension ChangeAdminChannelRequestDTO {
+    init(_ model: ChangeAdminChannelRequestModel) {
+        self.workSpaceId = model.workSpaceId
+        self.nextAdminUserId = model.nextAdminUserId
+        self.channelName = model.channelName
+    }
 }
 typealias ChangeAdminChannelResponseDTO = ChannelInfoDTO

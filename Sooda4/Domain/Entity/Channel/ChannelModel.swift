@@ -60,3 +60,38 @@ struct OneChannelInfoModel {
     
     let users: [WorkSpaceUserInfo]
 }
+
+
+/* ========== 1. 채널 편집 ========== */
+struct EditChannelRequestModel {
+    let workSpaceId: Int
+    let channelName: String
+    let newChannelName: String
+    let newDesciption: String?
+}
+// 응답은 WorkSpaceChannelInfoModel
+
+
+
+/* ========== 2. 채널 퇴장 ========== */
+// 요청 ChannelDetailRequestModel
+// 응답 [WorkSpaceChannelInfoModel]
+
+
+/* ========== 3 - 1. 채널 멤버 조회 ========== */
+// 요청 ChannelDetailRequestModel
+// 응답 [WorkSpaceUserInfo]
+
+
+/* ========== 3 - 2. 채널 관리자 권한 변경 ========== */
+struct ChangeAdminChannelRequestModel {
+    let workSpaceId: Int
+    let nextAdminUserId: Int
+    let channelName: String
+}
+// 응답 WorkSpaceChannelInfoModel
+
+
+/* ========== 4. 채널 삭제 ========== */
+// 요청 ChannelDetailRequestModel
+// 응답 No response
