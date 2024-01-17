@@ -189,3 +189,13 @@ typealias EditChannelResponseDTO = ChannelInfoDTO
 /* ========== 채널 퇴장 ========== */
 // 요청은 ChannelDetailRequestDTO 사용
 typealias LeaveChannelResponseDTO = [ChannelInfoDTO]
+
+
+
+/* ========== 채널 관리자 권한 변경 ========== */
+struct ChangeAdminChannelRequestDTO {
+    let workSpaceId: Int
+    let nextAdminUserId: Int
+    let channelName: String
+}
+typealias ChangeAdminChannelResponseDTO = ChannelInfoDTO

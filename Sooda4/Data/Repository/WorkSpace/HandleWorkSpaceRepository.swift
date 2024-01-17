@@ -63,7 +63,7 @@ class HandleWorkSpaceRepository: HandleWorkSpaceRepositoryProtocol {
     // 3 - 2. 워크스페이스 관리자 권한 변경
     func changeAdminWorkSpace(_ requestModel: ChangeAdminRequestModel, completion: @escaping (Result<WorkSpaceModel, NetworkError>) -> Void) {
         
-        let requestModel = ChangeAdminRequestDTO(
+        let requestModel = ChangeAdminWorkSpaceRequestDTO(
             id: requestModel.workSpaceId,
             user_id: requestModel.newAdminId
         )

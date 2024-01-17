@@ -33,7 +33,7 @@ enum NetworkRouter: URLRequestConvertible {
     case workSpaceMembers(_ sender: Int) // workSpaceId
     
     case leaveWorkSpace(_ sender: Int)  // workSpaceId
-    case changeAdminWorkSpace(_ sender: ChangeAdminRequestDTO)
+    case changeAdminWorkSpace(_ sender: ChangeAdminWorkSpaceRequestDTO)
     
     
     /* === CHANNEL === */
@@ -49,6 +49,7 @@ enum NetworkRouter: URLRequestConvertible {
     
     case channelMembers(_ sender: ChannelDetailRequestDTO)
     case leaveChannel(_ sender: ChannelDetailRequestDTO)
+    case changeAdminChannel(_ sender: ChangeAdminChannelRequestDTO)
     
     
     /* === DM === */
@@ -129,6 +130,8 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/members"
         case .leaveChannel(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/leave"
+        case .changeAdminChannel(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/change/admin/\(sender.nextAdminUserId)"
             
             
             
@@ -199,7 +202,7 @@ enum NetworkRouter: URLRequestConvertible {
             return .get
         case .deleteChannel:
             return .delete
-        case .editChannel:
+        case .editChannel, .changeAdminChannel:
             return .put
             
             

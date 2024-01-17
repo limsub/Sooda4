@@ -344,7 +344,7 @@ class HomeDefaultViewModel: BaseViewModelType {
     func channelCellData(_ indexPath: IndexPath) -> (String, Int) {
         guard let channelData else { return ("", 0) }
         
-        print("--- indexPath : \(indexPath) / channelData : \(channelData.sectionData[indexPath.row - 1])")
+//        print("--- indexPath : \(indexPath) / channelData : \(channelData.sectionData[indexPath.row - 1])")
         
         return (
             channelData.sectionData[indexPath.row - 1].channelInfo.name,

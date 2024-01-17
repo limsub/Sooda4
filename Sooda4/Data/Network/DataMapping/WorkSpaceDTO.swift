@@ -104,7 +104,7 @@ typealias WorkSpaceMembersResponseDTO = [UserInfoDTO]
 
 
 /* ========== 워크스페이스 관리자 권한 변경 ========== */
-struct ChangeAdminRequestDTO {
+struct ChangeAdminWorkSpaceRequestDTO {
     let id: Int
     let user_id: Int
 }
