@@ -792,9 +792,9 @@
 		485AAAA02B57712B00CC9D89 /* TabBarScene */ = {
 			isa = PBXGroup;
 			children = (
+				485AAAAD2B57712B00CC9D89 /* TabBarCoordinator.swift */,
 				485AAAA12B57712B00CC9D89 /* SettingScene */,
 				485AAAA72B57712B00CC9D89 /* SearchScene */,
-				485AAAAD2B57712B00CC9D89 /* TabBarCoordinator.swift */,
 				485AAAAE2B57712B00CC9D89 /* HomeDefaultScene */,
 				485AAAD92B57712B00CC9D89 /* DMScene */,
 			);
@@ -941,9 +941,9 @@
 			isa = PBXGroup;
 			children = (
 				485AAABC2B57712B00CC9D89 /* ViewModel */,
-				485AAAC02B57712B00CC9D89 /* Coordinator */,
 				485AAAC22B57712B00CC9D89 /* View */,
 				485AAAC62B57712B00CC9D89 /* ViewController */,
+				485AAAC02B57712B00CC9D89 /* Coordinator */,
 			);
 			path = ExploreChannel;
 			sourceTree = "<group>";

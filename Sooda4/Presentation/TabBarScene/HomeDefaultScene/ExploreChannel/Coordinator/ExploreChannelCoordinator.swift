@@ -16,6 +16,7 @@ protocol ExploreChannelCoordinatorProtocol: Coordinator {
     func showChannelChattingView(_ workSpaceId: Int, channelName: String)
     func showChannelSettingView(_ workSpaceId: Int, channelName: String, isAdmin: Bool)
     
+    // setting 세부 뷰
     
 }
 
