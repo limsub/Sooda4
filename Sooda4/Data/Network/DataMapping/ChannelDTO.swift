@@ -166,6 +166,15 @@ extension ChannelUnreadCountResponseDTO {
 typealias ChannelMembersResponseDTO = [UserInfoDTO]
 
 
+/* ========== 채널 편집 ========== */
+// 요청은 ChannelDetialReqeustDTO 사용
+struct EditChannelRequestDTO {
+    let workSpaceId: Int
+    let channelName: String
+    let newChannelName: String
+    let newDescription: String?
+}
+typealias EditChannelResponseDTO = ChannelInfoDTO
 
 /* ========== 채널 퇴장 ========== */
 // 요청은 ChannelDetailRequestDTO 사용
