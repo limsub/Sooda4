@@ -124,6 +124,9 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
                 
             case .presentEditChannel(let workSpaceId, let channelName):
                 self?.showEditChannelView(workSpaceId, channelName: channelName)
+                
+            case .goBackHomeDefault(let workSpaceId):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
             }
         }
         

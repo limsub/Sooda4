@@ -155,6 +155,8 @@ extension ChannelSettingViewModel {
     enum Event {
         case presentEditChannel(workSpaceId: Int, channelName: String)
         case presentChangeAdminChannel(workSpaceId: Int, channelName: String)
+        
+        case goBackHomeDefault(workSpaceId: Int)
     }
 }
 
@@ -242,6 +244,7 @@ extension ChannelSettingViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , response in
                 print(response)
                 print("나가")
+                owner.didSendEventClosure?(.goBackHomeDefault(workSpaceId: owner.workSpaceId))
             }
             .disposed(by: disposeBag)
         
@@ -254,6 +257,7 @@ extension ChannelSettingViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , response in
                 print(response)
                 print("삭제")
+                owner.didSendEventClosure?(.goBackHomeDefault(workSpaceId: owner.workSpaceId))
             }
             .disposed(by: disposeBag)
         
