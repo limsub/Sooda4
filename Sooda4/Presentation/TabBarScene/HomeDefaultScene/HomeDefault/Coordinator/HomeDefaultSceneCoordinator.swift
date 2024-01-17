@@ -237,6 +237,9 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
             // 지금 nav.vcs에 HomeDefaultVC가 있을거야. -> 아마 [0]일거야
             // 걔 지우지 말고, 고대로 뷰모델 네트워크 다시 쏴서 뷰 업데이트 시켜
             
+            // 0. 사이드 워크스페이스에서 새로운 워크스페이스 클릭하고 돌아왔을 때 -> workSpaceID 업데이트 시켜줘야 함.
+            self.workSpaceId = workSpaceId
+            
             // 1. HomeDefaultVC 찾아
             navigationController.viewControllers.forEach { vc in
                 if let vc = vc as? HomeDefaultViewController {
