@@ -12,17 +12,18 @@ class ChannelChattingView: BaseView {
     let chattingTableView = {
         let view = UITableView(frame: .zero)
         
-        view.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.description())
+        view.register(ChannelChattingTableViewCell.self, forCellReuseIdentifier: ChannelChattingTableViewCell.description())
         
-        view.backgroundColor = .red
+        view.backgroundColor = .white
         
-    
+        view.rowHeight = UITableView.automaticDimension
+        
+        view.contentInset = .zero
+        
         
         return view
     }()
-    
-//    let chattinTextView = ChannelChattingTextView()
-    
+
     let chattingTextView = {
         let view = UITextView()
         view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
@@ -58,7 +59,7 @@ class ChannelChattingView: BaseView {
 //        }
         
         
-        [ chattingTextView.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
+        [ chattingTextView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
           chattingTextView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
           chattingTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
           chattingTextView.heightAnchor.constraint(equalToConstant: 50)

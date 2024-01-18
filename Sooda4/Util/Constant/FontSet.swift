@@ -13,6 +13,7 @@ enum FontSet {
     case bodyBold
     case body
     case caption
+    case caption2
     
     var size: CGFloat {
         switch self {
@@ -26,6 +27,8 @@ enum FontSet {
             return 13
         case .caption:
             return 12
+        case .caption2:
+            return 11
         }
     }
     
@@ -41,6 +44,8 @@ enum FontSet {
             return 18
         case .caption:
             return 18
+        case .caption2:
+            return 18
         }
     }
     
@@ -48,7 +53,7 @@ enum FontSet {
         switch self {
         case .title1, .title2, .bodyBold:
             return "SFPro-Bold"
-        case .body, .caption:
+        case .body, .caption, .caption2:
             return "SFPro-Regular"
             
         }
