@@ -35,7 +35,8 @@ class SplashCoordinator: SplashCoordinatorProtocol {
     
     // 5.
     func start() {
-        showSplashView()
+//        showSplashView()
+        showView()
     }
 
     
@@ -63,6 +64,20 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         }
         
         navigationController.pushViewController(splashVC, animated: true)
+    }
+    
+    func showView() {
+        
+        let vm = ChannelChattingViewModel(
+            workSpaceId: 118,
+            channelName: "Final final",
+            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
+        )
+        
+        let vc = ChannelChattingViewController.create(with: vm)
+        
+        navigationController.pushViewController(vc, animated: true)
+        
     }
     
     
