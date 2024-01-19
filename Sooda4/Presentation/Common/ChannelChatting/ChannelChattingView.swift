@@ -24,28 +24,21 @@ class ChannelChattingView: BaseView {
         return view
     }()
     
+    let chattingInputBackView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
     let chattingInputView = ChannelChattingInputView()
 
-//    let chattingTextView = {
-//        let view = UITextView()
-//        view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
-//        view.backgroundColor = .lightGray
-//        
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//
-//        view.font = UIFont.appFont(.body)
-//        
-//        view.isScrollEnabled = false
-//        
-//        return view
-//    }()
     
     override func setConfigure() {
         super.setConfigure()
         
         self.addSubview(chattingTableView)
+        self.addSubview(chattingInputBackView)
         self.addSubview(chattingInputView)
-//        self.addSubview(chattingTextView)
     }
     
     override func setConstraints() {
@@ -55,23 +48,19 @@ class ChannelChattingView: BaseView {
             make.edges.equalTo(self)
         }
         
+        
+        
         chattingInputView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(self).inset(16)
-            make.bottom.equalTo(self).inset(32)
-            
-            
-//            make.height.equalTo(200)
+            make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-12)
         }
         
         
-//        [ chattingTextView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
-//          chattingTextView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-//          chattingTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-//          chattingTextView.heightAnchor.constraint(equalToConstant: 50)
-//          
-//        ].forEach { $0.isActive = true}
-        
-        
+        chattingInputBackView.snp.makeConstraints { make in
+            make.horizontalEdges.equalTo(self)
+            make.top.equalTo(chattingInputView.snp.top).inset(-8)
+            make.bottom.equalTo(chattingInputView.snp.bottom).offset(50)
+        }
     }
     
     override func setting() {
