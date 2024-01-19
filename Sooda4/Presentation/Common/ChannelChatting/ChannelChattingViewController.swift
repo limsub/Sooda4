@@ -122,12 +122,21 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         
         // 한 줄 텍스트뷰 높이 38
         // -> 38 - 31.6 = 6.4 => 위아래 패딩 3.2 주자
-    
-        textView.constraints.forEach { constraint in
-            if constraint.firstAttribute == .height {
-                constraint.constant = estimatedSize.height
+        
+        if estimatedSize.height > 65 {
+            textView.isScrollEnabled = true
+            return
+        } else {
+            textView.isScrollEnabled = false
+            
+            textView.constraints.forEach { constraint in
+                if constraint.firstAttribute == .height {
+                    constraint.constant = estimatedSize.height
+                }
             }
         }
+    
+        
     }
     
     
