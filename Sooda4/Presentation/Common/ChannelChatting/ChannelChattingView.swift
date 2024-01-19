@@ -23,26 +23,29 @@ class ChannelChattingView: BaseView {
         
         return view
     }()
+    
+    let chattingInputView = ChannelChattingInputView()
 
-    let chattingTextView = {
-        let view = UITextView()
-        view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
-        view.backgroundColor = .lightGray
-        
-        view.translatesAutoresizingMaskIntoConstraints = false
-
-        view.font = UIFont.appFont(.body)
-        
-        view.isScrollEnabled = false
-        
-        return view
-    }()
+//    let chattingTextView = {
+//        let view = UITextView()
+//        view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
+//        view.backgroundColor = .lightGray
+//        
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//
+//        view.font = UIFont.appFont(.body)
+//        
+//        view.isScrollEnabled = false
+//        
+//        return view
+//    }()
     
     override func setConfigure() {
         super.setConfigure()
         
         self.addSubview(chattingTableView)
-        self.addSubview(chattingTextView)
+        self.addSubview(chattingInputView)
+//        self.addSubview(chattingTextView)
     }
     
     override func setConstraints() {
@@ -52,21 +55,30 @@ class ChannelChattingView: BaseView {
             make.edges.equalTo(self)
         }
         
-//        chattingTextView.snp.makeConstraints { make in
-//            make.horizontalEdges.equalTo(self)
-//            make.centerY.equalTo(self)
-//            make.height.equalTo(50)
-//        }
+        chattingInputView.snp.makeConstraints { make in
+            make.horizontalEdges.equalTo(self).inset(16)
+            make.bottom.equalTo(self).inset(32)
+            
+            
+//            make.height.equalTo(200)
+        }
         
         
-        [ chattingTextView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
-          chattingTextView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-          chattingTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-          chattingTextView.heightAnchor.constraint(equalToConstant: 50)
-          
-        ].forEach { $0.isActive = true}
+//        [ chattingTextView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+//          chattingTextView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+//          chattingTextView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+//          chattingTextView.heightAnchor.constraint(equalToConstant: 50)
+//          
+//        ].forEach { $0.isActive = true}
         
         
+    }
+    
+    override func setting() {
+        super.setting()
+        
+        chattingInputView.fileImageCollectionView.isHidden = false
+        self.setConstraints()
     }
     
 }

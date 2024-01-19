@@ -7,9 +7,23 @@
 
 import UIKit
 
+
 class ChannelChattingTextView: UITextView {
     
-
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        super.init(frame: frame, textContainer: textContainer)
+        
+        setUp()
+    }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
+    func setUp() {
+        self.backgroundColor = .cyan
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.font = .appFont(.body)
+    
+    }
 }

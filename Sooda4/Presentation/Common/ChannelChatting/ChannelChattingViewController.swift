@@ -82,27 +82,47 @@ class ChannelChattingViewController: BaseViewController {
 // 테이블뷰 테스트
 extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+        print(#function)
+        
+        mainView.chattingInputView.fileImageCollectionView.isHidden.toggle()
+        mainView.chattingInputView.setConstraints()
+        self.textViewDidChange(mainView.chattingInputView.chattingTextView)
+        
+//        mainView.chattingInputView.layoutSubviews()
+//        mainView.chattingInputView.updateConstraints()
+        
+//        self.setConstraints()s
+        
+        
+        
+    }
+    
     func setTableView() {
         mainView.chattingTableView.delegate = self
         mainView.chattingTableView.dataSource = self
     }
     
     func setTextView() {
-        mainView.chattingTextView.delegate = self
+        mainView.chattingInputView.chattingTextView.delegate = self
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        print(textView.text)
-        
-        
         
         let size = CGSize(width: view.frame.width, height: .infinity)
-        
         let estimatedSize = textView.sizeThatFits(size)
         
-        print("estimatedSize : \(estimatedSize)")
-    
+        // estimatedSize
+        // 1줄일 때 31.6
+        // 2줄일 때 47.3
+        // 3줄일 때 62.6
+        // 기준이 뭔데 이거
+        // inputView 내부에 패딩 없애자
         
+        // 한 줄 텍스트뷰 높이 38
+        // -> 38 - 31.6 = 6.4 => 위아래 패딩 3.2 주자
+    
         textView.constraints.forEach { constraint in
             if constraint.firstAttribute == .height {
                 constraint.constant = estimatedSize.height
