@@ -31,6 +31,8 @@ class ChannelChattingInputView: BaseView {
     lazy var fileImageCollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: self.createFileImageCollectionViewLayout())
         
+        view.register(ChannelChattingInputFileImageCollectionViewCell.self, forCellWithReuseIdentifier: ChannelChattingInputFileImageCollectionViewCell.description())
+        
         view.backgroundColor = .yellow
         
         return view

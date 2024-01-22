@@ -9,6 +9,11 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+enum ResultMakeChatting {
+    case success
+    case failure
+}
+
 
 class ChannelChattingViewModel {
     
@@ -23,6 +28,8 @@ class ChannelChattingViewModel {
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
+    let imageData = PublishSubject<[Data]>()    // 이미지 저장
+    
     
     private var channelChattingUseCase: ChannelChattingUseCaseProtocol
     
@@ -33,19 +40,29 @@ class ChannelChattingViewModel {
         self.channelChattingUseCase = channelChattingUseCase
     }
     
-
+    
     
     /* ===== Input / Output Pattern ===== */
+    // - 채팅 생성 (텍스트, 이미지, 버튼 클릭)
     // - 세팅 화면 전환
     struct Input {
+        let chattingText: ControlEvent<String>
         let channelSettingButtonClicked: ControlEvent<Void>
     }
     
     struct Output {
-        let b: String
+        let showImageCollectionView: BehaviorSubject<Bool> // 선택한 이미지가 1개 이상이면 컬렉션뷰 보여준다
+        let enableSendButton: BehaviorSubject<Bool> // 텍스트가 입력되었거나 이미지가 있으면 버튼 활성화
+        let resultMakeChatting: PublishSubject<ResultMakeChatting>  // 채팅 성공 시 뷰컨에서 처리해줄 일 해주기
     }
     
     func transform(_ input: Input) -> Output {
+        
+        let showImageCollectionView = BehaviorSubject(value: false)
+        let enableSendButton = BehaviorSubject(value: false)
+        let resultMakeChatting = PublishSubject<ResultMakeChatting>()
+        
+        
         
         input.channelSettingButtonClicked
             .subscribe(with: self) { owner , _ in
@@ -56,7 +73,12 @@ class ChannelChattingViewModel {
             }
             .disposed(by: disposeBag)
         
-        return Output(b: "hi")
+        
+        return Output(
+            showImageCollectionView: showImageCollectionView,
+            enableSendButton: enableSendButton,
+            resultMakeChatting: resultMakeChatting
+        )
     }
     
 //    let repo = ChannelChattingRepository()

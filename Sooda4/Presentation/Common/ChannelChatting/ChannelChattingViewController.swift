@@ -14,8 +14,6 @@ class ChannelChattingViewController: BaseViewController {
     
     let mainView = ChannelChattingView()
     
-    
-    
     private var viewModel: ChannelChattingViewModel!
     
     private var disposeBag = DisposeBag()
@@ -100,6 +98,12 @@ class ChannelChattingViewController: BaseViewController {
     
     func bindVM() {
         
+        /* collectionView rx */
+        viewModel.imageData
+            .bind(to: mainView.chattingInputView.fileImageCollectionView.rx.items(cellIdentifier: <#T##String#>, cellType: <#T##Cell.Type#>))
+        
+        
+        /* Input / Output */
         let input = ChannelChattingViewModel.Input(
             channelSettingButtonClicked: channelSettingButton.rx.tap
         )
