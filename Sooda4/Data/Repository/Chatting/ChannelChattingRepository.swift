@@ -41,7 +41,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
-    
     func checkLastDate(requestModel: ChannelDetailRequestModel) -> Date? {
 
         return realm.objects(ChattingInfoTable.self)
@@ -51,6 +50,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             .createdAt
     }
     // 여기서 받은 Date를 cursor date로 해서 channelChattingRequest 요청
+    
     
     
     // - 2. 네트워크 통신을 통해 특정 날짜 이후 최신까지 데이터 불러오기
@@ -73,11 +73,13 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                             dataList: dtoData,
                             workSpaceId: channelChattingRequestModel.workSpaceId
                         )
+                        
+                        // 이 아래 코드는 굳이 필요한가 싶음. 성공 여부만 알려줘도 충분한데
+                        let responseModel = dtoData.map { $0.toDomain() }
+                        completion(.success(responseModel))
                     }
                     
-                    // 이 아래 코드는 굳이 필요한가 싶음. 성공 여부만 알려줘도 충분한데
-                    let responseModel = dtoData.map { $0.toDomain() }
-                    completion(.success(responseModel))
+
                     
                 case .failure(let networkError):
                     completion(.failure(networkError))
@@ -87,7 +89,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     // - 3. 채팅 배열들을 디비에 저장
-    func addData(dataList: ChannelChattingResponseDTO, workSpaceId: Int) {
+    private func addData(dataList: ChannelChattingResponseDTO, workSpaceId: Int) {
         
         do {
             try realm.write {
@@ -105,16 +107,51 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
         }
     }
     
-    // - 3 - 1. 특정 날짜 기준 이전으로 30개의 데이터를 가져온다 (디비)
-    func fetchPreviousData(channelName: String, targetDate: Date) -> [ChattingInfoModel] {
+    
+    // - 4 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
+    func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
         
+        // lastChattingDate가 nil이다 -> 디비에 저장된 읽은 데이터가 없다
+        guard let targetDate else { return [] }
+        
+        
+        /* 코드 이상함 - prefix */
         return realm.objects(ChattingInfoTable.self)
-            .filter("channelName == %@ AND createdAt < %@", channelName, targetDate)
+            .filter("workSpaceId == %@ AND channelName == %@ AND createdAt <= %@", workSpaceId, channelName, targetDate)
             .sorted(byKeyPath: "createdAt")
-            .prefix(30)
+            .suffix(30)
             .map { $0.toDomain() }
     }
     
+    
+    
+    // - 4 - 2. targetDate (포함 x) 이후 데이터 (최대) 30개
+    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
+        
+        // lastChattingDate가 nil이다 -> 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
+        if let targetDate {
+            /* 코드 이상함 - prefix */
+            return realm.objects(ChattingInfoTable.self)
+                .filter("workSpaceId == %@ AND channelName == %@ AND createdAt > %@", workSpaceId, channelName, targetDate)
+                .sorted(byKeyPath: "createdAt")
+                .prefix(30)
+                .map { $0.toDomain() }
+            
+        } else {
+            /* 코드 이상함 - prefix */
+            return realm.objects(ChattingInfoTable.self)
+                .filter("workSpaceId == %@ AND channelName == %@", workSpaceId, channelName)
+                .sorted(byKeyPath: "createdAt")
+                .prefix(30)
+                .map { $0.toDomain() }
+            
+        }
+    }
+    
+    
+    
+    
+
     
     // - 3 - 2. 특정 날짜 기준 이후로 30개의 데이터를 가져온다 (네트워크) => 디비에서 가져와야지!!!!!. 이미 네트워크로는 데이터 다 가져왔다!!!
     

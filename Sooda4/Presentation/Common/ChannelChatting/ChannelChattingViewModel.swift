@@ -191,6 +191,10 @@ class ChannelChattingViewModel: BaseViewModelType {
                 
                 print("결과 - 성공일 때는 이미 디비에 넣는 작업까지 repo에서 하기 때문에 completion이 필요없다")
                 print(result)
+                
+                self.fetchAllPastChatting {
+                    print("hihi")
+                }
             }
         
         // 소켓 오픈
@@ -199,6 +203,57 @@ class ChannelChattingViewModel: BaseViewModelType {
     
     func openSocket() {
         print("소켓 오픈")
+    }
+    
+    
+    // 이제 테이블뷰에 띄울 데이터 배열에 대한 관리 시작
+    // 1. 앞에 (최대) 30개는 lastChattingDate를 포함한 읽은 채팅
+    // 2. 가운데 하나는 "여기까지 읽었습니다" 셀에 적용할 mock 데이터 하나
+    // 3. 뒤에 (최대) 30개는 lastChattingDate를 포함하지 않은 읽은 채팅
+    // 1, 3 모두 realm에서 가져온다
+    var chatArr: [ChattingInfoModel] = []
+    func fetchAllPastChatting(completion: @escaping () -> Void) {
+        print("-- chatArr에 데이터 추가 --")
+        
+        // 1.
+        let previousArr = repo.fetchPreviousData(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName,
+            targetDate: self.lastChattingDate
+        )
+        chatArr.append(contentsOf: previousArr)
+        
+        
+        // 2. 이걸 어떻게 기본 데이터로 만들지 -> 일단 대충
+        let seperatorData = ChattingInfoModel(
+            content: "기본 데이터",
+            createdAt: Date(),
+            files: [],
+            userName: "기본 데이터",
+            userImage: "기본 데이터"
+        )
+        chatArr.append(seperatorData)
+        
+        
+        // 3.
+        let nextArr = repo.fetchNextData(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName,
+            targetDate: self.lastChattingDate
+        )
+        chatArr.append(contentsOf: nextArr)
+        
+        print("---------- previousData ----------")
+        previousArr.forEach { model in
+            print(model)
+        }
+        print("---------- seperatorData ----------")
+        print(seperatorData)
+        print("---------- nextData ----------")
+        nextArr.forEach { model in
+            print(model)
+        }
+        
     }
 }
 
