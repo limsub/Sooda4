@@ -66,6 +66,7 @@ class NetworkManager {
     }
     
     
+    // Single + EmptyResponse
     // 빈 데이터가 응답으로 오는 경우 (ex. 이메일 유효성 검사, 워크스페이스 삭제)
     // -> statusCode로 성공 실패 구분.
     func requestEmptyResponse(
@@ -135,7 +136,7 @@ class NetworkManager {
                 
                 switch response.result {
                 case .success(let data):
-                    print("(Single - Multipart) 네트워크 통신 성공")
+                    
                     single(.success(.success(data)))
                     
                 case .failure(let error):
@@ -200,6 +201,7 @@ class NetworkManager {
     }
     
     
+    // Completion + EmptyResponse
     func requestCompletionEmptyResponse(
         api: NetworkRouter,
         completion: @escaping (Result<String, NetworkError>) -> Void
@@ -242,6 +244,42 @@ class NetworkManager {
             }
     }
     
+    
+    // Completion + multipart
+    func requestCompletionMultipart<T: Decodable>(
+        type: T.Type,
+        api: NetworkRouter,
+        completion: @escaping (Result<T, NetworkError>) -> Void
+    ) {
+        
+        AF.upload(
+            multipartFormData: api.multipart,
+            with: api
+        )
+        .validate()
+        .responseDecodable(of: T.self) { response  in
+            
+            switch response.result {
+            case .success(let data):
+                completion(.success(data))
+    
+            case .failure(let error):
+                print("(Completion - Multipart) 네트워크 통신 실패")
+                
+                if let errorCode = self.decodingErrorResponse(from: response.data)  {
+                    print("(Completion - Multipart) 에러 디코딩 성공")
+                    let e = NetworkError(errorCode)
+                    completion(.failure(e))
+                } else {
+                    let errorDescription = error.localizedDescription
+                    let e = NetworkError(errorDescription)
+                    completion(.failure(e))
+                }
+                
+            }
+        }
+        
+    }
     
     
     
