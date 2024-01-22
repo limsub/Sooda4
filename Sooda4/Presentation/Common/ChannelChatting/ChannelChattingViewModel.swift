@@ -32,6 +32,9 @@ class ChannelChattingViewModel: BaseViewModelType {
     // 만약 아직 속해있지 않은 채널이라면 자동으로 속해진다.
     
     
+    // 1. 디비에 저장된 마지막
+    
+    
     struct Input {
         let loadData: PublishSubject<Void>
         let channelSettingButtonClicked: ControlEvent<Void>
