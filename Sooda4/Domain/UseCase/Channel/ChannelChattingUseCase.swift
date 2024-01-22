@@ -12,6 +12,9 @@ import RxCocoa
 protocol ChannelChattingUseCaseProtocol {
     // 네트워크
     func channelChattingRequest(_ requestModel: ChannelChattingRequestModel) -> Single< Result< ChannelChattingResponseModel, NetworkError> >
+//    
+//    // 디비
+//    func checkLastDate() -> Date?
 }
 
 class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
@@ -30,5 +33,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
         
         return channelChattingRepository.channelChattingsRequest(requestModel)
     }
+    
+
 }
 

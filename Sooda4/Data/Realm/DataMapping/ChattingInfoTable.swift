@@ -27,7 +27,48 @@ import RealmSwift
 
 class ChattingInfoTable: Object {
     
+    @Persisted var channelId: Int
+    @Persisted var channelName: String
     @Persisted(primaryKey: true) var chatId: Int
+    @Persisted var content: String?
+    @Persisted var createdAt: Date
+    @Persisted var files: List<String>
     
+    @Persisted var userId: Int
+    @Persisted var userEmail: String
+    @Persisted var userNickname: String
+    @Persisted var userProfileImage: String?
+}
+
+
+extension ChattingInfoTable {
+    // Domain
+    func toDomain() -> ChattingInfoModel {
+        return .init(
+            content: content,
+            createdAt: createdAt,
+            files: files.map { $0 },
+            userName: userNickname,
+            userImage: userProfileImage
+        )
+    }
     
+    // Network
+    convenience init(_ dto: ChannelChattingDTO) {
+        self.init()
+        
+        self.channelId = dto.channel_id
+        self.channelName = dto.channelName
+        self.chatId = dto.chat_id
+        self.content = dto.content
+        self.createdAt = dto.createdAt.toDate(to: .apiDate)!
+        var fileList = List<String>()
+        fileList.append(objectsIn: dto.files)
+        self.files = fileList
+        
+        self.userId = dto.user.user_id
+        self.userEmail = dto.user.email
+        self.userNickname = dto.user.nickname
+        self.userProfileImage = dto.user.profileImage
+    }
 }

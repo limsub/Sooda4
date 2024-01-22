@@ -9,6 +9,25 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+class SampleData {
+    static let arr = [
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 11, content: "hihi", createdAt: "2024-01-07T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil)),
+        
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 12, content: "fawefawefeawf", createdAt: "2024-01-02T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil)),
+        
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 13, content: "q3ecqweqcrqwerc", createdAt: "2024-01-11T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil)),
+        
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 14, content: "cqwrxe3q2e", createdAt: "2023-11-22T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil)),
+        
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 15, content: "dyjytkjtyfkty", createdAt: "2023-12-22T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil)),
+        
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 16, content: "dfxxdfgheshh5r", createdAt: "2024-01-21T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil)),
+        
+        ChannelChattingDTO(channel_id: 203, channelName: "ㅎㅇㅎㅇ", chat_id: 17, content: "5e7u6rdrfjdrtj", createdAt: "2024-01-19T11:28:59.124Z", files: [], user: UserInfoDTO(user_id: 100, email: "hihi", nickname: "hih", profileImage: nil))
+    
+    ]
+}
+
 
 class ChannelChattingViewModel: BaseViewModelType {
     
@@ -44,7 +63,24 @@ class ChannelChattingViewModel: BaseViewModelType {
         let b: String
     }
     
+    let repo = ChannelChattingRepository()
+    
     func transform(_ input: Input) -> Output {
+        
+        /* === 테스트 === */
+        print("---------")
+        repo.printURL()
+        print(repo.checkLastDate(channelId: 203))
+        print("---------")
+        
+//        let arr = SampleData.arr
+//        repo.addData(dataList: arr)
+        
+        repo.fetchPreviousData(channelId: 203, targetDate: Date()).forEach { print($0) }
+        
+        
+        print("---------")
+        /* ============ */
         
         // 채널 채팅 조회
         let requestModel = ChannelChattingRequestModel(
