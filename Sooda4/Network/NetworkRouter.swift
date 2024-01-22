@@ -43,7 +43,7 @@ enum NetworkRouter: URLRequestConvertible {
     case oneChannel(_ sender: ChannelDetailRequestDTO)
     case editChannel(_ sender: EditChannelRequestDTO)
     case deleteChannel(_ sender: ChannelDetailRequestDTO)
-    
+    case makeChannelChatting(_ sender: MakeChannelChattingRequestDTO)
     case channelChattings(_ sender: ChannelChattingRequestDTO)
     case channelUnreadCount(_ sender: ChannelUnreadCountRequestDTO)
     
@@ -118,8 +118,9 @@ enum NetworkRouter: URLRequestConvertible {
         case .editChannel(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))"
         case .deleteChannel(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)"
-            
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))"
+        case .makeChannelChatting(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/chats"
             
         case .channelChattings(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/chats"
@@ -131,7 +132,7 @@ enum NetworkRouter: URLRequestConvertible {
         case .leaveChannel(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/leave"
         case .changeAdminChannel(let sender):
-            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(sender.channelName)/change/admin/\(sender.nextAdminUserId)"
+            return "/v1/workspaces/\(sender.workSpaceId)/channels/\(self.encodingUrl(sender.channelName))/change/admin/\(sender.nextAdminUserId)"
             
             
             
@@ -153,7 +154,7 @@ enum NetworkRouter: URLRequestConvertible {
                 "Content-Type": "application/json",
                 "SesacKey": APIKey.key
             ]
-        case .makeWorkSpace, .editWorkSpace:
+        case .makeWorkSpace, .editWorkSpace, .makeChannelChatting:
             return [
                 "Content-Type": "multipart/form-data",
                 "Authorization": KeychainStorage.shared.accessToken ?? "" ,
@@ -196,7 +197,7 @@ enum NetworkRouter: URLRequestConvertible {
             
             
         // CHANNEL
-        case .makeChannel:
+        case .makeChannel, .makeChannelChatting:
             return .post
         case .workSpaceAllChannels, .workSpaceMyChannels, .oneChannel, .channelChattings, .channelMembers, .leaveChannel, .channelUnreadCount:
             return .get
@@ -267,6 +268,11 @@ enum NetworkRouter: URLRequestConvertible {
             return [
                 "name": sender.newChannelName,
                 "description": sender.newDescription
+            ]
+        case .makeChannelChatting(let sender):
+            return [
+                "content": sender.content ??  "",
+                "files": sender.files
             ]
         
         default:

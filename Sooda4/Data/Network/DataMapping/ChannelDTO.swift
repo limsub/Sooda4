@@ -124,6 +124,31 @@ extension OneChannelResponseDTO {
 }
 
 
+
+
+/* ========== 채널 채팅 생성 ========== */
+struct MakeChannelChattingRequestDTO: Encodable {
+    let channelName: String
+    let workSpaceId: Int
+    
+    let content: String?
+    let files: [Data]
+}
+extension MakeChannelChattingRequestDTO {
+    init(_ model: MakeChannelChattingRequestModel) {
+        self.channelName = model.channelName
+        self.workSpaceId = model.workSpaceId
+        self.content = model.content
+        self.files = model.files
+    }
+}
+typealias MakeChannelChattingResponseDTO = ChannelChattingDTO
+
+
+
+
+
+
 /* ========== 채널 채팅 조회 ========== */
 struct ChannelChattingRequestDTO: Encodable {
     let workSpaceId: Int
