@@ -44,9 +44,7 @@ class ChannelChattingView: BaseView {
     override func setConstraints() {
         super.setConstraints()
         
-        chattingTableView.snp.makeConstraints { make in
-            make.edges.equalTo(self)
-        }
+
         
         
         
@@ -60,6 +58,14 @@ class ChannelChattingView: BaseView {
             make.horizontalEdges.equalTo(self)
             make.top.equalTo(chattingInputView.snp.top).inset(-8)
             make.bottom.equalTo(chattingInputView.snp.bottom).offset(50)
+        }
+        
+        chattingTableView.snp.makeConstraints { make in
+            make.top.horizontalEdges.equalTo(self)
+            
+            // 키보드 레이아웃 + 그 때 chattingInputView height만큼
+            make.bottom.equalTo(chattingInputBackView.snp.top)
+//            make.bottom.equalTo(keyboardLayoutGuide.snp.top)
         }
     }
     

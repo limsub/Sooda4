@@ -52,6 +52,23 @@ class ChannelChattingViewController: BaseViewController {
         
         setTableView()
         setTextView()
+        
+        startObservingKeyboard()
+        
+        
+        
+        // Notification 등록
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+
+
+    }
+    
+    // Notification 핸들러
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let userInfo = notification.userInfo,
+           let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval {
+            print("Keyboard animation duration: \(animationDuration) seconds")
+        }
     }
     
     func setNavigationButton() {
@@ -76,6 +93,23 @@ class ChannelChattingViewController: BaseViewController {
          
         
     }
+    
+    deinit {
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.removeObserver(
+            self,
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        
+        notificationCenter.removeObserver(
+            self,
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+        
+    }
 }
 
 
@@ -93,10 +127,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
 //        mainView.chattingInputView.layoutSubviews()
 //        mainView.chattingInputView.updateConstraints()
         
-//        self.setConstraints()s
-        
-        
-        
+//        self.setConstraints()
     }
     
     func setTableView() {
@@ -141,7 +172,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -151,5 +182,102 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         cell.backgroundColor = .white
                 
         return cell
+    }
+}
+
+
+extension ChannelChattingViewController {
+    private func startObservingKeyboard() {
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.addObserver(
+            forName: UIResponder.keyboardWillShowNotification,
+            object: nil,
+            queue: nil,
+            using: keyboardWillAppear
+        )
+        
+        notificationCenter.addObserver(
+            forName: UIResponder.keyboardWillHideNotification,
+            object: nil,
+            queue: nil,
+            using: keyboardWillDisappear
+        )
+    }
+    
+    private func keyboardWillAppear(_ notification: Notification) {
+        
+        // 1. tableView 레이아웃 (bottom이 키보드 top + 인풋뷰 height)
+        // 2. 스크롤 시점(?)도 키보드 top + 인풋뷰 height만큼 올려줘야 함.
+        
+        
+    
+        
+        let key = UIResponder.keyboardFrameEndUserInfoKey
+        guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
+        
+        print("- 키보드 올라옴 - ")
+        print("keyboardFrame.height : ", keyboardFrame.height)
+        print("chattingBackView Frame.height : ", mainView.chattingInputBackView.frame.height)
+    
+        var height = keyboardFrame.height /*+ mainView.chattingInputBackView.frame.height*/
+        // inputView의 height은 필요가 없어.
+        
+        print("총 올려야 하는 height : ", height)
+        
+        
+        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
+        
+        let newOffset = CGPoint(
+            x: self.mainView.chattingTableView.contentOffset.x,
+            y: self.mainView.chattingTableView.contentOffset.y + height
+        )
+        
+        print("새로운 스크롤 Offset : ", newOffset)
+                
+        UIView.animate(withDuration: 0.25) {
+            self.mainView.chattingTableView.setContentOffset(
+                newOffset,
+                animated: true
+            )
+        }
+        
+        
+        
+        
+        // 테이블뷰의 스크롤 조절
+        mainView.chattingTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
+        mainView.chattingTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
+        
+        // 살짝 더 올라가.... 이유가 뭘까
+    }
+    
+    private func keyboardWillDisappear(_ notification: Notification) {
+        
+        
+            
+        let key = UIResponder.keyboardFrameEndUserInfoKey
+        guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
+        
+        print("- 키보드 내려감 - ")
+        print("keyboardFrame.height : ", keyboardFrame.height)
+        
+        let height: CGFloat = 336 /*keyboardFrame.height*/
+    
+        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
+        
+        let newOffset = CGPoint(
+            x: self.mainView.chattingTableView.contentOffset.x,
+            y: self.mainView.chattingTableView.contentOffset.y - height
+        )
+        
+        print("새로운 스크롤 Offset : ", newOffset)
+                
+        UIView.animate(withDuration: 0.25) {
+            self.mainView.chattingTableView.setContentOffset(
+                newOffset,
+                animated: true
+            )
+        }
     }
 }
