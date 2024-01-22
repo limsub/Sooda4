@@ -78,7 +78,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     
-    // - 3 - 2. 특정 날짜 기준 이후로 30개의 데이터를 가져온다 (네트워크)
+    // - 3 - 2. 특정 날짜 기준 이후로 30개의 데이터를 가져온다 (네트워크) => 디비에서 가져와야지!!!!!. 이미 네트워크로는 데이터 다 가져왔다!!!
     func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date, completion: @escaping (Result<[ChannelChattingModel], NetworkError>) -> Void ) {
         
         

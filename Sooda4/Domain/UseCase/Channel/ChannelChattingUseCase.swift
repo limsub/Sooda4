@@ -34,6 +34,9 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
         return channelChattingRepository.channelChattingsRequest(requestModel)
     }
     
+    
+    
+    
 
 }
 

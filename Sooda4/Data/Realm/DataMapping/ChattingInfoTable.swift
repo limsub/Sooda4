@@ -27,6 +27,8 @@ import RealmSwift
 
 class ChattingInfoTable: Object {
     
+    @Persisted var workSpaceId: Int
+    
     @Persisted var channelId: Int
     @Persisted var channelName: String
     @Persisted(primaryKey: true) var chatId: Int
@@ -42,7 +44,7 @@ class ChattingInfoTable: Object {
 
 
 extension ChattingInfoTable {
-    // Domain
+    // to Domain
     func toDomain() -> ChattingInfoModel {
         return .init(
             content: content,
@@ -53,9 +55,12 @@ extension ChattingInfoTable {
         )
     }
     
-    // Network
-    convenience init(_ dto: ChannelChattingDTO) {
+    
+    // from Network
+    convenience init(_ dto: ChannelChattingDTO, workSpaceId: Int) {
         self.init()
+        
+        self.workSpaceId = workSpaceId  // 따로 넣어주어야 한다!
         
         self.channelId = dto.channel_id
         self.channelName = dto.channelName

@@ -138,6 +138,12 @@ class ChannelChattingViewModel: BaseViewModelType {
     }
     
     
+    
+    func fetchLastChattingDateInRealm(workSpaceId: Int, channelName: String) -> Date? {
+        // nil : 디비에 저장된 채팅 데이터가 없다
+        
+        
+    }
 }
 
 extension ChannelChattingViewModel {
