@@ -12,29 +12,8 @@ import RealmSwift
 
 class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
-    // 1. 특정 채널 채팅 조회
-    func channelChattingsRequest(_ requestModel: ChannelChattingRequestModel) -> Single<Result<[ChattingInfoModel], NetworkError>> {
-        
-        let dto = ChannelChattingRequestDTO(requestModel)
-        
-        return NetworkManager.shared.request(
-            type: ChannelChattingResponseDTO.self,
-            api: .channelChattings(dto)
-        )
-        .map { result in
-            switch result {
-            case .success(let dtoData):
-                let responseModel = dtoData.map { $0.toDomain() }
-                return .success(responseModel)
-                
-            case .failure(let networkError):
-                return .failure(networkError)
-            }
-        }
-    }
     
     
-    /* 2. 디비 */
     private let realm = try! Realm()
     func printURL() {
         print(realm.configuration.fileURL!)
@@ -55,9 +34,10 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     // - 2. 네트워크 통신을 통해 특정 날짜 이후 최신까지 데이터 불러오기
     //       + 불러온 데이터를 디비에 넣어주기
+    //     - 네트워크 통신 완료 시점 때문에 completion 사용
     func fetchRecentChatting(
         channelChattingRequestModel: ChannelChattingRequestModel,
-        completion: @escaping (Result<[ChattingInfoModel], NetworkError>) -> Void
+        completion: @escaping () -> Void
     ) {
         
         let dto = ChannelChattingRequestDTO(channelChattingRequestModel)
@@ -68,6 +48,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                 switch result {
                 case .success(let dtoData):
                     print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
+                    print("예외처리 필요 (아직 안함) 소켓이 이미 열렸기 때문에, 소켓에서 받은 채팅이 디비에 있을 수 있다. 즉, 여기서 받은 데이터가 디비에 없는지 확인하는 작업이 필요하다")
                     DispatchQueue.main.async {
                         self.addData(
                             dataList: dtoData,
@@ -76,19 +57,16 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                         
                         // 이 아래 코드는 굳이 필요한가 싶음. 성공 여부만 알려줘도 충분한데
                         let responseModel = dtoData.map { $0.toDomain() }
-                        completion(.success(responseModel))
+                        completion()
                     }
                     
-
-                    
                 case .failure(let networkError):
-                    completion(.failure(networkError))
-                    
+                    print(" *** 에러발생 ***")
                 }
             }
     }
     
-    // - 3. 채팅 배열들을 디비에 저장
+    // - (2). 채팅 배열들을 디비에 저장
     private func addData(dataList: ChannelChattingResponseDTO, workSpaceId: Int) {
         
         do {
@@ -108,7 +86,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     
-    // - 4 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
+    // - 3 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
     func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
         
         // lastChattingDate가 nil이다 -> 디비에 저장된 읽은 데이터가 없다
@@ -125,7 +103,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     
-    // - 4 - 2. targetDate (포함 x) 이후 데이터 (최대) 30개
+    // - 3 - 2. targetDate (포함 x) 이후 데이터 (최대) 30개
     func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
         
         // lastChattingDate가 nil이다 -> 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
@@ -147,61 +125,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             
         }
     }
-    
-    
-    
-    
-
-    
-    // - 3 - 2. 특정 날짜 기준 이후로 30개의 데이터를 가져온다 (네트워크) => 디비에서 가져와야지!!!!!. 이미 네트워크로는 데이터 다 가져왔다!!!
-    
-    
-    
-    
-    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date, completion: @escaping (Result<[ChattingInfoModel], NetworkError>) -> Void ) {
-        
-        
-        let dto = ChannelChattingRequestDTO(
-            workSpaceId: workSpaceId,
-            channelName: channelName,
-            cursor_date: targetDate.toString(of: .toAPI)
-        )
-        
-        return NetworkManager.shared.requestCompletion(
-            type: ChannelChattingResponseDTO.self,
-            api: .channelChattings(dto)) { result in
-                switch result {
-                case .success(let dtoData):
-                    let responseModel = dtoData.map { $0.toDomain() }
-                    completion(.success(responseModel))
-                    
-                case .failure(let networkError):
-                    completion(.failure(networkError))
-                }
-            }
-
-    }
 }
 
-/*
- // 1. 특정 채널 채팅 조회
- func channelChattingsRequest(_ requestModel: ChannelChattingRequestModel) -> Single<Result<[ChannelChattingModel], NetworkError>> {
-     
-     let dto = ChannelChattingRequestDTO(requestModel)
-     
-     return NetworkManager.shared.request(
-         type: ChannelChattingResponseDTO.self,
-         api: .channelChattings(dto)
-     )
-     .map { result in
-         switch result {
-         case .success(let dtoData):
-             let responseModel = dtoData.map { $0.toDomain() }
-             return .success(responseModel)
-             
-         case .failure(let networkError):
-             return .failure(networkError)
-         }
-     }
- }
- */
+

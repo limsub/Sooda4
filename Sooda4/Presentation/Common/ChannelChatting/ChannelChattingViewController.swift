@@ -61,10 +61,8 @@ class ChannelChattingViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
 
         
-        
-        viewModel.checkLastDate()
-        viewModel.fetchRecentChatting {
-            print("hi")
+        viewModel.loadData {
+            print("todo : 테이블뷰 리로드 및 스크롤 시점 잡아주기")
         }
     }
     
@@ -90,7 +88,6 @@ class ChannelChattingViewController: BaseViewController {
     func bindVM() {
         
         let input = ChannelChattingViewModel.Input(
-            loadData: self.loadData,
             channelSettingButtonClicked: channelSettingButton.rx.tap
         )
         
@@ -129,10 +126,6 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         mainView.chattingInputView.setConstraints()
         self.textViewDidChange(mainView.chattingInputView.chattingTextView)
         
-//        mainView.chattingInputView.layoutSubviews()
-//        mainView.chattingInputView.updateConstraints()
-        
-//        self.setConstraints()
     }
     
     func setTableView() {
