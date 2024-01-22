@@ -73,27 +73,27 @@ class ChannelChattingViewModel: BaseViewModelType {
         
         /* === 테스트 === */
         print("---------")
-        repo.printURL()
-//        print(repo.checkLastDate(channelId: 203))
-        print("---------")
-        
-//        let arr = SampleData.arr
-//        repo.addData(dataList: arr)
-        
-//        repo.fetchPreviousData(channelId: 203, targetDate: Date()).forEach { print($0) }
-        
-        
-        print(repo.fetchPreviousData(
-            channelName: "ㅎㅇㅎㅇ",
-            targetDate: Date()
-        ))
-        
-        repo.fetchNextData(
-            workSpaceId: self.workSpaceId,
-            channelName: self.channelName,
-            targetDate: Date()) { result in
-                print(result)
-            }
+//        repo.printURL()
+////        print(repo.checkLastDate(channelId: 203))
+//        print("---------")
+//        
+////        let arr = SampleData.arr
+////        repo.addData(dataList: arr)
+//        
+////        repo.fetchPreviousData(channelId: 203, targetDate: Date()).forEach { print($0) }
+//        
+//        
+//        print(repo.fetchPreviousData(
+//            channelName: "ㅎㅇㅎㅇ",
+//            targetDate: Date()
+//        ))
+//        
+//        repo.fetchNextData(
+//            workSpaceId: self.workSpaceId,
+//            channelName: self.channelName,
+//            targetDate: Date()) { result in
+//                print(result)
+//            }
         
         
         print("---------")
@@ -139,10 +139,57 @@ class ChannelChattingViewModel: BaseViewModelType {
     
     
     
-    func fetchLastChattingDateInRealm(workSpaceId: Int, channelName: String) -> Date? {
-        // nil : 디비에 저장된 채팅 데이터가 없다
+    var lastChattingDate: Date?
+    
+    // 디비에 저장된 채팅의 마지막 날짜 저장
+    func checkLastDate() {
         
+        let requesetModel = ChannelDetailRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName
+        )
         
+        self.lastChattingDate = channelChattingUseCase.checkLastDate(
+            requestModel: requesetModel
+        )
+    }
+    
+    
+    // lastChattingDate 이후 온 채팅을 디비에 저장한다.
+    // 이 때, 동시에 소켓이 오픈되기 때문에 해당 채팅이 이미 디비에 있는지 확인하는 작업이 필요하다
+    func fetchRecentChatting(completion: @escaping () -> Void) {
+        
+        // 모델 생성
+        var requestModel: ChannelChattingRequestModel
+        
+        if let targetDate = lastChattingDate {
+            requestModel = ChannelChattingRequestModel(
+                workSpaceId: workSpaceId,
+                channelName: channelName,
+                cursor_date: targetDate.toString(of: .toAPI)
+            )
+        } else {
+            requestModel = ChannelChattingRequestModel(
+                workSpaceId: workSpaceId,
+                channelName: channelName,
+                cursor_date: ""
+            )
+        }
+        
+        // 네트워크 통신
+        channelChattingUseCase.fetchRecentChatting(
+            channelChattingRequestModel: requestModel) { result  in
+                print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
+                
+                print(result)
+            }
+        
+        // 소켓 오픈
+        self.openSocket()
+    }
+    
+    func openSocket() {
+        print("소켓 오픈")
     }
 }
 

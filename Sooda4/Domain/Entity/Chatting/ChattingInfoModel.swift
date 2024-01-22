@@ -9,7 +9,7 @@ import Foundation
 
 struct ChattingInfoModel {
     let content: String?
-    let createdAt: Date?
+    let createdAt: Date
     let files: [String]
     
     let userName: String

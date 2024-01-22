@@ -43,13 +43,13 @@ struct ChannelChattingRequestModel {
     let channelName: String
     let cursor_date: String
 }
-struct ChannelChattingModel {
-    let content: String?
-    let files: [String]
-    let userName: String
-    let userImage: String?
-}
-typealias ChannelChattingResponseModel = [ChannelChattingModel]
+//struct ChannelChattingModel {
+//    let content: String?
+//    let files: [String]
+//    let userName: String
+//    let userImage: String?
+//}
+typealias ChannelChattingResponseModel = [ChattingInfoModel]
 
 
 // 채널 정보 조회 (ChannelSettingView)

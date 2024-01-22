@@ -47,8 +47,8 @@ class ChannelChattingViewController: BaseViewController {
         setNavigation("하이")
         setNavigationButton()
         
-        bindVM()
-        loadData.onNext(())
+//        bindVM()
+//        loadData.onNext(())
         
         setTableView()
         setTextView()
@@ -60,7 +60,12 @@ class ChannelChattingViewController: BaseViewController {
         // Notification 등록
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
 
-
+        
+        
+        viewModel.checkLastDate()
+        viewModel.fetchRecentChatting {
+            print("hi")
+        }
     }
     
     // Notification 핸들러

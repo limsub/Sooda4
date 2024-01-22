@@ -52,10 +52,22 @@ struct ChannelChattingDTO: Decodable {
     let files: [String]
     let user: UserInfoDTO   // user_id, email, nickname, profileImage
 }
+//extension ChannelChattingDTO {
+//    func toDomain() -> ChannelChattingModel {
+//        return .init(
+//            content: content,
+//            files: files,
+//            userName: user.nickname,
+//            userImage: user.profileImage
+//        )
+//    }
+//}
+// * 수정!
 extension ChannelChattingDTO {
-    func toDomain() -> ChannelChattingModel {
+    func toDomain() -> ChattingInfoModel {
         return .init(
             content: content,
+            createdAt: createdAt.toDate(to: .fromAPI)!,
             files: files,
             userName: user.nickname,
             userImage: user.profileImage

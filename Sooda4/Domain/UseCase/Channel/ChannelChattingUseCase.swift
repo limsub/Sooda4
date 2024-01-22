@@ -12,9 +12,15 @@ import RxCocoa
 protocol ChannelChattingUseCaseProtocol {
     // 네트워크
     func channelChattingRequest(_ requestModel: ChannelChattingRequestModel) -> Single< Result< ChannelChattingResponseModel, NetworkError> >
-//    
-//    // 디비
-//    func checkLastDate() -> Date?
+    
+    func fetchRecentChatting(
+        channelChattingRequestModel: ChannelChattingRequestModel,
+        completion: @escaping (Result<[ChattingInfoModel], NetworkError>) -> Void
+    )
+    
+    // 디비
+    func checkLastDate(requestModel: ChannelDetailRequestModel) -> Date?
+    
 }
 
 class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
@@ -29,11 +35,29 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 3. 프로토콜 메서드 (네트워크)
+    // 얘는 더이상 필요 없을듯?
     func channelChattingRequest(_ requestModel: ChannelChattingRequestModel) -> Single<Result<ChannelChattingResponseModel, NetworkError>> {
         
         return channelChattingRepository.channelChattingsRequest(requestModel)
     }
     
+    func fetchRecentChatting(
+        channelChattingRequestModel: ChannelChattingRequestModel,
+        completion: @escaping (Result<[ChattingInfoModel], NetworkError>) -> Void
+    ) {
+        channelChattingRepository.fetchRecentChatting(
+            channelChattingRequestModel: channelChattingRequestModel,
+            completion: completion
+        )
+    }
+    
+
+    
+    
+    func checkLastDate(requestModel: ChannelDetailRequestModel) -> Date? {
+        
+        return channelChattingRepository.checkLastDate(requestModel: requestModel)
+    }
     
     
     

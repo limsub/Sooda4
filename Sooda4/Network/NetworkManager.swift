@@ -32,7 +32,7 @@ class NetworkManager {
                     
                     switch response.result {
                     case .success(let data):
-                        print("(Single) 네트워크 통신 성공")
+//                        print("(Single) 네트워크 통신 성공")
                         single(.success(.success(data)))
                         
                     case .failure(let error):
@@ -82,7 +82,7 @@ class NetworkManager {
                     print("code : ", statusCode)
                  
                     if statusCode == 200 {
-                        print("(Single - EmptyResponse) 네트워크 통신 성공")
+//                        print("(Single - EmptyResponse) 네트워크 통신 성공")
                         single(.success(.success("good")))
                     }
                     else {
@@ -174,7 +174,7 @@ class NetworkManager {
             .responseDecodable(of: T.self) { response  in
                 switch response.result {
                 case .success(let data):
-                    print("(Completion) 네트워크 통신 성공")
+//                    print("(Completion) 네트워크 통신 성공")
                     completion(.success(data))
                     
                 case .failure(let error):
@@ -212,7 +212,7 @@ class NetworkManager {
                 print("code : ", statusCode)
                 
                 if statusCode == 200 {
-                    print("(Completion - EmptyResponse) 네트워크 통신 성공")
+//                    print("(Completion - EmptyResponse) 네트워크 통신 성공")
                     completion(.success("good"))
                 }
                 else {
