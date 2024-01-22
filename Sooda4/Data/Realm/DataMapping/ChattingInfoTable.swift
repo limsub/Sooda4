@@ -61,7 +61,7 @@ extension ChattingInfoTable {
         self.channelName = dto.channelName
         self.chatId = dto.chat_id
         self.content = dto.content
-        self.createdAt = dto.createdAt.toDate(to: .apiDate)!
+        self.createdAt = dto.createdAt.toDate(to: .fromAPI)!
         var fileList = List<String>()
         fileList.append(objectsIn: dto.files)
         self.files = fileList

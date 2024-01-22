@@ -41,9 +41,10 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
-    func checkLastDate(channelId: Int) -> Date? {
+    func checkLastDate(channelName: String) -> Date? {
         
         return realm.objects(ChattingInfoTable.self)
+            .filter("channelName == %@", channelName)
             .sorted(byKeyPath: "createdAt", ascending: false)
             .first?
             .createdAt
@@ -67,10 +68,10 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     // - 3 - 1. 특정 날짜 기준 이전으로 30개의 데이터를 가져온다 (디비)
-    func fetchPreviousData(channelId: Int, targetDate: Date) -> [ChattingInfoModel] {
+    func fetchPreviousData(channelName: String, targetDate: Date) -> [ChattingInfoModel] {
         
         return realm.objects(ChattingInfoTable.self)
-            .filter("channelId == %@ AND createdAt <= %@", channelId, targetDate)
+            .filter("channelName == %@ AND createdAt <= %@", channelName, targetDate)
             .sorted(byKeyPath: "createdAt")
             .prefix(30)
             .map { $0.toDomain() }
@@ -78,10 +79,50 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 3 - 2. 특정 날짜 기준 이후로 30개의 데이터를 가져온다 (네트워크)
-//    func fetchNextData(channelId: Int, targetDate: Date) -> [ChattingInfoModel] {
-//        
-//        
-//    }
+    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date, completion: @escaping (Result<[ChannelChattingModel], NetworkError>) -> Void ) {
+        
+        
+        let dto = ChannelChattingRequestDTO(
+            workSpaceId: workSpaceId,
+            channelName: channelName,
+            cursor_date: targetDate.toString(of: .toAPI)
+        )
+        
+        return NetworkManager.shared.requestCompletion(
+            type: ChannelChattingResponseDTO.self,
+            api: .channelChattings(dto)) { result in
+                switch result {
+                case .success(let dtoData):
+                    let responseModel = dtoData.map { $0.toDomain() }
+                    completion(.success(responseModel))
+                    
+                case .failure(let networkError):
+                    completion(.failure(networkError))
+                }
+            }
+
+    }
 }
 
-
+/*
+ // 1. 특정 채널 채팅 조회
+ func channelChattingsRequest(_ requestModel: ChannelChattingRequestModel) -> Single<Result<[ChannelChattingModel], NetworkError>> {
+     
+     let dto = ChannelChattingRequestDTO(requestModel)
+     
+     return NetworkManager.shared.request(
+         type: ChannelChattingResponseDTO.self,
+         api: .channelChattings(dto)
+     )
+     .map { result in
+         switch result {
+         case .success(let dtoData):
+             let responseModel = dtoData.map { $0.toDomain() }
+             return .success(responseModel)
+             
+         case .failure(let networkError):
+             return .failure(networkError)
+         }
+     }
+ }
+ */

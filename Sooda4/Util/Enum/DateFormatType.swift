@@ -9,8 +9,8 @@ import Foundation
 
 enum DateFormatType: String {
     
-    case dateToTime = "yyyy-MM-dd HH:mm:ss" 
+    case toAPI = "yyyy-MM-dd HH:mm:ss" 
     case fullWithDot = "yy. MM. dd"
     
-    case apiDate = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    case fromAPI = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 }

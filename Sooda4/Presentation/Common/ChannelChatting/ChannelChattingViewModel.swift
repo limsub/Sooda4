@@ -51,7 +51,11 @@ class ChannelChattingViewModel: BaseViewModelType {
     // 만약 아직 속해있지 않은 채널이라면 자동으로 속해진다.
     
     
-    // 1. 디비에 저장된 마지막
+    // 1. 디비에 저장된 마지막 날짜 확인 -> 날짜 변수에 저장
+    // 2. 해당 날짜 이후 채팅내역 서버에서 가져옴
+    // 3. 서버에서 가져온 후 바로 디비에 저장.
+    // 4. 날짜 변수 기준 이전 30개, 이후 30개 데이터 로드
+    // 5. 스크롤 시점은 날짜 셀.
     
     
     struct Input {
@@ -70,13 +74,26 @@ class ChannelChattingViewModel: BaseViewModelType {
         /* === 테스트 === */
         print("---------")
         repo.printURL()
-        print(repo.checkLastDate(channelId: 203))
+//        print(repo.checkLastDate(channelId: 203))
         print("---------")
         
 //        let arr = SampleData.arr
 //        repo.addData(dataList: arr)
         
-        repo.fetchPreviousData(channelId: 203, targetDate: Date()).forEach { print($0) }
+//        repo.fetchPreviousData(channelId: 203, targetDate: Date()).forEach { print($0) }
+        
+        
+        print(repo.fetchPreviousData(
+            channelName: "ㅎㅇㅎㅇ",
+            targetDate: Date()
+        ))
+        
+        repo.fetchNextData(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName,
+            targetDate: Date()) { result in
+                print(result)
+            }
         
         
         print("---------")

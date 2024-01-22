@@ -367,7 +367,7 @@ class sample4VC: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("ququququ    \(Date().toString(of: .dateToTime))")
+        print("ququququ    \(Date().toString(of: .toAPI))")
         
         view.backgroundColor = .green
     }

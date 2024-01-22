@@ -253,7 +253,7 @@ class HomeDefaultViewModel: BaseViewModelType {
             let requestModel = ChannelUnreadCountRequestModel(
                 workSpaceId: self.workSpaceId,
                 channelName: item.channelInfo.name,
-                after: Date().toString(of: .dateToTime)
+                after: Date().toString(of: .toAPI)
             )
             
             group.enter()
@@ -279,7 +279,7 @@ class HomeDefaultViewModel: BaseViewModelType {
             let requestModel = DMUnreadCountRequestModel(
                 dmRoomId: item.dmInfo.roomId,
                 workSpaceId: self.workSpaceId,
-                after: Date().toString(of: .dateToTime)
+                after: Date().toString(of: .toAPI)
             )
             
             group.enter()
