@@ -143,6 +143,7 @@ class ChannelChattingViewModel: BaseViewModelType {
     
     // 디비에 저장된 채팅의 마지막 날짜 저장
     func checkLastDate() {
+        repo.printURL()
         
         let requesetModel = ChannelDetailRequestModel(
             workSpaceId: self.workSpaceId,
@@ -152,6 +153,7 @@ class ChannelChattingViewModel: BaseViewModelType {
         self.lastChattingDate = channelChattingUseCase.checkLastDate(
             requestModel: requesetModel
         )
+        print("확인한 채팅 중 가장 마지막 날짜 : ", lastChattingDate)
     }
     
     
@@ -162,7 +164,14 @@ class ChannelChattingViewModel: BaseViewModelType {
         // 모델 생성
         var requestModel: ChannelChattingRequestModel
         
-        if let targetDate = lastChattingDate {
+        if var targetDate = lastChattingDate {
+            // * 임시 : 1ms 더해서 네트워크 콜 쏜다. (v2에서 바뀔 예정)
+            var dateComponents = DateComponents()
+            dateComponents.second = 1
+            targetDate = Calendar.current.date(byAdding: dateComponents, to: targetDate)!
+            
+            
+            
             requestModel = ChannelChattingRequestModel(
                 workSpaceId: workSpaceId,
                 channelName: channelName,
@@ -179,8 +188,8 @@ class ChannelChattingViewModel: BaseViewModelType {
         // 네트워크 통신
         channelChattingUseCase.fetchRecentChatting(
             channelChattingRequestModel: requestModel) { result  in
-                print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
                 
+                print("결과 - 성공일 때는 이미 디비에 넣는 작업까지 repo에서 하기 때문에 completion이 필요없다")
                 print(result)
             }
         

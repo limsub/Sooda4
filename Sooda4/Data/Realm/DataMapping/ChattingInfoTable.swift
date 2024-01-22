@@ -56,6 +56,7 @@ extension ChattingInfoTable {
     }
     
     
+    
     // from Network
     convenience init(_ dto: ChannelChattingDTO, workSpaceId: Int) {
         self.init()

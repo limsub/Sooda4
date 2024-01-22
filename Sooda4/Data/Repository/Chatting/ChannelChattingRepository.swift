@@ -54,6 +54,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 2. 네트워크 통신을 통해 특정 날짜 이후 최신까지 데이터 불러오기
+    //       + 불러온 데이터를 디비에 넣어주기
     func fetchRecentChatting(
         channelChattingRequestModel: ChannelChattingRequestModel,
         completion: @escaping (Result<[ChattingInfoModel], NetworkError>) -> Void
@@ -66,6 +67,15 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             api: .channelChattings(dto)) { result in
                 switch result {
                 case .success(let dtoData):
+                    print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
+                    DispatchQueue.main.async {
+                        self.addData(
+                            dataList: dtoData,
+                            workSpaceId: channelChattingRequestModel.workSpaceId
+                        )
+                    }
+                    
+                    // 이 아래 코드는 굳이 필요한가 싶음. 성공 여부만 알려줘도 충분한데
                     let responseModel = dtoData.map { $0.toDomain() }
                     completion(.success(responseModel))
                     
@@ -76,29 +86,30 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             }
     }
     
-    
-    
-    
-    // - 2. 네트워크 통신을 통해 받은 데이터들을 realm에 저장
-//    func addData(dataList: [ChannelChattingDTO]) {
-//        
-//        do {
-//            try realm.write {
-//                dataList.forEach { dto in
-//                    let table = ChattingInfoTable(dto)
-//                    realm.add(table)
-//                }
-//            }
-//        } catch {
-//            print("에러났슈 - realm")
-//        }
-//    }
+    // - 3. 채팅 배열들을 디비에 저장
+    func addData(dataList: ChannelChattingResponseDTO, workSpaceId: Int) {
+        
+        do {
+            try realm.write {
+                print("디비에 데이터 넣어주는 작업 시작")
+                dataList.forEach { dto in
+                    let table = ChattingInfoTable(
+                        dto,
+                        workSpaceId: workSpaceId
+                    )
+                    realm.add(table)
+                }
+            }
+        } catch {
+            print("에러났슈 - realm")
+        }
+    }
     
     // - 3 - 1. 특정 날짜 기준 이전으로 30개의 데이터를 가져온다 (디비)
     func fetchPreviousData(channelName: String, targetDate: Date) -> [ChattingInfoModel] {
         
         return realm.objects(ChattingInfoTable.self)
-            .filter("channelName == %@ AND createdAt <= %@", channelName, targetDate)
+            .filter("channelName == %@ AND createdAt < %@", channelName, targetDate)
             .sorted(byKeyPath: "createdAt")
             .prefix(30)
             .map { $0.toDomain() }
