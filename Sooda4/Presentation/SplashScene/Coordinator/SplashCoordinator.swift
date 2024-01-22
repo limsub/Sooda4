@@ -35,8 +35,8 @@ class SplashCoordinator: SplashCoordinatorProtocol {
     
     // 5.
     func start() {
-//        showSplashView()
-        showView()
+        showSplashView()
+//        showView()
     }
 
     

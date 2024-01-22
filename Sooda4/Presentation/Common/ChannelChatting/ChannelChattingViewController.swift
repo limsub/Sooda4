@@ -250,6 +250,8 @@ extension ChannelChattingViewController {
         mainView.chattingTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
         
         // 살짝 더 올라가.... 이유가 뭘까
+        
+        mainView.setConstraints()
     }
     
     private func keyboardWillDisappear(_ notification: Notification) {
@@ -279,5 +281,7 @@ extension ChannelChattingViewController {
                 animated: true
             )
         }
+        
+        mainView.setConstraints()
     }
 }

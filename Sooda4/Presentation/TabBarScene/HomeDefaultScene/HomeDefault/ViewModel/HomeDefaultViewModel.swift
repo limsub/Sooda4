@@ -51,11 +51,13 @@ class HomeDefaultViewModel: BaseViewModelType {
     /* ===== input / output pattern ===== */
     struct Input {
         let presentWorkSpaceList: ControlEvent<Void>
-        let tableViewItemSelected: ControlEvent<IndexPath>  // 일단 팀원 추가
+        let tableViewItemSelected: ControlEvent<IndexPath>  
+            // - 팀원 추가
+            // - 채널 채팅 뷰
         
         let presentMakeChannel: PublishSubject<Void>
         let presentExploreChannel: PublishSubject<Void>
-        
+
         let logoutButtonClicked: ControlEvent<Void>
     }
     
@@ -80,6 +82,16 @@ class HomeDefaultViewModel: BaseViewModelType {
                 if indexPath.section == 2 && indexPath.row == 0 {
                     owner.didSendEventClosure?(.presentInviteMemberView)
                 }
+                
+                // 채널 채팅 뷰
+                if owner.checkCellType(indexPath: indexPath) == .channelCell {
+                    owner.didSendEventClosure?(.goChannelChatting(
+                        workSpaceId: owner.workSpaceId,
+                        channelName: owner.channelCellData(indexPath).0
+                    ))
+                }
+                
+                    
             }
             .disposed(by: disposeBag)
         
@@ -393,6 +405,8 @@ extension HomeDefaultViewModel {
         
         case presentMakeChannelView
         case goExploreChannelFlow
+        
+        case goChannelChatting(workSpaceId: Int, channelName: String)
         
         case goBackOnboarding
     }

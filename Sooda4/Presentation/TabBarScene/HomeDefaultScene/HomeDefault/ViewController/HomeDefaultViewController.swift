@@ -38,6 +38,8 @@ class HomeDefaultViewController: BaseViewController {
     
     
     
+    
+    
     // Navigation 영역의 객체들
     let customNavigationItemView = UIButton()
     let leftImageView = {

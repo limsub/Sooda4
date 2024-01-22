@@ -65,7 +65,6 @@ class ChannelChattingView: BaseView {
             
             // 키보드 레이아웃 + 그 때 chattingInputView height만큼
             make.bottom.equalTo(chattingInputBackView.snp.top)
-//            make.bottom.equalTo(keyboardLayoutGuide.snp.top)
         }
     }
     

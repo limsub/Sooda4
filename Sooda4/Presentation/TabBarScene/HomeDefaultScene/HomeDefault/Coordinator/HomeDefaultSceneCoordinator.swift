@@ -15,6 +15,8 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     func showInviteMemberView()
     
     func showMakeChannelView()
+    
+    func showChannelChattingView(workSpaceId: Int, channelName: String) 
 
     
     // flow
@@ -25,7 +27,6 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
 // 생성 시 반드시 데이터가 필요함. workspace_id: Int
 class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
 
-    
 
     
     // 1.
@@ -78,6 +79,13 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 // 뭐가 맞는지를 모르겠네
                 // 1. 어차피 프로퍼티로 가지고 있는거 쓸건데 굳이 매개변수 만드나
                 // 2. 그래도 쓰는게 맞나
+                
+                
+            case .goChannelChatting(let workSpaceId, let channelName):
+                self?.showChannelChattingView(
+                    workSpaceId: workSpaceId,
+                    channelName: channelName
+                )
                 
             case .goBackOnboarding:     // 로그아웃
                 self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
@@ -150,6 +158,34 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         
         navigationController.present(nav, animated: true)
         print(#function)
+    }
+    
+    
+    func showChannelChattingView(workSpaceId: Int, channelName: String) {
+        
+        
+        let channelChattingVM = ChannelChattingViewModel(
+            workSpaceId: workSpaceId,
+            channelName: channelName,
+            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
+        )
+        
+        channelChattingVM.didSendEventClosure = { [weak self] event in
+            switch event {
+            case .goBackHomeDefault(let workSpaceId):
+                // finish(homeDefault)
+                print("* TODO ")
+                break
+            case .goChannelSetting(let workSpaceId, let channelName):
+                print("* TODO ")
+                break;
+            }
+            
+        }
+        
+        let channelChattingVC = ChannelChattingViewController.create(with: channelChattingVM)
+        
+        navigationController.pushViewController(channelChattingVC, animated: true)
     }
     
     
