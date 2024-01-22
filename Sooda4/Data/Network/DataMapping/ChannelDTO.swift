@@ -47,7 +47,7 @@ struct ChannelChattingDTO: Decodable {
     let channel_id: Int
     let channelName: String
     let chat_id: Int
-    let content: String?
+    let content: String
     let createdAt: String
     let files: [String]
     let user: UserInfoDTO   // user_id, email, nickname, profileImage

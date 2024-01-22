@@ -125,6 +125,28 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             
         }
     }
+    
+    
+    
+    // 4. 채팅 전송
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel, completion: @escaping (Result<ChattingInfoModel, NetworkError>) -> Void) {
+        
+        let dto = MakeChannelChattingRequestDTO(requestModel)
+        
+        NetworkManager.shared.requestCompletionMultipart(
+            type: MakeChannelChattingResponseDTO.self,
+            api: .makeChannelChatting(dto)) { result  in
+                switch result {
+                case .success(let dtoData):
+                    let responseModel = dtoData.toDomain()
+                    completion(.success(responseModel))
+                    
+                case .failure(let networkError):
+                    completion(.failure(networkError))
+                }
+            }
+    }
+    
 }
 
 

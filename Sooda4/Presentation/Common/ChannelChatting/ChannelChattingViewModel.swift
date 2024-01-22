@@ -88,6 +88,20 @@ class ChannelChattingViewModel {
     }
     
     
+    func sendMessage(content: String, files: [Data], completion: @escaping () -> Void) {
+        
+        channelChattingUseCase.makeChatting(
+            MakeChannelChattingRequestModel(
+                channelName: self.channelName,
+                workSpaceId: self.workSpaceId,
+                content: content,
+                files: files
+            )
+        ) { response in
+            print("----- 채팅 전송 결과 -----")
+            print(response)
+        }
+    }
     
     
     

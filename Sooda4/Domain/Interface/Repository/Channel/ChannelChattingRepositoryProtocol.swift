@@ -27,4 +27,8 @@ protocol ChannelChattingRepositoryProtocol {
     // 3 - 2. 안읽은 채팅
     func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel]
     
+    
+    // 4. 채팅 전송
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel, completion: @escaping (Result<ChattingInfoModel, NetworkError>) -> Void)
+    
 }

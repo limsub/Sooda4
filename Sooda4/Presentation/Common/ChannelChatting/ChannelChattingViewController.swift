@@ -64,6 +64,19 @@ class ChannelChattingViewController: BaseViewController {
         viewModel.loadData {
             print("todo : 테이블뷰 리로드 및 스크롤 시점 잡아주기")
         }
+        
+        
+        /* test */
+        mainView.chattingInputView.sendButton.addTarget(self , action: #selector(makeChatting), for: .touchUpInside)
+    }
+    
+    @objc
+    func makeChatting() {
+        viewModel.sendMessage(
+            content: self.mainView.chattingInputView.chattingTextView.text,
+            files: []) {
+                print("hi")
+            }
     }
     
     // Notification 핸들러
