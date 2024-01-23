@@ -18,7 +18,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
     }()
     
     // nameLabel + contentLabel(+ contentBackView) + fileImageView -> customView로 합치기
-    var chattingContentView = ChannelChattingCellContentView()
+    var chattingContentView = ChannelChattingCellContentView2()
 
     
     let dateLabel = {

@@ -92,10 +92,7 @@ class ChannelChattingCellContentView: BaseView {
         self.nameLabel.text = sender.userName
         self.contentLabel.text = sender.content
         
-//        contentLabel.snp.removeConstraints()
-//        contentBackView.snp.removeConstraints()
-//        sampleView.snp.removeConstraints()
-        
+
         // 내용이 없는 경우, 이미지가 위로 붙어야 한다.
         if sender.content!.isEmpty {
             print("내용 없는 친구 : \(sender.createdAt.toString(of: .timeAMPM))")
@@ -143,6 +140,7 @@ class ChannelChattingCellContentView: BaseView {
             
             print("둘 다 있는 친구 : \(sender.createdAt.toString(of: .timeAMPM))")
             
+            
             contentLabel.snp.makeConstraints { make in
                 make.top.equalTo(nameLabel.snp.bottom).offset(13)
                 make.leading.equalTo(self).inset(8)
@@ -151,7 +149,7 @@ class ChannelChattingCellContentView: BaseView {
             contentBackView.snp.makeConstraints { make in
                 make.edges.equalTo(contentLabel).inset(-8)
             }
-            sampleView.snp.makeConstraints { make in
+            sampleView.snp.remakeConstraints { make in
                 make.top.equalTo(contentBackView.snp.bottom).offset(5)
                 
                 make.height.equalTo(162)
@@ -167,22 +165,3 @@ class ChannelChattingCellContentView: BaseView {
     }
 }
 
-
-// 각 케이스별로 레이아웃 잡기
-extension ChannelChattingCellContentView {
-    // 1. Only content
-    func setConstraintsOnlyContent() {
-
-    }
-    
-    
-    // 2. Only image
-    func setConstraintsOnlyImage(_ fileCnt: Int) {
-
-    }
-    
-    // 3. content + image
-    func setConstraintsFull(_ fileCnt: Int) {
-
-    }
-}
