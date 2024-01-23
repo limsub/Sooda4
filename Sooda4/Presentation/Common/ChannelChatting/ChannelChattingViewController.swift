@@ -98,17 +98,54 @@ class ChannelChattingViewController: BaseViewController {
     
     func bindVM() {
         
-        /* collectionView rx */
+        /* === collectionView rx === */
         viewModel.imageData
-            .bind(to: mainView.chattingInputView.fileImageCollectionView.rx.items(cellIdentifier: <#T##String#>, cellType: <#T##Cell.Type#>))
+            .bind(to: mainView.chattingInputView.fileImageCollectionView.rx.items(cellIdentifier: ChannelChattingInputFileImageCollectionViewCell.description(), cellType: ChannelChattingInputFileImageCollectionViewCell.self)) { (row, element, cell) in
+                
+                cell.cancelButton.rx.tap
+                    .subscribe(with: self) { owner , _ in
+                        print("cancelButton Clicked")
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+            }
+            .disposed(by: disposeBag)
         
         
-        /* Input / Output */
+        
+        
+        /* === Input / Output === */
         let input = ChannelChattingViewModel.Input(
-            channelSettingButtonClicked: channelSettingButton.rx.tap
+            chattingText: mainView.chattingInputView.chattingTextView.rx.text.orEmpty,
+            sendButtonClicked: mainView.chattingInputView.sendButton.rx.tap,
+            channelSettingButtonClicked: channelSettingButton.rx.tap    // 네비게이션 (mainView x)
         )
         
+        
+        
         let output = viewModel.transform(input)
+        
+        
+        output.showImageCollectionView
+            .subscribe(with: self) { owner , value in
+                print("showImageCollectionView : ", value)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        output.enabledSendButton
+            .subscribe(with: self) { owner, value in
+                print("enabledSendButton : ", value)
+            }
+            .disposed(by: disposeBag)
+        
+        
+        output.resultMakeChatting
+            .subscribe(with: self) { owner , result in
+                print("resultMakeCHatting : ", result)
+                // 성공 시 스크롤 맨 아래로 + 텍스트뷰 지워주기
+            }
+            .disposed(by: disposeBag)
          
         
     }

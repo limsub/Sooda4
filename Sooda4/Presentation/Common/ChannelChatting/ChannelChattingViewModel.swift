@@ -46,21 +46,27 @@ class ChannelChattingViewModel {
     // - 채팅 생성 (텍스트, 이미지, 버튼 클릭)
     // - 세팅 화면 전환
     struct Input {
-        let chattingText: ControlEvent<String>
+        let chattingText: ControlProperty<String>
+        let sendButtonClicked: ControlEvent<Void>
+        
         let channelSettingButtonClicked: ControlEvent<Void>
     }
     
     struct Output {
         let showImageCollectionView: BehaviorSubject<Bool> // 선택한 이미지가 1개 이상이면 컬렉션뷰 보여준다
-        let enableSendButton: BehaviorSubject<Bool> // 텍스트가 입력되었거나 이미지가 있으면 버튼 활성화
+        let enabledSendButton: BehaviorSubject<Bool> // 텍스트가 입력되었거나 이미지가 있으면 버튼 활성화
         let resultMakeChatting: PublishSubject<ResultMakeChatting>  // 채팅 성공 시 뷰컨에서 처리해줄 일 해주기
     }
     
     func transform(_ input: Input) -> Output {
         
         let showImageCollectionView = BehaviorSubject(value: false)
-        let enableSendButton = BehaviorSubject(value: false)
+        let enabledSendButton = BehaviorSubject(value: false)
         let resultMakeChatting = PublishSubject<ResultMakeChatting>()
+        
+        
+        // 선택한 이미지가 있으면 컬렉션뷰를 보여줘야 한다.
+        
         
         
         
@@ -76,7 +82,7 @@ class ChannelChattingViewModel {
         
         return Output(
             showImageCollectionView: showImageCollectionView,
-            enableSendButton: enableSendButton,
+            enabledSendButton: enabledSendButton,
             resultMakeChatting: resultMakeChatting
         )
     }

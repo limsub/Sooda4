@@ -6,8 +6,12 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class ChannelChattingInputFileImageCollectionViewCell: BaseCollectionViewCell {
+    
+    var disposeBag = DisposeBag()
     
     let fileImageView = {
         let view = UIImageView()
