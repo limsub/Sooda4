@@ -29,6 +29,8 @@ protocol ChannelChattingRepositoryProtocol {
     
     
     // 4. 채팅 전송
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel, completion: @escaping (Result<ChattingInfoModel, NetworkError>) -> Void)
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChattingInfoModel, NetworkError> >
+    
+    
     
 }

@@ -30,7 +30,7 @@ protocol ChannelChattingUseCaseProtocol {
 
     
     // 4. 채팅 전송
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel, completion: @escaping (Result<ChattingInfoModel, NetworkError>) -> Void)
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChattingInfoModel, NetworkError>>
     
 }
 
@@ -90,10 +90,9 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 4. 채팅 전송
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel, completion: @escaping (Result<ChattingInfoModel, NetworkError>) -> Void) {
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChattingInfoModel, NetworkError>> {
         
-        channelChattingRepository.makeChatting(requestModel, completion: completion)
+        return channelChattingRepository.makeChatting(requestModel)
     }
-
 }
 

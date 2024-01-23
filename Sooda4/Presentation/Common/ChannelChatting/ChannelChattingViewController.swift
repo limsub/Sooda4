@@ -66,8 +66,8 @@ class ChannelChattingViewController: BaseViewController {
         
         setPHPicker()
         
-        /* test */
-        mainView.chattingInputView.sendButton.addTarget(self , action: #selector(makeChatting), for: .touchUpInside)
+//        /* test */
+//        mainView.chattingInputView.sendButton.addTarget(self , action: #selector(makeChatting), for: .touchUpInside)
     }
     
     
@@ -93,11 +93,11 @@ class ChannelChattingViewController: BaseViewController {
     
     @objc
     func makeChatting() {
-        viewModel.sendMessage(
-            content: self.mainView.chattingInputView.chattingTextView.text,
-            files: []) {
-                print("hi")
-            }
+//        viewModel.sendMessage(
+//            content: self.mainView.chattingInputView.chattingTextView.text,
+//            files: []) {
+//                print("hi")
+//            }
     }
     
     // Notification 핸들러

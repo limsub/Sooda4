@@ -377,6 +377,18 @@ enum NetworkRouter: URLRequestConvertible {
                 
             }
             
+            // 이미지 데이터 배열인 경우
+            if let imageDataArr = value as? [Data] {
+                imageDataArr.forEach { imageData in
+                    multipartFormData.append(
+                        imageData,
+                        withName: key,
+                        fileName: "image.jpeg",
+                        mimeType: "image/jpeg"
+                    )
+                }
+            }
+            
             else {
                 multipartFormData.append(
                     "\(value)".data(using: .utf8)!,
@@ -384,6 +396,8 @@ enum NetworkRouter: URLRequestConvertible {
                 )
             }
         }
+        
+        
         
         return multipartFormData
     }

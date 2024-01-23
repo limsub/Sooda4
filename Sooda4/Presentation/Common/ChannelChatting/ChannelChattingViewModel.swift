@@ -82,8 +82,30 @@ class ChannelChattingViewModel {
         .disposed(by: disposeBag)
         
         
+        // 3. 전송 버튼 클릭
+        input.sendButtonClicked
+            .withLatestFrom(Observable.combineLatest(input.chattingText, imageData)) { _, values in
+                
+                print(values.1)
+
+                return MakeChannelChattingRequestModel(
+                    channelName: self.channelName,
+                    workSpaceId: self.workSpaceId,
+                    content: values.0,
+                    files: values.1
+                )
+            }
+            .flatMap {
+                self.channelChattingUseCase.makeChatting($0)
+            }
+            .subscribe(with: self) { owner , response in
+                print("--- 전송 버튼 클릭 ---")
+                print(response)
+            }
+            .disposed(by: disposeBag)
         
         
+        // 4. 채널 세팅 화면으로 넘어간다. -> HomeDefault에서 바로 넘어온 경우 아직 구현 x
         input.channelSettingButtonClicked
             .subscribe(with: self) { owner , _ in
                 owner.didSendEventClosure?(.goChannelSetting(
@@ -130,21 +152,21 @@ class ChannelChattingViewModel {
     }
     
     
-    func sendMessage(content: String, files: [Data], completion: @escaping () -> Void) {
-        
-        channelChattingUseCase.makeChatting(
-            MakeChannelChattingRequestModel(
-                channelName: self.channelName,
-                workSpaceId: self.workSpaceId,
-                content: content,
-                files: files
-            )
-        ) { response in
-            print("----- 채팅 전송 결과 -----")
-            print(response)
-        }
-    }
-    
+//    func sendMessage(content: String, files: [Data], completion: @escaping () -> Void) {
+//        
+//        channelChattingUseCase.makeChatting(
+//            MakeChannelChattingRequestModel(
+//                channelName: self.channelName,
+//                workSpaceId: self.workSpaceId,
+//                content: content,
+//                files: files
+//            )
+//        ) { response in
+//            print("----- 채팅 전송 결과 -----")
+//            print(response)
+//        }
+//    }
+//    
     
     
 }
