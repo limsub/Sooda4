@@ -10,8 +10,8 @@ import RxSwift
 import RxCocoa
 
 enum ResultMakeChatting {
-    case success
-    case failure
+    case success(model: ChattingInfoModel)
+    case failure(networkError: NetworkError)
 }
 
 
@@ -20,10 +20,10 @@ class ChannelChattingViewModel {
     private var disposeBag = DisposeBag()
     
     private var workSpaceId: Int
-    var channelName: String
+    private var channelName: String
     
-    var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
-    var chatArr: [ChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
+    private var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
+    private var chatArr: [ChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
     var seperatorIndex: Int?    // "여기까지 읽었습니다" 셀이 들어갈 위치
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
@@ -98,13 +98,16 @@ class ChannelChattingViewModel {
             }
             .subscribe(with: self) { owner , response in
                 switch response {
-                case .success:
+                case .success(let model):
                     print("전송 성공")
-                    resultMakeChatting.onNext(.success)
+                    resultMakeChatting.onNext(.success(model: model))
+                    
+                    // model을 배열 뒤에 추가
+//                    owner.chatArr.append(model)
                     
                 case .failure(let networkError):
                     print("에러발생 : \(networkError)")
-                    resultMakeChatting.onNext(.failure)
+                    resultMakeChatting.onNext(.failure(networkError: networkError))
                     
                 }
             }
@@ -292,6 +295,23 @@ extension ChannelChattingViewModel {
 }
 
 
+// VC에 전달
+extension ChannelChattingViewModel {
+    // 채널 이름
+    func nameOfChannel() -> String {
+        return self.channelName
+    }
+    
+    // 채팅 아이템의 개수
+    func numberOfRows() -> Int {
+        return chatArr.count
+    }
+    
+    // 이미지 데이터 초기화
+    func removeAllImages() {
+        self.imageData.onNext([])
+    }
+}
 
 
 

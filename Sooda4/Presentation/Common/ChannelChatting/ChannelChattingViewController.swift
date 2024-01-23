@@ -37,7 +37,7 @@ class ChannelChattingViewController: BaseViewController {
         super.viewDidLoad()
         
         
-        setNavigation(viewModel.channelName)
+        setNavigation(viewModel.nameOfChannel())
         setNavigationButton()
         
         setPHPicker()
@@ -50,6 +50,7 @@ class ChannelChattingViewController: BaseViewController {
         
         viewModel.loadData {
             print("todo : 테이블뷰 리로드 및 스크롤 시점 잡아주기")
+            self.mainView.chattingTableView.reloadData()
         }
     }
     
@@ -139,6 +140,27 @@ class ChannelChattingViewController: BaseViewController {
         output.resultMakeChatting
             .subscribe(with: self) { owner , result in
                 // 성공 시 스크롤 맨 아래로 + 텍스트뷰 지워주기
+                switch result {
+                case .success(let model):
+                    print("--- VC : 채팅 전송 성공 ---")
+                    print("* TODO ")
+                    print(" - 스크롤 맨 아래로 위치")
+                    let indexPath = IndexPath(
+                        row: owner.viewModel.numberOfRows() - 1,
+                        section: 0
+                    )
+                    owner.mainView.chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+                    
+                    print(" - 보낸 채팅 테이블뷰에 업데이트 -> (VM) 배열에 추가")
+                    
+                    print(" - Input View 초기화")
+                    owner.mainView.chattingInputView.chattingTextView.text = ""
+                    owner.viewModel.removeAllImages()   // -> showImageCollectionView output 받아서 레이아웃 및 textViewDidChange 실행
+                          
+                    
+                case .failure(let networkError):
+                    print("여기서 전송 실패에 대한 처리를 해줄 수 있을 것 같다. 단, 그럼 보내는 requestModel을 저장하고 있어야 해")
+                }
             }
             .disposed(by: disposeBag)
          
@@ -200,7 +222,7 @@ extension ChannelChattingViewController: UITextViewDelegate {
 extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return viewModel.numberOfRows()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
