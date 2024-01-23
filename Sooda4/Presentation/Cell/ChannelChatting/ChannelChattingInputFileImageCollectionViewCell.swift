@@ -27,6 +27,10 @@ class ChannelChattingInputFileImageCollectionViewCell: BaseCollectionViewCell {
         return view
     }()
     
+    override func prepareForReuse() {
+        disposeBag = DisposeBag()
+    }
+    
     override func setConfigure() {
         super.setConfigure()
         

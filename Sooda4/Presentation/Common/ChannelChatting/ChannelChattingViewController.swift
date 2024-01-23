@@ -128,6 +128,19 @@ class ChannelChattingViewController: BaseViewController {
                 cell.cancelButton.rx.tap
                     .subscribe(with: self) { owner , _ in
                         print("cancelButton Clicked")
+                        
+                        // viewModel의 imageData 배열의 row 번째 요소 제거
+                        do {
+                            var newArr = try owner.viewModel.imageData.value()
+                            print("-- \(row) 번째 요소 지운다")
+                            print("이전 : \(newArr)")
+                            newArr.remove(at: row)
+                            print("이전 : \(newArr)")
+                            owner.viewModel.imageData.onNext(newArr)
+                            
+                        } catch {
+                            print("이미지 데이터 에러 catch")
+                        }
                     }
                     .disposed(by: cell.disposeBag)
                 

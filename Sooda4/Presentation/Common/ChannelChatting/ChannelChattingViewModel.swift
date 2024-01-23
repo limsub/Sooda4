@@ -28,7 +28,7 @@ class ChannelChattingViewModel {
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
-    let imageData = PublishSubject<[Data]>()    // 이미지 저장
+    let imageData = BehaviorSubject<[Data]>(value: [])    // 이미지 저장
     
     
     private var channelChattingUseCase: ChannelChattingUseCaseProtocol
