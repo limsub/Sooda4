@@ -14,6 +14,8 @@ class ChannelChattingView: BaseView {
         
         view.register(ChannelChattingTableViewCell.self, forCellReuseIdentifier: ChannelChattingTableViewCell.description())
         
+        view.register(ChannelChattingSeperatorTableViewCell.self, forCellReuseIdentifier: ChannelChattingSeperatorTableViewCell.description())
+        
         view.backgroundColor = .white
         
         view.rowHeight = UITableView.automaticDimension
