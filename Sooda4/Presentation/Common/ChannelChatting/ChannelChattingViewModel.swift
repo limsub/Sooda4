@@ -100,6 +100,7 @@ class ChannelChattingViewModel {
                 switch response {
                 case .success(let model):
                     print("전송 성공")
+                    print(model)
                     
                     // model을 배열 뒤에 추가
                     owner.chatArr.append(model)

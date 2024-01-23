@@ -18,7 +18,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
     }()
     
     // nameLabel + contentLabel(+ contentBackView) + fileImageView -> customView로 합치기
-    let chattingContentView = ChannelChattingCellContentView()
+    var chattingContentView = ChannelChattingCellContentView()
 
     
     let dateLabel = {
@@ -29,6 +29,15 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
     }()
     
     
+    override func prepareForReuse() {
+        
+//        chattingContentView = ChannelChattingCellContentView()
+        chattingContentView.contentLabel.isHidden = false
+        chattingContentView.contentBackView.isHidden = false
+        chattingContentView.sampleView.isHidden = false
+    }
+
+    
     override func setConfigure() {
         super.setConfigure()
         
@@ -36,6 +45,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
             contentView.addSubview(item)
         }
     }
+    
     
     
     override func setConstraints() {
@@ -80,6 +90,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
     func designCell(_ sender: ChattingInfoModel) {
         
         self.chattingContentView.designView(sender)
+
         chattingContentView.backgroundColor = .yellow
         
         self.dateLabel.text = sender.createdAt.toString(of: .timeAMPM)

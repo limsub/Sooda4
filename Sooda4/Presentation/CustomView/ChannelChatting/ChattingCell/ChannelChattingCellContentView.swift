@@ -37,12 +37,11 @@ class ChannelChattingCellContentView: BaseView {
     
     
     var sampleView = {
-        let view = UIView()
+        let view = ChannelChattingCellContentImageSetView()
         view.backgroundColor = .red
         return view
     }()
     
-    var fileImageViews = Array(repeating: UIImageView(), count: 5)
     
     override func setConfigure() {
         super.setConfigure()
@@ -52,17 +51,11 @@ class ChannelChattingCellContentView: BaseView {
             self.addSubview(item)
         }
         
-        
-        
-        fileImageViews.forEach { item in
-            self.addSubview(item)
-        }
     }
     
     // 뷰의 width
     // 1. 기본적으로 contentLabel의 width와 동일
     // 2. 만약 이미지뷰가 있으면, 무조건 이미지뷰의 width
-    
     
     override func setConstraints() {
         super.setConstraints()
@@ -72,84 +65,124 @@ class ChannelChattingCellContentView: BaseView {
             make.leading.equalToSuperview()
         }
         
-        // 내용이 없으면 hidden 처리됨 -> 어떻게 할건지 고민
-        
+
         contentLabel.snp.makeConstraints { make in
             make.top.equalTo(nameLabel.snp.bottom).offset(13)
-            make.leading.equalToSuperview().inset(8)
-            make.width.lessThanOrEqualTo(228) // 244 - 16
+            make.leading.equalTo(self).inset(8)
+            make.width.lessThanOrEqualTo(228)
         }
         contentBackView.snp.makeConstraints { make in
             make.edges.equalTo(contentLabel).inset(-8)
-//            make.bottom.equalToSuperview()
-//            make.horizontalEdges.equalToSuperview()
         }
-        
-        
-        
         sampleView.snp.makeConstraints { make in
             make.top.equalTo(contentBackView.snp.bottom).offset(5)
-            make.horizontalEdges.equalTo(self)  // 이미지가 있으면 무조건 얘랑 같아짐
-            // 임의의 사이즈
-            make.height.equalTo(50)
+            make.bottom.equalTo(self)
+            make.height.equalTo(162)
             make.width.equalTo(244)
-            make.bottom.equalToSuperview()
+            make.horizontalEdges.equalTo(self)  // 얘 너비에 맞처진다.
         }
+        
     }
     
     
     
     func designView(_ sender: ChattingInfoModel) {
-
+        
+//        print("--- designView sender : ", sender)
         self.nameLabel.text = sender.userName
         self.contentLabel.text = sender.content
         
+//        contentLabel.snp.removeConstraints()
+//        contentBackView.snp.removeConstraints()
+//        sampleView.snp.removeConstraints()
         
+        // 내용이 없는 경우, 이미지가 위로 붙어야 한다.
         if sender.content!.isEmpty {
-            // 내용이 없는 경우 (이미지가 위로 붙음)
+            print("내용 없는 친구 : \(sender.createdAt.toString(of: .timeAMPM))")
+            
             contentLabel.isHidden = true
             contentBackView.isHidden = true
-            sampleView.isHidden = false
             
             contentLabel.snp.removeConstraints()
             contentBackView.snp.removeConstraints()
             
             sampleView.snp.makeConstraints { make in
                 make.top.equalTo(nameLabel.snp.bottom).offset(5)
+                make.width.equalTo(244)
                 make.horizontalEdges.equalTo(self)
                 make.bottom.equalTo(self)
-                make.height.equalTo(50)
-                make.width.equalTo(244)
+                make.height.equalTo(sender.files.count > 3 ? 162 : 80)
             }
         }
         
+        // 이미지가 없는 경우, 내용이 bottom 먹는다
         else if sender.files.isEmpty {
-            // 이미지가 없는 경우
-            contentLabel.isHidden = false
-            contentBackView.isHidden = false
+            print("이미지 없는 친구 : \(sender.createdAt.toString(of: .timeAMPM))")
+            
             sampleView.isHidden = true
+            
             sampleView.snp.removeConstraints()
             
             contentLabel.snp.makeConstraints { make in
                 make.top.equalTo(nameLabel.snp.bottom).offset(13)
-                make.left.equalTo(self).inset(8)
+                make.leading.equalTo(self).inset(8)
                 make.width.lessThanOrEqualTo(228)
             }
             contentBackView.snp.makeConstraints { make in
                 make.edges.equalTo(contentLabel).inset(-8)
-                // 두개 추가 (이미지가 없기 때문)
                 make.bottom.equalTo(self)
                 make.horizontalEdges.equalTo(self)
             }
         }
         
+        // 둘 다 있을 때
         else {
-            // 둘 다 없거나 둘 다 있거나 -> 둘 다 없는건 불가 (전송이 안됨)
-            // 즉, 둘 다 있다고 가정.
+            contentLabel.isHidden = false
+            contentBackView.isHidden = false
+            sampleView.isHidden = false
+            
+            print("둘 다 있는 친구 : \(sender.createdAt.toString(of: .timeAMPM))")
+            
+            contentLabel.snp.makeConstraints { make in
+                make.top.equalTo(nameLabel.snp.bottom).offset(13)
+                make.leading.equalTo(self).inset(8)
+                make.width.lessThanOrEqualTo(228)
+            }
+            contentBackView.snp.makeConstraints { make in
+                make.edges.equalTo(contentLabel).inset(-8)
+            }
+            sampleView.snp.makeConstraints { make in
+                make.top.equalTo(contentBackView.snp.bottom).offset(5)
+                
+                make.height.equalTo(162)
+                make.width.equalTo(244)
+                make.horizontalEdges.equalTo(self)  // 얘 너비에 맞춰진다.
+                make.bottom.equalTo(self)
+            }
         }
-        
+
         // 이거 없어도 되긴 한데, 일단 혹시 모르니까
         setNeedsLayout()
         layoutIfNeeded()
+    }
+}
+
+
+// 각 케이스별로 레이아웃 잡기
+extension ChannelChattingCellContentView {
+    // 1. Only content
+    func setConstraintsOnlyContent() {
+
+    }
+    
+    
+    // 2. Only image
+    func setConstraintsOnlyImage(_ fileCnt: Int) {
+
+    }
+    
+    // 3. content + image
+    func setConstraintsFull(_ fileCnt: Int) {
+
     }
 }
