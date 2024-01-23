@@ -14,5 +14,5 @@ enum DateFormatType: String {
     
     case fromAPI = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
     
-    case timeAMPM = "HH:mm a"
+    case timeAMPM = "hh:mm a"
 }

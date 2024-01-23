@@ -240,6 +240,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingTableViewCell.description(), for: indexPath) as? ChannelChattingTableViewCell else { return UITableViewCell() }
             
             cell.designCell(viewModel.dataForRowAt(indexPath))
+
             
             return cell
         }
