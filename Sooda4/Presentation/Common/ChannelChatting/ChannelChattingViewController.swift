@@ -31,94 +31,52 @@ class ChannelChattingViewController: BaseViewController {
     
     
     
-    // 네비게이션 영역에 넣을 버튼
-    let channelSettingButton = UIBarButtonItem(image: UIImage(named: "icon_list"), style: .plain, target: nil, action: nil)
     
-    
-    // 데이터 불러오라는 이벤트
-    let loadData = PublishSubject<Void>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .yellow
         
-        setNavigation("하이")
+        setNavigation(viewModel.channelName)
         setNavigationButton()
         
-        bindVM()
-//        loadData.onNext(())
-        
+        setPHPicker()
         setTableView()
         setTextView()
         
+        bindVM()
+        
         startObservingKeyboard()
-        
-        
-        
-        // Notification 등록
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-
         
         viewModel.loadData {
             print("todo : 테이블뷰 리로드 및 스크롤 시점 잡아주기")
         }
-        
-        setPHPicker()
-        
-//        /* test */
-//        mainView.chattingInputView.sendButton.addTarget(self , action: #selector(makeChatting), for: .touchUpInside)
     }
     
+    
+    /* ===== set ===== */
+    // 네비게이션 영역에 넣을 버튼
+    let channelSettingButton = UIBarButtonItem(image: UIImage(named: "icon_list"), style: .plain, target: nil, action: nil)
+    
+    func setNavigationButton() {
+        navigationItem.rightBarButtonItem = channelSettingButton
+    }
     
     func setPHPicker() {
         mainView.chattingInputView.plusButton.addTarget(self , action: #selector(pickerButtonClicked), for: .touchUpInside)
     }
     
-    @objc func pickerButtonClicked() {
-        self.showPHPicker()
+    func setTableView() {
+        mainView.chattingTableView.delegate = self
+        mainView.chattingTableView.dataSource = self
     }
     
-    func showPHPicker() {
-        var configuration = PHPickerConfiguration()
-        configuration.selectionLimit = 5
-        configuration.filter = .images
+    func setTextView() {
+        mainView.chattingInputView.chattingTextView.delegate = self
+    }
         
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        present(picker, animated: true)
-    }
     
-    
-    
-    @objc
-    func makeChatting() {
-//        viewModel.sendMessage(
-//            content: self.mainView.chattingInputView.chattingTextView.text,
-//            files: []) {
-//                print("hi")
-//            }
-    }
-    
-    // Notification 핸들러
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let userInfo = notification.userInfo,
-           let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval {
-            print("Keyboard animation duration: \(animationDuration) seconds")
-        }
-    }
-    
-    func setNavigationButton() {
-        navigationItem.rightBarButtonItem = channelSettingButton
-        
-        
-        channelSettingButton.rx.tap
-            .subscribe(with: self) { owner , _ in
-                print("000")
-            }
-            .disposed(by: disposeBag)
-    }
-    
+    /* ===== bind ===== */
     func bindVM() {
         
         /* === collectionView rx === */
@@ -164,8 +122,6 @@ class ChannelChattingViewController: BaseViewController {
         
         output.showImageCollectionView
             .subscribe(with: self) { owner , value in
-                print("showImageCollectionView : ", value)
-                
                 owner.mainView.chattingInputView.fileImageCollectionView.isHidden = !value
                 owner.mainView.chattingInputView.setConstraints()
                 owner.textViewDidChange(owner.mainView.chattingInputView.chattingTextView)
@@ -175,7 +131,6 @@ class ChannelChattingViewController: BaseViewController {
         
         output.enabledSendButton
             .subscribe(with: self) { owner, value in
-                print("enabledSendButton : ", value)
                 owner.mainView.chattingInputView.sendButton.update(value ? .enabled : .disabled)
             }
             .disposed(by: disposeBag)
@@ -183,7 +138,6 @@ class ChannelChattingViewController: BaseViewController {
         
         output.resultMakeChatting
             .subscribe(with: self) { owner , result in
-                print("resultMakeCHatting : ", result)
                 // 성공 시 스크롤 맨 아래로 + 텍스트뷰 지워주기
             }
             .disposed(by: disposeBag)
@@ -205,22 +159,11 @@ class ChannelChattingViewController: BaseViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
-        
     }
 }
 
-
-// 테이블뷰 테스트
-extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
-    
-    func setTableView() {
-        mainView.chattingTableView.delegate = self
-        mainView.chattingTableView.dataSource = self
-    }
-    
-    func setTextView() {
-        mainView.chattingInputView.chattingTextView.delegate = self
-    }
+// TextView
+extension ChannelChattingViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         
@@ -249,10 +192,12 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
                 }
             }
         }
-    
-        
     }
-    
+}
+
+
+// TableView
+extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
@@ -269,8 +214,11 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
 }
 
 
+// Keyboard Observing
 extension ChannelChattingViewController {
+    
     private func startObservingKeyboard() {
+        
         let notificationCenter = NotificationCenter.default
         
         notificationCenter.addObserver(
@@ -369,8 +317,22 @@ extension ChannelChattingViewController {
     }
 }
 
-
+// PHPicker
 extension ChannelChattingViewController: PHPickerViewControllerDelegate {
+    
+    @objc func pickerButtonClicked() {
+        self.showPHPicker()
+    }
+    
+    func showPHPicker() {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 5
+        configuration.filter = .images
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
     
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         

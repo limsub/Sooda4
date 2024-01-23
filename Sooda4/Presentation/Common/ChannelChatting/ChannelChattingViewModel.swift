@@ -20,7 +20,7 @@ class ChannelChattingViewModel {
     private var disposeBag = DisposeBag()
     
     private var workSpaceId: Int
-    private var channelName: String
+    var channelName: String
     
     var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
     var chatArr: [ChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
@@ -67,9 +67,9 @@ class ChannelChattingViewModel {
         
         // 1. 선택한 이미지가 있으면 컬렉션뷰를 보여준다.
         self.imageData
-            .subscribe(with: self) { owner , arr in
-                showImageCollectionView.onNext(!arr.isEmpty)
-            }
+            .map { !$0.isEmpty }
+            .distinctUntilChanged()
+            .bind(to: showImageCollectionView)
             .disposed(by: disposeBag)
         
         
@@ -85,8 +85,6 @@ class ChannelChattingViewModel {
         // 3. 전송 버튼 클릭
         input.sendButtonClicked
             .withLatestFrom(Observable.combineLatest(input.chattingText, imageData)) { _, values in
-                
-                print(values.1)
 
                 return MakeChannelChattingRequestModel(
                     channelName: self.channelName,
@@ -99,8 +97,16 @@ class ChannelChattingViewModel {
                 self.channelChattingUseCase.makeChatting($0)
             }
             .subscribe(with: self) { owner , response in
-                print("--- 전송 버튼 클릭 ---")
-                print(response)
+                switch response {
+                case .success:
+                    print("전송 성공")
+                    resultMakeChatting.onNext(.success)
+                    
+                case .failure(let networkError):
+                    print("에러발생 : \(networkError)")
+                    resultMakeChatting.onNext(.failure)
+                    
+                }
             }
             .disposed(by: disposeBag)
         
@@ -295,3 +301,4 @@ extension ChannelChattingViewModel {
         case goChannelSetting(workSpaceId: Int, channelName: String)
     }
 }
+
