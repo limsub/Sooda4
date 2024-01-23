@@ -100,10 +100,11 @@ class ChannelChattingViewModel {
                 switch response {
                 case .success(let model):
                     print("전송 성공")
-                    resultMakeChatting.onNext(.success(model: model))
                     
                     // model을 배열 뒤에 추가
-//                    owner.chatArr.append(model)
+                    owner.chatArr.append(model)
+                    
+                    resultMakeChatting.onNext(.success(model: model))
                     
                 case .failure(let networkError):
                     print("에러발생 : \(networkError)")
@@ -310,6 +311,16 @@ extension ChannelChattingViewModel {
     // 이미지 데이터 초기화
     func removeAllImages() {
         self.imageData.onNext([])
+    }
+    
+    // seperator cell의 위치
+    func isSeperatorCell(_ indexPath: IndexPath) -> Bool {
+        return indexPath.row == self.seperatorIndex // 옵서널 처리를 알아서 해주나봄
+    }
+    
+    // cell에 그릴 데이터
+    func dataForRowAt(_ indexPath: IndexPath) -> ChattingInfoModel {
+        return chatArr[indexPath.row]
     }
 }
 

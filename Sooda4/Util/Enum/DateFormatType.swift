@@ -13,4 +13,6 @@ enum DateFormatType: String {
     case fullWithDot = "yy. MM. dd"
     
     case fromAPI = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    
+    case timeAMPM = "HH:mm a"
 }

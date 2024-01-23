@@ -99,4 +99,11 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
         }
     }
     
+    func designCell(_ sender: ChattingInfoModel) {
+        
+//        self.profileImageView = sender.userImage
+        self.nameLabel.text = sender.userName
+        self.contentLabel.text = sender.content
+        self.dateLabel.text = sender.createdAt.toString(of: .timeAMPM)
+    }
 }

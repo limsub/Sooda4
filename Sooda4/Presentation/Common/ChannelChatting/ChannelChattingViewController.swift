@@ -144,14 +144,16 @@ class ChannelChattingViewController: BaseViewController {
                 case .success(let model):
                     print("--- VC : 채팅 전송 성공 ---")
                     print("* TODO ")
+                    
+                    print(" - 보낸 채팅 테이블뷰에 업데이트 -> (VM) 배열에 추가")
+                    owner.mainView.chattingTableView.reloadData()
+                    
                     print(" - 스크롤 맨 아래로 위치")
                     let indexPath = IndexPath(
                         row: owner.viewModel.numberOfRows() - 1,
                         section: 0
                     )
                     owner.mainView.chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-                    
-                    print(" - 보낸 채팅 테이블뷰에 업데이트 -> (VM) 배열에 추가")
                     
                     print(" - Input View 초기화")
                     owner.mainView.chattingInputView.chattingTextView.text = ""
@@ -227,16 +229,21 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingTableViewCell.description(), for: indexPath) as? ChannelChattingTableViewCell else { return UITableViewCell() }
+        // 일단 초반에는 웬만하면 seperator cell 나오는 걸로 하고, 안나와야 하는 경우에 대해서는 나중에 예외처리해보자
         
-//        cell.backgroundColor = .white
+        if viewModel.isSeperatorCell(indexPath) {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingSeperatorTableViewCell.description(), for: indexPath) as? ChannelChattingSeperatorTableViewCell else { return UITableViewCell() }
+            
+            return cell
+            
+        } else {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingTableViewCell.description(), for: indexPath) as? ChannelChattingTableViewCell else { return UITableViewCell() }
+            
+            cell.designCell(viewModel.dataForRowAt(indexPath))
+            
+            return cell
+        }
         
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingSeperatorTableViewCell.description(), for: indexPath) as? ChannelChattingSeperatorTableViewCell else { return UITableViewCell() }
-        
-        
-                
-        return cell
     }
 }
 
