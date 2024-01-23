@@ -45,7 +45,11 @@ class ChannelChattingCellContentView2: BaseView {
     
     var sampleView = {
         let view = ChannelChattingCellContentImageSetView()
-        view.backgroundColor = .red
+//        view.backgroundColor = .red
+        
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 12
+        
         return view
     }()
     
@@ -76,8 +80,8 @@ class ChannelChattingCellContentView2: BaseView {
     var contentBottomSelf: Constraint? = nil
     var sampleBottomSelf: Constraint? = nil
     
-    var sampleViewSingleLine: Constraint? = nil
-    var sampleViewDoubleLine: Constraint? = nil
+    var sampleViewSingleLine: Constraint? = nil // 2, 3
+    var sampleViewDoubleLine: Constraint? = nil // 1, 4, 5
     
     // 1. 둘 다 있다   -> a / d / a / d / a
     // 2. 텍스트만 있다 -> a / d / d / a / d
@@ -134,9 +138,14 @@ class ChannelChattingCellContentView2: BaseView {
     
     func designView(_ sender: ChattingInfoModel) {
         
+        func singleLine(_ cnt: Int) -> Bool {
+            if cnt == 1 || cnt > 3 { return false }
+            else { return true }
+        }
+        
         self.nameLabel.text = sender.userName
         self.contentLabel.text = sender.content
-//        self.sampleView.updateView(sender.files)
+        self.sampleView.updateView(sender.files)
         
         
         
@@ -165,7 +174,9 @@ class ChannelChattingCellContentView2: BaseView {
             contentBottomSelf?.deactivate()
             sampleBottomSelf?.activate()
             
-            if sender.files.count <= 3 {
+            
+            
+            if singleLine(sender.files.count) {
                 sampleViewSingleLine?.activate()
                 sampleViewDoubleLine?.deactivate()
             } else {
@@ -186,7 +197,7 @@ class ChannelChattingCellContentView2: BaseView {
             contentBottomSelf?.deactivate()
             sampleBottomSelf?.activate()
             
-            if sender.files.count <= 3 {
+            if singleLine(sender.files.count) {
                 sampleViewSingleLine?.activate()
                 sampleViewDoubleLine?.deactivate()
             } else {

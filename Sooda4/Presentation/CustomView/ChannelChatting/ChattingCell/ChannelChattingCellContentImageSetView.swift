@@ -19,14 +19,25 @@ class ChannelChattingCellContentImageSetView: BaseView {
         let view = UIImageView()
         view.clipsToBounds = true
         view.layer.cornerRadius = 4
+        view.contentMode = .scaleAspectFill
         return view
     }
 
-    let imageViews = Array(repeating: makeImageView(), count: 5)
     
+    let imageView1 = makeImageView()
+    let imageView2 = makeImageView()
+    let imageView3 = makeImageView()
+    let imageView4 = makeImageView()
+    let imageView5 = makeImageView()
     
-    let a = UIImageView()
-    let b = UIImageView()
+    lazy var imageViews = [
+        imageView1,
+        imageView2, 
+        imageView3,
+        imageView4,
+        imageView5,
+    ]
+    
     
     
     override func setConfigure() {
@@ -39,32 +50,22 @@ class ChannelChattingCellContentImageSetView: BaseView {
             self.addSubview(item)
         }
         print("*--------------------*")
+        
+        imageViews[0].snp.makeConstraints { make in
+            make.size.equalTo(30)
+            make.center.equalTo(self).offset(-20)
+        }
+        imageViews[1].snp.makeConstraints { make in
+            make.size.equalTo(30)
+            make.center.equalTo(self).offset(20)
+        }
 
-        imageViews[0].backgroundColor = .yellow
+        imageViews[0].backgroundColor = .lightGray
         imageViews[1].backgroundColor = .black
         imageViews[2].backgroundColor = .green
         imageViews[3].backgroundColor = .blue
         imageViews[4].backgroundColor = .purple
-//        
-//        
-//        imageViews[2].snp.makeConstraints { make in
-//            make.edges.equalTo(self)
-//        }
-        
-//        a.backgroundColor = .black
-//        b.backgroundColor = .yellow
-//        
-//        self.addSubview(a)
-//        self.addSubview(b)
-//        
-//        a.snp.makeConstraints { make in
-//            make.size.equalTo(30)
-//            make.center.equalTo(self)
-//        }
-//        b.snp.makeConstraints { make in
-//            make.size.equalTo(30)
-//            make.center.equalTo(self).offset(30)
-//        }
+
         
 //        set5Layout()
     }
@@ -73,15 +74,15 @@ class ChannelChattingCellContentImageSetView: BaseView {
     
     func updateView(_ files: [String]) {
         
-        // text용
-//        for i in 1...5 {
-//            imageViews[i-1].image = UIImage(named: "sample\(i)")
-//        }
+//         test용
+        for i in 1...5 {
+            imageViews[i-1].image = UIImage(named: "sample\(i)")
+        }
         
-//        // 레이아웃 초기화
-//        imageViews.forEach { item in
-//            item.snp.removeConstraints()
-//        }
+        // 레이아웃 초기화
+        imageViews.forEach { item in
+            item.snp.removeConstraints()
+        }
         
         // file이 없는 경우는 아예 상위 뷰에서 Hidden처리 해준다
         switch files.count {
@@ -107,6 +108,7 @@ extension ChannelChattingCellContentImageSetView {
     
     func set1Layout() {
         for i in 1...4 { imageViews[i].isHidden = true }
+        for i in 0...0 { imageViews[i].isHidden = false }
         
         imageViews[0].snp.makeConstraints { make in
             make.edges.equalTo(self)
@@ -118,7 +120,8 @@ extension ChannelChattingCellContentImageSetView {
     }
     
     func set2Layout() {
-//        for i in 2...4 { imageViews[i].isHidden = true }
+        for i in 2...4 { imageViews[i].isHidden = true }
+        for i in 0...1 { imageViews[i].isHidden = false }
         
         imageViews[0].snp.makeConstraints { make in
             make.leading.verticalEdges.equalTo(self)
@@ -132,7 +135,8 @@ extension ChannelChattingCellContentImageSetView {
     }
     
     func set3Layout() {
-//        for i in 3...4 { imageViews[i].isHidden = true }
+        for i in 3...4 { imageViews[i].isHidden = true }
+        for i in 0...2 { imageViews[i].isHidden = false }
         
         imageViews[0].snp.makeConstraints { make in
             make.leading.verticalEdges.equalTo(self)
@@ -151,7 +155,8 @@ extension ChannelChattingCellContentImageSetView {
     }
     
     func set4Layout() {
-//        for i in 4...4 { imageViews[i].isHidden = true }
+        for i in 4...4 { imageViews[i].isHidden = true }
+        for i in 0...3 { imageViews[i].isHidden = false }
         
         imageViews[0].snp.makeConstraints { make in
             make.leading.top.equalTo(self)
@@ -172,6 +177,8 @@ extension ChannelChattingCellContentImageSetView {
     }
     
     func set5Layout() {
+        for i in 0...4 { imageViews[i].isHidden = false }
+        
         imageViews[0].snp.makeConstraints { make in
             make.top.leading.equalTo(self)
             make.height.equalTo(self).dividedBy(2).offset(-1)
@@ -179,7 +186,7 @@ extension ChannelChattingCellContentImageSetView {
         }
         imageViews[1].snp.makeConstraints { make in
             make.top.equalTo(self)
-            make.leading.equalTo(imageViews[1].snp.trailing).offset(2)
+            make.leading.equalTo(imageViews[0].snp.trailing).offset(2)
             make.height.width.equalTo(imageViews[0])
         }
         imageViews[2].snp.makeConstraints { make in
