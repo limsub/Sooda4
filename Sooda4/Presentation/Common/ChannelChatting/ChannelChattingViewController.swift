@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import PhotosUI
 
 
 class ChannelChattingViewController: BaseViewController {
@@ -45,7 +46,7 @@ class ChannelChattingViewController: BaseViewController {
         setNavigation("하이")
         setNavigationButton()
         
-//        bindVM()
+        bindVM()
 //        loadData.onNext(())
         
         setTableView()
@@ -63,10 +64,32 @@ class ChannelChattingViewController: BaseViewController {
             print("todo : 테이블뷰 리로드 및 스크롤 시점 잡아주기")
         }
         
+        setPHPicker()
         
         /* test */
         mainView.chattingInputView.sendButton.addTarget(self , action: #selector(makeChatting), for: .touchUpInside)
     }
+    
+    
+    func setPHPicker() {
+        mainView.chattingInputView.plusButton.addTarget(self , action: #selector(pickerButtonClicked), for: .touchUpInside)
+    }
+    
+    @objc func pickerButtonClicked() {
+        self.showPHPicker()
+    }
+    
+    func showPHPicker() {
+        var configuration = PHPickerConfiguration()
+        configuration.selectionLimit = 5
+        configuration.filter = .images
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        present(picker, animated: true)
+    }
+    
+    
     
     @objc
     func makeChatting() {
@@ -129,6 +152,10 @@ class ChannelChattingViewController: BaseViewController {
         output.showImageCollectionView
             .subscribe(with: self) { owner , value in
                 print("showImageCollectionView : ", value)
+                
+                owner.mainView.chattingInputView.fileImageCollectionView.isHidden = !value
+                owner.mainView.chattingInputView.setConstraints()
+                owner.textViewDidChange(owner.mainView.chattingInputView.chattingTextView)
             }
             .disposed(by: disposeBag)
         
@@ -171,16 +198,6 @@ class ChannelChattingViewController: BaseViewController {
 
 // 테이블뷰 테스트
 extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
-        print(#function)
-        
-        mainView.chattingInputView.fileImageCollectionView.isHidden.toggle()
-        mainView.chattingInputView.setConstraints()
-        self.textViewDidChange(mainView.chattingInputView.chattingTextView)
-        
-    }
     
     func setTableView() {
         mainView.chattingTableView.delegate = self
@@ -335,5 +352,44 @@ extension ChannelChattingViewController {
         }
         
         mainView.setConstraints()
+    }
+}
+
+
+extension ChannelChattingViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        
+        if results.isEmpty { return }
+        
+        
+        // 선택한 순서에 맞게 넣어주기 위해 배열의 인덱스를 이용한다
+        var imageArr = Array(repeating: Data(), count: results.count)
+        var group = DispatchGroup()
+        
+        for (index, item) in results.enumerated() {
+            
+            group.enter()
+            let itemProvider = item.itemProvider
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image , error  in
+                    
+                    guard let image = image as? UIImage else { return }
+                    
+                    guard let imageData = image.jpegData(compressionQuality: 0.001) else { return }
+                    
+                    imageArr[index] = imageData
+                    group.leave()
+                }
+            }
+        }
+        
+        picker.dismiss(animated: true)
+        
+        
+        group.notify(queue: .main) {
+            self.viewModel.imageData.onNext(imageArr)
+        }
+        
     }
 }

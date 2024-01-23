@@ -65,8 +65,12 @@ class ChannelChattingViewModel {
         let resultMakeChatting = PublishSubject<ResultMakeChatting>()
         
         
-        // 선택한 이미지가 있으면 컬렉션뷰를 보여줘야 한다.
-        
+        // 선택한 이미지가 있으면 컬렉션뷰를 보여준다.
+        self.imageData
+            .subscribe(with: self) { owner , arr in
+                showImageCollectionView.onNext(!arr.isEmpty)
+            }
+            .disposed(by: disposeBag)
         
         
         
