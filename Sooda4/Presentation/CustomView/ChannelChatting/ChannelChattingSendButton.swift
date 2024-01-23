@@ -25,6 +25,8 @@ class ChannelChattingSendButton: UIButton {
             UIImage(named: type.buttonImageName),
             for: .normal
         )
+        
+        self.isEnabled = type.isEnabled
     }
     
     enum SendButtonType {
@@ -35,6 +37,13 @@ class ChannelChattingSendButton: UIButton {
             switch self {
             case .enabled: return "icon_send_enabled"
             case .disabled: return "icon_send_disabled"
+            }
+        }
+        
+        var isEnabled: Bool {
+            switch self {
+            case .enabled: return true
+            case .disabled: return false
             }
         }
     }

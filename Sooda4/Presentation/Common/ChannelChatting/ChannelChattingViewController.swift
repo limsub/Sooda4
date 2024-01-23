@@ -176,6 +176,7 @@ class ChannelChattingViewController: BaseViewController {
         output.enabledSendButton
             .subscribe(with: self) { owner, value in
                 print("enabledSendButton : ", value)
+                owner.mainView.chattingInputView.sendButton.update(value ? .enabled : .disabled)
             }
             .disposed(by: disposeBag)
         
