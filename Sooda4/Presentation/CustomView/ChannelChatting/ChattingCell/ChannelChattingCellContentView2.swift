@@ -80,12 +80,20 @@ class ChannelChattingCellContentView2: BaseView {
     var contentBottomSelf: Constraint? = nil
     var sampleBottomSelf: Constraint? = nil
     
+    var contentWidthSelf: Constraint? = nil
+    var sampleWidthSelf: Constraint? = nil
+    
+    
+    // 1. 둘 다 있다   -> a / d / a / d / a / d / a
+    // 2. 텍스트만 있다 -> a / d / d / a / d / a / d
+    // 3. 이미지만 있다 -> d / a / d / d / a / d / a
+    
+    
+    
     var sampleViewSingleLine: Constraint? = nil // 2, 3
     var sampleViewDoubleLine: Constraint? = nil // 1, 4, 5
     
-    // 1. 둘 다 있다   -> a / d / a / d / a
-    // 2. 텍스트만 있다 -> a / d / d / a / d
-    // 3. 이미지만 있다 -> d / a / d / d / a
+    
 
     
     override func setConstraints() {
@@ -103,6 +111,7 @@ class ChannelChattingCellContentView2: BaseView {
             
             self.contentTopName = make.top.equalTo(nameLabel.snp.bottom).offset(13).constraint
             self.contentBottomSelf =  make.bottom.equalTo(self).inset(8).constraint
+            self.contentWidthSelf = make.width.equalTo(self).inset(8).constraint
         }
         contentBackView.snp.makeConstraints { make in
             make.edges.equalTo(contentLabel).inset(-8)
@@ -111,9 +120,7 @@ class ChannelChattingCellContentView2: BaseView {
         
         sampleView.snp.makeConstraints { make in
             
-            
             make.width.equalTo(244)
-            make.horizontalEdges.equalTo(self)  // 얘 너비에 맞춰진다.
             
             self.sampleViewSingleLine = make.height.equalTo(80).constraint
             self.sampleViewDoubleLine = make.height.equalTo(162).constraint
@@ -121,6 +128,7 @@ class ChannelChattingCellContentView2: BaseView {
             self.sampleTopName = make.top.equalTo(nameLabel.snp.bottom).offset(5).constraint
             self.sampleTopContent = make.top.equalTo(contentBackView.snp.bottom).offset(5).constraint
             self.sampleBottomSelf = make.bottom.equalTo(self).constraint
+            self.sampleWidthSelf =  make.horizontalEdges.equalTo(self).constraint
         }
         
         
@@ -129,6 +137,9 @@ class ChannelChattingCellContentView2: BaseView {
         sampleTopContent?.activate()
         contentBottomSelf?.deactivate()
         sampleBottomSelf?.activate()
+        
+        contentWidthSelf?.deactivate()
+        sampleWidthSelf?.activate()
         
         sampleViewSingleLine?.deactivate()
         sampleViewDoubleLine?.activate()
@@ -149,7 +160,7 @@ class ChannelChattingCellContentView2: BaseView {
         
         
         
-        // 텍스트만 있다 -> a / d / d / a / d
+        // 텍스트만 있다 -> a / d / d / a / d  / a / d
         if sender.files.isEmpty {
             contentLabel.isHidden = false
             contentBackView.isHidden = false
@@ -160,9 +171,11 @@ class ChannelChattingCellContentView2: BaseView {
             sampleTopContent?.deactivate()
             contentBottomSelf?.activate()
             sampleBottomSelf?.deactivate()
+            contentWidthSelf?.activate()
+            sampleWidthSelf?.deactivate()
         }
         
-        // 이미지만 있다 -> d / a / d / d / a
+        // 이미지만 있다 -> d / a / d / d / a / d / a
         else if sender.content!.isEmpty {
             contentLabel.isHidden = true
             contentBackView.isHidden = true
@@ -174,6 +187,8 @@ class ChannelChattingCellContentView2: BaseView {
             contentBottomSelf?.deactivate()
             sampleBottomSelf?.activate()
             
+            contentWidthSelf?.deactivate()
+            sampleWidthSelf?.activate()
             
             
             if singleLine(sender.files.count) {
@@ -185,7 +200,7 @@ class ChannelChattingCellContentView2: BaseView {
             }
         }
         
-        // 둘 다 있다   -> a / d / a / d / a
+        // 둘 다 있다   -> a / d / a / d / a / d / a
         else {
             contentLabel.isHidden = false
             contentBackView.isHidden = false
@@ -196,6 +211,9 @@ class ChannelChattingCellContentView2: BaseView {
             sampleTopContent?.activate()
             contentBottomSelf?.deactivate()
             sampleBottomSelf?.activate()
+            
+            contentWidthSelf?.deactivate()
+            sampleWidthSelf?.activate()
             
             if singleLine(sender.files.count) {
                 sampleViewSingleLine?.activate()
