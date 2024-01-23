@@ -136,6 +136,8 @@ class ChannelChattingCellContentView2: BaseView {
         
         self.nameLabel.text = sender.userName
         self.contentLabel.text = sender.content
+//        self.sampleView.updateView(sender.files)
+        
         
         
         // 텍스트만 있다 -> a / d / d / a / d
@@ -192,6 +194,8 @@ class ChannelChattingCellContentView2: BaseView {
                 sampleViewDoubleLine?.activate()
             }
         }
+        
+        
 
         // 이거 없어도 되긴 한데, 일단 혹시 모르니까
         setNeedsLayout()
