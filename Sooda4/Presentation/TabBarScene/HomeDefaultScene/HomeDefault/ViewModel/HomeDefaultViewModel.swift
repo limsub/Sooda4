@@ -85,13 +85,15 @@ class HomeDefaultViewModel: BaseViewModelType {
                 
                 // 채널 채팅 뷰
                 if owner.checkCellType(indexPath: indexPath) == .channelCell {
-                    owner.didSendEventClosure?(.goChannelChatting(
-                        workSpaceId: owner.workSpaceId,
-                        channelName: owner.channelCellData(indexPath).0
-                    ))
-                }
-                
                     
+                    owner.didSendEventClosure?(
+                        .goChannelChatting(
+                            workSpaceId: owner.workSpaceId,
+                            channelId: owner.channelCellData(indexPath).0.channelId,
+                            channelName: owner.channelCellData(indexPath).0.name
+                        )
+                    )
+                }
             }
             .disposed(by: disposeBag)
         
@@ -353,16 +355,24 @@ class HomeDefaultViewModel: BaseViewModelType {
         }
     }
     
-    func channelCellData(_ indexPath: IndexPath) -> (String, Int) {
-        guard let channelData else { return ("", 0) }
+    func channelCellData(_ indexPath: IndexPath) -> (WorkSpaceChannelInfoModel, Int) {
         
-//        print("--- indexPath : \(indexPath) / channelData : \(channelData.sectionData[indexPath.row - 1])")
+        guard let channelData else { return (WorkSpaceChannelInfoModel(channelId: 0, name: ""), 0)}
         
-        return (
-            channelData.sectionData[indexPath.row - 1].channelInfo.name,
-            channelData.sectionData[indexPath.row - 1].unreadCount
-        )
+        
+        return (channelData.sectionData[indexPath.row - 1].channelInfo, channelData.sectionData[indexPath.row - 1].unreadCount)
     }
+//    
+//    func channelCellData(_ indexPath: IndexPath) -> (String, Int) {
+//        guard let channelData else { return ("", 0) }
+//        
+////        print("--- indexPath : \(indexPath) / channelData : \(channelData.sectionData[indexPath.row - 1])")
+//        
+//        return (
+//            channelData.sectionData[indexPath.row - 1].channelInfo.name,
+//            channelData.sectionData[indexPath.row - 1].unreadCount
+//        )
+//    }
     
     func dmCellData(_ indexPath: IndexPath) -> (String?, String, Int) {
         guard let dmData else { return (nil, "", 0) }
@@ -406,7 +416,7 @@ extension HomeDefaultViewModel {
         case presentMakeChannelView
         case goExploreChannelFlow
         
-        case goChannelChatting(workSpaceId: Int, channelName: String)
+        case goChannelChatting(workSpaceId: Int, channelId: Int, channelName: String)
         
         case goBackOnboarding
     }

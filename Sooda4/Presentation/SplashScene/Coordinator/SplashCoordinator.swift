@@ -70,6 +70,7 @@ class SplashCoordinator: SplashCoordinatorProtocol {
         
         let vm = ChannelChattingViewModel(
             workSpaceId: 118,
+            channelId: 0,
             channelName: "Final final",
             channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
         )

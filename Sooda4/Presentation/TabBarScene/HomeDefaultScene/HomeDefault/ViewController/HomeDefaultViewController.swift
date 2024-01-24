@@ -190,7 +190,9 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
             
             let data = viewModel.channelCellData(indexPath)
             
-            cell.designCell(data.0, count: data.1)
+            cell.designCell(data.0.name, count: data.1)
+            
+//            cell.designCell(data.0, count: data.1)
             
             
             

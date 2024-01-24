@@ -20,7 +20,9 @@ class ChannelChattingViewModel {
     private var disposeBag = DisposeBag()
     
     private var workSpaceId: Int
+    private var channelId: Int
     private var channelName: String
+    
     
     private var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
     private var chatArr: [ChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
@@ -34,8 +36,9 @@ class ChannelChattingViewModel {
     private var channelChattingUseCase: ChannelChattingUseCaseProtocol
     
     
-    init(workSpaceId: Int, channelName: String, channelChattingUseCase: ChannelChattingUseCaseProtocol) {
+    init(workSpaceId: Int, channelId: Int, channelName: String, channelChattingUseCase: ChannelChattingUseCaseProtocol) {
         self.workSpaceId = workSpaceId
+        self.channelId = channelId
         self.channelName = channelName
         self.channelChattingUseCase = channelChattingUseCase
     }
@@ -205,12 +208,17 @@ extension ChannelChattingViewModel {
     
     // 1.
     private func checkLastChattingDate() {
-        self.lastChattingDate = channelChattingUseCase.checkLastDate(
-            requestModel: ChannelDetailRequestModel(
-                workSpaceId: self.workSpaceId,
-                channelName: self.channelName
-            )
+        
+        let requestModel = ChannelDetailFullRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelId: self.channelId,
+            channelName: self.channelName
         )
+        
+        self.lastChattingDate = channelChattingUseCase.checkLastDate(
+            requestModel: requestModel
+        )
+ 
         print("확인한 채팅 중 가장 마지막 날짜 : ", lastChattingDate)
     }
 
@@ -264,10 +272,16 @@ extension ChannelChattingViewModel {
         
         print("-- chatArr에 데이터 추가 --")
         
+        let requestModel = ChannelDetailFullRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelId: self.channelId,
+            channelName: self.channelName
+        )
+        
+        
         // 1.
         let previousArr = channelChattingUseCase.fetchPreviousData(
-            workSpaceId: self.workSpaceId,
-            channelName: self.channelName,
+            requestModel: requestModel,
             targetDate: self.lastChattingDate
         )
         chatArr.append(contentsOf: previousArr)
@@ -287,8 +301,7 @@ extension ChannelChattingViewModel {
         
         // 3.
         let nextArr = channelChattingUseCase.fetchNextData(
-            workSpaceId: self.workSpaceId,
-            channelName: self.channelName,
+            requestModel: requestModel,
             targetDate: self.lastChattingDate
         )
         chatArr.append(contentsOf: nextArr)

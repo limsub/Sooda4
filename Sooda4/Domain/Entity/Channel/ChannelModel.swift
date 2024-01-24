@@ -29,9 +29,10 @@ struct ChannelDetailRequestModel {
 }
 
 // Realm에서 데이터를 읽을 땐 채널 아이디를 이용한다
-struct ChannelDetailRealmRequestModel {
+struct ChannelDetailFullRequestModel {
     let workSpaceId: Int
-    let channelId: Int 
+    let channelId: Int
+    let channelName: String
 }
 
 // 채널 생성

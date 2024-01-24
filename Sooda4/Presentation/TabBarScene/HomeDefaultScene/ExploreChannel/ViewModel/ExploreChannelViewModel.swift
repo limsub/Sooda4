@@ -102,7 +102,14 @@ class ExploreChannelViewModel: BaseViewModelType {
                     ) {
                         print("이미 소속된 채널이다. 바로 화면 전환 시도한다")
                         
-                        owner.didSendEventClosure?(.goChannelChatting(channelName: selectedChannel.name))
+                        owner.didSendEventClosure?(
+                            .goChannelChatting(
+                                workSpaceId: self.workSpaceId,
+                                channelId: selectedChannel.channelId,
+                                channelName: selectedChannel.name
+                            )
+                        )
+                        
                     } else {
                         print("소속되지 않은 채널이다")
                         notJoinedChannel.onNext(selectedChannel)
@@ -122,7 +129,13 @@ class ExploreChannelViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , value in
                 print("채널 이름 \(value.name) 에 조인한다. 화면 전환")
                 
-                owner.didSendEventClosure?(.goChannelChatting(channelName: value.name))
+                owner.didSendEventClosure?(
+                    .goChannelChatting(
+                        workSpaceId: self.workSpaceId,
+                        channelId: value.channelId,
+                        channelName: value.name
+                    )
+                )
             }
             .disposed(by: disposeBag)
         
@@ -136,7 +149,7 @@ class ExploreChannelViewModel: BaseViewModelType {
 
 extension ExploreChannelViewModel {
     enum Event {
-        case goChannelChatting(channelName: String)
+        case goChannelChatting(workSpaceId: Int, channelId: Int, channelName: String)
         case goBackHomeDefault(workSpaceId: Int)
     }
 }

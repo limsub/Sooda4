@@ -13,10 +13,10 @@ protocol ExploreChannelCoordinatorProtocol: Coordinator {
     
     // view
     func showExploreChannelView(_ workSpaceId: Int) // firstView
-    func showChannelChattingView(_ workSpaceId: Int, channelName: String)
+    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String )
     func showChannelSettingView(_ workSpaceId: Int, channelName: String, isAdmin: Bool)
     
-    
+
     
     // setting 세부 뷰 (나가기, 삭제는 VC 에서 팝업으로 처리)
     // workspace 할 때, 여기서 UseCase를 쓰는 게 별로였음.
@@ -65,8 +65,13 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         
         exploreChannelVM.didSendEventClosure = { [weak self] event in
             switch event {
-            case .goChannelChatting(let channelName):
-                self?.showChannelChattingView((self?.workSpaceId)!, channelName: channelName)
+            case .goChannelChatting(let workSpaceId, let channelId, let channelName):
+                
+                self?.showChannelChattingView(
+                    workSpaceId: workSpaceId,
+                    channelId: channelId,
+                    channelName: channelName
+                )
                 
             case .goBackHomeDefault(let workSpaceId):
                 self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workSpaceId))
@@ -79,14 +84,18 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
         navigationController.pushViewController(exploreChannelVC, animated: false)
     }
     
-    func showChannelChattingView(_ workSpaceId: Int, channelName: String ) {
+    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String ) {
         print(#function)
         
         let channelChattingVM = ChannelChattingViewModel(
             workSpaceId: workSpaceId,
+            channelId: channelId,
             channelName: channelName,
-            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
+            channelChattingUseCase: ChannelChattingUseCase(
+                channelChattingRepository: ChannelChattingRepository()
+            )
         )
+   
         
         channelChattingVM.didSendEventClosure = { [weak self] event in
             switch event {

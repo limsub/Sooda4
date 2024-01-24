@@ -20,10 +20,14 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     }
     
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
-    func checkLastDate(requestModel: ChannelDetailRequestModel) -> Date? {
+    func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
 
         return realm.objects(ChattingInfoTable.self)
-            .filter("workSpaceId == %@ AND channelName == %@", requestModel.workSpaceId, requestModel.channelName)
+            .filter(
+                "workSpaceId == %@ AND channelId == %@",
+                requestModel.workSpaceId,
+                requestModel.channelId
+            )
             .sorted(byKeyPath: "createdAt", ascending: false)
             .first?
             .createdAt
@@ -70,14 +74,20 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 3 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
-    func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
-        // lastChattingDate가 nil이다 -> 디비에 저장된 읽은 데이터가 없다
+        // lastChattingDate가 nil이다
+        // -> (createdAt <= %@)디비에 저장된 읽은 데이터가 없다
         guard let targetDate else { return [] }
         
         
         return realm.objects(ChattingInfoTable.self)
-            .filter("workSpaceId == %@ AND channelName == %@ AND createdAt <= %@", workSpaceId, channelName, targetDate)
+            .filter(
+                "workSpaceId == %@ AND channelId == %@ AND createdAt <= %@",
+                requestModel.workSpaceId,
+                requestModel.channelId,
+                targetDate
+            )
             .sorted(byKeyPath: "createdAt")
             .suffix(30)
             .map { $0.toDomain() }
@@ -86,19 +96,29 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 3 - 2. targetDate (포함 x) 이후 데이터 (최대) 30개
-    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
-        // lastChattingDate가 nil이다 -> 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
+        // lastChattingDate가 nil이다 
+        // -> (createdAt > %@) 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
         if let targetDate {
             return realm.objects(ChattingInfoTable.self)
-                .filter("workSpaceId == %@ AND channelName == %@ AND createdAt > %@", workSpaceId, channelName, targetDate)
+                .filter(
+                    "workSpaceId == %@ AND channelId == %@ AND createdAt > %@",
+                    requestModel.workSpaceId,
+                    requestModel.channelId,
+                    targetDate
+                )
                 .sorted(byKeyPath: "createdAt")
                 .prefix(30)
                 .map { $0.toDomain() }
             
         } else {
             return realm.objects(ChattingInfoTable.self)
-                .filter("workSpaceId == %@ AND channelName == %@", workSpaceId, channelName)
+                .filter(
+                    "workSpaceId == %@ AND channelId == %@",
+                    requestModel.workSpaceId,
+                    requestModel.channelId
+                )
                 .sorted(byKeyPath: "createdAt")
                 .prefix(30)
                 .map { $0.toDomain() }

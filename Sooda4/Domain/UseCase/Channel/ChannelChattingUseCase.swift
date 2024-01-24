@@ -11,7 +11,7 @@ import RxCocoa
 
 protocol ChannelChattingUseCaseProtocol {
     // 1. 디비에 저장된 채팅의 마지막 날짜 조회
-    func checkLastDate(requestModel: ChannelDetailRequestModel) -> Date?
+    func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date?
     
     
     // 2. 특정 날짜 이후 최신까지 모든 데이터 불러서 디비에 저장
@@ -22,11 +22,11 @@ protocol ChannelChattingUseCaseProtocol {
     
     
     // 3 - 1. 읽은 채팅
-    func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel]
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
     
     
     // 3 - 2. 안읽은 채팅
-    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel]
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
 
     
     // 4. 채팅 전송
@@ -48,7 +48,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     // 3. 프로토콜 메서드
   
     // 1. 디비에 저장된 채팅의 마지막 날짜 조회
-    func checkLastDate(requestModel: ChannelDetailRequestModel) -> Date? {
+    func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
         
         return channelChattingRepository.checkLastDate(requestModel: requestModel)
     }
@@ -68,22 +68,20 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 3 - 1. 읽은 채팅
-    func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
         return channelChattingRepository.fetchPreviousData(
-            workSpaceId: workSpaceId,
-            channelName: channelName,
+            requestModel: requestModel,
             targetDate: targetDate
         )
     }
     
     
     // 3 - 2. 안읽은 채팅
-    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
         return channelChattingRepository.fetchNextData(
-            workSpaceId: workSpaceId,
-            channelName: channelName,
+            requestModel: requestModel,
             targetDate: targetDate
         )
     }

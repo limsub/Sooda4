@@ -16,7 +16,7 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     
     func showMakeChannelView()
     
-    func showChannelChattingView(workSpaceId: Int, channelName: String) 
+    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String)
 
     
     // flow
@@ -81,11 +81,13 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 // 2. 그래도 쓰는게 맞나
                 
                 
-            case .goChannelChatting(let workSpaceId, let channelName):
+            case .goChannelChatting(let workSpaceId, let channelId, let channelName):
                 self?.showChannelChattingView(
                     workSpaceId: workSpaceId,
+                    channelId: channelId,
                     channelName: channelName
                 )
+                
                 
             case .goBackOnboarding:     // 로그아웃
                 self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
@@ -161,11 +163,12 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     }
     
     
-    func showChannelChattingView(workSpaceId: Int, channelName: String) {
+    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String) {
         
         
         let channelChattingVM = ChannelChattingViewModel(
             workSpaceId: workSpaceId,
+            channelId: channelId,
             channelName: channelName,
             channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
         )
