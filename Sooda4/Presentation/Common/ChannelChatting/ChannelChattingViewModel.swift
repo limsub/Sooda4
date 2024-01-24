@@ -79,7 +79,7 @@ class ChannelChattingViewModel {
         // 2. 선택한 이미지가 있거나 or 텍스트가 입력이 되었다면 버튼 활성화
         //   - 둘 다 초기 이벤트가 있기 때문에 combinelatest가 가능하다.
         Observable.combineLatest(input.chattingText, imageData) { v1, v2 in
-            return !v1.isEmpty || !v2.isEmpty
+            return self.isStringEnabled(str: v1) || !v2.isEmpty
         }
         .bind(to: enabledSendButton)
         .disposed(by: disposeBag)
@@ -350,6 +350,15 @@ extension ChannelChattingViewModel {
     }
 }
 
+
+// private func
+extension ChannelChattingViewModel {
+    private func isStringEnabled(str: String) -> Bool {
+        let trimmedString = str.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return !trimmedString.isEmpty
+    }
+}
 
 
 extension ChannelChattingViewModel {

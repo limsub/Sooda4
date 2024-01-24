@@ -234,5 +234,7 @@ class ChannelChattingCellContentView2: BaseView {
         setNeedsLayout()
         layoutIfNeeded()
     }
+    
+
 }
 
