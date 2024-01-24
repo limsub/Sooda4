@@ -99,12 +99,24 @@ class ChannelChattingViewModel {
             .subscribe(with: self) { owner , response in
                 switch response {
                 case .success(let model):
+                    // 채팅 보내기 성공 TODO
+                    // 1. (VM) 보낸 채팅 테이블뷰 업데이트 -> 배열에 추가
+                    // 1.5 (VC) 테이블뷰 reload
+                    // 2. (REPO) 보낸 채팅 디비에 바로 저장
+                    // 3. (VC) 테이블뷰 스크롤 위치 맨 아래로 이동 (방금 보낸 채팅 보이게 하기)
+                    // 4. (VC) input view 초기화 (텍스트, 이미지)
+                    
                     print("전송 성공")
                     print(model)
                     
-                    // model을 배열 뒤에 추가
+                    // 1.
                     owner.chatArr.append(model)
                     
+                    // 2.
+                    
+                    
+                    
+                    // 결과 전달
                     resultMakeChatting.onNext(.success(model: model))
                     
                 case .failure(let networkError):

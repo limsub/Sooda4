@@ -8,8 +8,6 @@
 import UIKit
 
 class ChannelChattingCellContentImageSetView: BaseView {
-    
-    
     // 기본으로 이미지뷰 5개.
     // 메서드로 들어온 이미지뷰 개수에 따라 레이아웃 변경.
     // 높이는 2개밖에 없어서, 개수에 따라 ChannelChattingCellContentView에서 잡아줄 예정.
@@ -42,32 +40,16 @@ class ChannelChattingCellContentImageSetView: BaseView {
     
     override func setConfigure() {
         super.setConfigure()
-        
-        print("*--------------------*")
+
         imageViews.forEach { item in
-            print("---------")
-            print(item)
             self.addSubview(item)
         }
-        print("*--------------------*")
         
-        imageViews[0].snp.makeConstraints { make in
-            make.size.equalTo(30)
-            make.center.equalTo(self).offset(-20)
-        }
-        imageViews[1].snp.makeConstraints { make in
-            make.size.equalTo(30)
-            make.center.equalTo(self).offset(20)
-        }
-
         imageViews[0].backgroundColor = .lightGray
         imageViews[1].backgroundColor = .black
         imageViews[2].backgroundColor = .green
         imageViews[3].backgroundColor = .blue
         imageViews[4].backgroundColor = .purple
-
-        
-//        set5Layout()
     }
     
     
@@ -125,12 +107,11 @@ extension ChannelChattingCellContentImageSetView {
         
         imageViews[0].snp.makeConstraints { make in
             make.leading.verticalEdges.equalTo(self)
-//            make.height.equalTo(80)
-            make.trailing.equalTo(self.snp.centerX).inset(1)
+            make.width.equalTo(self).dividedBy(2).offset(-1)
         }
         imageViews[1].snp.makeConstraints { make in
             make.trailing.verticalEdges.equalTo(self)
-            make.leading.equalTo(self.snp.centerX).inset(-1)
+            make.width.equalTo(self).dividedBy(2).offset(-1)
         }
     }
     

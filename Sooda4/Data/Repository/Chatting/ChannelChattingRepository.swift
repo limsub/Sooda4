@@ -50,7 +50,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                     print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
                     print("예외처리 필요 (아직 안함) 소켓이 이미 열렸기 때문에, 소켓에서 받은 채팅이 디비에 있을 수 있다. 즉, 여기서 받은 데이터가 디비에 없는지 확인하는 작업이 필요하다")
                     DispatchQueue.main.async {
-                        self.addData(
+                        self.addDataList(
                             dataList: dtoData,
                             workSpaceId: channelChattingRequestModel.workSpaceId
                         )
@@ -66,24 +66,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             }
     }
     
-    // - (2). 채팅 배열들을 디비에 저장
-    private func addData(dataList: ChannelChattingResponseDTO, workSpaceId: Int) {
-        
-        do {
-            try realm.write {
-                print("디비에 데이터 넣어주는 작업 시작")
-                dataList.forEach { dto in
-                    let table = ChattingInfoTable(
-                        dto,
-                        workSpaceId: workSpaceId
-                    )
-                    realm.add(table)
-                }
-            }
-        } catch {
-            print("에러났슈 - realm")
-        }
-    }
+
     
     
     // - 3 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
@@ -93,7 +76,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
         guard let targetDate else { return [] }
         
         
-        /* 코드 이상함 - prefix */
         return realm.objects(ChattingInfoTable.self)
             .filter("workSpaceId == %@ AND channelName == %@ AND createdAt <= %@", workSpaceId, channelName, targetDate)
             .sorted(byKeyPath: "createdAt")
@@ -108,7 +90,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
         
         // lastChattingDate가 nil이다 -> 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
         if let targetDate {
-            /* 코드 이상함 - prefix */
             return realm.objects(ChattingInfoTable.self)
                 .filter("workSpaceId == %@ AND channelName == %@ AND createdAt > %@", workSpaceId, channelName, targetDate)
                 .sorted(byKeyPath: "createdAt")
@@ -116,7 +97,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                 .map { $0.toDomain() }
             
         } else {
-            /* 코드 이상함 - prefix */
             return realm.objects(ChattingInfoTable.self)
                 .filter("workSpaceId == %@ AND channelName == %@", workSpaceId, channelName)
                 .sorted(byKeyPath: "createdAt")
@@ -140,6 +120,15 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
         .map { result in
             switch result {
             case .success(let dtoData):
+                print("REPO : 채팅 전송 성공. 성공했으니까 해당 채팅 바로 디비에 저장")
+                DispatchQueue.main.async {
+                    self.addDataElement(
+                        data: dtoData,
+                        workSpaceId: requestModel.workSpaceId
+                    )
+                }
+                
+                
                 let responseModel = dtoData.toDomain()
                 return .success(responseModel)
                 
@@ -153,3 +142,42 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
 }
 
 
+extension ChannelChattingRepository {
+    
+    // 채팅 하나를 디비에 저장 (채팅 전송 후 실행)
+    private func addDataElement(data: ChannelChattingDTO, workSpaceId: Int) {
+        
+        do {
+            try realm.write {
+                print("디비에 채팅 데이터 하나 넣어주기")
+                let table = ChattingInfoTable(
+                    data,
+                    workSpaceId: workSpaceId
+                )
+                realm.add(table)
+            }
+        } catch {
+            print("에러났슈 - realm")
+        }
+        
+    }
+    
+    // 채팅 배열을 디비에 저장 (네트워크 응답 받은 후 실행)
+    private func addDataList(dataList: [ChannelChattingDTO], workSpaceId: Int) {
+        
+        do {
+            try realm.write {
+                print("디비에 채팅 데이터 배열 넣어주기")
+                dataList.forEach { dto in
+                    let table = ChattingInfoTable(
+                        dto,
+                        workSpaceId: workSpaceId
+                    )
+                    realm.add(table)
+                }
+            }
+        } catch {
+            print("에러났슈 - realm")
+        }
+    }
+}

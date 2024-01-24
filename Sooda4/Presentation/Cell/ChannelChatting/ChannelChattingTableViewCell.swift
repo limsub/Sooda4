@@ -91,7 +91,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
         
         self.chattingContentView.designView(sender)
 
-        chattingContentView.backgroundColor = .yellow
+//        chattingContentView.backgroundColor = .yellow
         
         self.dateLabel.text = sender.createdAt.toString(of: .timeAMPM)
     }

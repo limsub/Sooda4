@@ -45,7 +45,6 @@ class ChannelChattingCellContentView2: BaseView {
     
     var sampleView = {
         let view = ChannelChattingCellContentImageSetView()
-//        view.backgroundColor = .red
         
         view.clipsToBounds = true
         view.layer.cornerRadius = 12
@@ -148,6 +147,8 @@ class ChannelChattingCellContentView2: BaseView {
     
     
     func designView(_ sender: ChattingInfoModel) {
+        
+        backgroundColor = .clear
         
         func singleLine(_ cnt: Int) -> Bool {
             if cnt == 1 || cnt > 3 { return false }

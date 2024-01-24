@@ -139,23 +139,29 @@ class ChannelChattingViewController: BaseViewController {
         
         output.resultMakeChatting
             .subscribe(with: self) { owner , result in
-                // 성공 시 스크롤 맨 아래로 + 텍스트뷰 지워주기
                 switch result {
                 case .success(let model):
-                    print("--- VC : 채팅 전송 성공 ---")
-                    print("* TODO ")
+                    // 채팅 보내기 성공 TODO
+                    // 1. (VM) 보낸 채팅 테이블뷰 업데이트 -> 배열에 추가
+                    // 1.5 (VC) 테이블뷰 reload
+                    // 2. (REPO) 보낸 채팅 디비에 바로 저장
+                    // 3. (VC) 테이블뷰 스크롤 위치 맨 아래로 이동 (방금 보낸 채팅 보이게 하기)
+                    // 4. (VC) input view 초기화 (텍스트, 이미지)
                     
-                    print(" - 보낸 채팅 테이블뷰에 업데이트 -> (VM) 배열에 추가")
+                    
+                    // 1.5
                     owner.mainView.chattingTableView.reloadData()
                     
-                    print(" - 스크롤 맨 아래로 위치")
+                    
+                    // 3.
                     let indexPath = IndexPath(
                         row: owner.viewModel.numberOfRows() - 1,
                         section: 0
                     )
                     owner.mainView.chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
                     
-                    print(" - Input View 초기화")
+                    
+                    // 4.
                     owner.mainView.chattingInputView.chattingTextView.text = ""
                     owner.viewModel.removeAllImages()   // -> showImageCollectionView output 받아서 레이아웃 및 textViewDidChange 실행
                           
