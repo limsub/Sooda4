@@ -159,6 +159,9 @@ class ChannelChattingCellContentView2: BaseView {
         self.contentLabel.text = sender.content
         self.sampleView.updateView(sender.files)
         
+        self.nameLabel.setAppFont(.caption)
+        self.contentLabel.setAppFont(.body)
+        
         
         
         // 텍스트만 있다 -> a / d / d / a / d  / a / d

@@ -25,6 +25,10 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
         let view = UILabel()
         view.text = "08:16 오전"
         view.setAppFont(.caption2)   // * 텍스트 이상함. 피그마 상에는 caption 2
+        view.textColor = UIColor.appColor(.text_secondary)
+        
+        view.numberOfLines = 2
+        view.contentMode = .bottomLeft
         return view
     }()
     
@@ -93,6 +97,21 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
 
 //        chattingContentView.backgroundColor = .yellow
         
-        self.dateLabel.text = sender.createdAt.toString(of: .timeAMPM)
+        
+        let createdDate = sender.createdAt
+        if isDateToday(createdDate) {
+            self.dateLabel.text = createdDate.toString(of: .timeAMPM)
+        } else {
+            self.dateLabel.text = "\(createdDate.toString(of: .monthday))\n\(createdDate.toString(of: .timeAMPM))"
+        }
+        self.dateLabel.setAppFont(.caption2)
+    }
+    
+    private func isDateToday(_ date: Date) -> Bool {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let inputDate = calendar.startOfDay(for: date)
+        
+        return calendar.isDate(today, inSameDayAs: inputDate)
     }
 }
