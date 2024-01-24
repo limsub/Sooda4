@@ -14,8 +14,8 @@ class ChannelChattingInfoTable: Object {
     
 //    @Persisted(originProperty: "channel_id") var channelInfo: LinkingObjects<ChannelInfoTable>
     
-    @Persisted var channelInfo: ChannelInfoTable
-    @Persisted var userInfo: UserInfoTable
+    @Persisted var channelInfo: ChannelInfoTable?
+    @Persisted var userInfo: UserInfoTable?
     
     @Persisted var content: String
     @Persisted var createdAt: Date
@@ -23,4 +23,17 @@ class ChannelChattingInfoTable: Object {
 }
 
 
-
+extension ChannelChattingInfoTable {
+    // to Domain
+    func toDomain() -> ChattingInfoModel {
+        return .init(
+            content: self.content,
+            createdAt: self.createdAt,
+            files: self.files.map { $0 },
+            userName: self.userInfo?.user_name ?? "",
+            userImage: self.userInfo?.user_image ?? ""
+        )
+    }
+    
+    
+}

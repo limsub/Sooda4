@@ -16,3 +16,15 @@ class ChannelInfoTable: Object {
     @Persisted var channel_name: String
     
 }
+
+extension ChannelInfoTable {
+    
+    // from network
+    convenience init(_ model: ChannelChattingDTO, workSpaceId: Int) {
+        self.init()
+        
+        self.channel_id = model.channel_id
+        self.channel_name = model.channelName
+        self.workspace_id = workSpaceId
+    }
+}
