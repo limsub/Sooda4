@@ -37,6 +37,9 @@ class ChannelChattingViewModel {
     
     
     init(workSpaceId: Int, channelId: Int, channelName: String, channelChattingUseCase: ChannelChattingUseCaseProtocol) {
+        
+        print("---------- 채널 정보 ----------")
+        print("workspace_id: \(workSpaceId) / channel_id : \(channelId)")
         self.workSpaceId = workSpaceId
         self.channelId = channelId
         self.channelName = channelName

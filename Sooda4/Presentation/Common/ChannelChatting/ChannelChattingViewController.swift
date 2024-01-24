@@ -9,6 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import PhotosUI
+import SocketIO
 
 
 class ChannelChattingViewController: BaseViewController {
@@ -31,10 +32,24 @@ class ChannelChattingViewController: BaseViewController {
     
     
     
-    
+    // **** socket test ****
+    let sss = SocketIOManager.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // **** socket test ****
+        
+//        sss.receivedChatInfo { data, ack in
+//            print("SOCKET RECEIVED : ", data, ack)
+//        }
+        sss.establishConnection()
+//        
+//        SocketIOManager.shared.socket.on("channel") { a, b in
+//            print("RECEIVED____", a, b)
+//        }
+        
+        
         
         
         setNavigation(viewModel.nameOfChannel())
@@ -175,6 +190,13 @@ class ChannelChattingViewController: BaseViewController {
         
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // **** socket test ****
+        SocketIOManager.shared.closeConnection()
+    }
+    
     deinit {
         let notificationCenter = NotificationCenter.default
         
@@ -189,6 +211,8 @@ class ChannelChattingViewController: BaseViewController {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
+        
+
     }
 }
 
@@ -251,6 +275,20 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
             return cell
         }
         
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // **** socket test ****
+        
+        
+//
+//        SocketIOManager.shared.emit(message: ["message": "This is a test message"])
+        
+//        SocketIOManager.shared.sendMessage(
+//            message: "테스트 메세지",
+//            nickname: "테스트 닉네임"
+//        )
     }
 }
 

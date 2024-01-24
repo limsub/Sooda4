@@ -55,7 +55,7 @@ class HomeEmptySceneCoordinator: HomeEmptySceneCoordinatorProtocol {
                 self?.showMakeWorkSpaceView()
                 
             case .showWorkSpaceList:
-                print("0000000")
+//                print("0000000")
                 self?.showWorkSpaceFlow()
             }
         }
