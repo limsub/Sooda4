@@ -93,11 +93,17 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
     
     func designCell(_ sender: ChattingInfoModel) {
         
+        // 1. 프로필 이미지
+        profileImageView.loadImage(
+            endURLString: sender.userImage ?? "",
+            size: CGSize(width: 40, height: 40),
+            placeholder: .profileNoPhotoA
+        )
+        
+        // 2. 본문 (이름, 내용, 이미지)
         self.chattingContentView.designView(sender)
 
-//        chattingContentView.backgroundColor = .yellow
-        
-        
+        // 3. 날짜
         let createdDate = sender.createdAt
         if isDateToday(createdDate) {
             self.dateLabel.text = createdDate.toString(of: .timeAMPM)

@@ -14,7 +14,9 @@ extension UIImageView {
         
         let imageURLString = APIKey.baseURL + "/" + endURLString
         let imageURL = URL(string: imageURLString)
-        
+        print("00000")
+        print(imageURLString)
+        print("00000")
         let header = [
             "Authorization": KeychainStorage.shared.accessToken ?? "",
             "SesacKey": APIKey.key
