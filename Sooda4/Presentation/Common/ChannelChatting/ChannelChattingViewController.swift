@@ -33,7 +33,7 @@ class ChannelChattingViewController: BaseViewController {
     
     
     // **** socket test ****
-    let sss = SocketIOManager.shared
+//    let sss = SocketIOManager.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +43,9 @@ class ChannelChattingViewController: BaseViewController {
 //        sss.receivedChatInfo { data, ack in
 //            print("SOCKET RECEIVED : ", data, ack)
 //        }
-        sss.establishConnection()
-//        
+//        sss.establishConnection()
+//        sss.establishConnection(238)
+//
 //        SocketIOManager.shared.socket.on("channel") { a, b in
 //            print("RECEIVED____", a, b)
 //        }
@@ -194,7 +195,7 @@ class ChannelChattingViewController: BaseViewController {
         super.viewDidDisappear(animated)
         
         // **** socket test ****
-        SocketIOManager.shared.closeConnection()
+//        SocketIOManager.shared.closeConnection()
     }
     
     deinit {

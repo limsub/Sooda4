@@ -17,8 +17,7 @@ class SocketIOManager: NSObject {
     var manager: SocketManager!
     var socket: SocketIOClient!
     
-    
-    private let baseURL = URL(string: APIKey.baseURL +  "/ws-channel-238")
+    private let baseURL = URL(string: APIKey.baseURL)   // url은 그냥 기본. namespace에서 찾아주기
     
     
     override init() {
@@ -27,41 +26,13 @@ class SocketIOManager: NSObject {
         self.manager = SocketManager(socketURL: baseURL!, config: [
             .log(true),
             .compress
-            // 헤더가 필요 없나봄
-//            .extraHeaders([
-//                "Content-Type": "application/json",
-//                "Authorization": KeychainStorage.shared.accessToken ?? "" ,
-//                "SesacKey": APIKey.key
-//            ])
         ])
         
-        socket = self.manager.socket(forNamespace: "/ws-channel-238")
+//        socket = self.manager.socket(forNamespace: "/ws-channel-238")
+        socket = self.manager.defaultSocket
         
         socket.on(clientEvent: .connect) { data, ack in
             print("SOCKET IS CONNECTED : ", data, ack)
-            
-//            if let array = data as? [Any],
-//               array.count == 2,
-//               let secondElement = array[1] as? [String: Any],
-//               let sid = secondElement["sid"] as? String {
-//                print("세션 아이디: \(sid)")
-//                
-//                self.socket.emit("channel", sid)
-//            } else {
-//                print("올바르지 않은 데이터 형식입니다.")
-//            }
-//            
-//            
-//            
-//            
-//            
-//            let data = [
-//                "Content-Type": "application/json",
-//                "Authorization": KeychainStorage.shared.accessToken ?? "" ,
-//                "SesacKey": APIKey.key
-//            ] as [String: Any]
-//            
-//            self.socket.emit("channel", data)
         }
         
         socket.on(clientEvent: .disconnect) { data, ack in
@@ -71,10 +42,27 @@ class SocketIOManager: NSObject {
         socket.on("channel") { data, ack in
             print("CHANNEL RECEIVED", data, ack)
         }
+    }
+    
+    // 소켓 연결
+    func establishConnection(_ channelId: Int) {
+        print("소켓 연결")
+        self.closeConnection()  // 혹시나 연결된 소켓 끊어주기? 굳이 할 필요가 없나.
         
-        socket.onAny { event in
-            print("-----------------------  onAny Event", event)
-        }
+        socket = self.manager.socket(forNamespace: "/ws-channel-\(channelId)")
+        socket.connect()
+    }
+    
+    // 소켓 연결 해제
+    func closeConnection() {
+        print("소켓 연결 해제")
+        socket.disconnect()
+    }
+    
+    // 채널 채팅 응답
+    func receiveChannelChatInfo(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
+        print("소켓 응답")
+        self.socket.on("channel", callback: completion)
     }
     
     func listenConnect(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
@@ -85,19 +73,9 @@ class SocketIOManager: NSObject {
         self.socket.on(clientEvent: .disconnect, callback: completion)
     }
     
-    func receivedChatInfo(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
-        self.socket.on("channel", callback: completion)
-    }
     
-    func establishConnection() {
-        print("소켓연결")
-        socket.connect()
-    }
+    
 
-    func closeConnection() {
-        print("소켓연결끊음")
-        socket.disconnect()
-    }
     
     
 //    func establishConnection() {
