@@ -20,7 +20,7 @@ class ChannelChattingViewModel {
     private var disposeBag = DisposeBag()
     
     private var workSpaceId: Int
-    private var channelId: Int
+    var channelId: Int
     private var channelName: String
     
     

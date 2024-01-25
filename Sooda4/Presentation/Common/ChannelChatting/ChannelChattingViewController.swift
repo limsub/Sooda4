@@ -50,6 +50,7 @@ class ChannelChattingViewController: BaseViewController {
 //            print("RECEIVED____", a, b)
 //        }
         
+        SocketIOManager.shared.establishConnection(.channel(channelId: viewModel.channelId))
         
         
         
@@ -196,6 +197,7 @@ class ChannelChattingViewController: BaseViewController {
         
         // **** socket test ****
 //        SocketIOManager.shared.closeConnection()
+        SocketIOManager.shared.closeConnection()
     }
     
     deinit {

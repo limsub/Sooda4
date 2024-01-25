@@ -10,6 +10,17 @@ import SocketIO
 
 // 152 / 238 (workspace id / channel id)
 
+enum SocketRouter {
+    case channel(channelId: Int)
+    
+    var nameSpace: String {
+        switch self {
+        case .channel(let channelId):
+            return "/ws-channel-\(channelId)"
+        }
+    }
+}
+
 class SocketIOManager: NSObject {
     
     static let shared = SocketIOManager()
@@ -45,11 +56,11 @@ class SocketIOManager: NSObject {
     }
     
     // 소켓 연결
-    func establishConnection(_ channelId: Int) {
+    func establishConnection(_ router: SocketRouter) {
         print("소켓 연결")
-        self.closeConnection()  // 혹시나 연결된 소켓 끊어주기? 굳이 할 필요가 없나.
+        self.closeConnection()  // 혹시 연결되어 있는 소켓이 있으면 끊어준다
         
-        socket = self.manager.socket(forNamespace: "/ws-channel-\(channelId)")
+        socket = self.manager.socket(forNamespace: router.nameSpace)
         socket.connect()
     }
     
