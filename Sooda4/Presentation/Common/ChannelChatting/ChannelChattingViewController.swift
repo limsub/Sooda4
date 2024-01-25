@@ -52,6 +52,9 @@ class ChannelChattingViewController: BaseViewController {
         
         SocketIOManager.shared.establishConnection(.channel(channelId: viewModel.channelId))
         
+        SocketIOManager.shared.receiveChannelChatInfo { data, ack in
+            print("received : ", data) 
+        }
         
         
         setNavigation(viewModel.nameOfChannel())

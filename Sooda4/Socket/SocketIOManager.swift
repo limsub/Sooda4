@@ -35,7 +35,7 @@ class SocketIOManager: NSObject {
         super.init()
         
         self.manager = SocketManager(socketURL: baseURL!, config: [
-            .log(true),
+//            .log(true),
             .compress
         ])
         
@@ -50,9 +50,9 @@ class SocketIOManager: NSObject {
             print("SOCKET IS DISCONNECTED : ", data, ack)
         }
         
-        socket.on("channel") { data, ack in
-            print("CHANNEL RECEIVED", data, ack)
-        }
+//        socket.on("channel") { data, ack in
+//            print("CHANNEL RECEIVED", data, ack)
+//        }
     }
     
     // 소켓 연결
@@ -70,16 +70,34 @@ class SocketIOManager: NSObject {
         socket.disconnect()
     }
     
-    // 채널 채팅 응답
+    // 소켓 응답
+    func receive<T: Decodable>(event: String, completion: @escaping (T, SocketAckEmitter) -> Void) {
+        
+        self.socket.on(event) { dataArr, ack in
+            guard let data = dataArr.first as? Data else { return }
+            
+            do {
+                let decodedData = try JSONDecoder().decode(T.self, from: data)
+                completion(decodedData, ack)
+            } catch {
+                print("디코딩 에러에러")
+            }
+        }
+    }
+
+    
     func receiveChannelChatInfo(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
         print("소켓 응답")
         self.socket.on("channel", callback: completion)
     }
     
+
+    // 소켓 연결 이벤트
     func listenConnect(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
         self.socket.on(clientEvent: .connect, callback: completion)
     }
     
+    // 소켓 연결 해제 이벤트
     func listenDisconnect(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
         self.socket.on(clientEvent: .disconnect, callback: completion)
     }

@@ -12,9 +12,8 @@ import RealmSwift
 
 class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
-    
-    
     private let realm = try! Realm()
+    
     func printURL() {
         print(realm.configuration.fileURL!)
     }
@@ -28,18 +27,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             .sorted(byKeyPath: "createdAt", ascending: false)
             .first?
             .createdAt
-        
-        
-
-//        return realm.objects(ChattingInfoTable.self)
-//            .filter(
-//                "workSpaceId == %@ AND channelId == %@",
-//                requestModel.workSpaceId,
-//                requestModel.channelId
-//            )
-//            .sorted(byKeyPath: "createdAt", ascending: false)
-//            .first?
-//            .createdAt
     }
     // 여기서 받은 Date를 cursor date로 해서 channelChattingRequest 요청
     
@@ -95,19 +82,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             .sorted(byKeyPath: "createdAt")
             .suffix(30)
             .map { $0.toDomain() }
-        
-        
-        
-//        return realm.objects(ChattingInfoTable.self)
-//            .filter(
-//                "workSpaceId == %@ AND channelId == %@ AND createdAt <= %@",
-//                requestModel.workSpaceId,
-//                requestModel.channelId,
-//                targetDate
-//            )
-//            .sorted(byKeyPath: "createdAt")
-//            .suffix(30)
-//            .map { $0.toDomain() }
     }
     
     
@@ -136,36 +110,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                 .prefix(30)
                 .map { $0.toDomain() }
         }
-        
-        
-        
-        
-        
-        
-//        if let targetDate {
-//            return realm.objects(ChattingInfoTable.self)
-//                .filter(
-//                    "workSpaceId == %@ AND channelId == %@ AND createdAt > %@",
-//                    requestModel.workSpaceId,
-//                    requestModel.channelId,
-//                    targetDate
-//                )
-//                .sorted(byKeyPath: "createdAt")
-//                .prefix(30)
-//                .map { $0.toDomain() }
-//            
-//        } else {
-//            return realm.objects(ChattingInfoTable.self)
-//                .filter(
-//                    "workSpaceId == %@ AND channelId == %@",
-//                    requestModel.workSpaceId,
-//                    requestModel.channelId
-//                )
-//                .sorted(byKeyPath: "createdAt")
-//                .prefix(30)
-//                .map { $0.toDomain() }
-//            
-//        }
     }
     
     
@@ -268,20 +212,6 @@ extension ChannelChattingRepository {
             dtoData: data,
             workSpaceId: workSpaceId
         )
-        
-//        do {
-//            try realm.write {
-//                print("디비에 채팅 데이터 하나 넣어주기")
-//                let table = ChattingInfoTable(
-//                    data,
-//                    workSpaceId: workSpaceId
-//                )
-//                realm.add(table)
-//            }
-//        } catch {
-//            print("에러났슈 - realm")
-//        }
-        
     }
     
     // 채팅 배열을 디비에 저장 (네트워크 응답 받은 후 실행)
@@ -293,21 +223,5 @@ extension ChannelChattingRepository {
                 workSpaceId: workSpaceId
             )
         }
-        
-        
-//        do {
-//            try realm.write {
-//                print("디비에 채팅 데이터 배열 넣어주기")
-//                dataList.forEach { dto in
-//                    let table = ChattingInfoTable(
-//                        dto,
-//                        workSpaceId: workSpaceId
-//                    )
-//                    realm.add(table)
-//                }
-//            }
-//        } catch {
-//            print("에러났슈 - realm")
-//        }
     }
 }
