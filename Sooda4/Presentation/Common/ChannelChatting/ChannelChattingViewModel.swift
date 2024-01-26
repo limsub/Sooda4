@@ -360,8 +360,12 @@ extension ChannelChattingViewModel {
                 
                 print("user ID 확인해서 내가 아닐 때만 배열 뒤에 붙여줌")
                 if newData.userId == KeychainStorage.shared._id { return }
+                
+                
                 self.chatArr.append(newData)
                 self.addNewChatData.onNext(())
+                
+                print("TODO : 소켓 응답 채팅 디비에 넣어주는 작업 필요!")
             }
     }
     

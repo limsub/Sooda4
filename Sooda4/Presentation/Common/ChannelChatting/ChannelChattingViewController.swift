@@ -74,8 +74,8 @@ class ChannelChattingViewController: BaseViewController {
         startObservingKeyboard()
         
         viewModel.loadData {
-            print("todo : 테이블뷰 리로드 및 스크롤 시점 잡아주기")
             self.mainView.chattingTableView.reloadData()
+            self.tableViewScrollToSeperatorCell()
         }
     }
     
@@ -472,6 +472,26 @@ extension ChannelChattingViewController {
             row: self.viewModel.numberOfRows() - 1,
             section: 0
         )
-        self.mainView.chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        self.mainView.chattingTableView.scrollToRow(
+            at: indexPath,
+            at: .bottom,
+            animated: false
+        )
+    }
+    
+    private func tableViewScrollToSeperatorCell() {
+        guard let row = viewModel.seperatorIndex else {
+            return tableViewScrollToBottom()
+        }
+        
+        let indexPath = IndexPath(
+            row: row,
+            section: 0
+        )
+        self.mainView.chattingTableView.scrollToRow(
+            at: indexPath,
+            at: .middle,
+            animated: false
+        )
     }
 }

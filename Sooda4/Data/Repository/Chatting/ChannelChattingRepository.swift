@@ -80,7 +80,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
         return realm.objects(ChannelChattingInfoTable.self)
             .filter("channelInfo.channel_id == %@ AND createdAt <= %@", requestModel.channelId, targetDate)
             .sorted(byKeyPath: "createdAt")
-            .suffix(30)
+            .suffix(50)
             .map { $0.toDomain() }
     }
     
@@ -99,7 +99,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                     targetDate
                 )
                 .sorted(byKeyPath: "createdAt")
-                .prefix(30)
+                .prefix(50)
                 .map { $0.toDomain() }
         } else {
             return realm.objects(ChannelChattingInfoTable.self)
@@ -107,7 +107,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                     "channelInfo.channel_id == %@",
                     requestModel.channelId
                 )
-                .prefix(30)
+                .prefix(50)
                 .map { $0.toDomain() }
         }
     }
