@@ -14,9 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
-        UserDefaults.standard.setValue(44, forKey: "userID")
-        UserDefaults.standard.setValue("", forKey: "accessToken")
+
         
         
         return true
@@ -41,5 +39,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        print(deviceToken)
 //        print("------------------------")
 //    }
+    
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print(#function)
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        print(#function)
+    }
 }
 

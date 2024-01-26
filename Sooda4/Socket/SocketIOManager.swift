@@ -20,6 +20,16 @@ class SocketIOManager: NSObject {
     private let baseURL = URL(string: APIKey.baseURL)   // url은 그냥 기본. namespace에서 찾아주기
     
     
+    
+   // 앱이 백그라운드로 나갔다가 다시 들어온 순간, 현재 저장된 socket(톡방)에 대해 다시 연결할 필요가 있는지 확인하기 위한 변수를 만들 필요가 있어보임.
+    // 특정 조건에 따라 소켓을 재연결할지 여부를 확인하는 로직 작성하기?
+    var shouldReconnect: Bool {
+        // 조건 써주기?
+        return false
+    }
+    // 아니면 백그라운드로 나갈 때 직접 값을 바꿔주고, 들어올 때마다 요 값을 확인하는 작업이 필요할수도?
+    
+    
     override init() {
         super.init()
         
