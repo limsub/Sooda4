@@ -116,6 +116,11 @@ class WorkSpaceListTableViewCell: BaseTableViewCell {
         
         
         // 이미지
+        workSpaceImageView.loadImage(
+            endURLString: model.thumbnail,
+            size: CGSize(width: 50, height: 50),
+            placeholder: .workspace
+        )
         
         
         // 타이틀
