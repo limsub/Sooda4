@@ -11,8 +11,8 @@ import Kingfisher
 extension UIImageView {
     
     func loadImage(endURLString: String, size: CGSize, placeholder: UIImage) {
-        
-        let imageURLString = APIKey.baseURL + "/" + endURLString
+//        - BASE_URL/v1/리턴받은 이미지나 파일경로+파일명
+        let imageURLString = APIKey.baseURL + "/v1" + endURLString
         let imageURL = URL(string: imageURLString)
 //        print("00000")
 //        print(imageURLString)
