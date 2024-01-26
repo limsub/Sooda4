@@ -72,6 +72,11 @@ class MemberListTableViewCell: BaseTableViewCell {
     
     func designCell(_ model: WorkSpaceUserInfo) {
         // 1. 이미지
+        profileImageView.loadImage(
+            endURLString: model.profileImage ?? "",
+            size: CGSize(width: 40, height: 40),
+            placeholder: .profileNoPhotoA
+        )
         
         // 2. 이름
         nameLabel.text = model.nickname
