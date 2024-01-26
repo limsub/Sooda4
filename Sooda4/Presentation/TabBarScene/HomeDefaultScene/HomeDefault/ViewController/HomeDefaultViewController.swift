@@ -95,27 +95,10 @@ class HomeDefaultViewController: BaseViewController {
         setTableView()
  
         bindVM()
-        
-//        addBlurView()
-        showBlurView(false)
-        
+
         SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: view)
     }
 
-//    func addBlurView() {
-//        UIApplication.shared.keyWindow!.bringSubviewToFront(aView)
-////        if let window = UIApplication.shared.windows.first {
-////            window.addSubview(aView)
-////            aView.snp.makeConstraints { make in
-////                make.edges.equalTo(window)
-////            }
-////        }
-//    }
-    
-    func showBlurView(_ show: Bool) {
-        aView.isHidden = !show
-    }
-    
     func setTableView() {
         mainView.tableView.delegate = self
         mainView.tableView.dataSource = self
@@ -128,11 +111,23 @@ class HomeDefaultViewController: BaseViewController {
         }
     }
     
-    func updateNavigationView() {
-        navigationTitleLabel.text = viewModel.workSpaceInfo?.name
-//        leftImageView.image = viewModel.workSpaceInfo?.thumbnail
-//        rightImageView.image = viewModel.myProfileInfo?.profileImage
+    private func updateNavigationView() {
+        let navigationInfo = viewModel.navigationData()
         
+        
+        navigationTitleLabel.text = navigationInfo.0
+        
+        leftImageView.loadImage(
+            endURLString: navigationInfo.1,
+            size: CGSize(width: 40, height: 40),
+            placeholder: .workspace
+        )
+        
+        rightImageView.loadImage(
+            endURLString: navigationInfo.2,
+            size: CGSize(width: 40, height: 40),
+            placeholder: .profileNoPhotoA
+        )
     }
     
 

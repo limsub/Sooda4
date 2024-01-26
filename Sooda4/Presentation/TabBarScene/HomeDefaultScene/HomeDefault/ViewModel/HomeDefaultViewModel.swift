@@ -35,6 +35,8 @@ struct HomeDefaultDMsDataModel {
 
 class HomeDefaultViewModel: BaseViewModelType {
     
+    private var disposeBag = DisposeBag()
+    
     private let homeDefaultWorkSpaceUseCase: HomeDefaultWorkSpaceUseCaseProtocol
     
     var didSendEventClosure: ( (HomeDefaultViewModel.Event) -> Void)?
@@ -48,7 +50,7 @@ class HomeDefaultViewModel: BaseViewModelType {
     }
     
     
-    /* ===== input / output pattern ===== */
+    /* ===== Input / Output pattern ===== */
     struct Input {
         let presentWorkSpaceList: ControlEvent<Void>
         let tableViewItemSelected: ControlEvent<IndexPath>  
@@ -137,19 +139,14 @@ class HomeDefaultViewModel: BaseViewModelType {
  
     
     
-    // 뷰를 그려주기 위한 데이터
+    
+    /* ===== Network Call - Completion ===== */
     var workSpaceInfo: MyOneWorkSpaceModel? // 네비게이션 - 이미지, 타이틀
     var myProfileInfo: WorkSpaceMyProfileInfoModel?  // 네비게이션 - 이미지
     var channelData: HomeDefaultChannelsDataModel?
     var dmData: HomeDefaultDMsDataModel?
-    
-    
-    private var disposeBag = DisposeBag()
-    
-    
-    
-    // 처음 필요한 네트워크 콜
-    /* ===== 네트워크 통신을 통해 데이터 저장 ===== */
+
+    // First Call
 //    (GET, /v1/workspaces/{id}) 를 통해 워크스페이스 정보
 //    (GET, /v1/workspaces/{id}/channels/my) 를 통해 채널 정보
 //    (GET, /v1/workspaces/{id}/dms) 을 통해 다이렉트 메시지 정보
@@ -236,12 +233,9 @@ class HomeDefaultViewModel: BaseViewModelType {
     }
     
     
-    
-    // 그 다음
+    // Second Call
     // (GET, /v1/workspaces/{id}/channels/{name}/unreads) 를 통해 읽지 않은 채널 채팅 개수 확인
     // GET, /v1/workspaces/{id}/dms/{roomID}/unreads) 를 통해 읽지 않은 디엠 채팅 개수 확인
-    
-    
     func fetchUnreadCount(completion: @escaping () -> Void) {
         // 채널 for문
         
@@ -301,14 +295,24 @@ class HomeDefaultViewModel: BaseViewModelType {
             completion()
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    /* ===== tableView DataSource에서 사용하기 위한 데이터 가공 및 로직 ===== */
+}
+
+// VC 데이터 전달
+extension HomeDefaultViewModel {
+    func navigationData() -> (String, String, String) {
+        // 타이틀, 웤스 이미지, 프로필 이미지
+        let title = self.workSpaceInfo?.name ?? ""
+        let wsImage = self.workSpaceInfo?.thumbnail ?? ""
+        let pfImage = self.myProfileInfo?.profileImage ?? ""
+        
+        return (title, wsImage, pfImage)
+    }
+}
+
+
+
+// TableView 로직
+extension HomeDefaultViewModel {
     func numberOfRowsInSection(section: Int) -> Int {
         guard let channelData, let dmData else { return 0 }
         
@@ -362,17 +366,6 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         return (channelData.sectionData[indexPath.row - 1].channelInfo, channelData.sectionData[indexPath.row - 1].unreadCount)
     }
-//    
-//    func channelCellData(_ indexPath: IndexPath) -> (String, Int) {
-//        guard let channelData else { return ("", 0) }
-//        
-////        print("--- indexPath : \(indexPath) / channelData : \(channelData.sectionData[indexPath.row - 1])")
-//        
-//        return (
-//            channelData.sectionData[indexPath.row - 1].channelInfo.name,
-//            channelData.sectionData[indexPath.row - 1].unreadCount
-//        )
-//    }
     
     func dmCellData(_ indexPath: IndexPath) -> (String?, String, Int) {
         guard let dmData else { return (nil, "", 0) }
@@ -398,16 +391,16 @@ class HomeDefaultViewModel: BaseViewModelType {
         
     }
     
-    
     func guardVMData() -> Bool {
         guard let channelData, let dmData else { return false }
         
         return true
     }
     
-    
 }
 
+
+// Event
 extension HomeDefaultViewModel {
     enum Event {
         case presentWorkSpaceListView(workSpaceId: Int)

@@ -97,7 +97,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
         profileImageView.loadImage(
             endURLString: sender.userImage ?? "",
             size: CGSize(width: 40, height: 40),
-            placeholder: .profileNoPhotoA  
+            placeholder: .profileNoPhotoA
         )
         
         // 2. 본문 (이름, 내용, 이미지)
