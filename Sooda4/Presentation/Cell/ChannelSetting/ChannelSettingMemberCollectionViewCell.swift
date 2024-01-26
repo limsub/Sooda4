@@ -28,6 +28,7 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
         view.textAlignment = .center
         view.setAppFont(.body)
         view.numberOfLines = 2
+        view.backgroundColor = .red
         return view
     }()
     
@@ -57,9 +58,15 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
     
     func designCell(imageUrl: String?, name: String) {
         // * 이미지 넣어주기
+        profileImageView.loadImage(
+            endURLString: imageUrl ?? "",
+            size: CGSize(width: 40, height: 40),
+            placeholder: .profileNoPhotoA
+        )
         
         nameLabel.text = name
-        nameLabel.textAlignment = .center
         nameLabel.setAppFont(.body)
+        nameLabel.textAlignment = .center
+        
     }
 }
