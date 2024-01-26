@@ -10,17 +10,6 @@ import SocketIO
 
 // 152 / 238 (workspace id / channel id)
 
-enum SocketRouter {
-    case channel(channelId: Int)
-    
-    var nameSpace: String {
-        switch self {
-        case .channel(let channelId):
-            return "/ws-channel-\(channelId)"
-        }
-    }
-}
-
 class SocketIOManager: NSObject {
     
     static let shared = SocketIOManager()
@@ -71,26 +60,33 @@ class SocketIOManager: NSObject {
     }
     
     // 소켓 응답
-    func receive<T: Decodable>(event: String, completion: @escaping (T, SocketAckEmitter) -> Void) {
+    func receive<T: Decodable>(
+        type: T.Type,
+        router: SocketRouter,
+        completion: @escaping (T) -> Void
+    ) {
         
-        self.socket.on(event) { dataArr, ack in
+        self.socket.on(router.event) { dataArr, ack in
             guard let data = dataArr.first as? Data else { return }
             
             do {
                 let decodedData = try JSONDecoder().decode(T.self, from: data)
-                completion(decodedData, ack)
+                completion(decodedData)
             } catch {
                 print("디코딩 에러에러")
             }
+            
+//            ack.with("hi")  // 서버에게 응답을 보낸다?
+//            ack.with("메세지 수신 완료!")
         }
     }
 
-    
-    func receiveChannelChatInfo(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
-        print("소켓 응답")
-        self.socket.on("channel", callback: completion)
-    }
-    
+//    
+//    func receiveChannelChatInfo(completion: @escaping ([Any], SocketAckEmitter) -> Void) {
+//        print("소켓 응답")
+//        self.socket.on("channel", callback: completion)
+//    }
+//    
 
     // 소켓 연결 이벤트
     func listenConnect(completion: @escaping ([Any], SocketAckEmitter) -> Void) {

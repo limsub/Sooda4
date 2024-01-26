@@ -32,16 +32,31 @@ protocol ChannelChattingUseCaseProtocol {
     // 4. 채팅 전송
     func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChattingInfoModel, NetworkError>>
     
+    
+    /* - 소켓 - */
+    // 연결
+    func openSocket(_ channelId: Int)
+    
+    // 해제
+    func closeSocket()
+    
+    // 응답
+    func receiveSocket(_ channelId: Int, completion: @escaping (ChattingInfoModel)-> Void)
 }
 
 class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     // 1. repo
     let channelChattingRepository: ChannelChattingRepositoryProtocol
+    let socketChannelChattingRepository: SocketChannelChattingRepositoryProtocol
     
     // 2. init
-    init(channelChattingRepository: ChannelChattingRepositoryProtocol) {
+    init(
+        channelChattingRepository: ChannelChattingRepositoryProtocol,
+        socketChannelChattingRepository: SocketChannelChattingRepositoryProtocol
+    ) {
         self.channelChattingRepository = channelChattingRepository
+        self.socketChannelChattingRepository = socketChannelChattingRepository
     }
     
     
@@ -91,6 +106,24 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChattingInfoModel, NetworkError>> {
         
         return channelChattingRepository.makeChatting(requestModel)
+    }
+    
+    
+    
+    /* - 소켓 - */
+    // 연결
+    func openSocket(_ channelId: Int) {
+        socketChannelChattingRepository.openSocket(channelId)
+    }
+    
+    // 해제
+    func closeSocket() {
+        socketChannelChattingRepository.closeSocket()
+    }
+    
+    // 응답
+    func receiveSocket(_ channelId: Int, completion: @escaping (ChattingInfoModel)-> Void) {
+        socketChannelChattingRepository.receiveSocket(channelId, completion: completion)
     }
 }
 
