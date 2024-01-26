@@ -52,6 +52,13 @@ class HomeDefaultDMTableViewCell: BaseTableViewCell {
     }
     
     func designCell(image: String?, text: String, count: Int) {
+        
+        profileImageView.loadImage(
+            endURLString: image ?? "",
+            size: CGSize(width: 30, height: 30),
+            placeholder: .profileNoPhotoA
+        )
+        
         titleLabel.setText(text)
         unreadCountLabel.setText(count)
         
