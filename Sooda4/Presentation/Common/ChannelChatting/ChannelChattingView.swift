@@ -59,7 +59,7 @@ class ChannelChattingView: BaseView {
         chattingInputBackView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(self)
             make.top.equalTo(chattingInputView.snp.top).inset(-8)
-            make.bottom.equalTo(chattingInputView.snp.bottom).offset(50)
+            make.bottom.equalTo(chattingInputView.snp.bottom).offset(12)
         }
         
         chattingTableView.snp.makeConstraints { make in

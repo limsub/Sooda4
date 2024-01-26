@@ -293,20 +293,6 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         }
         
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        // **** socket test ****
-        
-        
-//
-//        SocketIOManager.shared.emit(message: ["message": "This is a test message"])
-        
-//        SocketIOManager.shared.sendMessage(
-//            message: "테스트 메세지",
-//            nickname: "테스트 닉네임"
-//        )
-    }
 }
 
 
@@ -333,6 +319,7 @@ extension ChannelChattingViewController {
     }
     
     private func keyboardWillAppear(_ notification: Notification) {
+        print("********** keyboardWillAppear  **********")
         
         // 1. tableView 레이아웃 (bottom이 키보드 top + 인풋뷰 height)
         // 2. 스크롤 시점(?)도 키보드 top + 인풋뷰 height만큼 올려줘야 함.
@@ -342,74 +329,112 @@ extension ChannelChattingViewController {
         
         let key = UIResponder.keyboardFrameEndUserInfoKey
         guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
-        
-        print("- 키보드 올라옴 - ")
+//        
+//        print("- 키보드 올라옴 - ")
         print("keyboardFrame.height : ", keyboardFrame.height)
-        print("chattingBackView Frame.height : ", mainView.chattingInputBackView.frame.height)
-    
-        var height = keyboardFrame.height /*+ mainView.chattingInputBackView.frame.height*/
-        // inputView의 height은 필요가 없어.
+//        print("chattingBackView Frame.height : ", mainView.chattingInputBackView.frame.height)
+//    
+        let height = keyboardFrame.height - 83 /*+ mainView.chattingInputBackView.frame.height*/
+//        // inputView의 height은 필요가 없어.
+//        
+//        print("총 올려야 하는 height : ", height)
         
-        print("총 올려야 하는 height : ", height)
+//        mainView.chattingTableView.contentInset.bottom = height
+//        mainView.layoutIfNeeded()
         
+        let currentOffset = mainView.chattingTableView.contentOffset.y
         
-        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
+        let newOffset = max(currentOffset + height, 0)
         
-        let newOffset = CGPoint(
-            x: self.mainView.chattingTableView.contentOffset.x,
-            y: self.mainView.chattingTableView.contentOffset.y + height
-        )
+        print("현재 offset : \(currentOffset)")
+        print("새로운 offset : \(newOffset)")
         
-        print("새로운 스크롤 Offset : ", newOffset)
-                
         UIView.animate(withDuration: 0.25) {
-            self.mainView.chattingTableView.setContentOffset(
-                newOffset,
-                animated: true
-            )
+            self.mainView.chattingTableView.setContentOffset(CGPoint(x: 0, y: newOffset), animated: false)
         }
         
+
         
+//        let contentOffset = CGPoint(x: 0, y: -50)
+//        mainView.chattingTableView.setContentOffset(contentOffset, animated: true)
         
+//
+//        
+//        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
+//        
+//        let newOffset = CGPoint(
+//            x: self.mainView.chattingTableView.contentOffset.x,
+//            y: self.mainView.chattingTableView.contentOffset.y + height
+//        )
+//        
+//        print("새로운 스크롤 Offset : ", newOffset)
+//                
+//        UIView.animate(withDuration: 0.25) {
+//            self.mainView.chattingTableView.setContentOffset(
+//                newOffset,
+//                animated: true
+//            )
+//        }
         
-        // 테이블뷰의 스크롤 조절
-        mainView.chattingTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
-        mainView.chattingTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
-        
-        // 살짝 더 올라가.... 이유가 뭘까
-        
-        mainView.setConstraints()
+//        
+//        
+//        
+//        // 테이블뷰의 스크롤 조절
+//        mainView.chattingTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
+//        mainView.chattingTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
+//        
+//        // 살짝 더 올라가.... 이유가 뭘까
+//        
+//        mainView.setConstraints()
     }
     
     private func keyboardWillDisappear(_ notification: Notification) {
-        
+        print("********** keyboardWillDisappear  **********")
         
             
         let key = UIResponder.keyboardFrameEndUserInfoKey
         guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
         
-        print("- 키보드 내려감 - ")
-        print("keyboardFrame.height : ", keyboardFrame.height)
+        let height = keyboardFrame.height - 83
         
-        let height: CGFloat = 336 /*keyboardFrame.height*/
-    
-        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
+        let currentOffset = mainView.chattingTableView.contentOffset.y
         
-        let newOffset = CGPoint(
-            x: self.mainView.chattingTableView.contentOffset.x,
-            y: self.mainView.chattingTableView.contentOffset.y - height
-        )
+//        let newOffset = max(currentOffset + height, 0)
+//        let newOffset = min(
+//            currentOffset - height,
+//            mainView.chattingTableView.contentSize.height
+//        )
+        let newOffset = currentOffset - height
         
-        print("새로운 스크롤 Offset : ", newOffset)
-                
+        print("현재 offset : \(currentOffset)")
+        print("새로운 offset : \(newOffset)")
+        
         UIView.animate(withDuration: 0.25) {
-            self.mainView.chattingTableView.setContentOffset(
-                newOffset,
-                animated: true
-            )
+            self.mainView.chattingTableView.setContentOffset(CGPoint(x: 0, y: newOffset), animated: false)
         }
-        
-        mainView.setConstraints()
+//
+//        print("- 키보드 내려감 - ")
+//        print("keyboardFrame.height : ", keyboardFrame.height)
+//        
+//        let height: CGFloat = 336 /*keyboardFrame.height*/
+//    
+//        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
+//        
+//        let newOffset = CGPoint(
+//            x: self.mainView.chattingTableView.contentOffset.x,
+//            y: self.mainView.chattingTableView.contentOffset.y - height
+//        )
+//        
+//        print("새로운 스크롤 Offset : ", newOffset)
+//                
+//        UIView.animate(withDuration: 0.25) {
+//            self.mainView.chattingTableView.setContentOffset(
+//                newOffset,
+//                animated: true
+//            )
+//        }
+//        
+//        mainView.setConstraints()
     }
 }
 

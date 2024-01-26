@@ -295,16 +295,16 @@ extension ChannelChattingViewModel {
         chatArr.append(contentsOf: nextArr)
         
         
-        print("---------- previousData ----------")
-        previousArr.forEach { model in
-            print(model)
-        }
-        print("---------- seperatorData ----------")
-        print(seperatorData)
-        print("---------- nextData ----------")
-        nextArr.forEach { model in
-            print(model)
-        }
+//        print("---------- previousData ----------")
+//        previousArr.forEach { model in
+//            print(model)
+//        }
+//        print("---------- seperatorData ----------")
+//        print(seperatorData)
+//        print("---------- nextData ----------")
+//        nextArr.forEach { model in
+//            print(model)
+//        }
         
     }
 }
