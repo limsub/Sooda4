@@ -80,6 +80,8 @@ class ChannelChattingViewController: BaseViewController {
     }
     
     
+    
+    
     /* ===== set ===== */
     // 네비게이션 영역에 넣을 버튼
     let channelSettingButton = UIBarButtonItem(image: UIImage(named: "icon_list"), style: .plain, target: nil, action: nil)
@@ -211,7 +213,9 @@ class ChannelChattingViewController: BaseViewController {
         
         // **** socket test ****
 //        SocketIOManager.shared.closeConnection()
-        SocketIOManager.shared.closeConnection()
+//        SocketIOManager.shared.closeConnection()
+        
+        viewModel.disconnectSocket()
     }
     
     deinit {

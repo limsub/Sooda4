@@ -336,6 +336,11 @@ extension ChannelChattingViewModel {
     func dataForRowAt(_ indexPath: IndexPath) -> ChattingInfoModel {
         return chatArr[indexPath.row]
     }
+    
+    // 소켓 연결 해제
+    func disconnectSocket() {
+        self.closeSocket()
+    }
 }
 
 // Socket

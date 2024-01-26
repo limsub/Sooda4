@@ -43,7 +43,7 @@ class SocketIOManager: NSObject {
     
     // 소켓 연결
     func establishConnection(_ router: SocketRouter) {
-//        self.closeConnection()  // 혹시 연결되어 있는 소켓이 있으면 끊어준다
+        self.closeConnection()  // 혹시 연결되어 있는 소켓이 있으면 끊어준다
         print(#function)
         socket = self.manager.socket(forNamespace: router.nameSpace)
         socket.connect()
