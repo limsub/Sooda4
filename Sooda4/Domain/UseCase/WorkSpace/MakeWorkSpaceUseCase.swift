@@ -48,7 +48,7 @@ class MakeWorkSpaceUseCase: MakeWorkSpaceUseCaseProtocol {
     func loadImageData(endURLString: String) -> Single< Result<Data, Error> > {
         
         return Single.create { single in
-            let imageURLString = APIKey.baseURL + endURLString
+            let imageURLString = APIKey.baseURL + "/v1" + endURLString
             let imageURL = URL(string: imageURLString)
             
             let header = [
