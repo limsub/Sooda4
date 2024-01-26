@@ -39,23 +39,19 @@ class SocketIOManager: NSObject {
             print("SOCKET IS DISCONNECTED : ", data, ack)
         }
         
-//        socket.on("channel") { data, ack in
-//            print("CHANNEL RECEIVED", data, ack)
-//        }
     }
     
     // 소켓 연결
     func establishConnection(_ router: SocketRouter) {
-        print("소켓 연결")
-        self.closeConnection()  // 혹시 연결되어 있는 소켓이 있으면 끊어준다
-        
+//        self.closeConnection()  // 혹시 연결되어 있는 소켓이 있으면 끊어준다
+        print(#function)
         socket = self.manager.socket(forNamespace: router.nameSpace)
         socket.connect()
     }
     
     // 소켓 연결 해제
     func closeConnection() {
-        print("소켓 연결 해제")
+        print(#function)
         socket.disconnect()
     }
     
@@ -65,16 +61,16 @@ class SocketIOManager: NSObject {
         router: SocketRouter,
         completion: @escaping (T) -> Void
     ) {
+        print(#function)
         
         self.socket.on(router.event) { dataArr, ack in
-            guard let data = dataArr.first as? Data else { return }
             
-            do {
-                let decodedData = try JSONDecoder().decode(T.self, from: data)
-                completion(decodedData)
-            } catch {
-                print("디코딩 에러에러")
+            guard let data = dataArr.first,
+                  let decodedData: T = try? self.decodeData(data: data) else {
+                return
             }
+            
+            completion(decodedData)
             
 //            ack.with("hi")  // 서버에게 응답을 보낸다?
 //            ack.with("메세지 수신 완료!")
@@ -162,5 +158,14 @@ extension String {
         }
 
         return decodedString as String
+    }
+}
+
+extension SocketIOManager {
+    private func decodeData<T: Decodable>(data: Any) throws -> T {
+        let jsonData = try JSONSerialization.data(withJSONObject: data)
+        let decodedData = try JSONDecoder().decode(T.self, from: jsonData)
+        
+        return decodedData
     }
 }

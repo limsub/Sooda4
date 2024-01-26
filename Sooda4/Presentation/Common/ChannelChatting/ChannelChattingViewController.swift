@@ -56,6 +56,11 @@ class ChannelChattingViewController: BaseViewController {
 //            print("received : ", data)
 //        }
         
+//        SocketIOManager.shared.establishConnection(.channel(channelId: viewModel.channelId))
+//        SocketIOManager.shared.receive(type: SocketchannelChattingResponseDTO.self, router: .channel(channelId: viewModel.channelId)) { response in
+//            print(response)
+//        }
+        
         
         setNavigation(viewModel.nameOfChannel())
         setNavigationButton()
@@ -174,11 +179,7 @@ class ChannelChattingViewController: BaseViewController {
                     
                     
                     // 3.
-                    let indexPath = IndexPath(
-                        row: owner.viewModel.numberOfRows() - 1,
-                        section: 0
-                    )
-                    owner.mainView.chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+                    owner.tableViewScrollToBottom()
                     
                     
                     // 4.
@@ -192,6 +193,14 @@ class ChannelChattingViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
          
+        
+        output.addNewChatData
+            .subscribe(with: self) { owner , _ in
+                owner.mainView.chattingTableView.reloadData()
+                
+                owner.tableViewScrollToBottom()
+            }
+            .disposed(by: disposeBag)
         
     }
     
@@ -452,5 +461,17 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
             self.viewModel.imageData.onNext(imageArr)
         }
         
+    }
+}
+
+
+// private func
+extension ChannelChattingViewController {
+    private func tableViewScrollToBottom() {
+        let indexPath = IndexPath(
+            row: self.viewModel.numberOfRows() - 1,
+            section: 0
+        )
+        self.mainView.chattingTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
     }
 }

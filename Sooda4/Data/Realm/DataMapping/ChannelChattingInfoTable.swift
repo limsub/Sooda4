@@ -30,6 +30,7 @@ extension ChannelChattingInfoTable {
             content: self.content,
             createdAt: self.createdAt,
             files: self.files.map { $0 },
+            userId: self.userInfo?.user_id ?? -1, 
             userName: self.userInfo?.user_name ?? "",
             userImage: self.userInfo?.user_image ?? ""
         )

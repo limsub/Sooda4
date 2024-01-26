@@ -32,6 +32,8 @@ class ChannelChattingViewModel {
     
     let imageData = BehaviorSubject<[Data]>(value: [])    // 이미지 저장
     
+    private var addNewChatData = PublishSubject<Void>()
+    
     
     private var channelChattingUseCase: ChannelChattingUseCaseProtocol
     
@@ -62,6 +64,7 @@ class ChannelChattingViewModel {
         let showImageCollectionView: BehaviorSubject<Bool> // 선택한 이미지가 1개 이상이면 컬렉션뷰 보여준다
         let enabledSendButton: BehaviorSubject<Bool> // 텍스트가 입력되었거나 이미지가 있으면 버튼 활성화
         let resultMakeChatting: PublishSubject<ResultMakeChatting>  // 채팅 성공 시 뷰컨에서 처리해줄 일 해주기
+        let addNewChatData: PublishSubject<Void>    // 소켓 채팅 응답 시 뷰컨에 이벤트 전달
     }
     
     func transform(_ input: Input) -> Output {
@@ -148,7 +151,8 @@ class ChannelChattingViewModel {
         return Output(
             showImageCollectionView: showImageCollectionView,
             enabledSendButton: enabledSendButton,
-            resultMakeChatting: resultMakeChatting
+            resultMakeChatting: resultMakeChatting,
+            addNewChatData: self.addNewChatData
         )
     }
     
@@ -179,25 +183,6 @@ class ChannelChattingViewModel {
             completion()    // 아마 tableView reload
         }
     }
-    
-    
-//    func sendMessage(content: String, files: [Data], completion: @escaping () -> Void) {
-//        
-//        channelChattingUseCase.makeChatting(
-//            MakeChannelChattingRequestModel(
-//                channelName: self.channelName,
-//                workSpaceId: self.workSpaceId,
-//                content: content,
-//                files: files
-//            )
-//        ) { response in
-//            print("----- 채팅 전송 결과 -----")
-//            print(response)
-//        }
-//    }
-//    
-    
-    
 }
 
 
@@ -257,13 +242,12 @@ extension ChannelChattingViewModel {
             completion: completion
         )
         
-        // 소켓 오픈
+        // 소켓 오픈 및 응답 대기
         self.openSocket()
+        self.receiveSocket()
     }
     
-    private func openSocket() {
-        print("소켓 오픈")
-    }
+    
     
     // 3.
     private func fetchAllPastChatting() {
@@ -295,6 +279,7 @@ extension ChannelChattingViewModel {
             content: "기본 데이터",
             createdAt: Date(),
             files: [],
+            userId: -1,
             userName: "기본 데이터",
             userImage: "기본 데이터"
         )
@@ -351,6 +336,36 @@ extension ChannelChattingViewModel {
     func dataForRowAt(_ indexPath: IndexPath) -> ChattingInfoModel {
         return chatArr[indexPath.row]
     }
+}
+
+// Socket
+extension ChannelChattingViewModel {
+    // 소켓 연결
+    private func openSocket() {
+        print("소켓 연결")
+        channelChattingUseCase.openSocket(self.channelId)
+    }
+    
+    // 소켓 해제
+    private func closeSocket() {
+        print("소켓 연결 해졔")
+        channelChattingUseCase.closeSocket()
+    }
+    
+    // 응답
+    private func receiveSocket() {
+        channelChattingUseCase.receiveSocket(
+            self.channelId) { newData  in
+                print("소켓 응답!!!!! ", newData)
+                
+                print("user ID 확인해서 내가 아닐 때만 배열 뒤에 붙여줌")
+                if newData.userId == KeychainStorage.shared._id { return }
+                self.chatArr.append(newData)
+                self.addNewChatData.onNext(())
+            }
+    }
+    
+    
 }
 
 

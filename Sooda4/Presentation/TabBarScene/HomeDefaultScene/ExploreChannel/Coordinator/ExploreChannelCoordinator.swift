@@ -92,7 +92,8 @@ class ExploreChannelCoordinator: ExploreChannelCoordinatorProtocol {
             channelId: channelId,
             channelName: channelName,
             channelChattingUseCase: ChannelChattingUseCase(
-                channelChattingRepository: ChannelChattingRepository()
+                channelChattingRepository: ChannelChattingRepository(),
+                socketChannelChattingRepository: SocketChannelChattingRepository()
             )
         )
    

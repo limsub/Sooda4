@@ -7,11 +7,12 @@
 
 import Foundation
 
-struct ChattingInfoModel {
+struct ChattingInfoModel: Decodable {
     let content: String?
     let createdAt: Date
     let files: [String]
     
+    let userId: Int
     let userName: String
     let userImage: String?
 }

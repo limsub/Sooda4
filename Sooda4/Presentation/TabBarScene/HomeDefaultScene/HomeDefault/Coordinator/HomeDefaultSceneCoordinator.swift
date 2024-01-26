@@ -170,7 +170,10 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
             workSpaceId: workSpaceId,
             channelId: channelId,
             channelName: channelName,
-            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
+            channelChattingUseCase: ChannelChattingUseCase(
+                channelChattingRepository: ChannelChattingRepository(),
+                socketChannelChattingRepository: SocketChannelChattingRepository()
+            )
         )
         
         channelChattingVM.didSendEventClosure = { [weak self] event in

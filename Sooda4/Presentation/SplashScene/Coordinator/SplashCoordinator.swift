@@ -72,8 +72,12 @@ class SplashCoordinator: SplashCoordinatorProtocol {
             workSpaceId: 118,
             channelId: 0,
             channelName: "Final final",
-            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository())
+            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository(),
+                                                           socketChannelChattingRepository: SocketChannelChattingRepository()
+                                                          )
         )
+        
+        
         
         let vc = ChannelChattingViewController.create(with: vm)
         

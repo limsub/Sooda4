@@ -69,6 +69,7 @@ extension ChannelChattingDTO {
             content: content,
             createdAt: createdAt.toDate(to: .fromAPI)!,
             files: files,
+            userId: user.user_id,
             userName: user.nickname,
             userImage: user.profileImage
         )
