@@ -56,10 +56,20 @@ class ChannelChattingCellContentImageSetView: BaseView {
     
     func updateView(_ files: [String]) {
         
-//         test용
-        for i in 1...5 {
-            imageViews[i-1].image = UIImage(named: "sample\(i)")
+////         test용
+//        for i in 1...5 {
+//            imageViews[i-1].image = UIImage(named: "sample\(i)")
+//        }
+        
+        
+        for i in 0..<files.count {
+            imageViews[i].loadImage(
+                endURLString: files[i],
+                size: CGSize(width: 300, height: 300),
+                placeholder: .sample1
+            )
         }
+        
         
         // 레이아웃 초기화
         imageViews.forEach { item in
