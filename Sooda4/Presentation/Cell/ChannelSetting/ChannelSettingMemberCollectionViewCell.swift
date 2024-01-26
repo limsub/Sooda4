@@ -28,7 +28,7 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
         view.textAlignment = .center
         view.setAppFont(.body)
         view.numberOfLines = 2
-        view.backgroundColor = .red
+//        view.backgroundColor = .red
         return view
     }()
     

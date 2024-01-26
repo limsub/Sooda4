@@ -109,6 +109,8 @@ class ChannelChattingViewController: BaseViewController {
         viewModel.imageData
             .bind(to: mainView.chattingInputView.fileImageCollectionView.rx.items(cellIdentifier: ChannelChattingInputFileImageCollectionViewCell.description(), cellType: ChannelChattingInputFileImageCollectionViewCell.self)) { (row, element, cell) in
                 
+                cell.designCell(element)
+                
                 cell.cancelButton.rx.tap
                     .subscribe(with: self) { owner , _ in
                         print("cancelButton Clicked")
