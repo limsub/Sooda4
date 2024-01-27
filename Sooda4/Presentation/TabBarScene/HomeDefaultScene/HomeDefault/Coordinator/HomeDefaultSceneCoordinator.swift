@@ -270,6 +270,14 @@ extension HomeDefaultSceneCoordinator: CoordinatorFinishDelegate {
         
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
 //        navigationController.viewControllers.removeAll()  // 이걸 해버리면 남아있던 HomeDefault도 날라가. 근데 아마 여기서 얘를 날릴 일은 없을 것 같아. 어차피 얘가 베이스로 깔려있고 위에 present 이것저것 해주고 있어서 ㅇㅇ
+        // -> 근데 여기서 하나도 안날리면 안돼. HomeDefault 빼고 나머지를 다 날려줘야 걔네들이 메모리에 안남아있어
+        navigationController.viewControllers = navigationController.viewControllers.filter{ vc in
+            if let _ = vc as? HomeDefaultViewController {
+                return true
+            }
+            
+            return false
+        }
         navigationController.dismiss(animated: true)
         
         

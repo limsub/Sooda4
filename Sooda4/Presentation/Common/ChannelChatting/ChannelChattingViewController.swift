@@ -12,7 +12,7 @@ import PhotosUI
 import SocketIO
 
 
-class ChannelChattingViewController: BaseViewController {
+final class ChannelChattingViewController: BaseViewController {
     
     let mainView = ChannelChattingView()
     
@@ -31,35 +31,10 @@ class ChannelChattingViewController: BaseViewController {
     }
     
     
-    
-    // **** socket test ****
-//    let sss = SocketIOManager.shared
-    
+    /* ===== life cycle ===== */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // **** socket test ****
-        
-//        sss.receivedChatInfo { data, ack in
-//            print("SOCKET RECEIVED : ", data, ack)
-//        }
-//        sss.establishConnection()
-//        sss.establishConnection(238)
-//
-//        SocketIOManager.shared.socket.on("channel") { a, b in
-//            print("RECEIVED____", a, b)
-//        }
-        
-//        SocketIOManager.shared.establishConnection(.channel(channelId: viewModel.channelId))
-//        
-//        SocketIOManager.shared.receiveChannelChatInfo { data, ack in
-//            print("received : ", data)
-//        }
-        
-//        SocketIOManager.shared.establishConnection(.channel(channelId: viewModel.channelId))
-//        SocketIOManager.shared.receive(type: SocketchannelChattingResponseDTO.self, router: .channel(channelId: viewModel.channelId)) { response in
-//            print(response)
-//        }
+
         
         
         setNavigation(viewModel.nameOfChannel())
@@ -72,11 +47,41 @@ class ChannelChattingViewController: BaseViewController {
         bindVM()
         
         startObservingKeyboard()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        viewModel.loadData {
-            self.mainView.chattingTableView.reloadData()
-            self.tableViewScrollToSeperatorCell()
-        }
+        print(#function)
+        loadData()
+        startObservingSocket()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        print(#function)
+        viewModel.disconnectSocket()
+        removeObservingSocket()
+    }
+    
+    
+    deinit {    // 이거 지금 실행 안됨ㅠ
+        print("채널 채팅 뷰 deinit!! - 지우는 noti observer 많음!")
+        
+        let notificationCenter = NotificationCenter.default
+        
+        notificationCenter.removeObserver(
+            self,
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        
+        notificationCenter.removeObserver(
+            self,
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
     }
     
     
@@ -138,7 +143,7 @@ class ChannelChattingViewController: BaseViewController {
         
         
         
-        /* === Input / Output === */
+        /* === Input / Output === */ // - 채팅 보내는 작업 진행
         let input = ChannelChattingViewModel.Input(
             chattingText: mainView.chattingInputView.chattingTextView.rx.text.orEmpty,
             sendButtonClicked: mainView.chattingInputView.sendButton.rx.tap,
@@ -208,47 +213,14 @@ class ChannelChattingViewController: BaseViewController {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        print(#function)
-    }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        print(#function)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        print(#function)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        print(#function)
-        viewModel.disconnectSocket()
-    }
-    
-    deinit {
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.removeObserver(
-            self,
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        
-        notificationCenter.removeObserver(
-            self,
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-        
-
+    /* ===== load data ===== */
+    // - 뷰가 화면에 나올 때 (viewDidAppear, sceneDidBecomeActive)
+    func loadData() {
+        viewModel.loadData {
+            self.mainView.chattingTableView.reloadData()
+            self.tableViewScrollToSeperatorCell()
+        }
     }
 }
 
@@ -315,9 +287,10 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
 }
 
 
-// Keyboard Observing
+// Observing (keyboard, socket)
 extension ChannelChattingViewController {
     
+    /* keyboard */
     private func startObservingKeyboard() {
         
         let notificationCenter = NotificationCenter.default
@@ -338,7 +311,7 @@ extension ChannelChattingViewController {
     }
     
     private func keyboardWillAppear(_ notification: Notification) {
-        print("********** keyboardWillAppear  **********")
+//        print("********** keyboardWillAppear  **********")
         
         // 1. tableView 레이아웃 (bottom이 키보드 top + 인풋뷰 height)
         // 2. 스크롤 시점(?)도 키보드 top + 인풋뷰 height만큼 올려줘야 함.
@@ -350,7 +323,7 @@ extension ChannelChattingViewController {
         guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
 //        
 //        print("- 키보드 올라옴 - ")
-        print("keyboardFrame.height : ", keyboardFrame.height)
+//        print("keyboardFrame.height : ", keyboardFrame.height)
 //        print("chattingBackView Frame.height : ", mainView.chattingInputBackView.frame.height)
 //    
         let height = keyboardFrame.height - 83 /*+ mainView.chattingInputBackView.frame.height*/
@@ -365,8 +338,8 @@ extension ChannelChattingViewController {
         
         let newOffset = max(currentOffset + height, 0)
         
-        print("현재 offset : \(currentOffset)")
-        print("새로운 offset : \(newOffset)")
+//        print("현재 offset : \(currentOffset)")
+//        print("새로운 offset : \(newOffset)")
         
         UIView.animate(withDuration: 0.25) {
             self.mainView.chattingTableView.setContentOffset(CGPoint(x: 0, y: newOffset), animated: false)
@@ -408,7 +381,7 @@ extension ChannelChattingViewController {
     }
     
     private func keyboardWillDisappear(_ notification: Notification) {
-        print("********** keyboardWillDisappear  **********")
+//        print("********** keyboardWillDisappear  **********")
         
             
         let key = UIResponder.keyboardFrameEndUserInfoKey
@@ -425,8 +398,8 @@ extension ChannelChattingViewController {
 //        )
         let newOffset = currentOffset - height
         
-        print("현재 offset : \(currentOffset)")
-        print("새로운 offset : \(newOffset)")
+//        print("현재 offset : \(currentOffset)")
+//        print("새로운 offset : \(newOffset)")
         
         UIView.animate(withDuration: 0.25) {
             self.mainView.chattingTableView.setContentOffset(CGPoint(x: 0, y: newOffset), animated: false)
@@ -454,6 +427,33 @@ extension ChannelChattingViewController {
 //        }
 //        
 //        mainView.setConstraints()
+    }
+    
+    
+    /* socket */
+    private func startObservingSocket() {
+        // SceneDidBecomeActive에서 소켓 재연결의 필요성을 확인하고, 노티를 보낸다 -> loadData
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(socketReconnectAndReloadData),
+            name: NSNotification.Name("socketShouldReconnect"),
+            object: nil
+        )
+    }
+    
+    private func removeObservingSocket() {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: NSNotification.Name("socketShouldReconnect"),
+            object: nil
+        )
+    }
+    
+    @objc
+    private func socketReconnectAndReloadData() {
+        print("Scene에서 연락 받음 : 다시 소켓 연결해야 함!\n")
+        
+        self.loadData()
     }
 }
 

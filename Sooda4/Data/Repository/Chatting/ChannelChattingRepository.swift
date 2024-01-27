@@ -21,7 +21,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
         
-        self.printURL()
+//        self.printURL()
         
         return realm.objects(ChannelChattingInfoTable.self)
             .filter("channelInfo.channel_id == %@", requestModel.channelId)
@@ -48,11 +48,11 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             api: .channelChattings(dto)) { result in
                 switch result {
                 case .success(let dtoData):
-                    print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
+                    print("최신 채팅에 대한 응답 완료 - v1 : 확인한 채팅 중 마지막 채팅도 포함해서 받음. 디비에 넣어주기")
                     dtoData.forEach { item in
                         print(item)
                     }
-                    print("예외처리 필요 (아직 안함) 소켓이 이미 열렸기 때문에, 소켓에서 받은 채팅이 디비에 있을 수 있다. 즉, 여기서 받은 데이터가 디비에 없는지 확인하는 작업이 필요하다")
+                    print("예외처리 필요 (완료) 소켓이 이미 열렸기 때문에, 소켓에서 받은 채팅이 디비에 있을 수 있다. 즉, 여기서 받은 데이터가 디비에 없는지 확인하는 작업이 필요하다")
                     DispatchQueue.main.async {
                         self.addDataList(
                             dataList: dtoData,

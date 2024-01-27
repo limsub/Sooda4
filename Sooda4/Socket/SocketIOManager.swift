@@ -19,15 +19,9 @@ class SocketIOManager: NSObject {
     
     private let baseURL = URL(string: APIKey.baseURL)   // url은 그냥 기본. namespace에서 찾아주기
     
+    var isOpen = false          // 소켓 연결 상태를 쉽게 파악하기 위한 변수
+    var shouldReconnect = false // 앱이 포그라운드로 진입할 때(sceneDidBecomeActive), 소켓을 재연결해야 하는지 여부 -> sceneDidEnterBackground에서 값 변경
     
-    
-   // 앱이 백그라운드로 나갔다가 다시 들어온 순간, 현재 저장된 socket(톡방)에 대해 다시 연결할 필요가 있는지 확인하기 위한 변수를 만들 필요가 있어보임.
-    // 특정 조건에 따라 소켓을 재연결할지 여부를 확인하는 로직 작성하기?
-    var shouldReconnect: Bool {
-        // 조건 써주기?
-        return false
-    }
-    // 아니면 백그라운드로 나갈 때 직접 값을 바꿔주고, 들어올 때마다 요 값을 확인하는 작업이 필요할수도?
     
     
     override init() {
@@ -57,12 +51,23 @@ class SocketIOManager: NSObject {
         print(#function)
         socket = self.manager.socket(forNamespace: router.nameSpace)
         socket.connect()
+        self.isOpen = true
+        
+        /* 테스트용 */
+        socket.on(clientEvent: .connect) { data, ack in
+            print("SOCKET IS CONNECTED : ", data, ack)
+        }
+        
+        socket.on(clientEvent: .disconnect) { data, ack in
+            print("SOCKET IS DISCONNECTED : ", data, ack)
+        }
     }
     
     // 소켓 연결 해제
     func closeConnection() {
         print(#function)
         socket.disconnect()
+        self.isOpen = false
     }
     
     // 소켓 응답

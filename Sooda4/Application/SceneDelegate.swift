@@ -12,6 +12,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     var appCoordinator: AppCoordinator?
+    
+    var socketManager = SocketIOManager.shared
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -43,20 +45,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
         
         print(#function)
+        print("재연결 여부 : ", socketManager.shouldReconnect)
+        if socketManager.shouldReconnect {
+            // Notification Center로 해당 화면(채팅 화면 - 소켓이 열리는 화면)에 노티 보내기
+            // -> 네트워크 콜 하고, 소켓 연결하고 오만가지 함.
+            NotificationCenter.default.post(
+                name: NSNotification.Name("socketShouldReconnect"),
+                object: nil
+            )
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         
-        print(#function)
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
         
-        print(#function)
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -65,6 +74,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
         
         print(#function)
+        print("오픈 여부 : ", socketManager.isOpen)
+        // 소켓이 연결되어 있는 상태에서 백그라운드로 앱을 보내면,
+        // 1. 일단 소켓 끊어주고
+        // 2. 다시 포그라운드 진입 시 소켓 연결하도록 한다
+        if socketManager.isOpen {
+            socketManager.closeConnection()      // 1.
+            socketManager.shouldReconnect = true // 2.
+        } else {
+            socketManager.shouldReconnect = false
+        }
+        
+        
     }
 
 
