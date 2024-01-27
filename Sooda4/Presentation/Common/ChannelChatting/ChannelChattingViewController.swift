@@ -31,18 +31,20 @@ final class ChannelChattingViewController: BaseViewController {
     }
     
     
+    
+    
+    
     /* ===== life cycle ===== */
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        
         setNavigation(viewModel.nameOfChannel())
         setNavigationButton()
         
         setPHPicker()
         setTableView()
         setTextView()
+        setNewMessageToastView()
         
         bindVM()
         
@@ -108,6 +110,15 @@ final class ChannelChattingViewController: BaseViewController {
     
     func setTextView() {
         mainView.chattingInputView.chattingTextView.delegate = self
+    }
+    
+    func setNewMessageToastView() {
+        // 1. 뷰를 클릭하면, 스크롤을 맨 아래로 위치시킴 (animation x)
+        mainView.newMessageView.fakeButton.rx.tap
+            .subscribe(with: self) { owner , _ in
+                owner.tableViewScrollToBottom()
+            }
+            .disposed(by: disposeBag)
     }
         
     
@@ -205,12 +216,24 @@ final class ChannelChattingViewController: BaseViewController {
             .disposed(by: disposeBag)
          
         
+        
         // addNewChatData : 소켓 응답으로 새로운 채팅을 받았을 때
         output.addNewChatData
-            .subscribe(with: self) { owner , _ in
+            .subscribe(with: self) { owner , newChat in
+                
+                // 현재 스크롤 위치에 따라 토스트 뷰를 띄울지, 스크롤을 바닥으로 내릴지
+                // 일단 지금은 두 케이스 모두 배열에 붙이고 있긴 함. 만약 아래 pagination이 완료되지 않은 상태라면 배열 뒤에 붙이면 안됨 -> 버튼 클릭했을 때 싹 해야해
+                
                 owner.mainView.chattingTableView.reloadData()
                 
-                owner.tableViewScrollToBottom()
+                if owner.viewModel.showNewMessageToast() {
+                    owner.mainView.newMessageView.setUpView(newChat)
+                    
+                } else {
+                    owner.tableViewScrollToBottom()
+                }
+                
+                
             }
             .disposed(by: disposeBag)
         
@@ -288,15 +311,28 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(#function)
+        print("***** 스크롤뷰 디드스크롤 *****")
         
-        print(scrollView.contentOffset)
-        print(scrollView.contentSize)
+        // 1. 현재 스크롤이 바닥에 있는지 아닌지 (소켓으로 응답 받았을 때 newMessageToastView 여부)
+        let isBottom = scrollView.contentSize.height - scrollView.contentOffset.y < 800
+        viewModel.setUpIsScrollBottom(isBottom)         // 매번 함수 실행하는게 살짝 무리이려나..?
+        
+        // 1.5 스크롤이 아래로 내려왔으면, hidden 처리해주기
+        // * 애니메이션이 안먹긴 하는데, 일단 넘어가
+        if !viewModel.showNewMessageToast() {
+            UIView.transition(
+                with: self.mainView.newMessageView,
+                duration: 1) {
+                    self.mainView.newMessageView.isHidden = true
+                }
+        }
+        
+        
+        
         
         // 차이가 900 미만으로 들어왔을 때 pagination 진행
         
-        print(#function)
-        
+        print("*************************")
     }
 }
 

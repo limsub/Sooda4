@@ -90,6 +90,25 @@ class NewMessageToastView: BaseView {
     override func setting() {
         super.setting()
         
-        self.backgroundColor = .black.withAlphaComponent(0.5)
+        self.backgroundColor = .black.withAlphaComponent(0.7)
+    }
+    
+    func setUpView(_ sender: ChattingInfoModel) {
+        self.isHidden = false
+        
+        // 프로필 이미지
+        profileImageView.loadImage(
+            endURLString: sender.userImage ?? "",
+            size: CGSize(width: 40, height: 40),
+            placeholder: .profileNoPhotoA
+        )
+        
+        // 프로필 이름
+        nameLabel.text = sender.userName
+        nameLabel.setAppFont(.caption)
+        
+        // 채팅 내용
+        contentLabel.text = sender.content
+        contentLabel.setAppFont(.body)
     }
 }

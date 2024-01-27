@@ -81,6 +81,9 @@ class ChannelChattingView: BaseView {
         
         chattingInputView.fileImageCollectionView.isHidden = false
         self.setConstraints()
+        
+        
+        newMessageView.isHidden = true 
     }
     
 }

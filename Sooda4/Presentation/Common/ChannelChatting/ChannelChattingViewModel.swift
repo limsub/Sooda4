@@ -32,10 +32,11 @@ class ChannelChattingViewModel {
     
     let imageData = BehaviorSubject<[Data]>(value: [])    // 이미지 저장
     
-    private var addNewChatData = PublishSubject<Void>()
+    private var addNewChatData = PublishSubject<ChattingInfoModel>()
     
     
-    
+    // 현재 스크롤 위치에 대한 정보 -> newMessageToastView 띄울 때 사용
+    private var isScrollBottom = false
     
     
     
@@ -70,7 +71,7 @@ class ChannelChattingViewModel {
         let showImageCollectionView: BehaviorSubject<Bool> // 선택한 이미지가 1개 이상이면 컬렉션뷰 보여준다
         let enabledSendButton: BehaviorSubject<Bool> // 텍스트가 입력되었거나 이미지가 있으면 버튼 활성화
         let resultMakeChatting: PublishSubject<ResultMakeChatting>  // 채팅 성공 시 뷰컨에서 처리해줄 일 해주기
-        let addNewChatData: PublishSubject<Void>    // 소켓 채팅 응답 시 뷰컨에 이벤트 전달
+        let addNewChatData: PublishSubject<ChattingInfoModel>    // 소켓 채팅 응답 시 뷰컨에 이벤트 전달
     }
     
     func transform(_ input: Input) -> Output {
@@ -330,7 +331,7 @@ extension ChannelChattingViewModel {
 }
 
 
-// VC에 전달
+// VC
 extension ChannelChattingViewModel {
     // 채널 이름
     func nameOfChannel() -> String {
@@ -361,6 +362,15 @@ extension ChannelChattingViewModel {
     func disconnectSocket() {
         self.closeSocket()
     }
+    
+    // 스크롤 시점 전달받음
+    func setUpIsScrollBottom(_ value: Bool) {
+        self.isScrollBottom = value
+        print(value)
+    }
+    func showNewMessageToast() -> Bool {
+        return !self.isScrollBottom     // 스크롤이 위에 있으면 띄운다
+    }
 }
 
 // Socket
@@ -390,7 +400,7 @@ extension ChannelChattingViewModel {
                 // 아직 아래 페이지네이션이 모두 되어있지 않은 상태라면, 배열 뒤에 붙이지 않는다. (디비에만 저장)
                 // 대신, toastChatData에 값을 넣어서, 토스트 메세지로 뜨게 해준다.
                 self.chatArr.append(newData)
-                self.addNewChatData.onNext(())
+                self.addNewChatData.onNext(newData)
             }
     }
 }
