@@ -33,6 +33,8 @@ class ChannelChattingView: BaseView {
     }()
     
     let chattingInputView = ChannelChattingInputView()
+    
+    let newMessageView = NewMessageToastView()
 
     
     override func setConfigure() {
@@ -41,15 +43,12 @@ class ChannelChattingView: BaseView {
         self.addSubview(chattingTableView)
         self.addSubview(chattingInputBackView)
         self.addSubview(chattingInputView)
+        self.addSubview(newMessageView)
     }
     
     override func setConstraints() {
         super.setConstraints()
-        
 
-        
-        
-        
         chattingInputView.snp.makeConstraints { make in
             make.horizontalEdges.equalTo(self).inset(16)
             make.bottom.equalTo(keyboardLayoutGuide.snp.top).offset(-12)
@@ -66,6 +65,13 @@ class ChannelChattingView: BaseView {
             make.top.horizontalEdges.equalTo(self)
             
             // 키보드 레이아웃 + 그 때 chattingInputView height만큼
+            make.bottom.equalTo(chattingInputBackView.snp.top)
+        }
+        
+        
+        newMessageView.snp.makeConstraints { make in
+            make.height.equalTo(56)
+            make.horizontalEdges.equalTo(self)
             make.bottom.equalTo(chattingInputBackView.snp.top)
         }
     }

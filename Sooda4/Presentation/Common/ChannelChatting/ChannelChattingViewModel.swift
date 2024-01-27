@@ -35,6 +35,12 @@ class ChannelChattingViewModel {
     private var addNewChatData = PublishSubject<Void>()
     
     
+    
+    
+    
+    
+    
+    
     private var channelChattingUseCase: ChannelChattingUseCaseProtocol
     
     
@@ -156,11 +162,7 @@ class ChannelChattingViewModel {
         )
     }
     
-//    let repo = ChannelChattingRepository()
-    
-    
-    
-    
+
     
     
     
@@ -309,6 +311,24 @@ extension ChannelChattingViewModel {
     }
 }
 
+// Pagination
+extension ChannelChattingViewModel {
+    
+    
+    
+    // 위로 pagination
+    func paginationPreviousData() {
+        
+    }
+    
+    
+    // 아래로 pagination
+    func paginationNextData() {
+        
+    }
+    
+}
+
 
 // VC에 전달
 extension ChannelChattingViewModel {
@@ -367,12 +387,12 @@ extension ChannelChattingViewModel {
                 if newData.userId == KeychainStorage.shared._id { return }
                 
                 
+                // 아직 아래 페이지네이션이 모두 되어있지 않은 상태라면, 배열 뒤에 붙이지 않는다. (디비에만 저장)
+                // 대신, toastChatData에 값을 넣어서, 토스트 메세지로 뜨게 해준다.
                 self.chatArr.append(newData)
                 self.addNewChatData.onNext(())
             }
     }
-    
-    
 }
 
 
@@ -385,7 +405,7 @@ extension ChannelChattingViewModel {
     }
 }
 
-
+// Event
 extension ChannelChattingViewModel {
     enum Event {
         case goBackHomeDefault(workSpaceId: Int)

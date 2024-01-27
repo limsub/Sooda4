@@ -205,6 +205,7 @@ final class ChannelChattingViewController: BaseViewController {
             .disposed(by: disposeBag)
          
         
+        // addNewChatData : 소켓 응답으로 새로운 채팅을 받았을 때
         output.addNewChatData
             .subscribe(with: self) { owner , _ in
                 owner.mainView.chattingTableView.reloadData()
@@ -284,6 +285,17 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
             
             return cell
         }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(#function)
+        
+        print(scrollView.contentOffset)
+        print(scrollView.contentSize)
+        
+        // 차이가 900 미만으로 들어왔을 때 pagination 진행
+        
+        print(#function)
         
     }
 }
