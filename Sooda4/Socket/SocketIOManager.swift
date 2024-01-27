@@ -53,20 +53,13 @@ class SocketIOManager: NSObject {
         socket.connect()
         self.isOpen = true
         
-        /* 테스트용 */
-        socket.on(clientEvent: .connect) { data, ack in
-            print("SOCKET IS CONNECTED : ", data, ack)
-        }
-        
-        socket.on(clientEvent: .disconnect) { data, ack in
-            print("SOCKET IS DISCONNECTED : ", data, ack)
-        }
     }
     
     // 소켓 연결 해제
     func closeConnection() {
         print(#function)
         socket.disconnect()
+        socket.removeAllHandlers()
         self.isOpen = false
     }
     

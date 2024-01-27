@@ -113,16 +113,19 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     /* - 소켓 - */
     // 연결
     func openSocket(_ channelId: Int) {
+        print("--- USECASE - OPENSOCKET ---")
         socketChannelChattingRepository.openSocket(channelId)
     }
     
     // 해제
     func closeSocket() {
+        print("--- USECASE - CLOSESOCKET ---")
         socketChannelChattingRepository.closeSocket()
     }
     
     // 응답
     func receiveSocket(_ channelId: Int, completion: @escaping (ChattingInfoModel)-> Void) {
+        print("--- USECASE - RECEIVESOCKET ---")
         socketChannelChattingRepository.receiveSocket(channelId, completion: completion)
     }
 }

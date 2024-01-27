@@ -60,6 +60,8 @@ final class ChannelChattingViewController: BaseViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
+        
+        
         print(#function)
         viewModel.disconnectSocket()
         removeObservingSocket()

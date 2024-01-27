@@ -369,8 +369,6 @@ extension ChannelChattingViewModel {
                 
                 self.chatArr.append(newData)
                 self.addNewChatData.onNext(())
-                
-                print("TODO : 소켓 응답 채팅 디비에 넣어주는 작업 필요!")
             }
     }
     

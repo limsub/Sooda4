@@ -52,7 +52,10 @@ extension SocketChannelChattingRepository {
     private func addDTOData(dtoData: ChannelChattingDTO, workSpaceId: Int) {
         
         /* 디비에 저장하려고 하는 채팅이 이미 디비에 있는 채팅인지 확인하는 작업 */
-        if let _ = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first { return }
+        if let _ = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first {
+            print("디비에 이미 있는 채팅. 걸러")
+            return
+        }
         
         do {
             try realm.write {
