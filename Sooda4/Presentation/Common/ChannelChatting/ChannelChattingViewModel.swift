@@ -218,10 +218,10 @@ extension ChannelChattingViewModel {
         
         if var targetDate = lastChattingDate {
             // * 임시 : 1ms 더해서 네트워크 콜 쏜다. (v2에서 바뀔 예정)
-            var dateComponents = DateComponents()
-            dateComponents.second = 1
-            targetDate = Calendar.current.date(byAdding: dateComponents, to: targetDate)!
- 
+//            var dateComponents = DateComponents()
+//            dateComponents.second = 1
+//            targetDate = Calendar.current.date(byAdding: dateComponents, to: targetDate)!
+            // -> 디비 저장 시 이미 디비에 저장된 채팅인지 체크하는 로직 추가
             
             requestModel = ChannelChattingRequestModel(
                 workSpaceId: workSpaceId,

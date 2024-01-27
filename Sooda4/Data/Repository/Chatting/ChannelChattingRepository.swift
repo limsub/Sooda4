@@ -21,6 +21,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
         
+        self.printURL()
         
         return realm.objects(ChannelChattingInfoTable.self)
             .filter("channelInfo.channel_id == %@", requestModel.channelId)
@@ -48,6 +49,9 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                 switch result {
                 case .success(let dtoData):
                     print("최신 채팅에 대한 응답 완료. 디비에 넣어주기")
+                    dtoData.forEach { item in
+                        print(item)
+                    }
                     print("예외처리 필요 (아직 안함) 소켓이 이미 열렸기 때문에, 소켓에서 받은 채팅이 디비에 있을 수 있다. 즉, 여기서 받은 데이터가 디비에 없는지 확인하는 작업이 필요하다")
                     DispatchQueue.main.async {
                         self.addDataList(
@@ -152,6 +156,17 @@ extension ChannelChattingRepository {
     
     // ChannelChattinDTO 타입으로 채팅 정보를 받을 때, 이 채팅 정보를 디비에 저장하기
     private func addDTOData(dtoData: ChannelChattingDTO, workSpaceId: Int) {
+        
+        // 0. 디비에 저장하려고 하는 채팅이 이미 디비에 있는 채팅인지 확인하는 작업
+            // - 서버 오류로 인해 중복된 채팅을 받을 가능성이 있음
+            // - (현재는) createdAt을 주었을 때 해당 채팅을 포함해서 주기 때문에 필요하기도 함.
+            // - request를 보냄과 동시에 소켓이 오픈되기 때문에, 서버 입장에서 request를 받기 전, 소켓을 통해 이미 디비에 채팅이 저장될 가능성이 있음.
+        
+        if let existChatting = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first {
+            print("이미 디비에 있는 채널 -> 가드문 return")
+            return
+        }
+        
         
         do {
             try realm.write {
