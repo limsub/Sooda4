@@ -22,7 +22,7 @@ protocol ChannelChattingRepositoryProtocol {
     )
     
     // 3 - 1. 읽은 채팅
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel]
     
 //    func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel]
     

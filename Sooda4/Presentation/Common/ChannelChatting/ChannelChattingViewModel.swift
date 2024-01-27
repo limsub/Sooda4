@@ -37,8 +37,15 @@ class ChannelChattingViewModel {
     
     // 현재 스크롤 위치에 대한 정보 -> newMessageToastView 띄울 때 사용
     private var isScrollBottom = false
+    var yPos: CGFloat = 0
+    var delta: CGFloat = 0
     
+    // Pagination 변수 -> 다른 화면 갔다오면 네트워크 콜 다시 들어가기 때문에 또 초기화해줘야 함
+    private var stopPreviousPagination = false, stopNextPagination = false, isDonePreviousPagination = false, isDoneNextPagination = false
+    private var previousOffsetTargetDate: Date? = nil
+    private var nextOffsetTargetDate: Date? = nil
     
+    var notLoadScrollPagination = true  // 일단 초기 데이터를 다 부르고, 테이블뷰가 안정화된 다음에 didScroll로 인한 pagination이 실행되어야 함. 뷰 로드 되자마자 오두방정 떨어버리면 배열 난리난다.
     
     
     
@@ -184,6 +191,10 @@ class ChannelChattingViewModel {
             // (이전 (포함) 30 + sample + 이후 30)
             self.fetchAllPastChatting()
             completion()    // 아마 tableView reload
+            
+            // 4. 이제부터 스크롤에 따라 pagination 시작
+            print("이제부터 스크롤에 따라 pagination 시작")
+            self.notLoadScrollPagination = false
         }
     }
 }
@@ -262,20 +273,8 @@ extension ChannelChattingViewModel {
         
         print("-- chatArr에 데이터 추가 --")
         
-        let requestModel = ChannelDetailFullRequestModel(
-            workSpaceId: self.workSpaceId,
-            channelId: self.channelId,
-            channelName: self.channelName
-        )
-        
-        
         // 1.
-        let previousArr = channelChattingUseCase.fetchPreviousData(
-            requestModel: requestModel,
-            targetDate: self.lastChattingDate
-        )
-        chatArr.append(contentsOf: previousArr)
-        
+        self.fetchPreviousData(self.lastChattingDate, isFirst: true)
         
         // 2.
         let seperatorData = ChattingInfoModel(
@@ -291,13 +290,8 @@ extension ChannelChattingViewModel {
         
         
         // 3.
-        let nextArr = channelChattingUseCase.fetchNextData(
-            requestModel: requestModel,
-            targetDate: self.lastChattingDate
-        )
-        chatArr.append(contentsOf: nextArr)
-        
-        
+        self.fetchNextData(self.lastChattingDate)
+
 //        print("---------- previousData ----------")
 //        previousArr.forEach { model in
 //            print(model)
@@ -308,24 +302,176 @@ extension ChannelChattingViewModel {
 //        nextArr.forEach { model in
 //            print(model)
 //        }
-        
     }
 }
 
 // Pagination
 extension ChannelChattingViewModel {
     
+    func doPreviousPagination(indexPaths: [IndexPath], completion: @escaping () -> Void) {
+        if indexPaths.contains(where: { indexPath in
+            return indexPath.row == 1
+        }) {
+            // 0. 걸러
+            if stopPreviousPagination || isDonePreviousPagination { return }
+            
+            // 1. 일단 과호출 막아
+            self.stopPreviousPagination = true
+            
+            // 2. 디비에서 끄내
+            self.fetchPreviousData(previousOffsetTargetDate, isFirst: false)
+            
+            // 3. tableView reload
+            completion()
+            
+            // 4. stop 풀어줘
+            self.stopPreviousPagination = false
+        }
+    }
     
+    func doNextPagination(indexPaths: [IndexPath], completion: @escaping () -> Void) {
+        if indexPaths.contains(where: { indexPath in
+            return indexPath.row == self.numberOfRows() - 1
+        }) {
+            // 0. 걸러
+            if stopNextPagination || isDoneNextPagination { return }
+            
+            // 1. 일단 과호출 막아
+            self.stopNextPagination = true
+            
+            // 2. 디비에서 끄내
+            self.fetchNextData(nextOffsetTargetDate)
+            
+            // 3. tableView reload
+            completion()
+            
+            // 4. stop 풀어
+            self.stopNextPagination = false
+        }
+        
+    }
     
     // 위로 pagination
-    func paginationPreviousData() {
+    func paginationPreviousData(completion: @escaping () -> Void) {
+        // 0. 걸러
+        if stopPreviousPagination || isDonePreviousPagination { return }
+        
+        // 1. 일단 과호출 막아
+        self.stopPreviousPagination = true
+        
+        // 2. 디비에서 끄내
+        self.fetchPreviousData(previousOffsetTargetDate, isFirst: false)
+        
+        // 3. tableView reload
+        completion()
+        print("----- completion -----")
+        print("----- yPos \(yPos) ----- ")
+        
+        // 이게 단순히 tableView 다시 그렸다 해서 contentsize가 늘어나지 않는다. -> 변수 하나 더 잡음
+        // 3.5
+//        if yPos > 200 {
+//            // 4. stop 풀어줘
+//            self.stopPreviousPagination = false
+//        }
+        
+        
+        self.stopPreviousPagination = false
         
     }
     
     
     // 아래로 pagination
-    func paginationNextData() {
+    func paginationNextData(completion: @escaping () -> Void) {
+        // 0. 걸러유~
+        if stopNextPagination || isDoneNextPagination { return }
         
+        // 1. 일단 과호출 막아유~
+        self.stopNextPagination = true
+        
+        // 2. 디비에서 끄내유~
+        self.fetchNextData(nextOffsetTargetDate)
+        
+        // 3. tableView reload유~~
+        completion()
+        print("----- completion -----")
+        
+        // 이게 단순히 tableView 다시 그렸다 해서 contentsize가 늘어나지 않는다. -> 변수 하나 더 잡음
+        // 3.5
+        if delta > 1100 {
+            // 4. stop 풀어줘
+            self.stopNextPagination = false
+        }
+        
+    }
+    
+}
+
+// private func
+extension ChannelChattingViewModel {
+    // 1. 초기 데이터 불러올 때      2. pagination할 때
+    
+    // target date 이전으로 n개의 채팅 내역 불러와서 chatArr 맨 앞에 붙임
+    private func fetchPreviousData(_ targetDate: Date?, isFirst: Bool) {
+        
+        let requestModel = ChannelDetailFullRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelId: self.channelId,
+            channelName: self.channelName
+        )
+        
+        let previousArr = channelChattingUseCase.fetchPreviousData(
+            requestModel: requestModel,
+            targetDate: targetDate,
+            isFirst: isFirst
+        )
+        
+        // offset target date 지정 - 받아온 데이터들의 맨 첫 번째 채팅의 날짜
+        previousOffsetTargetDate = previousArr.first?.createdAt
+        
+        // 배열 앞에 추가
+        chatArr.insert(contentsOf: previousArr, at: 0)
+        
+        // 더이상 pagination이 가능한지 여부 판단
+        isDonePreviousPagination = previousArr.isEmpty
+        
+        
+        print("----- fetchPreviousData 실행 결과 isFirst : \(isFirst) -----")
+        previousArr.forEach { chat in
+            print("\(chat.createdAt)  \(chat.content)  \(chat.userName)")
+        }
+        print("이제 pagination 불가능? : \(isDonePreviousPagination)")
+        print("----------------------------------------------------------")
+    }
+    
+    // targetDate 이후로 n개의 채팅 내역 불러와서 chatArr 맨 뒤에 붙임
+    private func fetchNextData(_ targetDate: Date?) {
+        
+        let requestModel = ChannelDetailFullRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelId: self.channelId,
+            channelName: self.channelName
+        )
+        
+        let nextArr = channelChattingUseCase.fetchNextData(
+            requestModel: requestModel,
+            targetDate: targetDate
+        )
+        
+        // offset target date 지정 - 받아온 데이터들의 맨 마지막 채팅의 날짜
+        nextOffsetTargetDate = nextArr.first?.createdAt
+        
+        // 배열 뒤에 추가
+        chatArr.append(contentsOf: nextArr)
+        
+        // 더 이상 pagination이 가능한지 여부 판단
+        isDoneNextPagination = nextArr.isEmpty
+        
+        print("--------------- fetchNextData 실행 결과 ---------------")
+        nextArr.forEach { chat in
+            print("\(chat.createdAt)  \(chat.content)  \(chat.userName)")
+        }
+        print("이제 pagination 불가능? : \(isDoneNextPagination)")
+        print("----------------------------------------------------------")
     }
     
 }
@@ -363,13 +509,15 @@ extension ChannelChattingViewModel {
         self.closeSocket()
     }
     
-    // 스크롤 시점 전달받음
+    // 스크롤 시점 전달받음 (bottom 여부)
     func setUpIsScrollBottom(_ value: Bool) {
         self.isScrollBottom = value
         print(value)
     }
+    
+    // 스크롤 시점 전달해줌 (bottom 여부)
     func showNewMessageToast() -> Bool {
-        return !self.isScrollBottom     // 스크롤이 위에 있으면 띄운다
+        return !self.isScrollBottom     // 스크롤이 위에 있으면 toastView 띄운다
     }
 }
 

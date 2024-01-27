@@ -74,7 +74,8 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 3 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    // 맨 처음만 targetDate 포함해서 주고, 그 이후에는 포함하지 않아야 한다
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
         
         // lastChattingDate가 nil이다
         // -> (createdAt <= %@)디비에 저장된 읽은 데이터가 없다
@@ -82,7 +83,12 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
         
         
         return realm.objects(ChannelChattingInfoTable.self)
-            .filter("channelInfo.channel_id == %@ AND createdAt <= %@", requestModel.channelId, targetDate)
+            .filter(
+                isFirst
+                ? "channelInfo.channel_id == %@ AND createdAt <= %@"
+                : "channelInfo.channel_id == %@ AND createdAt < %@",
+                requestModel.channelId, targetDate
+            )
             .sorted(byKeyPath: "createdAt")
             .suffix(30)
             .map { $0.toDomain() }

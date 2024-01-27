@@ -106,6 +106,7 @@ final class ChannelChattingViewController: BaseViewController {
     func setTableView() {
         mainView.chattingTableView.delegate = self
         mainView.chattingTableView.dataSource = self
+        mainView.chattingTableView.prefetchDataSource = self
     }
     
     func setTextView() {
@@ -246,6 +247,7 @@ final class ChannelChattingViewController: BaseViewController {
         viewModel.loadData {
             self.mainView.chattingTableView.reloadData()
             self.tableViewScrollToSeperatorCell()
+            
         }
     }
 }
@@ -285,7 +287,19 @@ extension ChannelChattingViewController: UITextViewDelegate {
 
 
 // TableView
-extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource {
+extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+//        print("------------- prefetch -------------")
+//        print("------------- \(indexPaths) --------")
+//        
+//        viewModel.doPreviousPagination(indexPaths: indexPaths) {
+//            self.mainView.chattingTableView.reloadData()
+//        }
+//        
+//        viewModel.doNextPagination(indexPaths: indexPaths) {
+//            self.mainView.chattingTableView.reloadData()
+//        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRows()
@@ -310,6 +324,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         }
     }
     
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("***** 스크롤뷰 디드스크롤 *****")
         
@@ -330,10 +345,77 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         
         
         
-        // 차이가 900 미만으로 들어왔을 때 pagination 진행
         
-        print("*************************")
+        // 2. pagination 진행.
+        if viewModel.notLoadScrollPagination { return }
+        
+//        let offsetY = scrollView.contentOffset.y
+//        let contentHeight = scrollView.contentSize.height
+//        let boundsHeight = scrollView.bounds.height
+//        
+//        let triggerOffset = CGFloat(100) // 스크롤이 어느 정도 도달하면 로드할지 결정하는 오프셋
+//        
+//        print(offsetY)
+//        print(contentHeight - boundsHeight - triggerOffset)
+//
+//        if offsetY > contentHeight - boundsHeight - triggerOffset {
+//            viewModel.paginationPreviousData {
+//                self.mainView.chattingTableView.reloadData()
+//            }
+//            print("-----pagination 진행!!!!!-----")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//            print("-----------------------------")
+//        }
+        
+        print(scrollView.contentSize.height)
+        print(scrollView.contentOffset.y)
+        print("차이 : ", scrollView.contentSize.height - scrollView.contentOffset.y)
+        
+        // contentOffset.y < 100 에서 위로 pagination
+        // delta < 1000 에서 아래로 pagination
+        let delta = scrollView.contentSize.height - scrollView.contentOffset.y
+        let yPos = scrollView.contentOffset.y
+        viewModel.delta = delta
+        viewModel.yPos = yPos
+        
+        // 이게 yPos가 쉽지 않은게, arr.insert(at: 0) 에다가 넣어버리고 tableView reload해도 y가 다시 늘어나는 개념이 아닌가본데 이거...
+        
+        if yPos < 100 {
+            viewModel.paginationPreviousData {
+                self.mainView.chattingTableView.reloadData()
+            }
+        }
+        
+        if delta < 1000 {
+            viewModel.paginationNextData {
+                self.mainView.chattingTableView.reloadData()
+            }
+        }
+//        
+//        
+//        
+//        /* 필요한 변수 */
+//        // 1. 네트워크 통신이기 때문에 과호출 먹지 않게 막아줄 변수 필요
+//        //    stopPreviousPagination / stopNextPagination -> 디비 로드 끝나고 배열에 붙이고 테이블뷰 늘어나면 값 초기화
+//        // 2. 더 이상 pagination이 가능한지, 즉 디비에서 더 이상 꺼내올 데이터가 없는지 확인할 변수 필요
+//        //    -> 아래 pagination이 불가능하면, 그때부터 socket 응답값 바로 배열에 추가.
+//        //    isDonePreviousPagination / isDoneNextPagination
+//        // 3. pagination의 기준이 되는 날짜&시간
+//        //    previousOffsetDate / nextOffsetDate
+//        
+//        
+//        print("*************************")
     }
+    
+    
 }
 
 

@@ -22,7 +22,7 @@ protocol ChannelChattingUseCaseProtocol {
     
     
     // 3 - 1. 읽은 채팅
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel]
     
     
     // 3 - 2. 안읽은 채팅
@@ -83,11 +83,12 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 3 - 1. 읽은 채팅
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
         
         return channelChattingRepository.fetchPreviousData(
             requestModel: requestModel,
-            targetDate: targetDate
+            targetDate: targetDate,
+            isFirst: isFirst
         )
     }
     
