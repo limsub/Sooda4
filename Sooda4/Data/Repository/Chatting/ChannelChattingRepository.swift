@@ -163,7 +163,7 @@ extension ChannelChattingRepository {
             // - request를 보냄과 동시에 소켓이 오픈되기 때문에, 서버 입장에서 request를 받기 전, 소켓을 통해 이미 디비에 채팅이 저장될 가능성이 있음.
         
         if let existChatting = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first {
-            print("이미 디비에 있는 채널 -> 가드문 return")
+            print("이미 디비에 있는 채팅 -> 가드문 return")
             return
         }
         

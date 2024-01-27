@@ -51,6 +51,9 @@ extension SocketChannelChattingRepository {
     // ChannelChattinDTO 타입으로 채팅 정보를 받을 때, 이 채팅 정보를 디비에 저장하기
     private func addDTOData(dtoData: ChannelChattingDTO, workSpaceId: Int) {
         
+        /* 디비에 저장하려고 하는 채팅이 이미 디비에 있는 채팅인지 확인하는 작업 */
+        if let _ = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first { return }
+        
         do {
             try realm.write {
                 // 1. 디비에 이미 있는 채널인지 확인, 없는 채널이면 디비에 추가
