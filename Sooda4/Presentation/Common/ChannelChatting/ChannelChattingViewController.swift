@@ -106,7 +106,6 @@ final class ChannelChattingViewController: BaseViewController {
     func setTableView() {
         mainView.chattingTableView.delegate = self
         mainView.chattingTableView.dataSource = self
-        mainView.chattingTableView.prefetchDataSource = self
     }
     
     func setTextView() {
@@ -287,20 +286,8 @@ extension ChannelChattingViewController: UITextViewDelegate {
 
 
 // TableView
-extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-//        print("------------- prefetch -------------")
-//        print("------------- \(indexPaths) --------")
-//        
-//        viewModel.doPreviousPagination(indexPaths: indexPaths) {
-//            self.mainView.chattingTableView.reloadData()
-//        }
-//        
-//        viewModel.doNextPagination(indexPaths: indexPaths) {
-//            self.mainView.chattingTableView.reloadData()
-//        }
-    }
-    
+extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRows()
     }
@@ -308,8 +295,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // 일단 초반에는 웬만하면 seperator cell 나오는 걸로 하고, 안나와야 하는 경우에 대해서는 나중에 예외처리해보자
-        
-        if viewModel.isSeperatorCell(indexPath) {
+        if indexPath.row == viewModel.seperatorCellIndex() {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingSeperatorTableViewCell.description(), for: indexPath) as? ChannelChattingSeperatorTableViewCell else { return UITableViewCell() }
             
             return cell
@@ -326,7 +312,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
     
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("***** 스크롤뷰 디드스크롤 *****")
+//        print("***** 스크롤뷰 디드스크롤 *****")
         
         // 1. 현재 스크롤이 바닥에 있는지 아닌지 (소켓으로 응답 받았을 때 newMessageToastView 여부)
         let isBottom = scrollView.contentSize.height - scrollView.contentOffset.y < 800
@@ -349,59 +335,23 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         // 2. pagination 진행.
         if viewModel.notLoadScrollPagination { return }
         
-//        let offsetY = scrollView.contentOffset.y
-//        let contentHeight = scrollView.contentSize.height
-//        let boundsHeight = scrollView.bounds.height
-//        
-//        let triggerOffset = CGFloat(100) // 스크롤이 어느 정도 도달하면 로드할지 결정하는 오프셋
-//        
-//        print(offsetY)
-//        print(contentHeight - boundsHeight - triggerOffset)
-//
-//        if offsetY > contentHeight - boundsHeight - triggerOffset {
-//            viewModel.paginationPreviousData {
-//                self.mainView.chattingTableView.reloadData()
-//            }
-//            print("-----pagination 진행!!!!!-----")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//            print("-----------------------------")
-//        }
-        
-        print(scrollView.contentSize.height)
-        print(scrollView.contentOffset.y)
-        print("차이 : ", scrollView.contentSize.height - scrollView.contentOffset.y)
-        
-        // contentOffset.y < 100 에서 위로 pagination
-        // delta < 1000 에서 아래로 pagination
-        let delta = scrollView.contentSize.height - scrollView.contentOffset.y
         let yPos = scrollView.contentOffset.y
-        viewModel.delta = delta
-        viewModel.yPos = yPos
+        let delta = scrollView.contentSize.height - scrollView.contentOffset.y
         
-        // 이게 yPos가 쉽지 않은게, arr.insert(at: 0) 에다가 넣어버리고 tableView reload해도 y가 다시 늘어나는 개념이 아닌가본데 이거...
-        
+        // 위로 pagination
         if yPos < 100 {
-            viewModel.paginationPreviousData {
-                self.mainView.chattingTableView.reloadData()
+            viewModel.paginationPreviousData { cnt in
+                let indexPaths = (0..<cnt).map { IndexPath(row: $0, section: 0) }
+                self.mainView.chattingTableView.insertRows(at: indexPaths, with: .bottom)    // 아래에서 위로 추가된다는 애니메이션
             }
         }
         
+        // 아래로 pagination
         if delta < 1000 {
-            viewModel.paginationNextData {
-                self.mainView.chattingTableView.reloadData()
-            }
+            print("--- 아래로 pagination 시켜주기 ---")
         }
-//        
-//        
-//        
+        
+ 
 //        /* 필요한 변수 */
 //        // 1. 네트워크 통신이기 때문에 과호출 먹지 않게 막아줄 변수 필요
 //        //    stopPreviousPagination / stopNextPagination -> 디비 로드 끝나고 배열에 붙이고 테이블뷰 늘어나면 값 초기화
@@ -658,9 +608,8 @@ extension ChannelChattingViewController {
     }
     
     private func tableViewScrollToSeperatorCell() {
-        guard let row = viewModel.seperatorIndex else {
-            return tableViewScrollToBottom()
-        }
+        
+        let row = viewModel.seperatorCellIndex()
         
         let indexPath = IndexPath(
             row: row,

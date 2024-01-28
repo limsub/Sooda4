@@ -26,7 +26,7 @@ class ChannelChattingViewModel {
     
     private var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
     private var chatArr: [ChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
-    var seperatorIndex: Int?    // "여기까지 읽었습니다" 셀이 들어갈 위치
+//    var seperatorIndex: Int?    // "여기까지 읽었습니다" 셀이 들어갈 위치
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
@@ -275,6 +275,7 @@ extension ChannelChattingViewModel {
         
         // 1.
         self.fetchPreviousData(self.lastChattingDate, isFirst: true)
+        // 새롭게 받아온 개수가 몇개인지 리턴하지만, 이건 pagination할 때 insertRows 때문에 필요한거고, 여기선 받고나서 tableView reload를 해버리기 때문에 반환값을 사용할 일이 없다
         
         // 2.
         let seperatorData = ChattingInfoModel(
@@ -286,73 +287,20 @@ extension ChannelChattingViewModel {
             userImage: "기본 데이터"
         )
         chatArr.append(seperatorData)
-        self.seperatorIndex = chatArr.count - 1
+//        self.seperatorIndex = chatArr.count - 1
         
         
         // 3.
         self.fetchNextData(self.lastChattingDate)
+        // 이하동문
 
-//        print("---------- previousData ----------")
-//        previousArr.forEach { model in
-//            print(model)
-//        }
-//        print("---------- seperatorData ----------")
-//        print(seperatorData)
-//        print("---------- nextData ----------")
-//        nextArr.forEach { model in
-//            print(model)
-//        }
     }
 }
 
 // Pagination
 extension ChannelChattingViewModel {
-    
-    func doPreviousPagination(indexPaths: [IndexPath], completion: @escaping () -> Void) {
-        if indexPaths.contains(where: { indexPath in
-            return indexPath.row == 1
-        }) {
-            // 0. 걸러
-            if stopPreviousPagination || isDonePreviousPagination { return }
-            
-            // 1. 일단 과호출 막아
-            self.stopPreviousPagination = true
-            
-            // 2. 디비에서 끄내
-            self.fetchPreviousData(previousOffsetTargetDate, isFirst: false)
-            
-            // 3. tableView reload
-            completion()
-            
-            // 4. stop 풀어줘
-            self.stopPreviousPagination = false
-        }
-    }
-    
-    func doNextPagination(indexPaths: [IndexPath], completion: @escaping () -> Void) {
-        if indexPaths.contains(where: { indexPath in
-            return indexPath.row == self.numberOfRows() - 1
-        }) {
-            // 0. 걸러
-            if stopNextPagination || isDoneNextPagination { return }
-            
-            // 1. 일단 과호출 막아
-            self.stopNextPagination = true
-            
-            // 2. 디비에서 끄내
-            self.fetchNextData(nextOffsetTargetDate)
-            
-            // 3. tableView reload
-            completion()
-            
-            // 4. stop 풀어
-            self.stopNextPagination = false
-        }
-        
-    }
-    
     // 위로 pagination
-    func paginationPreviousData(completion: @escaping () -> Void) {
+    func paginationPreviousData(completion: @escaping (Int) -> Void) {
         // 0. 걸러
         if stopPreviousPagination || isDonePreviousPagination { return }
         
@@ -360,28 +308,18 @@ extension ChannelChattingViewModel {
         self.stopPreviousPagination = true
         
         // 2. 디비에서 끄내
-        self.fetchPreviousData(previousOffsetTargetDate, isFirst: false)
+        let newArrCnt = self.fetchPreviousData(previousOffsetTargetDate, isFirst: false)
         
         // 3. tableView reload
-        completion()
-        print("----- completion -----")
-        print("----- yPos \(yPos) ----- ")
+        completion(newArrCnt)
         
-        // 이게 단순히 tableView 다시 그렸다 해서 contentsize가 늘어나지 않는다. -> 변수 하나 더 잡음
-        // 3.5
-//        if yPos > 200 {
-//            // 4. stop 풀어줘
-//            self.stopPreviousPagination = false
-//        }
-        
-        
+        // 4. stop 풀어줘
         self.stopPreviousPagination = false
-        
     }
     
     
     // 아래로 pagination
-    func paginationNextData(completion: @escaping () -> Void) {
+    func paginationNextData(completion: @escaping (Int) -> Void) {
         // 0. 걸러유~
         if stopNextPagination || isDoneNextPagination { return }
         
@@ -389,19 +327,13 @@ extension ChannelChattingViewModel {
         self.stopNextPagination = true
         
         // 2. 디비에서 끄내유~
-        self.fetchNextData(nextOffsetTargetDate)
+        let newArrCnt = self.fetchNextData(nextOffsetTargetDate)
         
         // 3. tableView reload유~~
-        completion()
-        print("----- completion -----")
+        completion(newArrCnt)
         
-        // 이게 단순히 tableView 다시 그렸다 해서 contentsize가 늘어나지 않는다. -> 변수 하나 더 잡음
-        // 3.5
-        if delta > 1100 {
-            // 4. stop 풀어줘
-            self.stopNextPagination = false
-        }
-        
+        // 4. stop 풀어줘
+        self.stopNextPagination = false
     }
     
 }
@@ -411,7 +343,7 @@ extension ChannelChattingViewModel {
     // 1. 초기 데이터 불러올 때      2. pagination할 때
     
     // target date 이전으로 n개의 채팅 내역 불러와서 chatArr 맨 앞에 붙임
-    private func fetchPreviousData(_ targetDate: Date?, isFirst: Bool) {
+    private func fetchPreviousData(_ targetDate: Date?, isFirst: Bool) -> Int {
         
         let requestModel = ChannelDetailFullRequestModel(
             workSpaceId: self.workSpaceId,
@@ -441,10 +373,12 @@ extension ChannelChattingViewModel {
         }
         print("이제 pagination 불가능? : \(isDonePreviousPagination)")
         print("----------------------------------------------------------")
+        
+        return previousArr.count
     }
     
     // targetDate 이후로 n개의 채팅 내역 불러와서 chatArr 맨 뒤에 붙임
-    private func fetchNextData(_ targetDate: Date?) {
+    private func fetchNextData(_ targetDate: Date?) -> Int {
         
         let requestModel = ChannelDetailFullRequestModel(
             workSpaceId: self.workSpaceId,
@@ -472,6 +406,9 @@ extension ChannelChattingViewModel {
         }
         print("이제 pagination 불가능? : \(isDoneNextPagination)")
         print("----------------------------------------------------------")
+        
+        // 배열 pagination을 할 때 insert row로 하기 때문에 새롭게 추가된 배열 개수를 전달해줌
+        return nextArr.count
     }
     
 }
@@ -495,8 +432,15 @@ extension ChannelChattingViewModel {
     }
     
     // seperator cell의 위치
-    func isSeperatorCell(_ indexPath: IndexPath) -> Bool {
-        return indexPath.row == self.seperatorIndex // 옵서널 처리를 알아서 해주나봄
+//    func isSeperatorCell(_ indexPath: IndexPath) -> Bool {
+////        return indexPath.row == self.seperatorIndex // 옵서널 처리를 알아서 해주나봄
+//    }
+    
+    // seperator cell의 위치 (인덱스) - 계속해서 indexPath가 바뀌기 때문에 (위로 pagination) 단순 변수로 저장해두는 것보다, 필요할 때마다 메서드로 계산하는게 더 낫다
+    func seperatorCellIndex() -> Int {
+        return chatArr.firstIndex { model in
+            model.userId == -1
+        } ?? 0
     }
     
     // cell에 그릴 데이터
@@ -512,7 +456,6 @@ extension ChannelChattingViewModel {
     // 스크롤 시점 전달받음 (bottom 여부)
     func setUpIsScrollBottom(_ value: Bool) {
         self.isScrollBottom = value
-        print(value)
     }
     
     // 스크롤 시점 전달해줌 (bottom 여부)
