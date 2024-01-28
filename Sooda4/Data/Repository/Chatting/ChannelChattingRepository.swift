@@ -21,7 +21,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
         
-//        self.printURL()
+        self.printURL()
         
         return realm.objects(ChannelChattingInfoTable.self)
             .filter("channelInfo.channel_id == %@", requestModel.channelId)
@@ -117,7 +117,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                     "channelInfo.channel_id == %@",
                     requestModel.channelId
                 )
-                .prefix(50)
+                .prefix(30)
                 .map { $0.toDomain() }
         }
     }

@@ -348,7 +348,14 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         
         // 아래로 pagination
         if delta < 1000 {
-            print("--- 아래로 pagination 시켜주기 ---")
+            viewModel.paginationNextData { [weak self] cnt in
+//                let arrCnt = self?.viewModel.numberOfRows() ?? 0
+//                let indexPaths = (0..<cnt).map { IndexPath(row: $0 + arrCnt, section: 0) }
+//                self?.mainView.chattingTableView.insertRows(at: indexPaths, with: .top)
+//                self.mainView.chattingTableView.row
+                
+                self?.mainView.chattingTableView.reloadData()
+            }
         }
         
  

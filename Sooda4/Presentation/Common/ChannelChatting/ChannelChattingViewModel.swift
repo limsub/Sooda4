@@ -307,6 +307,8 @@ extension ChannelChattingViewModel {
         // 0. 걸러
         if stopPreviousPagination || isDonePreviousPagination { return }
         
+        print(#function)
+        
         // 1. 일단 과호출 막아
         self.stopPreviousPagination = true
         
@@ -325,6 +327,8 @@ extension ChannelChattingViewModel {
     func paginationNextData(completion: @escaping (Int) -> Void) {
         // 0. 걸러유~
         if stopNextPagination || isDoneNextPagination { return }
+        
+        print(#function)
         
         // 1. 일단 과호출 막아유~
         self.stopNextPagination = true
@@ -395,7 +399,7 @@ extension ChannelChattingViewModel {
         )
         
         // offset target date 지정 - 받아온 데이터들의 맨 마지막 채팅의 날짜
-        nextOffsetTargetDate = nextArr.first?.createdAt
+        nextOffsetTargetDate = nextArr.last?.createdAt
         
         // 배열 뒤에 추가
         chatArr.append(contentsOf: nextArr)
@@ -433,11 +437,6 @@ extension ChannelChattingViewModel {
     func removeAllImages() {
         self.imageData.onNext([])
     }
-    
-    // seperator cell의 위치
-//    func isSeperatorCell(_ indexPath: IndexPath) -> Bool {
-////        return indexPath.row == self.seperatorIndex // 옵서널 처리를 알아서 해주나봄
-//    }
     
     // seperator cell의 위치 (인덱스) - 계속해서 indexPath가 바뀌기 때문에 (위로 pagination) 단순 변수로 저장해두는 것보다, 필요할 때마다 메서드로 계산하는게 더 낫다
     func seperatorCellIndex() -> Int {
