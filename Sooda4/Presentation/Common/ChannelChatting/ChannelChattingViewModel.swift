@@ -464,6 +464,11 @@ extension ChannelChattingViewModel {
     func showNewMessageToast() -> Bool {
         return !self.isScrollBottom     // 스크롤이 위에 있으면 toastView 띄운다
     }
+    
+    // nextPagination이 끝났는지 여부
+    func isDoneNextPaginationMethod() -> Bool {
+        return isDoneNextPagination
+    }
 }
 
 // Socket
@@ -486,13 +491,15 @@ extension ChannelChattingViewModel {
             self.channelId) { newData  in
                 print("소켓 응답!!!!! ", newData)
                 
-                print("user ID 확인해서 내가 아닐 때만 배열 뒤에 붙여줌")
+                // 1. userId 비교해서 내가 보낸 건 걸러줌
                 if newData.userId == KeychainStorage.shared._id { return }
                 
+                // 2. 아래 pagination이 모두 끝난 상태일 때만 배열 뒤에 붙여줌.
+                if self.isDoneNextPagination {
+                    self.chatArr.append(newData)
+                }
                 
-                // 아직 아래 페이지네이션이 모두 되어있지 않은 상태라면, 배열 뒤에 붙이지 않는다. (디비에만 저장)
-                // 대신, toastChatData에 값을 넣어서, 토스트 메세지로 뜨게 해준다.
-                self.chatArr.append(newData)
+                // 3. 뷰컨에 newChat 전달
                 self.addNewChatData.onNext(newData)
             }
     }

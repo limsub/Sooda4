@@ -114,8 +114,17 @@ final class ChannelChattingViewController: BaseViewController {
     
     func setNewMessageToastView() {
         // 1. 뷰를 클릭하면, 스크롤을 맨 아래로 위치시킴 (animation x)
+        
+        // 1. 뷰를 클릭 -> 현재 아래 페이지네이션이 끝났는지 여부 확인
         mainView.newMessageView.fakeButton.rx.tap
             .subscribe(with: self) { owner , _ in
+                
+                if owner.viewModel.isDoneNextPaginationMethod() {
+                    print("Next Pagination이 끝났습니다. 고대로 아래로 내려보냅니다")
+                } else {
+                    print("Next Pagination이 아직 끝나지 않은 상태입니다. 디비에 있는거 싹 다 꺼낸 후에 아래로 내려보냅니다")
+                }
+                
                 owner.tableViewScrollToBottom()
             }
             .disposed(by: disposeBag)
@@ -221,19 +230,47 @@ final class ChannelChattingViewController: BaseViewController {
         output.addNewChatData
             .subscribe(with: self) { owner , newChat in
                 
-                // 현재 스크롤 위치에 따라 토스트 뷰를 띄울지, 스크롤을 바닥으로 내릴지
-                // 일단 지금은 두 케이스 모두 배열에 붙이고 있긴 함. 만약 아래 pagination이 완료되지 않은 상태라면 배열 뒤에 붙이면 안됨 -> 버튼 클릭했을 때 싹 해야해
+                // 해보자
                 
-                owner.mainView.chattingTableView.reloadData()
+                /* 필요한 변수 */
+                // 1. 현재 스크롤 위치가 토스트메세지뷰를 띄울 위치인지, 아니면 아예 스크롤을 아래로 보내버릴 위치인지
+                // 2. nextPagination이 모두 끝난 상태인지, 아니면 디비에서 더 꺼내올 게 있는지
+                let showToastView = owner.viewModel.showNewMessageToast()
+                let isDone = owner.viewModel.isDoneNextPaginationMethod()
                 
-                if owner.viewModel.showNewMessageToast() {
-                    owner.mainView.newMessageView.setUpView(newChat)
-                    
-                } else {
+                /* 경우의 수 */
+                // 1. 스크롤 위치가 바닥이라는 건, 당연히 pagination이 모두 끝났어야 함. (안끝났으면 그게 이상)
+                    // (1). 디비에 newChat 저장  (2). chatArr에 newChat 붙이고  (3). tableView reload  (4). scrollToBottom
+                if !showToastView { // (isDone은 당연히 true)
+                    // (1). -> VM
+                    // (2). -> VM
+                    // (3).
+                    owner.mainView.chattingTableView.reloadData()
+                    // (4).
                     owner.tableViewScrollToBottom()
                 }
                 
+                // 2. 스크롤 위치가 위, pagination 모두 끝남
+                    // (1). 디비에 newChat 저장  (2). chatArr에 newChat 붙이고  (3). tableView reload  (4). showNewMessageToastView
+                if showToastView && isDone {
+                    // (1). -> VM
+                    // (2). -> VM
+                    // (3).
+                    owner.mainView.chattingTableView.reloadData()
+                    // (4).
+                    owner.mainView.newMessageView.setUpView(newChat)
+                }
                 
+                // 3. 스크롤 위치가 위, pagination 아직 안끝남
+                    // (1). 디비에 newChat 저장 (2). showNewMessageToastView
+                if showToastView && !isDone {
+                    // (1). -> VM
+                    // (2).
+                    owner.mainView.newMessageView.setUpView(newChat)
+                }
+                
+                /* toastView를 클릭했을 때 이벤트는 저 위쪽에서 구현 */
+
             }
             .disposed(by: disposeBag)
         
