@@ -246,7 +246,10 @@ extension ChannelChattingViewModel {
             requestModel = ChannelChattingRequestModel(
                 workSpaceId: workSpaceId,
                 channelName: channelName,
-                cursor_date: ""
+                cursor_date: Date().toString(of: .toAPI)
+                // 기존에 빈 문자열 넣는 거에서 수정.
+                // 만약 채팅방을 새로 들어가서 디비에 읽은 애들이 없다면, 얘가 소속되기 전 채팅들은 굳이 네트워크 콜로 보낼 필요가 없다.
+                // -> cursor Date를 그 순간의 시간으로 넣어주면 기존 채팅 내역들은 안볼 수 있다.
             )
         }
         
