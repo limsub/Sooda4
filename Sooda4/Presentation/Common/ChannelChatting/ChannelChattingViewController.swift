@@ -113,19 +113,38 @@ final class ChannelChattingViewController: BaseViewController {
     }
     
     func setNewMessageToastView() {
-        // 1. 뷰를 클릭하면, 스크롤을 맨 아래로 위치시킴 (animation x)
+        // 뷰 클릭에 대한 액션 -> 스크롤 맨 바닥으로 보낸다.
+        // (기본 : 일단 뷰가 떠있다는 건 스크롤이 어느 정도 위에 있다는 뜻)
         
-        // 1. 뷰를 클릭 -> 현재 아래 페이지네이션이 끝났는지 여부 확인
+        
+        /* 필요한 변수 */
+        // 현재 nextPagination이 모두 끝난 상태인지
+        
+        
+        /* 경우의 수 */
+        // 1. 현재 nextPagination이 모두 끝난 상태
+            // (1). scrollToBottom
+        
+        // 2. 현재 nextPagination이 아직 끝나지 않은 상태 (디비에서 더 꺼내올 게 있는 상태)
+            // (1). fetchAllNextChattingData & chatArr append  (2). tableView reload  (3). scrollToBottom
+        
+        
+        
         mainView.newMessageView.fakeButton.rx.tap
             .subscribe(with: self) { owner , _ in
                 
                 if owner.viewModel.isDoneNextPaginationMethod() {
+                    // 1.
                     print("Next Pagination이 끝났습니다. 고대로 아래로 내려보냅니다")
+                    owner.tableViewScrollToBottom()
                 } else {
+                    // 2.
                     print("Next Pagination이 아직 끝나지 않은 상태입니다. 디비에 있는거 싹 다 꺼낸 후에 아래로 내려보냅니다")
+                    self.viewModel.fetchAllNextData {
+                        self.mainView.chattingTableView.reloadData()
+                        self.tableViewScrollToBottom()
+                    }
                 }
-                
-                owner.tableViewScrollToBottom()
             }
             .disposed(by: disposeBag)
     }

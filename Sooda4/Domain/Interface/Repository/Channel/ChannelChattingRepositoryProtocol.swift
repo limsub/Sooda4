@@ -23,14 +23,12 @@ protocol ChannelChattingRepositoryProtocol {
     
     // 3 - 1. 읽은 채팅
     func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel]
-    
-//    func fetchPreviousData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel]
-    
+
     // 3 - 2. 안읽은 채팅
     func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
     
-//    func fetchNextData(workSpaceId: Int, channelName: String, targetDate: Date?) -> [ChattingInfoModel]
-    
+    // 3 - 3. 안읽은 채팅 모두
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
     
     // 4. 채팅 전송
     func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChattingInfoModel, NetworkError> >

@@ -117,11 +117,35 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                     "channelInfo.channel_id == %@",
                     requestModel.channelId
                 )
+                .sorted(byKeyPath: "createdAt")
                 .prefix(30)
                 .map { $0.toDomain() }
         }
     }
     
+    
+    // - 3 - 3. targetDate (포함 x) 이후 데이터 모두 가져오기
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+        
+        if let targetDate {
+            return realm.objects(ChannelChattingInfoTable.self)
+                .filter(
+                    "channelInfo.channel_id == %@ AND createdAt > %@",
+                    requestModel.channelId,
+                    targetDate
+                )
+                .sorted(byKeyPath: "createdAt")
+                .map { $0.toDomain() }
+        } else {
+            return realm.objects(ChannelChattingInfoTable.self)
+                .filter(
+                    "channelInfo.channel_id == %@",
+                    requestModel.channelId
+                )
+                .sorted(byKeyPath: "createdAt")
+                .map { $0.toDomain() }
+        }
+    }
     
     
     // 4. 채팅 전송

@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        print(Date().toString(of: .toAPI))
         
         
-        for i in 0...98 {
+        for i in 0...40 {
             let requestModel = MakeChannelChattingRequestModel(
                 channelName: "오아아아",
                 workSpaceId: 152,

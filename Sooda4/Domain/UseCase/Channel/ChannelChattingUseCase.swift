@@ -21,12 +21,16 @@ protocol ChannelChattingUseCaseProtocol {
     )
     
     
-    // 3 - 1. 읽은 채팅
+    // 3 - 1. 읽은 채팅 30개
     func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel]
     
     
-    // 3 - 2. 안읽은 채팅
+    // 3 - 2. 안읽은 채팅 30개
     func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
+    
+    
+    // 3 - 3. 안읽은 채팅 모두
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
 
     
     // 4. 채팅 전송
@@ -82,7 +86,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     }
     
     
-    // 3 - 1. 읽은 채팅
+    // 3 - 1. 읽은 채팅 30개
     func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
         
         return channelChattingRepository.fetchPreviousData(
@@ -93,10 +97,20 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     }
     
     
-    // 3 - 2. 안읽은 채팅
+    // 3 - 2. 안읽은 채팅 30개
     func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
         return channelChattingRepository.fetchNextData(
+            requestModel: requestModel,
+            targetDate: targetDate
+        )
+    }
+    
+    
+    // 3 - 3. 안읽은 채팅 모두
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+        
+        return channelChattingRepository.fetchAllNextData(
             requestModel: requestModel,
             targetDate: targetDate
         )

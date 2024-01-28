@@ -342,7 +342,35 @@ extension ChannelChattingViewModel {
         // 4. stop 풀어줘
         self.stopNextPagination = false
     }
-    
+}
+
+// NewMessageToastView 클릭 시
+extension ChannelChattingViewModel {
+    func fetchAllNextData(completion: () -> Void) {
+        let requestModel = ChannelDetailFullRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelId: self.channelId,
+            channelName: self.channelName
+        )
+        
+        let allNextArr = channelChattingUseCase.fetchAllNextData(
+            requestModel: requestModel,
+            targetDate: nextOffsetTargetDate
+        )
+        
+        nextOffsetTargetDate = allNextArr.last?.createdAt   // 일단 업데이트..?
+        
+        chatArr.append(contentsOf: allNextArr)
+        
+        isDoneNextPagination = false
+        
+        print("--- 디비에 있는거 다 꺼내옴 ---")
+        allNextArr.forEach { chat in
+            print("\(chat.createdAt)  \(chat.content)  \(chat.userName)")
+        }
+        
+        completion()    // tableView reload, scrollToBottom
+    }
 }
 
 // private func
