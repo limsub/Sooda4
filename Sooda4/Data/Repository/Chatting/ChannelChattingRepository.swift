@@ -12,22 +12,24 @@ import RealmSwift
 
 class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
-    private let realm = try! Realm()
+//    private let realm = try! Realm()
     
-    func printURL() {
-        print(realm.configuration.fileURL!)
-    }
+    private let realmManager = RealmManager()
+    // 생성 시점에 키체인에 저장된 user id에 따라 realm 파일이 달라짐
+    
     
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
         
-        self.printURL()
+        return realmManager.checkChannelChattingLastDate(requestModel: requestModel)
         
+        /*
         return realm.objects(ChannelChattingInfoTable.self)
             .filter("channelInfo.channel_id == %@", requestModel.channelId)
             .sorted(byKeyPath: "createdAt", ascending: false)
             .first?
             .createdAt
+         */
     }
     // 여기서 받은 Date를 cursor date로 해서 channelChattingRequest 요청
     
@@ -77,6 +79,13 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     // 맨 처음만 targetDate 포함해서 주고, 그 이후에는 포함하지 않아야 한다
     func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
         
+        return realmManager.fetchPreviousData(
+            requestModel: requestModel,
+            targetDate: targetDate,
+            isFirst: isFirst
+        )
+        
+        /*
         // lastChattingDate가 nil이다
         // -> (createdAt <= %@)디비에 저장된 읽은 데이터가 없다
         guard let targetDate else { return [] }
@@ -92,6 +101,8 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             .sorted(byKeyPath: "createdAt")
             .suffix(30)
             .map { $0.toDomain() }
+         
+         */
     }
     
     
@@ -99,7 +110,13 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     // - 3 - 2. targetDate (포함 x) 이후 데이터 (최대) 30개
     func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
-        // lastChattingDate가 nil이다 
+        return realmManager.fetchNextData(
+            requestModel: requestModel,
+            targetDate: targetDate
+        )
+        
+        /*
+        // lastChattingDate가 nil이다
         // -> (createdAt > %@) 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
         if let targetDate {
             return realm.objects(ChannelChattingInfoTable.self)
@@ -121,12 +138,20 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                 .prefix(30)
                 .map { $0.toDomain() }
         }
+         */
     }
     
     
     // - 3 - 3. targetDate (포함 x) 이후 데이터 모두 가져오기
     func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
         
+        return realmManager.fetchAllNextData(
+            requestModel: requestModel,
+            targetDate: targetDate
+        )
+        
+        
+        /*
         if let targetDate {
             return realm.objects(ChannelChattingInfoTable.self)
                 .filter(
@@ -145,6 +170,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                 .sorted(byKeyPath: "createdAt")
                 .map { $0.toDomain() }
         }
+        */
     }
     
     
@@ -187,6 +213,13 @@ extension ChannelChattingRepository {
     
     // ChannelChattinDTO 타입으로 채팅 정보를 받을 때, 이 채팅 정보를 디비에 저장하기
     private func addDTOData(dtoData: ChannelChattingDTO, workSpaceId: Int) {
+        
+        realmManager.addChannelChattingData(
+            dtoData: dtoData,
+            workSpaceId: workSpaceId
+        )
+        
+        /*
         
         // 0. 디비에 저장하려고 하는 채팅이 이미 디비에 있는 채팅인지 확인하는 작업
             // - 서버 오류로 인해 중복된 채팅을 받을 가능성이 있음
@@ -247,7 +280,7 @@ extension ChannelChattingRepository {
         } catch {
             
         }
-        
+        */
         
     }
     

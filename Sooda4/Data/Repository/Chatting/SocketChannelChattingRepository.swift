@@ -10,8 +10,10 @@ import RealmSwift
 
 class SocketChannelChattingRepository: SocketChannelChattingRepositoryProtocol {
     
-    private let realm = try! Realm()
+//    private let realm = try! Realm()
     private let socketManager = SocketIOManager.shared
+    private let realmManager = RealmManager()
+    // 생성 시점에 키체인에 저장된 user id에 따라 realm 파일이 달라짐
     
     // 연결
     func openSocket(_ channelId: Int) {
@@ -51,6 +53,13 @@ extension SocketChannelChattingRepository {
     // ChannelChattinDTO 타입으로 채팅 정보를 받을 때, 이 채팅 정보를 디비에 저장하기
     private func addDTOData(dtoData: ChannelChattingDTO, workSpaceId: Int) {
         
+        
+        realmManager.addChannelChattingData(
+            dtoData: dtoData,
+            workSpaceId: workSpaceId
+        )
+        
+        /*
         /* 디비에 저장하려고 하는 채팅이 이미 디비에 있는 채팅인지 확인하는 작업 */
         if let _ = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first {
             print("디비에 이미 있는 채팅. 걸러")
@@ -105,7 +114,7 @@ extension SocketChannelChattingRepository {
         } catch {
             
         }
-        
+        */
         
     }
     
