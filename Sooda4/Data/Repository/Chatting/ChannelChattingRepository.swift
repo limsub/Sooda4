@@ -12,8 +12,6 @@ import RealmSwift
 
 class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
-//    private let realm = try! Realm()
-    
     private let realmManager = RealmManager()
     // 생성 시점에 키체인에 저장된 user id에 따라 realm 파일이 달라짐
     
@@ -21,15 +19,9 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     // - 1. 저장된 데이터 중 가장 마지막 날짜 확인. 데이터가  없으면 nil return -> api call 파라미터 빈 문자열
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
         
-        return realmManager.checkChannelChattingLastDate(requestModel: requestModel)
-        
-        /*
-        return realm.objects(ChannelChattingInfoTable.self)
-            .filter("channelInfo.channel_id == %@", requestModel.channelId)
-            .sorted(byKeyPath: "createdAt", ascending: false)
-            .first?
-            .createdAt
-         */
+        return realmManager.checkChannelChattingLastDate(
+            requestModel: requestModel
+        )
     }
     // 여기서 받은 Date를 cursor date로 해서 channelChattingRequest 요청
     
@@ -62,7 +54,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                         )
                         
                         // 이 아래 코드는 굳이 필요한가 싶음. 성공 여부만 알려줘도 충분한데
-                        let responseModel = dtoData.map { $0.toDomain() }
+//                        let responseModel = dtoData.map { $0.toDomain() }
                         completion()
                     }
                     
@@ -84,25 +76,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             targetDate: targetDate,
             isFirst: isFirst
         )
-        
-        /*
-        // lastChattingDate가 nil이다
-        // -> (createdAt <= %@)디비에 저장된 읽은 데이터가 없다
-        guard let targetDate else { return [] }
-        
-        
-        return realm.objects(ChannelChattingInfoTable.self)
-            .filter(
-                isFirst
-                ? "channelInfo.channel_id == %@ AND createdAt <= %@"
-                : "channelInfo.channel_id == %@ AND createdAt < %@",
-                requestModel.channelId, targetDate
-            )
-            .sorted(byKeyPath: "createdAt")
-            .suffix(30)
-            .map { $0.toDomain() }
-         
-         */
     }
     
     
@@ -114,31 +87,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             requestModel: requestModel,
             targetDate: targetDate
         )
-        
-        /*
-        // lastChattingDate가 nil이다
-        // -> (createdAt > %@) 디비에 저장된 모든 데이터가 읽지 않은 데이터이다
-        if let targetDate {
-            return realm.objects(ChannelChattingInfoTable.self)
-                .filter(
-                    "channelInfo.channel_id == %@ AND createdAt > %@",
-                    requestModel.channelId,
-                    targetDate
-                )
-                .sorted(byKeyPath: "createdAt")
-                .prefix(30)
-                .map { $0.toDomain() }
-        } else {
-            return realm.objects(ChannelChattingInfoTable.self)
-                .filter(
-                    "channelInfo.channel_id == %@",
-                    requestModel.channelId
-                )
-                .sorted(byKeyPath: "createdAt")
-                .prefix(30)
-                .map { $0.toDomain() }
-        }
-         */
     }
     
     
@@ -149,28 +97,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             requestModel: requestModel,
             targetDate: targetDate
         )
-        
-        
-        /*
-        if let targetDate {
-            return realm.objects(ChannelChattingInfoTable.self)
-                .filter(
-                    "channelInfo.channel_id == %@ AND createdAt > %@",
-                    requestModel.channelId,
-                    targetDate
-                )
-                .sorted(byKeyPath: "createdAt")
-                .map { $0.toDomain() }
-        } else {
-            return realm.objects(ChannelChattingInfoTable.self)
-                .filter(
-                    "channelInfo.channel_id == %@",
-                    requestModel.channelId
-                )
-                .sorted(byKeyPath: "createdAt")
-                .map { $0.toDomain() }
-        }
-        */
     }
     
     
@@ -218,70 +144,6 @@ extension ChannelChattingRepository {
             dtoData: dtoData,
             workSpaceId: workSpaceId
         )
-        
-        /*
-        
-        // 0. 디비에 저장하려고 하는 채팅이 이미 디비에 있는 채팅인지 확인하는 작업
-            // - 서버 오류로 인해 중복된 채팅을 받을 가능성이 있음
-            // - (현재는) createdAt을 주었을 때 해당 채팅을 포함해서 주기 때문에 필요하기도 함.
-            // - request를 보냄과 동시에 소켓이 오픈되기 때문에, 서버 입장에서 request를 받기 전, 소켓을 통해 이미 디비에 채팅이 저장될 가능성이 있음.
-        
-        if let existChatting = realm.objects(ChannelChattingInfoTable.self).filter("chat_id == %@", dtoData.chat_id).first {
-            print("이미 디비에 있는 채팅 -> 가드문 return")
-            return
-        }
-        
-        
-        do {
-            try realm.write {
-                // 1. 디비에 이미 있는 채널인지 확인, 없는 채널이면 디비에 추가
-                if let existChannel = realm.objects(ChannelInfoTable.self).filter("channel_id == %@", dtoData.channel_id).first {
-                    // 이미 있는 채널
-                    
-                } else {
-                    // 없는 채널 -> 추가해주기
-                    let newChannel = ChannelInfoTable(
-                        dtoData,
-                        workSpaceId: workSpaceId
-                    )
-                    realm.add(newChannel)
-                }
-                
-                // 2. 디비에 이미 있는 유저인지 확인, 없는 유저면 디비에 추가
-                if let existUser = realm.objects(UserInfoTable.self)
-                    .filter("user_id == %@", dtoData.user.user_id).first {
-                    // 이미 있는 유저
-                    
-                } else {
-                    // 없는 유저 -> 추가해주기
-                    let newUser = UserInfoTable(
-                        dtoData.user
-                    )
-                    realm.add(newUser)
-                }
-                
-                
-                // 3. 최종 채팅 정보 저장
-                let newChannelChatting = ChannelChattingInfoTable()
-                newChannelChatting.chat_id = dtoData.chat_id
-                newChannelChatting.content = dtoData.content
-                newChannelChatting.createdAt = dtoData.createdAt.toDate(to: .fromAPI)!
-                
-                var fileList = List<String>()
-                fileList.append(objectsIn: dtoData.files)
-                newChannelChatting.files = fileList
-                
-                newChannelChatting.channelInfo = realm.objects(ChannelInfoTable.self).filter("channel_id == %@", dtoData.channel_id).first!
-                newChannelChatting.userInfo = realm.objects(UserInfoTable.self)
-                    .filter("user_id == %@", dtoData.user.user_id).first!
-                
-                realm.add(newChannelChatting)
-            }
-        } catch {
-            
-        }
-        */
-        
     }
     
     // 채팅 하나를 디비에 저장 (채팅 전송 후 실행)
