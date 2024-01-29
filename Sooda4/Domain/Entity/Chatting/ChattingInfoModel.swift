@@ -8,6 +8,8 @@
 import Foundation
 
 struct ChattingInfoModel: Decodable {
+    let chatId: Int
+    
     let content: String?
     let createdAt: Date
     let files: [String]

@@ -130,7 +130,7 @@ class ChannelChattingViewModel {
                     // 4. (VC) input view 초기화 (텍스트, 이미지)
                     
                     print("전송 성공")
-                    print("소켓으로 이 채팅이 왔을 때 응답 처리를 하지 않기 위해 UserDefaults에 chat_id 저장")
+                    
                     print(model)
                     
                     // 1.
@@ -283,6 +283,7 @@ extension ChannelChattingViewModel {
         
         // 2.
         let seperatorData = ChattingInfoModel(
+            chatId: -1,
             content: "기본 데이터",
             createdAt: Date(),
             files: [],
@@ -524,8 +525,19 @@ extension ChannelChattingViewModel {
             self.channelId) { newData  in
                 print("소켓 응답!!!!! ", newData)
                 
+                
                 // 1. userId 비교해서 내가 보낸 건 걸러줌
                 if newData.userId == KeychainStorage.shared._id { return }
+                
+                
+                /* 실패...
+                // 1. 최근에 보낸 채팅인지 확인하고 걸러준다. (멀티 디바이스 지원)
+                if newData.chatId ==  UserDefaultsManager.latestChannelChattingId { return }
+                print(newData)
+                */
+                
+                
+                
                 
                 // 2. 아래 pagination이 모두 끝난 상태일 때만 배열 뒤에 붙여줌.
                 if self.isDoneNextPagination {

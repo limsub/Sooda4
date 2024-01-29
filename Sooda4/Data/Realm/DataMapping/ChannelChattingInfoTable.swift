@@ -27,6 +27,7 @@ extension ChannelChattingInfoTable {
     // to Domain
     func toDomain() -> ChattingInfoModel {
         return .init(
+            chatId: self.chat_id,
             content: self.content,
             createdAt: self.createdAt,
             files: self.files.map { $0 },

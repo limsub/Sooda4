@@ -161,6 +161,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
             switch result {
             case .success(let dtoData):
                 print("REPO : 채팅 전송 성공. 성공했으니까 해당 채팅 바로 디비에 저장")
+                
                 DispatchQueue.main.async {
                     self.addDataElement(
                         data: dtoData,

@@ -66,6 +66,7 @@ struct ChannelChattingDTO: Decodable {
 extension ChannelChattingDTO {
     func toDomain() -> ChattingInfoModel {
         return .init(
+            chatId: chat_id,
             content: content,
             createdAt: createdAt.toDate(to: .fromAPI)!,
             files: files,
