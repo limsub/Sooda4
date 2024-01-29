@@ -130,6 +130,7 @@ class ChannelChattingViewModel {
                     // 4. (VC) input view 초기화 (텍스트, 이미지)
                     
                     print("전송 성공")
+                    print("소켓으로 이 채팅이 왔을 때 응답 처리를 하지 않기 위해 UserDefaults에 chat_id 저장")
                     print(model)
                     
                     // 1.

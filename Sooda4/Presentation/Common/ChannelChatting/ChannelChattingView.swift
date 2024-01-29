@@ -22,6 +22,7 @@ class ChannelChattingView: BaseView {
         
         view.contentInset = .zero
         
+        view.separatorStyle = .none
         
         return view
     }()
@@ -83,7 +84,7 @@ class ChannelChattingView: BaseView {
         self.setConstraints()
         
         
-        newMessageView.isHidden = true 
+        newMessageView.isHidden = true
     }
     
 }
