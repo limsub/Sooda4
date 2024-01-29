@@ -106,6 +106,7 @@ final class ChannelChattingViewController: BaseViewController {
     func setTableView() {
         mainView.chattingTableView.delegate = self
         mainView.chattingTableView.dataSource = self
+        mainView.chattingTableView.prefetchDataSource = self
     }
     
     func setTextView() {
@@ -137,12 +138,15 @@ final class ChannelChattingViewController: BaseViewController {
                     // 1.
                     print("Next Pagination이 끝났습니다. 고대로 아래로 내려보냅니다")
                     owner.tableViewScrollToBottom()
+                    owner.mainView.newMessageView.isHidden = true
                 } else {
                     // 2.
                     print("Next Pagination이 아직 끝나지 않은 상태입니다. 디비에 있는거 싹 다 꺼낸 후에 아래로 내려보냅니다")
                     self.viewModel.fetchAllNextData {
-                        self.mainView.chattingTableView.reloadData()
-                        self.tableViewScrollToBottom()
+                        owner.mainView.chattingTableView.reloadData()
+                        owner.tableViewScrollToBottom()
+                        owner.mainView.newMessageView.isHidden = true
+                        
                     }
                 }
             }
@@ -393,6 +397,9 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         
         let yPos = scrollView.contentOffset.y
         let delta = scrollView.contentSize.height - scrollView.contentOffset.y
+        viewModel.yPos = yPos
+        viewModel.delta = delta
+//        print("yPos : \(yPos)")
         
         // 위로 pagination
         if yPos < 100 {
@@ -400,6 +407,9 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
                 let indexPaths = (0..<cnt).map { IndexPath(row: $0, section: 0) }
                 self.mainView.chattingTableView.insertRows(at: indexPaths, with: .bottom)    // 아래에서 위로 추가된다는 애니메이션
             }
+        }
+        if yPos > 100 {
+            viewModel.stopPreviousPagination = false
         }
         
         // 아래로 pagination
@@ -412,6 +422,9 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
                 
                 self?.mainView.chattingTableView.reloadData()
             }
+        }
+        if delta > 1000 {
+            viewModel.stopNextPagination = false
         }
         
  
@@ -684,4 +697,14 @@ extension ChannelChattingViewController {
             animated: false
         )
     }
+}
+
+extension ChannelChattingViewController: UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        
+        print(indexPaths)
+        
+    }
+    
 }

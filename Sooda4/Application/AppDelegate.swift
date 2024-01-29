@@ -18,23 +18,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        print(Date().toString(of: .toAPI))
         
         
-        for i in 0...40 {
-            let requestModel = MakeChannelChattingRequestModel(
-                channelName: "오아아아",
-                workSpaceId: 152,
-                content: "--- pagination Test \(i)",
-                files: []
-            )
-            
-            let dto = MakeChannelChattingRequestDTO(requestModel)
-            
-            NetworkManager.shared.requestCompletionMultipart(
-                type: MakeChannelChattingResponseDTO.self,
-                api: .makeChannelChatting(dto)) { response in
-                    print("\(i)")
-                    print(response)
-                }
-        }
+//        for i in 0...40 {
+//            let requestModel = MakeChannelChattingRequestModel(
+//                channelName: "오아아아",
+//                workSpaceId: 152,
+//                content: "--- pagination Test \(i)",
+//                files: []
+//            )
+//            
+//            let dto = MakeChannelChattingRequestDTO(requestModel)
+//            
+//            NetworkManager.shared.requestCompletionMultipart(
+//                type: MakeChannelChattingResponseDTO.self,
+//                api: .makeChannelChatting(dto)) { response in
+//                    print("\(i)")
+//                    print(response)
+//                }
+//        }
         
         return true
     }

@@ -41,7 +41,7 @@ class ChannelChattingViewModel {
     var delta: CGFloat = 0
     
     // Pagination 변수 -> 다른 화면 갔다오면 네트워크 콜 다시 들어가기 때문에 또 초기화해줘야 함
-    private var stopPreviousPagination = false, stopNextPagination = false, isDonePreviousPagination = false, isDoneNextPagination = false
+    var stopPreviousPagination = false, stopNextPagination = false, isDonePreviousPagination = false, isDoneNextPagination = false
     private var previousOffsetTargetDate: Date? = nil
     private var nextOffsetTargetDate: Date? = nil
     
@@ -318,8 +318,10 @@ extension ChannelChattingViewModel {
         // 3. tableView reload
         completion(newArrCnt)
         
-        // 4. stop 풀어줘
-        self.stopPreviousPagination = false
+        // 4. stop 풀어줘 -> VC에서
+//        if yPos > 100 {
+//            self.stopPreviousPagination = false
+//        }
     }
     
     
@@ -339,8 +341,10 @@ extension ChannelChattingViewModel {
         // 3. tableView reload유~~
         completion(newArrCnt)
         
-        // 4. stop 풀어줘
-        self.stopNextPagination = false
+//        // 4. stop 풀어줘 -> VC에서
+//        if delta > 1000 {
+//            self.stopNextPagination = false
+//        }
     }
 }
 
