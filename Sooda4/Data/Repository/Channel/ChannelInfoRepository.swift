@@ -21,11 +21,15 @@ class ChannelInfoRepository: ChannelInfoRepositoryProtocol {
             api: .oneChannel(requestDTO)) { response in
                 switch response {
                 case .success(let dtoData):
+                    print("11111")
+                    print(dtoData)
+                    print("11111")
                     self.realmManager.updateChannelInfo(dtoData: dtoData)
                     
                 case .failure(let networkError):
                     print("networkError : \(networkError)")
                 }
+                completion()
             }
         
     }

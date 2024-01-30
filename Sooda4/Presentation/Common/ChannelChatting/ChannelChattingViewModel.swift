@@ -181,21 +181,26 @@ class ChannelChattingViewModel {
     
     // - 채팅 데이터 (테이블뷰)
     func loadData(completion: @escaping () -> Void) {
-        // 1. 디비에 저장된 채팅의 마지막 날짜
-        self.checkLastChattingDate()
         
-        // 2. 안읽은 채팅 API call -> 디비에 저장
-        // 2. 소켓 오픈
-        self.fetchRecentChatting {
+        // 0. 디비 업데이트! (서버에 저장된 최신 데이터)
+        self.updateChannelInfoRealm {
             
-            // 3. 디비에서 데이터 가져와서 chatArr 구성
-            // (이전 (포함) 30 + sample + 이후 30)
-            self.fetchAllPastChatting()
-            completion()    // 아마 tableView reload
+            // 1. 디비에 저장된 채팅의 마지막 날짜
+            self.checkLastChattingDate()
             
-            // 4. 이제부터 스크롤에 따라 pagination 시작
-            print("이제부터 스크롤에 따라 pagination 시작")
-            self.notLoadScrollPagination = false
+            // 2. 안읽은 채팅 API call -> 디비에 저장
+            // 2. 소켓 오픈
+            self.fetchRecentChatting {
+                
+                // 3. 디비에서 데이터 가져와서 chatArr 구성
+                // (이전 (포함) 30 + sample + 이후 30)
+                self.fetchAllPastChatting()
+                completion()    // 아마 tableView reload
+                
+                // 4. 이제부터 스크롤에 따라 pagination 시작
+                print("이제부터 스크롤에 따라 pagination 시작")
+                self.notLoadScrollPagination = false
+            }
         }
     }
 }
@@ -203,11 +208,26 @@ class ChannelChattingViewModel {
 
 // 채팅 데이터 불러오는 로직
 extension ChannelChattingViewModel {
+    // 0. 디비 업데이트!!!
     // 1. 디비에 저장된 마지막 날짜 확인 -> 날짜 변수에 저장
     // 2. 해당 날짜 이후 채팅내역 서버에서 가져옴 -> 디비에 저장
     // 3. 날짜 변수 기준 이전 30개, 이후 30개 데이터 로드
     // 4. tableView reload & scroll offset 지정
     
+    
+    // 0.
+    private func updateChannelInfoRealm(completion: @escaping () -> Void) {
+        
+        let requestModel = ChannelDetailRequestModel(
+            workSpaceId: self.workSpaceId,
+            channelName: self.channelName
+        )
+                
+        channelChattingUseCase.updateChannelInfo(
+            requestModel: requestModel,
+            completion: completion
+        )
+    }
     
     // 1.
     private func checkLastChattingDate() {

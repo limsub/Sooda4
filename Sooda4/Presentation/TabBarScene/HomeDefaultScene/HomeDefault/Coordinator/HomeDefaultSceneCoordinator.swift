@@ -171,6 +171,7 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
             channelId: channelId,
             channelName: channelName,
             channelChattingUseCase: ChannelChattingUseCase(
+                channelInfoRepository: ChannelInfoRepository(),
                 channelChattingRepository: ChannelChattingRepository(),
                 socketChannelChattingRepository: SocketChannelChattingRepository()
             )

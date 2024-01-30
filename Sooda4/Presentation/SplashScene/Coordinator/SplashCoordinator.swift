@@ -72,9 +72,11 @@ class SplashCoordinator: SplashCoordinatorProtocol {
             workSpaceId: 118,
             channelId: 0,
             channelName: "Final final",
-            channelChattingUseCase: ChannelChattingUseCase(channelChattingRepository: ChannelChattingRepository(),
-                                                           socketChannelChattingRepository: SocketChannelChattingRepository()
-                                                          )
+            channelChattingUseCase: ChannelChattingUseCase(
+                channelInfoRepository: ChannelInfoRepository(),
+                channelChattingRepository: ChannelChattingRepository(),
+                socketChannelChattingRepository: SocketChannelChattingRepository()
+            )
         )
         
         
