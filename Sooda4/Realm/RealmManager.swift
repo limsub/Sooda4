@@ -37,9 +37,8 @@ class RealmManager: RealmManagerProtocol {
     }
 }
 
-// 채널 채팅
+// C - 채널 채팅 데이터 추가
 extension RealmManager {
-    
     // 0. 채팅 정보를 디비에 저장
     func addChannelChattingData(dtoData: ChannelChattingDTO, workSpaceId: Int) {
         
@@ -107,7 +106,11 @@ extension RealmManager {
         }
         
     }
-    
+}
+
+
+// R - 채널 채팅
+extension RealmManager {
     
     // 1. 채널 채팅 중 가장 마지막 날짜 확인.
     func checkChannelChattingLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
@@ -197,6 +200,46 @@ extension RealmManager {
                 .sorted(byKeyPath: "createdAt")
                 .map { $0.toDomain() }
         }
+    }
+    
+}
+
+
+// U - 채널 정보 업데이트 (유저 리스트 포함)
+extension RealmManager {
+    
+    func updateChannelInfo(dtoData: OneChannelResponseDTO) {
+        
+        guard let realm else { return }
+        
+        // 1. 채널 테이블
+        let newChannelTable = ChannelInfoTable()
+        newChannelTable.channel_id = dtoData.channel_id
+        newChannelTable.workspace_id = dtoData.workspace_id
+        newChannelTable.channel_name = dtoData.name
+        
+        do {
+            try realm.write {
+                realm.add(newChannelTable, update: .modified)
+            }
+        } catch {
+            print("Realm update Error")
+        }
+        
+        
+        // 2. 유저 테이블
+        dtoData.channelMembers.forEach { dtoData in
+            let newUserTable = UserInfoTable(dtoData)
+            
+            do {
+                try realm.write {
+                    realm.add(newUserTable, update: .modified)
+                }
+            } catch {
+                print("Realm update Error")
+            }
+        }
+        
     }
     
 }

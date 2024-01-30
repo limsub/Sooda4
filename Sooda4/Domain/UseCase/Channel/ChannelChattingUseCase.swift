@@ -10,6 +10,10 @@ import RxSwift
 import RxCocoa
 
 protocol ChannelChattingUseCaseProtocol {
+    
+    // 0. 서버에 저장된 채널 정보 가져와서 디비 업데이트
+    func updateChannelInfo(requestModel: ChannelDetailRequestModel, completion: @escaping () -> Void)
+    
     // 1. 디비에 저장된 채팅의 마지막 날짜 조회
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date?
     
@@ -51,20 +55,30 @@ protocol ChannelChattingUseCaseProtocol {
 class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     // 1. repo
+    let channelInfoRepository: ChannelInfoRepositoryProtocol
     let channelChattingRepository: ChannelChattingRepositoryProtocol
     let socketChannelChattingRepository: SocketChannelChattingRepositoryProtocol
     
+    
     // 2. init
     init(
+        channelInfoRepository: ChannelInfoRepositoryProtocol,
         channelChattingRepository: ChannelChattingRepositoryProtocol,
         socketChannelChattingRepository: SocketChannelChattingRepositoryProtocol
     ) {
+        self.channelInfoRepository = channelInfoRepository
         self.channelChattingRepository = channelChattingRepository
         self.socketChannelChattingRepository = socketChannelChattingRepository
     }
     
     
     // 3. 프로토콜 메서드
+    
+    // 0. 서버에 저장된 채널 정보 가져와서 디비 업데이트
+    func updateChannelInfo(requestModel: ChannelDetailRequestModel, completion: @escaping () -> Void) {
+        
+        return channelInfoRepository.updateChannelInfo(requestModel, completion: completion)
+    }
   
     // 1. 디비에 저장된 채팅의 마지막 날짜 조회
     func checkLastDate(requestModel: ChannelDetailFullRequestModel) -> Date? {
