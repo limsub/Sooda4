@@ -525,6 +525,7 @@ extension ChannelChattingViewModel {
     }
 }
 
+
 // Socket
 extension ChannelChattingViewModel {
     // 소켓 연결
@@ -567,6 +568,14 @@ extension ChannelChattingViewModel {
                 // 3. 뷰컨에 newChat 전달
                 self.addNewChatData.onNext(newData)
             }
+    }
+}
+
+
+// File Open
+extension ChannelChattingViewModel {
+    func openZip() {
+        
     }
 }
 
