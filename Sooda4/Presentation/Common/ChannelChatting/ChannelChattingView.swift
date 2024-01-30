@@ -24,6 +24,8 @@ class ChannelChattingView: BaseView {
         
         view.separatorStyle = .none
         
+        view.keyboardDismissMode = .onDrag
+        
         return view
     }()
     
