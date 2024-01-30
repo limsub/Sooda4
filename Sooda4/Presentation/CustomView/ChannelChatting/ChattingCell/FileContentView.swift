@@ -17,7 +17,11 @@ class FileContentView: BaseView {
     
     weak var delegate: FileOpenDelegate?
     
-    var pdfURL: String?
+    var pdfURL: String? {
+        didSet {
+            fileOpenButton.setTitle(pdfURL, for: .normal)
+        }
+    }
     
     let fileOpenButton = UIButton()
     

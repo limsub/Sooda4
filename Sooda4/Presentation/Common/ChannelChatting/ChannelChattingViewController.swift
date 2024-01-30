@@ -368,7 +368,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
             
             cell.designCell(viewModel.dataForRowAt(indexPath))
             
-            cell.chattingContentView.fileContentView.delegate = self
+//            cell.chattingContentView.fileContentView.delegate = self
 
             
             return cell

@@ -1,20 +1,16 @@
 //
-//  ChannelChattingCellContentView2.swift
+//  ChannelChattingCellContentView3.swift
 //  Sooda4
 //
-//  Created by 임승섭 on 1/23/24.
+//  Created by 임승섭 on 1/30/24.
 //
 
-
-// 이미지만 있는거 굿. 텍스트만 있는거 굿.
-// 근데 둘 다 있는게 안먹음....
-// 제약조건 참조타입으로 해결.
 
 
 import UIKit
 import SnapKit
 
-class ChannelChattingCellContentView2: BaseView {
+class ChannelChattingCellContentView3: BaseView {
     
     // 프로필 이름 (필수)
     let nameLabel = {
@@ -22,6 +18,14 @@ class ChannelChattingCellContentView2: BaseView {
         view.numberOfLines = 1
         view.text = "옹골찬 고래밥"
         view.setAppFont(.caption)
+        return view
+    }()
+    
+    let stackView = {
+        let view = UIStackView()
+        view.spacing = 5
+        view.axis = .vertical
+        view.alignment = .leading
         return view
     }()
     
@@ -63,128 +67,90 @@ class ChannelChattingCellContentView2: BaseView {
 //    }()
     
     
-    var fileContentView = {
-        let view = FileContentView()
-        return view
-    }()
+//    var fileContentView = {
+//        let view = FileContentView()
+//        return view
+//    }()
     
     
     override func setConfigure() {
         super.setConfigure()
         
-        // 디폴트 : 모두 있는 경우
-        [nameLabel, contentLabel, contentBackView, sampleView, fileContentView].forEach { item in
+        [nameLabel, stackView].forEach { item in
             self.addSubview(item)
         }
         
+        
+        [contentBackView, sampleView].forEach { item in
+            stackView.addArrangedSubview(item)
+        }
+        
+        contentBackView.addSubview(contentLabel)
     }
-    
-    // 뷰의 width
-    // 1. 기본적으로 contentLabel의 width와 동일
-    // 2. 만약 이미지뷰가 있으면, 무조건 이미지뷰의 width
-    
-    
-    
-    
-    
-    var contentTopName: Constraint? = nil
-    
-    var sampleTopName: Constraint? = nil
-    var sampleTopContent: Constraint? = nil
-    
-    var contentBottomSelf: Constraint? = nil
-    var sampleBottomSelf: Constraint? = nil
-    
-    var contentWidthSelf: Constraint? = nil
-    var sampleWidthSelf: Constraint? = nil
-    
-    
-    // 1. 둘 다 있다   -> a / d / a / d / a / d / a
-    // 2. 텍스트만 있다 -> a / d / d / a / d / a / d
-    // 3. 이미지만 있다 -> d / a / d / d / a / d / a
-    
-    
     
     var sampleViewSingleLine: Constraint? = nil // 2, 3
     var sampleViewDoubleLine: Constraint? = nil // 1, 4, 5
     
-    
-
     
     override func setConstraints() {
         super.setConstraints()
         
         nameLabel.snp.makeConstraints { make in
             make.top.equalToSuperview()
+            make.height.equalTo(18)
             make.leading.equalToSuperview()
         }
         
-
-        contentLabel.snp.makeConstraints { make in
+        stackView.snp.makeConstraints { make in
+            make.top.equalTo(nameLabel.snp.bottom).offset(5)
             make.leading.equalTo(self).inset(8)
             make.width.lessThanOrEqualTo(228)
-            
-            self.contentTopName = make.top.equalTo(nameLabel.snp.bottom).offset(13).constraint
-            self.contentBottomSelf =  make.bottom.equalTo(self).inset(8).constraint
-            self.contentWidthSelf = make.width.equalTo(self).inset(8).constraint
-        }
-        contentBackView.snp.makeConstraints { make in
-            make.edges.equalTo(contentLabel).inset(-8)
+            make.horizontalEdges.bottom.equalToSuperview()
         }
         
         
+        // contentLabel + contentBackView
+        contentLabel.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(8)
+            make.centerY.equalToSuperview()
+        }
+        
+        
+        // sampleView
         sampleView.snp.makeConstraints { make in
-            
             make.width.equalTo(244)
+            
+            make.height.lessThanOrEqualTo(162)
             
             self.sampleViewSingleLine = make.height.equalTo(80).constraint
             self.sampleViewDoubleLine = make.height.equalTo(162).constraint
-            
-            self.sampleTopName = make.top.equalTo(nameLabel.snp.bottom).offset(5).constraint
-            self.sampleTopContent = make.top.equalTo(contentBackView.snp.bottom).offset(5).constraint
-            self.sampleBottomSelf = make.bottom.equalTo(self).constraint
-            self.sampleWidthSelf =  make.horizontalEdges.equalTo(self).constraint
         }
-
         
+ 
         
-        contentTopName?.activate()
-        sampleTopName?.deactivate()
-        sampleTopContent?.activate()
-        contentBottomSelf?.deactivate()
-        sampleBottomSelf?.activate()
-        
-        contentWidthSelf?.deactivate()
-        sampleWidthSelf?.activate()
-        
-        sampleViewSingleLine?.deactivate()
-        sampleViewDoubleLine?.activate()
-        
-        
-        // 일단 파일 여는 게 우선이기 때문에, fileContentView 그냥 위에다 박아버려
-//        fileContentView.snp.makeConstraints { make in
-//            make.size.equalTo(30)
-//            make.center.equalTo(self)
-//        }
+   
     }
     
     
     
     func designView(_ sender: ChattingInfoModel) {
         
-        // sender.files에 pdf 파일이 있을 때, fileContentView를 띄워주자
-        var flag = 0;
-        sender.files.forEach { str in
-            if str.hasSuffix(".pdf") || str.hasSuffix(".zip") || str.hasSuffix(".mov") || str.hasSuffix(".mp3") {
-                fileContentView.pdfURL = str
-                flag = 1;
-            }
-        }
-        if flag == 0 { fileContentView.isHidden = true }
-        else { fileContentView.isHidden = false }
+//        // sender.files에 pdf 파일이 있을 때, fileContentView를 띄워주자
+//        var flag = 0;
+//        sender.files.forEach { str in
+//            if str.hasSuffix(".pdf") || str.hasSuffix(".zip") || str.hasSuffix(".mov") || str.hasSuffix(".mp3") {
+//                fileContentView.pdfURL = str
+//                flag = 1;
+//            }
+//        }
+//        if flag == 0 { fileContentView.isHidden = true }
+//        else { fileContentView.isHidden = false }
         
         backgroundColor = .clear
         
+//        backgroundColor = .red
+        
+//        stackView.backgroundColor = .lightGray
         
         
         self.nameLabel.text = sender.userName
@@ -201,14 +167,6 @@ class ChannelChattingCellContentView2: BaseView {
             contentLabel.isHidden = false
             contentBackView.isHidden = false
             sampleView.isHidden = true
-            
-            contentTopName?.activate()
-            sampleTopName?.deactivate()
-            sampleTopContent?.deactivate()
-            contentBottomSelf?.activate()
-            sampleBottomSelf?.deactivate()
-            contentWidthSelf?.activate()
-            sampleWidthSelf?.deactivate()
         }
         
         // 이미지만 있다 -> d / a / d / d / a / d / a
@@ -216,16 +174,6 @@ class ChannelChattingCellContentView2: BaseView {
             contentLabel.isHidden = true
             contentBackView.isHidden = true
             sampleView.isHidden = false
-            
-            contentTopName?.deactivate()
-            sampleTopName?.activate()
-            sampleTopContent?.deactivate()
-            contentBottomSelf?.deactivate()
-            sampleBottomSelf?.activate()
-            
-            contentWidthSelf?.deactivate()
-            sampleWidthSelf?.activate()
-            
             
             if singleLine(sender.files.count) {
                 sampleViewSingleLine?.activate()
@@ -241,15 +189,6 @@ class ChannelChattingCellContentView2: BaseView {
             contentLabel.isHidden = false
             contentBackView.isHidden = false
             sampleView.isHidden = false
-            
-            contentTopName?.activate()
-            sampleTopName?.deactivate()
-            sampleTopContent?.activate()
-            contentBottomSelf?.deactivate()
-            sampleBottomSelf?.activate()
-            
-            contentWidthSelf?.deactivate()
-            sampleWidthSelf?.activate()
             
             if singleLine(sender.files.count) {
                 sampleViewSingleLine?.activate()
@@ -273,4 +212,5 @@ class ChannelChattingCellContentView2: BaseView {
     
 
 }
+
 

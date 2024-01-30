@@ -21,7 +21,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
     }()
     
     // nameLabel + contentLabel(+ contentBackView) + fileImageView -> customView로 합치기
-    var chattingContentView = ChannelChattingCellContentView2()
+    var chattingContentView = ChannelChattingCellContentView3()
 
     
     let dateLabel = {
@@ -108,6 +108,12 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
 
         // 3. 날짜
         let createdDate = sender.createdAt
+        
+        print("------------")
+        print(createdDate)
+        print(createdDate.toString(of: .timeAMPM))
+        
+        print("------------")
         if isDateToday(createdDate) {
             self.dateLabel.text = createdDate.toString(of: .timeAMPM)
         } else {
