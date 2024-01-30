@@ -46,6 +46,8 @@ class FileContentView: BaseView {
         self.backgroundColor = .red
         
         fileOpenButton.backgroundColor = .white
+        fileOpenButton.setTitleColor(.black, for: .normal)
+        
         fileOpenButton.addTarget(self, action: #selector(fileOpenButtonClicked), for: .touchUpInside)
     }
     

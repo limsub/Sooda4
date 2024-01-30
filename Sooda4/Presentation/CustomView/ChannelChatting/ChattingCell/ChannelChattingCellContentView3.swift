@@ -58,19 +58,12 @@ class ChannelChattingCellContentView3: BaseView {
         return view
     }()
     
-    // 파일 뷰
-//    var fileStackView = {
-//        let view = UIStackView()
-//        view.axis = .vertical
-//        view.spacing = 5
-//        return view
-//    }()
-    
-    
-//    var fileContentView = {
-//        let view = FileContentView()
-//        return view
-//    }()
+    // 파일 뷰 (최대 5개 - 이미지 없이 파일들만)
+    var fileView1 = FileContentView()
+    var fileView2 = FileContentView()
+    var fileView3 = FileContentView()
+    var fileView4 = FileContentView()
+    var fileView5 = FileContentView()
     
     
     override func setConfigure() {
@@ -80,8 +73,7 @@ class ChannelChattingCellContentView3: BaseView {
             self.addSubview(item)
         }
         
-        
-        [contentBackView, sampleView].forEach { item in
+        [contentBackView, sampleView, fileView1, fileView2, fileView3, fileView4, fileView5].forEach { item in
             stackView.addArrangedSubview(item)
         }
         
@@ -126,14 +118,22 @@ class ChannelChattingCellContentView3: BaseView {
             self.sampleViewDoubleLine = make.height.equalTo(162).constraint
         }
         
- 
         
+        // fileView
+        [fileView1, fileView2, fileView3, fileView4, fileView5].forEach { item in
+            item.snp.makeConstraints { make in
+                make.height.equalTo(60)
+                make.width.equalTo(244)
+            }
+        }
    
     }
     
     
     
     func designView(_ sender: ChattingInfoModel) {
+        
+        
         
 //        // sender.files에 pdf 파일이 있을 때, fileContentView를 띄워주자
 //        var flag = 0;
@@ -152,30 +152,67 @@ class ChannelChattingCellContentView3: BaseView {
         
 //        stackView.backgroundColor = .lightGray
         
+        var fileExtensionArr = ["pdf", "zip", "mov", "mp3"]
+        
+        var imageArr: [String] = []
+        var fileArr: [String] = []
+    
+        for fileStr in sender.files {
+            // 이미지 배열
+            if fileStr.hasSuffix(".jpg") || fileStr.hasSuffix(".jpeg") || fileStr.hasSuffix(".png") {
+                imageArr.append(fileStr)
+            }
+            
+            fileExtensionArr.forEach { extensionType in
+                if fileStr.hasSuffix(extensionType) {
+                    fileArr.append(fileStr)
+                }
+            }
+        }
+        
+        print("*------------------------*")
+        print("파일 배열 : ", fileArr)
+        print("이미지 배열 : ", imageArr)
+        print("*------------------------*")
+        
+        // 이미지 뷰 업데이트
+        self.sampleView.updateView(imageArr)
+        
+        // 파일 뷰 업데이트
+        let fileViewArr = [fileView1, fileView2, fileView3, fileView4, fileView5]
+        for i in 0..<fileArr.count {
+            fileViewArr[i].isHidden = false
+            fileViewArr[i].pdfURL = fileArr[i]
+//            fileViewArr[i].fileOpenButton.setTitle(fileArr[i], for: .normal)
+        }
+        for i in fileArr.count..<5 {
+            fileViewArr[i].isHidden = true
+        }
+        
+        
+        
         
         self.nameLabel.text = sender.userName
         self.contentLabel.text = sender.content
-        self.sampleView.updateView(sender.files)
         
         self.nameLabel.setAppFont(.caption)
         self.contentLabel.setAppFont(.body)
         
-        
-        
-        // 텍스트만 있다 -> a / d / d / a / d  / a / d
-        if sender.files.isEmpty {
+
+        // 이미지 x
+        if imageArr.isEmpty {
             contentLabel.isHidden = false
             contentBackView.isHidden = false
             sampleView.isHidden = true
         }
         
-        // 이미지만 있다 -> d / a / d / d / a / d / a
-        else if sender.content!.isEmpty {
+        // content x
+        if sender.content!.isEmpty {
             contentLabel.isHidden = true
             contentBackView.isHidden = true
             sampleView.isHidden = false
             
-            if singleLine(sender.files.count) {
+            if singleLine(imageArr.count) {
                 sampleViewSingleLine?.activate()
                 sampleViewDoubleLine?.deactivate()
             } else {
@@ -184,13 +221,13 @@ class ChannelChattingCellContentView3: BaseView {
             }
         }
         
-        // 둘 다 있다   -> a / d / a / d / a / d / a
-        else {
+        // 둘 다 있다
+        if !imageArr.isEmpty && !sender.content!.isEmpty {
             contentLabel.isHidden = false
             contentBackView.isHidden = false
             sampleView.isHidden = false
             
-            if singleLine(sender.files.count) {
+            if singleLine(imageArr.count) {
                 sampleViewSingleLine?.activate()
                 sampleViewDoubleLine?.deactivate()
             } else {

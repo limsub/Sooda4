@@ -32,8 +32,8 @@ class RealmManager: RealmManagerProtocol {
        
         self.realm = try! Realm(configuration: config)
         
-        print("----- \(userId) realm 파일 생성 -----")
-        print(realm?.configuration.fileURL)
+//        print("----- \(userId) realm 파일 생성 -----")
+//        print(realm?.configuration.fileURL)
     }
 }
 

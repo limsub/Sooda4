@@ -367,10 +367,12 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingTableViewCell.description(), for: indexPath) as? ChannelChattingTableViewCell else { return UITableViewCell() }
             
             cell.designCell(viewModel.dataForRowAt(indexPath))
-            
-//            cell.chattingContentView.fileContentView.delegate = self
+            cell.chattingContentView.fileView1.delegate = self
+            cell.chattingContentView.fileView2.delegate = self
+            cell.chattingContentView.fileView3.delegate = self
+            cell.chattingContentView.fileView4.delegate = self
+            cell.chattingContentView.fileView5.delegate = self
 
-            
             return cell
         }
     }

@@ -47,14 +47,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
                         print(item)
                     }
                     
-                    print("*******")
-                    
-                    print(dtoData.first?.createdAt)
-                    print(dtoData.first?.createdAt.toDate(to: .fromAPI))
-                    print(dtoData.first?.createdAt.toDate(to: .fromAPI)?.toString(of: .timeAMPM))
-                    
-                    
-                    print("*******")
                     
                     print("예외처리 필요 (완료) 소켓이 이미 열렸기 때문에, 소켓에서 받은 채팅이 디비에 있을 수 있다. 즉, 여기서 받은 데이터가 디비에 없는지 확인하는 작업이 필요하다")
                     DispatchQueue.main.async {

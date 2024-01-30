@@ -42,6 +42,11 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
         chattingContentView.contentLabel.isHidden = false
         chattingContentView.contentBackView.isHidden = false
         chattingContentView.sampleView.isHidden = false
+        chattingContentView.fileView1.isHidden = false
+        chattingContentView.fileView2.isHidden = false
+        chattingContentView.fileView3.isHidden = false
+        chattingContentView.fileView4.isHidden = false
+        chattingContentView.fileView5.isHidden = false
     }
 
     
@@ -108,12 +113,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
 
         // 3. 날짜
         let createdDate = sender.createdAt
-        
-        print("------------")
-        print(createdDate)
-        print(createdDate.toString(of: .timeAMPM))
-        
-        print("------------")
+
         if isDateToday(createdDate) {
             self.dateLabel.text = createdDate.toString(of: .timeAMPM)
         } else {
