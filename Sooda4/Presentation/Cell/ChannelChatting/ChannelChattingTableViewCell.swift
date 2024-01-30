@@ -7,7 +7,10 @@
 
 import UIKit
 
+
 class ChannelChattingTableViewCell: BaseTableViewCell {
+    
+    
     
     let profileImageView = {
         let view = UIImageView()

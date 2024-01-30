@@ -166,12 +166,13 @@ class ChannelChattingCellContentView2: BaseView {
         // sender.files에 pdf 파일이 있을 때, fileContentView를 띄워주자
         var flag = 0;
         sender.files.forEach { str in
-            if str.hasSuffix(".pdf") {
+            if str.hasSuffix(".pdf") || str.hasSuffix(".zip") {
                 fileContentView.pdfURL = str
                 flag = 1;
             }
         }
         if flag == 0 { fileContentView.isHidden = true }
+        else { fileContentView.isHidden = false }
         
         backgroundColor = .clear
         

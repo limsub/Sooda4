@@ -14,6 +14,8 @@ import SocketIO
 
 final class ChannelChattingViewController: BaseViewController {
     
+    var interaction: UIDocumentInteractionController?
+    
     let mainView = ChannelChattingView()
     
     private var viewModel: ChannelChattingViewModel!
@@ -365,6 +367,8 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
             guard let cell = tableView.dequeueReusableCell(withIdentifier: ChannelChattingTableViewCell.description(), for: indexPath) as? ChannelChattingTableViewCell else { return UITableViewCell() }
             
             cell.designCell(viewModel.dataForRowAt(indexPath))
+            
+            cell.chattingContentView.fileContentView.delegate = self
 
             
             return cell
@@ -707,5 +711,69 @@ extension ChannelChattingViewController: UITableViewDataSourcePrefetching {
         print(indexPaths)
         
     }
+    
+}
+
+
+// file open delegate
+extension ChannelChattingViewController: FileOpenDelegate, UIDocumentInteractionControllerDelegate {
+    func downloadAndOpenFile(_ fileURL: String) {
+        print("파일 다운 및 열기 : \(fileURL)")
+        
+        
+        // 1. 네트워크 통신으로 파일 Data 다운
+        NetworkManager.shared.requestCompletionData(
+            api: .downLoadFile(fileURL)) { response in
+                switch response {
+                case .success(let data):
+                    print(data)
+                    
+                    // '/' 3개 빼기
+                    let components = fileURL.components(separatedBy: "/")
+                    
+                        
+                    // '/' 3개 이후의 문자열만 추출
+                    var result = ""
+                    if components.count > 3 {
+                        let startIndex = components.index(components.startIndex, offsetBy: 3)
+                        result = components[startIndex...].joined(separator: "/")
+                    }
+                    
+                    let fileManager = FileManager()
+                    let documentPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("SAMPLE_\(result)")
+                    
+                    do {
+                        try data.write(to: documentPath)
+                    } catch {
+                        print(error)
+                    }
+                    
+                    
+                    print("파일 경로 - \(documentPath)")
+                    
+                    DispatchQueue.main.async {
+                        self.interaction = UIDocumentInteractionController(url: documentPath)
+                        self.interaction?.delegate = self
+                        self.interaction?.presentPreview(animated: true)
+                    }
+                    
+                    
+                    
+                case .failure(let networkError):
+                    print("에러 발생 : \(networkError)")
+                }
+            }
+    }
+    
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
+    }
+    
+    func documentInteractionControllerDidEndPreview(_ controller: UIDocumentInteractionController) {
+        
+        interaction = nil
+        
+    }
+    
     
 }

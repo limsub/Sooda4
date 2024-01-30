@@ -282,6 +282,40 @@ class NetworkManager {
     }
     
     
+    // Completion + Data
+    func requestCompletionData(
+        api: NetworkRouter,
+        completion: @escaping (Result<Data, NetworkError>) -> Void
+    ) {
+        AF.request(api)
+            .validate()
+            .responseData { response  in
+                
+                switch response.result {
+                case .success(let data):
+                    completion(.success(data))
+                    
+                case .failure(let error):
+                    print("(Completion + Data) 네트워크 통신 실패")
+                    
+                    // ErrorResponse 디코딩 성공
+                    if let errorCode = self.decodingErrorResponse(from: response.data) {
+                        print("(Completion + Data) 에러 디코딩 성공")
+                        let e = NetworkError(errorCode)
+                        completion(.failure(e))
+                    }
+                    
+                    // ErrorResponse 디코딩 실패
+                    else {
+                        print("(Completion + Data) 에러 디코딩 실패")
+                        let errorDescription = error.localizedDescription
+                        let e = NetworkError(errorDescription)
+                        completion(.failure(e))
+                    }
+                }
+            }
+    }
+    
     
     private func decodingErrorResponse(from jsonData: Data?) -> String? {
         
