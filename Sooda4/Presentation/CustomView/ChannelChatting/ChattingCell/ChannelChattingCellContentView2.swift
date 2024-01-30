@@ -16,7 +16,7 @@ import SnapKit
 
 class ChannelChattingCellContentView2: BaseView {
     
-    
+    // 프로필 이름 (필수)
     let nameLabel = {
         let view = UILabel()
         view.numberOfLines = 1
@@ -25,6 +25,8 @@ class ChannelChattingCellContentView2: BaseView {
         return view
     }()
     
+    
+    // 채팅 레이블 (옵션)
     let contentLabel = {
         let view = UILabel()
         view.numberOfLines = 0
@@ -42,7 +44,7 @@ class ChannelChattingCellContentView2: BaseView {
         return view
     }()
     
-    
+    // 이미지 묶음 뷰 (옵션)
     var sampleView = {
         let view = ChannelChattingCellContentImageSetView()
         
@@ -52,12 +54,18 @@ class ChannelChattingCellContentView2: BaseView {
         return view
     }()
     
+    // 파일 뷰
+    var fileContentView = {
+        let view = FileContentView()
+        return view
+    }()
+    
     
     override func setConfigure() {
         super.setConfigure()
         
         // 디폴트 : 모두 있는 경우
-        [nameLabel, contentLabel, contentBackView, sampleView].forEach { item in
+        [nameLabel, contentLabel, contentBackView, sampleView, fileContentView].forEach { item in
             self.addSubview(item)
         }
         
@@ -142,11 +150,28 @@ class ChannelChattingCellContentView2: BaseView {
         
         sampleViewSingleLine?.deactivate()
         sampleViewDoubleLine?.activate()
+        
+        
+        // 일단 파일 여는 게 우선이기 때문에, fileContentView 그냥 위에다 박아버려
+        fileContentView.snp.makeConstraints { make in
+            make.size.equalTo(30)
+            make.center.equalTo(self)
+        }
     }
     
     
     
     func designView(_ sender: ChattingInfoModel) {
+        
+        // sender.files에 pdf 파일이 있을 때, fileContentView를 띄워주자
+        var flag = 0;
+        sender.files.forEach { str in
+            if str.hasSuffix(".pdf") {
+                fileContentView.pdfURL = str
+                flag = 1;
+            }
+        }
+        if flag == 0 { fileContentView.isHidden = true }
         
         backgroundColor = .clear
         

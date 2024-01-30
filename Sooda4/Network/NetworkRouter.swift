@@ -58,7 +58,8 @@ enum NetworkRouter: URLRequestConvertible {
     case dmUnreadCount(_ sender: DMUnreadCountRequestDTO)
     
     
-    
+    /* === OTHER === */
+    case downLoadFile(_ sender: String) // fileURL
     
     
     
@@ -142,6 +143,13 @@ enum NetworkRouter: URLRequestConvertible {
             
         case .dmUnreadCount(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.dmRoomId)/unreads"
+            
+            
+            
+        // FILE
+        case .downLoadFile(let sender):
+            return "/v1\(sender)"
+            
         }
     }
     
@@ -158,6 +166,11 @@ enum NetworkRouter: URLRequestConvertible {
             return [
                 "Content-Type": "multipart/form-data",
                 "Authorization": KeychainStorage.shared.accessToken ?? "" ,
+                "SesacKey": APIKey.key
+            ]
+        case .downLoadFile:
+            return [
+                "Authorization": KeychainStorage.shared.accessToken ?? "",
                 "SesacKey": APIKey.key
             ]
         default:
@@ -211,6 +224,12 @@ enum NetworkRouter: URLRequestConvertible {
         // DMs
         case .workSpaceDMs, .dmUnreadCount:
             return .get
+            
+            
+        // Files
+        case .downLoadFile:
+            return .get
+            
             
         }
     }

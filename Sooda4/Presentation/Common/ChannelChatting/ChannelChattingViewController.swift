@@ -49,6 +49,7 @@ final class ChannelChattingViewController: BaseViewController {
         bindVM()
         
         startObservingKeyboard()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
