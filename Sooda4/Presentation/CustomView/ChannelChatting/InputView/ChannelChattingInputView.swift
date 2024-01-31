@@ -33,7 +33,7 @@ class ChannelChattingInputView: BaseView {
         
         view.register(ChannelChattingInputFileImageCollectionViewCell.self, forCellWithReuseIdentifier: ChannelChattingInputFileImageCollectionViewCell.description())
         
-        view.backgroundColor = .yellow
+        view.backgroundColor = UIColor.appColor(.background_primary)
         
         return view
     }()

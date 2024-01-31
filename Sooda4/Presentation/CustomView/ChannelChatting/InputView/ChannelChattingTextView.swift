@@ -22,7 +22,7 @@ class ChannelChattingTextView: UITextView {
     
     func setUp() {
         self.frame = CGRect(x: 0, y: 0, width: 275, height: 0)
-        self.backgroundColor = .cyan
+        self.backgroundColor = UIColor.appColor(.background_primary)
         self.translatesAutoresizingMaskIntoConstraints = false
         self.font = .appFont(.body)
     
