@@ -397,7 +397,7 @@ enum NetworkRouter: URLRequestConvertible {
             }
             
             // 이미지 데이터 배열인 경우
-            if let imageDataArr = value as? [Data] {
+            else if let imageDataArr = value as? [Data] {
                 imageDataArr.forEach { imageData in
                     multipartFormData.append(
                         imageData,

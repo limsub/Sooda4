@@ -171,7 +171,7 @@ final class ChannelChattingViewController: BaseViewController {
     func bindVM() {
         
         /* === collectionView rx === */
-        viewModel.imageData
+        viewModel.fileData
             .bind(to: mainView.chattingInputView.fileImageCollectionView.rx.items(cellIdentifier: ChannelChattingInputFileImageCollectionViewCell.description(), cellType: ChannelChattingInputFileImageCollectionViewCell.self)) { (row, element, cell) in
                 
                 cell.designCell(element)
@@ -182,12 +182,12 @@ final class ChannelChattingViewController: BaseViewController {
                         
                         // viewModel의 imageData 배열의 row 번째 요소 제거
                         do {
-                            var newArr = try owner.viewModel.imageData.value()
+                            var newArr = try owner.viewModel.fileData.value()
                             print("-- \(row) 번째 요소 지운다")
                             print("이전 : \(newArr)")
                             newArr.remove(at: row)
                             print("이전 : \(newArr)")
-                            owner.viewModel.imageData.onNext(newArr)
+                            owner.viewModel.fileData.onNext(newArr)
                             
                         } catch {
                             print("이미지 데이터 에러 catch")
@@ -637,6 +637,7 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
     
     func showPHPicker() {
         var configuration = PHPickerConfiguration()
+        
         configuration.selectionLimit = 5
         configuration.filter = .images
         
@@ -648,6 +649,14 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
         if results.isEmpty { return }
+        
+        // 개수가 넘어갔을 때, 얼럿 띄우고 강제종료
+        guard let curCnt = try? viewModel.fileData.value() else { return }
+        let enableCnt = 5 - curCnt.count
+        if results.count > enableCnt {
+            print("얼럿!!! - 파일 개수는 5개 이하로 보낼 수 있습니다~~~")
+            return 
+        }
         
         
         // 선택한 순서에 맞게 넣어주기 위해 배열의 인덱스를 이용한다
@@ -674,8 +683,12 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
         picker.dismiss(animated: true)
         
         
-        group.notify(queue: .main) {
-            self.viewModel.imageData.onNext(imageArr)
+        group.notify(queue: .main) { [weak self] in
+            guard var fileArr = try? self?.viewModel.fileData.value() else { return }
+            
+            fileArr.append(contentsOf: imageArr)
+            
+            self?.viewModel.fileData.onNext(fileArr)
         }
         
     }
@@ -685,8 +698,11 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
 extension ChannelChattingViewController: UIDocumentPickerDelegate {
     
     func showDocumentPicker() {
-    
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.png, .jpeg, .pdf, .gif, .avi, .zip, .text, .mp3, .movie], asCopy: true)
+        
+        let picker = UIDocumentPickerViewController(
+            forOpeningContentTypes: [.pdf, .gif, .avi, .zip, .text, .mp3, .movie],
+            asCopy: true
+        )
         picker.delegate = self
         picker.allowsMultipleSelection = true
         present(picker, animated: true)
@@ -694,6 +710,23 @@ extension ChannelChattingViewController: UIDocumentPickerDelegate {
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         
+        // 개수가 넘어갔을 때, 얼럿 띄우고 강제종료
+        guard let curCnt = try? viewModel.fileData.value() else { return }
+        let enableCnt = 5 - curCnt.count
+        if urls.count > enableCnt {
+            print("얼럿!!! - 파일 개수는 5개 이하로 보낼 수 있습니다!!")
+            return
+        }
+        
+        
+        // 데이터 타입으로 변환
+        let dataArr = urls.map { (try? Data(contentsOf: $0)) ?? Data() }
+        
+        
+        // 뷰모델에 데이터 추가
+        guard var fileArr = try? viewModel.fileData.value() else { return }
+        fileArr.append(contentsOf: dataArr)
+        viewModel.fileData.onNext(fileArr)
     }
     
 }

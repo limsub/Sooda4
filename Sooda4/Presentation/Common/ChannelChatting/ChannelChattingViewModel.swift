@@ -14,6 +14,11 @@ enum ResultMakeChatting {
     case failure(networkError: NetworkError)
 }
 
+struct DataModel {
+    
+    
+}
+
 
 class ChannelChattingViewModel {
     
@@ -30,7 +35,7 @@ class ChannelChattingViewModel {
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
-    let imageData = BehaviorSubject<[Data]>(value: [])    // 이미지 저장
+    let fileData = BehaviorSubject<[Data]>(value: [])    // 이미지 저장
     
     private var addNewChatData = PublishSubject<ChattingInfoModel>()
     
@@ -89,7 +94,7 @@ class ChannelChattingViewModel {
         
         
         // 1. 선택한 이미지가 있으면 컬렉션뷰를 보여준다.
-        self.imageData
+        self.fileData
             .map { !$0.isEmpty }
             .distinctUntilChanged()
             .bind(to: showImageCollectionView)
@@ -98,7 +103,7 @@ class ChannelChattingViewModel {
         
         // 2. 선택한 이미지가 있거나 or 텍스트가 입력이 되었다면 버튼 활성화
         //   - 둘 다 초기 이벤트가 있기 때문에 combinelatest가 가능하다.
-        Observable.combineLatest(input.chattingText, imageData) { v1, v2 in
+        Observable.combineLatest(input.chattingText, fileData) { v1, v2 in
             return self.isStringEnabled(str: v1) || !v2.isEmpty
         }
         .bind(to: enabledSendButton)
@@ -107,7 +112,7 @@ class ChannelChattingViewModel {
         
         // 3. 전송 버튼 클릭
         input.sendButtonClicked
-            .withLatestFrom(Observable.combineLatest(input.chattingText, imageData)) { _, values in
+            .withLatestFrom(Observable.combineLatest(input.chattingText, fileData)) { _, values in
 
                 return MakeChannelChattingRequestModel(
                     channelName: self.channelName,
@@ -489,7 +494,7 @@ extension ChannelChattingViewModel {
     
     // 이미지 데이터 초기화
     func removeAllImages() {
-        self.imageData.onNext([])
+        self.fileData.onNext([])
     }
     
     // seperator cell의 위치 (인덱스) - 계속해서 indexPath가 바뀌기 때문에 (위로 pagination) 단순 변수로 저장해두는 것보다, 필요할 때마다 메서드로 계산하는게 더 낫다
