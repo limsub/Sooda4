@@ -25,5 +25,5 @@ struct MakeChannelChattingRequestModel {
     let workSpaceId: Int
     
     let content: String?
-    let files: [Data]
+    let files: [FileDataModel]
 }

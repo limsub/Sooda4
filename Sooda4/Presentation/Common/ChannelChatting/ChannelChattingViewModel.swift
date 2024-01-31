@@ -35,7 +35,8 @@ class ChannelChattingViewModel {
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
-    let fileData = BehaviorSubject<[Data]>(value: [])    // 이미지 저장
+    // 파일 배열 ([Data] -> [FileDataModel] 수정)
+    let fileData = BehaviorSubject<[FileDataModel]>(value: [])    // 이미지 저장
     
     private var addNewChatData = PublishSubject<ChattingInfoModel>()
     

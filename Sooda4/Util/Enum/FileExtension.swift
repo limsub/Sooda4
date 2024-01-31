@@ -8,15 +8,20 @@
 import Foundation
 
 enum FileExtension: String, CaseIterable {
-    case doc
-    case gif
+    
     case pdf
+    case gif
+    case avi
+    case zip
+    case mp3
+    
+    case doc
     case ppt
     case txt
-    case zip
     case mov
-    case mp3
-    case avi
+    
+    case jpeg
+
     
     var extensionStr: String {
         return ".\(self.rawValue)"
@@ -24,5 +29,32 @@ enum FileExtension: String, CaseIterable {
     
     var imageName: String {
         return "fileEx_\(self.rawValue)"
+    }
+    
+    var mimeType: String {
+        switch self {
+        case .pdf:
+            return "application/pdf"
+        case .gif:
+            return "image/gif"
+        case .avi:
+            return "video/avi"
+        case .zip:
+            return "application/zip"
+        case .mp3:
+            return "audio/mp3"
+            
+        case .doc:
+            return "application/msword"
+        case .ppt:
+            return "application/vnd.ms-powerpoint"
+        case .txt:
+            return "text/plain"
+        case .mov:
+            return "video/quicktime"
+            
+        case .jpeg:
+            return "image/jpeg"
+        }
     }
 }

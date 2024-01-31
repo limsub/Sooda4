@@ -408,6 +408,23 @@ enum NetworkRouter: URLRequestConvertible {
                 }
             }
             
+            // [FileDataModel] (채팅 파일 전송)
+            else if let fileDataArr = value as? [FileDataModel] {
+                print("hihihi")
+                print(fileDataArr)
+                fileDataArr.forEach { fileData in
+                    
+                    multipartFormData.append(
+                        fileData.data,
+                        withName: key,
+                        fileName: fileData.fileName + fileData.fileExtension.extensionStr, // name.pdf
+                        mimeType: fileData.fileExtension.mimeType
+                    )
+                }
+            }
+            
+            
+            // 일반 String, Int 등의 타입인 경우
             else {
                 multipartFormData.append(
                     "\(value)".data(using: .utf8)!,
@@ -416,7 +433,7 @@ enum NetworkRouter: URLRequestConvertible {
             }
         }
         
-        
+
         
         return multipartFormData
     }

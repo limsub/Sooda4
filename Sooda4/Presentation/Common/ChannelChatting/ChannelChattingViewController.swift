@@ -10,9 +10,11 @@ import RxSwift
 import RxCocoa
 import PhotosUI
 import SocketIO
+import MobileCoreServices
 
 
 final class ChannelChattingViewController: BaseViewController {
+    
     
     var interaction: UIDocumentInteractionController?
     
@@ -655,12 +657,22 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
         let enableCnt = 5 - curCnt.count
         if results.count > enableCnt {
             print("얼럿!!! - 파일 개수는 5개 이하로 보낼 수 있습니다~~~")
-            return 
+            return
         }
         
         
         // 선택한 순서에 맞게 넣어주기 위해 배열의 인덱스를 이용한다
-        var imageArr = Array(repeating: Data(), count: results.count)
+//        var imageArr = Array(repeating: Data(), count: results.count)
+        
+        var imageArr = Array(
+            repeating: FileDataModel(
+                fileName: "image.jpeg",
+                data: Data(),
+                fileExtension: .jpeg
+            ),
+            count: results.count
+        )
+        
         var group = DispatchGroup()
         
         for (index, item) in results.enumerated() {
@@ -674,7 +686,9 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
                     
                     guard let imageData = image.jpegData(compressionQuality: 0.001) else { return }
                     
-                    imageArr[index] = imageData
+                    imageArr[index].data = imageData
+                    
+//                    imageArr[index] = imageData
                     group.leave()
                 }
             }
@@ -700,12 +714,21 @@ extension ChannelChattingViewController: UIDocumentPickerDelegate {
     func showDocumentPicker() {
         
         let picker = UIDocumentPickerViewController(
-            forOpeningContentTypes: [.pdf, .gif, .avi, .zip, .text, .mp3, .movie],
+            forOpeningContentTypes: [
+
+                .pdf, .gif, .avi, .zip, .text, .mp3, .movie
+            ],
             asCopy: true
         )
+        
+        
+        
+        
         picker.delegate = self
         picker.allowsMultipleSelection = true
         present(picker, animated: true)
+        
+    
     }
     
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
@@ -717,11 +740,26 @@ extension ChannelChattingViewController: UIDocumentPickerDelegate {
             print("얼럿!!! - 파일 개수는 5개 이하로 보낼 수 있습니다!!")
             return
         }
+
+        
+        // url : FileManager URL
         
         
         // 데이터 타입으로 변환
-        let dataArr = urls.map { (try? Data(contentsOf: $0)) ?? Data() }
-        
+        var dataArr: [FileDataModel] = []
+        for url in urls {
+            if let fileName = url.absoluteString.extractFileName(),
+               let fileExtension = url.absoluteString.fileExtension() {
+                print("000")
+                dataArr.append(
+                    FileDataModel(
+                        fileName: fileName,
+                        data: (try? Data(contentsOf: url)) ?? Data(),
+                        fileExtension: fileExtension
+                    )
+                )
+            }
+        }
         
         // 뷰모델에 데이터 추가
         guard var fileArr = try? viewModel.fileData.value() else { return }
@@ -777,6 +815,8 @@ extension ChannelChattingViewController: FileOpenDelegate, UIDocumentInteraction
     func downloadAndOpenFile(_ fileURL: String) {
         print("파일 다운 및 열기 : \(fileURL)")
         
+        // fileURL : 서버에서 주는 url
+        
         
         // 1. 네트워크 통신으로 파일 Data 다운
         NetworkManager.shared.requestCompletionData(
@@ -785,19 +825,11 @@ extension ChannelChattingViewController: FileOpenDelegate, UIDocumentInteraction
                 case .success(let data):
                     print(data)
                     
-                    // '/' 3개 빼기
-                    let components = fileURL.components(separatedBy: "/")
-                    
-                        
-                    // '/' 3개 이후의 문자열만 추출
-                    var result = ""
-                    if components.count > 3 {
-                        let startIndex = components.index(components.startIndex, offsetBy: 3)
-                        result = components[startIndex...].joined(separator: "/")
-                    }
+                    // 마지막 '/' 기준 뒤 문자열로 파일 이름 정의
+                    guard let fileName = fileURL.extractFileName() else { return }
                     
                     let fileManager = FileManager()
-                    let documentPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("SAMPLE_\(result)")
+                    let documentPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("SAMPLE_\(fileName)")
                     
                     do {
                         try data.write(to: documentPath)
