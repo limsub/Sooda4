@@ -410,8 +410,6 @@ enum NetworkRouter: URLRequestConvertible {
             
             // [FileDataModel] (채팅 파일 전송)
             else if let fileDataArr = value as? [FileDataModel] {
-                print("hihihi")
-                print(fileDataArr)
                 fileDataArr.forEach { fileData in
                     
                     multipartFormData.append(

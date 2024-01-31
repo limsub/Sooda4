@@ -154,7 +154,9 @@ class ChannelChattingCellContentView3: BaseView {
         
 //        var fileExtensionArr = [".pdf", ".zip", ".mov", ".mp3", ".docx"]
         
-        let fileExtensionArr = FileExtension.allCases.map { $0.extensionStr }
+        let fileExtensionArr = FileExtension.allCases
+            .map { $0.extensionStr }
+            .filter { $0 != ".jpeg" }
         
         var imageArr: [String] = []
         var fileArr: [String] = []
@@ -172,10 +174,11 @@ class ChannelChattingCellContentView3: BaseView {
             }
         }
         
-//        print("*------------------------*")
-//        print("파일 배열 : ", fileArr)
-//        print("이미지 배열 : ", imageArr)
-//        print("*------------------------*")
+        print("*------------------------*")
+        print("파일 배열 : ", fileArr)
+        print("이미지 배열 : ", imageArr)
+        print("이미지 배열 Empty : ", imageArr.isEmpty)
+        print("*------------------------*")
         
         // 이미지 뷰 업데이트
         self.sampleView.updateView(imageArr)
@@ -199,42 +202,28 @@ class ChannelChattingCellContentView3: BaseView {
         self.nameLabel.setAppFont(.caption)
         self.contentLabel.setAppFont(.body)
         
-
+        
+        contentLabel.isHidden = false
+        contentBackView.isHidden = false
+        sampleView.isHidden = false
+        
         // 이미지 x
         if imageArr.isEmpty {
-            contentLabel.isHidden = false
-            contentBackView.isHidden = false
             sampleView.isHidden = true
         }
-        
-        // content x
+        // 텍스트 x
         if sender.content!.isEmpty {
             contentLabel.isHidden = true
             contentBackView.isHidden = true
-            sampleView.isHidden = false
-            
-            if singleLine(imageArr.count) {
-                sampleViewSingleLine?.activate()
-                sampleViewDoubleLine?.deactivate()
-            } else {
-                sampleViewSingleLine?.deactivate()
-                sampleViewDoubleLine?.activate()
-            }
         }
         
-        // 둘 다 있다
-        if !imageArr.isEmpty && !sender.content!.isEmpty {
-            contentLabel.isHidden = false
-            contentBackView.isHidden = false
-            sampleView.isHidden = false
-            
-            if singleLine(imageArr.count) {
-                sampleViewSingleLine?.activate()
-                sampleViewDoubleLine?.deactivate()
-            } else {
-                sampleViewSingleLine?.deactivate()
-                sampleViewDoubleLine?.activate()
-            }
+        // 이미지뷰 높이
+        if singleLine(imageArr.count) {
+            sampleViewSingleLine?.activate()
+            sampleViewDoubleLine?.deactivate()
+        } else {
+            sampleViewSingleLine?.deactivate()
+            sampleViewDoubleLine?.activate()
         }
         
         
