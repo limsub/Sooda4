@@ -43,7 +43,7 @@ final class ChannelChattingViewController: BaseViewController {
         setNavigation(viewModel.nameOfChannel())
         setNavigationButton()
         
-        setPHPicker()
+        setPlusButton()
         setTableView()
         setTextView()
         setNewMessageToastView()
@@ -102,9 +102,19 @@ final class ChannelChattingViewController: BaseViewController {
         navigationItem.rightBarButtonItem = channelSettingButton
     }
     
-    func setPHPicker() {
-        mainView.chattingInputView.plusButton.addTarget(self , action: #selector(pickerButtonClicked), for: .touchUpInside)
+    func setPlusButton() {
+        mainView.chattingInputView.plusButton.addTarget(self , action: #selector(plusButtonClicked), for: .touchUpInside)
     }
+    
+    @objc func plusButtonClicked() {
+        self.showActionSheetTwoSection(
+            firstTitle: "사진 추가", firstCompletion: {
+                self.showPHPicker()
+            }, secondTitle: "파일 추가") {
+                self.showDocumentPicker()
+            }
+    }
+    
     
     func setTableView() {
         mainView.chattingTableView.delegate = self
@@ -625,10 +635,6 @@ extension ChannelChattingViewController {
 // PHPicker
 extension ChannelChattingViewController: PHPickerViewControllerDelegate {
     
-    @objc func pickerButtonClicked() {
-        self.showPHPicker()
-    }
-    
     func showPHPicker() {
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 5
@@ -675,6 +681,22 @@ extension ChannelChattingViewController: PHPickerViewControllerDelegate {
     }
 }
 
+// DocumentPicker
+extension ChannelChattingViewController: UIDocumentPickerDelegate {
+    
+    func showDocumentPicker() {
+    
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.png, .jpeg, .pdf, .gif, .avi, .zip, .text, .mp3, .movie], asCopy: true)
+        picker.delegate = self
+        picker.allowsMultipleSelection = true
+        present(picker, animated: true)
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        
+    }
+    
+}
 
 // private func
 extension ChannelChattingViewController {
