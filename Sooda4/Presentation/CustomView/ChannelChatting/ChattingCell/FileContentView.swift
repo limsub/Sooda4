@@ -13,29 +13,53 @@ protocol FileOpenDelegate: AnyObject {
 }
 
 
+// 244 x 60
 class FileContentView: BaseView {
     
     weak var delegate: FileOpenDelegate?
     
-    var pdfURL: String? {
+    var fileURL: String? {
         didSet {
-            fileOpenButton.setTitle(pdfURL, for: .normal)
+            self.setUp(fileURL: fileURL)
         }
     }
     
-    let fileOpenButton = UIButton()
+    let fileExtensionImageView = UIImageView()
+    let fileNameLabel = {
+        let view = UILabel()
+        view.setAppFont(.body)
+        return view
+    }()
+    let fakeButton = {
+        let view = UIButton()
+        view.backgroundColor = .clear
+        return view
+    }()
     
     override func setConfigure() {
         super.setConfigure()
         
-        self.addSubview(fileOpenButton)
+        self.addSubview(fileExtensionImageView)
+        self.addSubview(fileNameLabel)
+        self.addSubview(fakeButton)
     }
     
     override func setConstraints() {
         super.setConstraints()
         
-        fileOpenButton.snp.makeConstraints { make in
-            make.edges.equalTo(self).inset(4)
+        fileExtensionImageView.snp.makeConstraints { make in
+            make.leading.verticalEdges.equalTo(self).inset(10)
+            make.width.equalTo(fileExtensionImageView.snp.height)
+        }
+        
+        fileNameLabel.snp.makeConstraints { make in
+            make.leading.equalTo(fileExtensionImageView.snp.trailing).offset(8)
+            make.trailing.equalTo(self).inset(8)
+            make.centerY.equalTo(self)
+        }
+        
+        fakeButton.snp.makeConstraints { make in
+            make.edges.equalTo(self)
         }
     }
     
@@ -43,19 +67,44 @@ class FileContentView: BaseView {
     override func setting() {
         super.setting()
         
-        self.backgroundColor = .red
+        self.backgroundColor = .white
+        self.clipsToBounds = true
+        self.layer.cornerRadius = 8
+        self.layer.borderWidth = 1
+//        self.layer.borderColor = UIColor.appColor(.brand_inactive).cgColor
+        self.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.5).cgColor
+
+        fakeButton.addTarget(self, action: #selector(fileOpenButtonClicked), for: .touchUpInside)
+    }
+    
+    func setUp(fileURL: String?) {
         
-        fileOpenButton.backgroundColor = .white
-        fileOpenButton.setTitleColor(.black, for: .normal)
+        guard let fileURL else { return }
         
-        fileOpenButton.addTarget(self, action: #selector(fileOpenButtonClicked), for: .touchUpInside)
+        // 파일명 분리
+        let components = fileURL.components(separatedBy: "/")
+        if components.count < 3 { return }
+        let fileName = components[components.count - 1]
+        
+        
+        // 이미지 세팅
+        FileExtension.allCases.forEach { fileExtension in
+            if fileName.hasSuffix(fileExtension.extensionStr) {
+                self.fileExtensionImageView.image = UIImage(named: fileExtension.imageName)
+            }
+        }
+        
+        
+        // 레이블 세팅
+        fileNameLabel.text = fileName
+        fileNameLabel.setAppFont(.body)
     }
     
     
     @objc func fileOpenButtonClicked() {
-        guard let pdfURL else  { return }
+        guard let fileURL else  { return }
         
-        delegate?.downloadAndOpenFile(pdfURL)
+        delegate?.downloadAndOpenFile(fileURL)
     }
 
 }

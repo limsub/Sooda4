@@ -184,7 +184,7 @@ class ChannelChattingCellContentView3: BaseView {
         let fileViewArr = [fileView1, fileView2, fileView3, fileView4, fileView5]
         for i in 0..<fileArr.count {
             fileViewArr[i].isHidden = false
-            fileViewArr[i].pdfURL = fileArr[i]
+            fileViewArr[i].fileURL = fileArr[i]
         }
         for i in fileArr.count..<5 {
             fileViewArr[i].isHidden = true
