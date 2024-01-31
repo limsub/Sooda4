@@ -26,6 +26,8 @@ class ChannelChattingView: BaseView {
         
         view.keyboardDismissMode = .onDrag
         
+        view.allowsSelection = false
+        
         return view
     }()
     
