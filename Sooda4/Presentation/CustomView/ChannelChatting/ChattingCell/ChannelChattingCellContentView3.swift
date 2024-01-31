@@ -152,7 +152,9 @@ class ChannelChattingCellContentView3: BaseView {
         
 //        stackView.backgroundColor = .lightGray
         
-        var fileExtensionArr = ["pdf", "zip", "mov", "mp3"]
+//        var fileExtensionArr = [".pdf", ".zip", ".mov", ".mp3", ".docx"]
+        
+        let fileExtensionArr = FileExtension.allCases.map { $0.extensionStr }
         
         var imageArr: [String] = []
         var fileArr: [String] = []
@@ -170,10 +172,10 @@ class ChannelChattingCellContentView3: BaseView {
             }
         }
         
-        print("*------------------------*")
-        print("파일 배열 : ", fileArr)
-        print("이미지 배열 : ", imageArr)
-        print("*------------------------*")
+//        print("*------------------------*")
+//        print("파일 배열 : ", fileArr)
+//        print("이미지 배열 : ", imageArr)
+//        print("*------------------------*")
         
         // 이미지 뷰 업데이트
         self.sampleView.updateView(imageArr)
@@ -183,7 +185,6 @@ class ChannelChattingCellContentView3: BaseView {
         for i in 0..<fileArr.count {
             fileViewArr[i].isHidden = false
             fileViewArr[i].pdfURL = fileArr[i]
-//            fileViewArr[i].fileOpenButton.setTitle(fileArr[i], for: .normal)
         }
         for i in fileArr.count..<5 {
             fileViewArr[i].isHidden = true

@@ -7,16 +7,22 @@
 
 import Foundation
 
-enum FileExtension {
-    // 같은 아이콘 들어갈 애들끼리 묶자
-    
+enum FileExtension: String, CaseIterable {
+    case doc
+    case gif
     case pdf
+    case ppt
+    case txt
     case zip
-//    case jpg, jpeg, png
     case mov
-    case mp3 //, mp4
+    case mp3
+    case avi
     
+    var extensionStr: String {
+        return ".\(self.rawValue)"
+    }
     
-    
-    
+    var imageName: String {
+        return "fileEx_\(self.rawValue)"
+    }
 }
