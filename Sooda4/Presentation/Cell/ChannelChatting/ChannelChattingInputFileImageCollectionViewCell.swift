@@ -54,7 +54,12 @@ class ChannelChattingInputFileImageCollectionViewCell: BaseCollectionViewCell {
     }
     
     func designCell(_ data: FileDataModel) {
-        fileImageView.image = UIImage(data: data.data)
+        
+        if data.fileExtension == .jpeg {
+            fileImageView.image = UIImage(data: data.data)
+        } else {
+            fileImageView.image = UIImage(named: data.fileExtension.imageName)
+        }
     }
     
 }
