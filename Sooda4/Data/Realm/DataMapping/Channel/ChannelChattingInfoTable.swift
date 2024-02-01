@@ -15,7 +15,7 @@ class ChannelChattingInfoTable: Object {
 //    @Persisted(originProperty: "channel_id") var channelInfo: LinkingObjects<ChannelInfoTable>
     
     @Persisted var channelInfo: ChannelInfoTable?
-    @Persisted var userInfo: UserInfoTable?
+    @Persisted var userInfo: UserInfoTable? // 채팅을 보낸 사람
     
     @Persisted var content: String
     @Persisted var createdAt: Date
