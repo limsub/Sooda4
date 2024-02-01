@@ -124,7 +124,7 @@ extension ChannelSettingViewModel {
     }
     
     // memebers 셀에 들어가는 데이터
-    func memberInfoForMembersCell() -> [WorkSpaceUserInfo] {
+    func memberInfoForMembersCell() -> [UserInfoModel] {
         guard let channelInfoData else { return [] }
         
         return channelInfoData.users

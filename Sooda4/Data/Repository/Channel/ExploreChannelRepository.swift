@@ -31,7 +31,7 @@ class ExploreChannelRepository: ExploreChannelRepositoryProtocol {
     }
     
     // 2. 특정 채널의 멤버 조회
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceUserInfo], NetworkError> > {
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[UserInfoModel], NetworkError> > {
         
         let requestDto = ChannelDetailRequestDTO(requestModel)
         

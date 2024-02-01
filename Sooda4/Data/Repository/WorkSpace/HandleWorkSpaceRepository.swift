@@ -42,7 +42,7 @@ class HandleWorkSpaceRepository: HandleWorkSpaceRepositoryProtocol {
     
     
     // 3 - 1. 워크스페이스 멤버 조회
-    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void) {
+    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void) {
         
         NetworkManager.shared.requestCompletion(
             type: WorkSpaceMembersResponseDTO.self ,

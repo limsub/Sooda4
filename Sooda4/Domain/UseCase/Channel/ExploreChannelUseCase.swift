@@ -12,10 +12,10 @@ import RxCocoa
 protocol ExploreChannelUseCaseProtocol {
     /* === 네트워크 === */
     func allChannelRequest(_ requestModel: Int) -> Single< Result<[WorkSpaceChannelInfoModel], NetworkError> >
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceUserInfo], NetworkError> >
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[UserInfoModel], NetworkError> >
     
     /* === 로직 === */
-    func checkAlreadyJoinedChannel(userId: Int, memberArr: [WorkSpaceUserInfo]) -> Bool
+    func checkAlreadyJoinedChannel(userId: Int, memberArr: [UserInfoModel]) -> Bool
 }
 
 
@@ -35,13 +35,13 @@ class ExploreChannelUseCase: ExploreChannelUseCaseProtocol {
         return exploreChannelRepository.workSpaceAllChannelsRequest(requestModel)
     }
     
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single<Result<[WorkSpaceUserInfo], NetworkError>> {
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel) -> Single<Result<[UserInfoModel], NetworkError>> {
         
         return exploreChannelRepository.channelMembersRequest(requestModel)
     }
     
     // 프로토콜 메서드 (로직)
-    func checkAlreadyJoinedChannel(userId: Int, memberArr: [WorkSpaceUserInfo]) -> Bool {
+    func checkAlreadyJoinedChannel(userId: Int, memberArr: [UserInfoModel]) -> Bool {
         
         return memberArr.contains { userInfo in
             userInfo.userId == userId

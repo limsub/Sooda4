@@ -78,11 +78,11 @@ struct InviteWorkSpaceMemberRequestModel {
     let workSpaceId: Int
     let email: String
 }
-// 응답은 WorkSpaceUserInfo 가져다 사용
+// 응답은 UserInfoModel 가져다 사용
 
 
 // 워크스페이스 멤버 조회
-struct WorkSpaceUserInfo {
+struct UserInfoModel {
     let userId: Int
     let email: String
     let nickname: String

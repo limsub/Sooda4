@@ -14,7 +14,7 @@ class ChangeAdminViewModel {
     var workSpaceId: Int
     var handleWorkSpaceUseCase: HandleWorkSpaceUseCaseProtocol  // WorkSpaceList 코디가 쓰는 UseCase를 받아올 것
     
-    var items: [WorkSpaceUserInfo] = []
+    var items: [UserInfoModel] = []
     
     init(workSpaceId: Int,
          handleWorkSpaceUseCase: HandleWorkSpaceUseCaseProtocol
@@ -80,7 +80,7 @@ extension ChangeAdminViewModel {
     func numberOfRows() -> Int {
         return items.count
     }
-    func userInfo(_ indexPath: IndexPath) -> WorkSpaceUserInfo {
+    func userInfo(_ indexPath: IndexPath) -> UserInfoModel {
         return items[indexPath.row]
     }
     func userName(_ indexPath: IndexPath) -> String {

@@ -36,7 +36,7 @@ protocol HandleWorkSpaceRepositoryProtocol {
 
     
     // 3 - 1.
-    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void)
+    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void)
     
     
     // 3 - 2.

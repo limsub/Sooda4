@@ -12,7 +12,7 @@ import RxCocoa
 protocol InviteWorkSpaceMemberUseCaseProtocol {
     /* === 네트워크 === */
     // 이메일 초대
-    func inviteMemberRequest(_ requestModel: InviteWorkSpaceMemberRequestModel) -> Single< Result<WorkSpaceUserInfo, NetworkError> >
+    func inviteMemberRequest(_ requestModel: InviteWorkSpaceMemberRequestModel) -> Single< Result<UserInfoModel, NetworkError> >
     
     
     /* === 로직 === */
@@ -30,7 +30,7 @@ class InviteWorkSpaceMemberUseCase: InviteWorkSpaceMemberUseCaseProtocol {
     }
     
     // 3. 프로토콜 메서드 (네트워크)
-    func inviteMemberRequest(_ requestModel: InviteWorkSpaceMemberRequestModel) -> Single<Result<WorkSpaceUserInfo, NetworkError>> {
+    func inviteMemberRequest(_ requestModel: InviteWorkSpaceMemberRequestModel) -> Single<Result<UserInfoModel, NetworkError>> {
         
         return inviteWorkSpaceMemberRepository.inviteMemberRequest(requestModel)
     }

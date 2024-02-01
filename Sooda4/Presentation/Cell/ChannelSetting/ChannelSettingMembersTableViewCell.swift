@@ -12,7 +12,7 @@ import UIKit
 // 직접 멤버 카운트와 셀 높이 계산해서 지정해주는 게 더 나을 것 같음
 class ChannelSettingMembersTableViewCell: BaseTableViewCell {
     
-    var items: [WorkSpaceUserInfo] = []
+    var items: [UserInfoModel] = []
     
     
     // 좌우 여백 6. 높이 cell과 동일

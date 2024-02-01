@@ -18,7 +18,7 @@ class ChangeAdminChannelViewModel {
     
     private var handleChannelUseCase: HandleChannelUseCaseProtocol
 
-    private var items: [WorkSpaceUserInfo] = []
+    private var items: [UserInfoModel] = []
     
     init(workSpaceId: Int, channelName: String, handleChannelUseCase: HandleChannelUseCaseProtocol) {
         self.workSpaceId = workSpaceId
@@ -97,7 +97,7 @@ extension ChangeAdminChannelViewModel {
     func numberOfRows() -> Int {
         return items.count
     }
-    func userInfo(_ indexPath: IndexPath) -> WorkSpaceUserInfo {
+    func userInfo(_ indexPath: IndexPath) -> UserInfoModel {
         return items[indexPath.row]
     }
     func userName(_ indexPath: IndexPath) -> String {

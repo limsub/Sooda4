@@ -38,7 +38,7 @@ protocol HandleChannelRepositoryProtocol {
     
         // (MODEL)
         // - 요청 : ChannelDetailRequestModel
-        // - 응답 : [WorkSpaceUserInfo]
+        // - 응답 : [UserInfoModel]
     
     
     // 3 - 2. 채널 관리자 권한 변경
@@ -70,7 +70,7 @@ protocol HandleChannelRepositoryProtocol {
     
     
     // 3 - 1. 채널 멤버 조회
-    func channelMembersRequest(_requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void)
+    func channelMembersRequest(_requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void)
     
     
     // 3 - 2. 채널 관리자 권한 변경

@@ -65,7 +65,7 @@ struct OneChannelInfoModel {
     let channelDescription: String?
     let ownerId: Int
     
-    let users: [WorkSpaceUserInfo]
+    let users: [UserInfoModel]
 }
 
 
@@ -87,7 +87,7 @@ struct EditChannelRequestModel {
 
 /* ========== 3 - 1. 채널 멤버 조회 ========== */
 // 요청 ChannelDetailRequestModel
-// 응답 [WorkSpaceUserInfo]
+// 응답 [UserInfoModel]
 
 
 /* ========== 3 - 2. 채널 관리자 권한 변경 ========== */

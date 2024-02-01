@@ -12,7 +12,7 @@ import RxCocoa
 class InviteWorkSpaceMemberRepository: InviteWorkSpaceMemberRepositoryProtocol {
     
     // (1). 워크스페이스 멤버 초대
-    func inviteMemberRequest(_ requestModel: InviteWorkSpaceMemberRequestModel) -> Single<Result<WorkSpaceUserInfo, NetworkError>> {
+    func inviteMemberRequest(_ requestModel: InviteWorkSpaceMemberRequestModel) -> Single<Result<UserInfoModel, NetworkError>> {
         
         // 1. requestDTO
         let dto = InviteWorkSpaceMemberRequestDTO(requestModel)

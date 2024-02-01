@@ -20,7 +20,7 @@ protocol HandleWorkSpaceUseCaseProtocol {
     func deleteWorkSpaceRequest(_ requestModel: Int, completion: @escaping (Result<String, NetworkError>) -> Void)
     
     // handleWorkSpaceRepo - 3 - 1
-    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void)
+    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void)
     
     func changeAdminWorkSpace(_ requestModel: ChangeAdminRequestModel, completion: @escaping (Result<WorkSpaceModel, NetworkError>) -> Void)
 }
@@ -67,7 +67,7 @@ class HandleWorkSpaceUseCase: HandleWorkSpaceUseCaseProtocol {
     }
     
     // - 3 - 1
-    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void) {
+    func workSpaceMembersRequest(_ requestModel: Int, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void) {
         
         handleWorkSpaceRepository.workSpaceMembersRequest(
             requestModel,

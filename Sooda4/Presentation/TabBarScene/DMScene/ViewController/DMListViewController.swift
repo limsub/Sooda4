@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RxSwift
 
 class DMListViewController: BaseViewController {
     
@@ -100,7 +101,7 @@ extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
 extension DMListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        10
+        20
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

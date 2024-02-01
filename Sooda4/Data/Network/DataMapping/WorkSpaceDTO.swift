@@ -60,7 +60,7 @@ struct UserInfoDTO: Codable {
 }
 
 extension UserInfoDTO {
-    func toDomain() -> WorkSpaceUserInfo {
+    func toDomain() -> UserInfoModel {
         return .init(userId: user_id, email: email, nickname: nickname, profileImage: profileImage)
     }
 }

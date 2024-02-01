@@ -17,7 +17,7 @@ protocol HandleChannelUseCaseProtocol {
     func leaveChannelRequest(_ requestModel: ChannelDetailRequestModel) -> Single< Result<[WorkSpaceChannelInfoModel], NetworkError> >
     
     // 3 - 1. 채널 멤버 조회
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void)
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void)
     
     // 3 - 2. 채널 관리자 권한 변경
     func chanegAdminChannelRequest(_ requestModel: ChangeAdminChannelRequestModel, completion: @escaping (Result<WorkSpaceChannelInfoModel, NetworkError>) -> Void)
@@ -52,7 +52,7 @@ class HandleChannelUseCase: HandleChannelUseCaseProtocol {
     }
     
     // 3 - 1. 채널 멤버 조회
-    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[WorkSpaceUserInfo], NetworkError>) -> Void) {
+    func channelMembersRequest(_ requestModel: ChannelDetailRequestModel, completion: @escaping (Result<[UserInfoModel], NetworkError>) -> Void) {
         
         handleChannelRepository.channelMembersRequest(_requestModel: requestModel, completion: completion)
     }

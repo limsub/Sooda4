@@ -70,7 +70,7 @@ class MemberListTableViewCell: BaseTableViewCell {
         contentView.backgroundColor = UIColor.appColor(.background_primary)
     }
     
-    func designCell(_ model: WorkSpaceUserInfo) {
+    func designCell(_ model: UserInfoModel) {
         // 1. 이미지
         profileImageView.loadImage(
             endURLString: model.profileImage ?? "",
