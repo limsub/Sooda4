@@ -79,13 +79,14 @@ class DMListTableViewCell: BaseTableViewCell {
         
         dateLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView).inset(6)
-            make.trailing.equalTo(contentView).inset(24)
+            make.trailing.equalTo(contentView).inset(24).priority(1000)
             make.height.equalTo(18)
         }
         
         unreadCountLabel.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom)
-            make.trailing.equalTo(dateLabel)
+            make.trailing.equalTo(dateLabel).priority(1000)
+            make.width.lessThanOrEqualTo(30)
             make.height.equalTo(18)
         }
         
@@ -100,6 +101,7 @@ class DMListTableViewCell: BaseTableViewCell {
             make.top.equalTo(nameLabel.snp.bottom)
             make.leading.equalTo(nameLabel)
             make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-4)
+            make.bottom.equalTo(contentView).inset(6)
         }
     }
     

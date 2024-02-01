@@ -12,6 +12,10 @@ class DMListView: BaseView {
     let dmListTableView = {
         let view = UITableView()
         
+        view.register(DMListTableViewCell.self, forCellReuseIdentifier: DMListTableViewCell.description())
+        
+        view.rowHeight = UITableView.automaticDimension
+        
         return view
     }()
     

@@ -9,7 +9,7 @@ import UIKit
 
 class DMListViewController: BaseViewController {
     
-    
+    let mainView = DMListView()
     
     
     // Navigation 영역
@@ -38,6 +38,9 @@ class DMListViewController: BaseViewController {
     }()
     
     
+    override func loadView() {
+        self.view = mainView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,11 +48,38 @@ class DMListViewController: BaseViewController {
         view.backgroundColor = .cyan
         
         
+        setNavigation()
+        setTableView()
+    }
+    
+    /* === setting === */
+    func setNavigation() {
         setCustomNavigation(
             customNavigationItemView: customNavigationItemView,
             leftImageView: leftImageView,
             navigationTitleLabel: navigationTitleLabel,
             rightImageView: rightImageView
         )
+    }
+    
+    func setTableView() {
+        mainView.dmListTableView.dataSource = self
+        mainView.dmListTableView.delegate = self
+    }
+}
+
+
+// TableView
+extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DMListTableViewCell.description(), for: indexPath) as? DMListTableViewCell else { return UITableViewCell() }
+        
+        return cell
     }
 }
