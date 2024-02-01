@@ -50,6 +50,7 @@ class DMListViewController: BaseViewController {
         
         setNavigation()
         setTableView()
+        setCollectionView()
     }
     
     /* === setting === */
@@ -66,11 +67,21 @@ class DMListViewController: BaseViewController {
         mainView.dmListTableView.dataSource = self
         mainView.dmListTableView.delegate = self
     }
+    
+    func setCollectionView() {
+        mainView.headerView.memberListCollectionView.delegate = self
+        mainView.headerView.memberListCollectionView.dataSource = self
+    }
 }
 
 
 // TableView
 extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    // Cell
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
@@ -79,6 +90,22 @@ extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DMListTableViewCell.description(), for: indexPath) as? DMListTableViewCell else { return UITableViewCell() }
+        
+        return cell
+    }
+}
+
+
+// CollectionView
+extension DMListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ChannelSettingMemberCollectionViewCell.description(), for: indexPath) as? ChannelSettingMemberCollectionViewCell else { return UICollectionViewCell() }
         
         return cell
     }

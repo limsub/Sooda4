@@ -93,7 +93,7 @@ class DMListTableViewCell: BaseTableViewCell {
         nameLabel.snp.makeConstraints { make in
             make.top.equalTo(contentView).inset(6)
             make.leading.equalTo(profileImageView.snp.trailing).offset(8)
-            make.trailing.equalTo(dateLabel.snp.leading).offset(-4)
+//            make.trailing.equalTo(dateLabel.snp.leading).offset(-4).priority(500)
             make.height.equalTo(18)
         }
         

@@ -9,12 +9,24 @@ import UIKit
 
 class DMListView: BaseView {
     
-    let dmListTableView = {
+    let headerView = {
+        let view = DMListTableViewHeaderView()
+        view.frame = CGRect(x: 0, y: 0, width: 0, height: 91)
+        view.layer.borderColor = UIColor.appColor(.view_seperator).cgColor
+        view.layer.borderWidth = 1
+        return view
+    }()
+    
+    lazy var dmListTableView = {
         let view = UITableView()
         
         view.register(DMListTableViewCell.self, forCellReuseIdentifier: DMListTableViewCell.description())
         
         view.rowHeight = UITableView.automaticDimension
+        
+        view.tableHeaderView = headerView
+        
+        view.separatorStyle = .none
         
         return view
     }()

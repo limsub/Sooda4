@@ -25,10 +25,9 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
     let nameLabel = {
         let view = UILabel()
         view.text = "Sam"
-        view.textAlignment = .center
         view.setAppFont(.body)
         view.numberOfLines = 2
-//        view.backgroundColor = .red
+        view.textAlignment = .center
         return view
     }()
     
