@@ -54,7 +54,8 @@ enum NetworkRouter: URLRequestConvertible {
     
     /* === DM === */
     case workSpaceDMs(_ sender: Int)    // workSpaceId
-    
+    case makeDMChatting(_ sender: MakeDMChattingRequestDTO)
+    case dmChattings(_ sender: DMChattingRequestDTO)
     case dmUnreadCount(_ sender: DMUnreadCountRequestDTO)
     
     
@@ -140,7 +141,10 @@ enum NetworkRouter: URLRequestConvertible {
         // DM
         case .workSpaceDMs(let sender):
             return "/v1/workspaces/\(sender)/dms"
-            
+        case .makeDMChatting(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.roomId)/chats"
+        case .dmChattings(let sender):
+            return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.partnerUserId)/chats"
         case .dmUnreadCount(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.dmRoomId)/unreads"
             
@@ -162,7 +166,7 @@ enum NetworkRouter: URLRequestConvertible {
                 "Content-Type": "application/json",
                 "SesacKey": APIKey.key
             ]
-        case .makeWorkSpace, .editWorkSpace, .makeChannelChatting:
+        case .makeWorkSpace, .editWorkSpace, .makeChannelChatting, .makeDMChatting:
             return [
                 "Content-Type": "multipart/form-data",
                 "Authorization": KeychainStorage.shared.accessToken ?? "" ,
@@ -206,7 +210,6 @@ enum NetworkRouter: URLRequestConvertible {
             return .delete
         case .editWorkSpace, .changeAdminWorkSpace:
             return .put
-    
             
             
         // CHANNEL
@@ -220,17 +223,16 @@ enum NetworkRouter: URLRequestConvertible {
             return .put
             
             
-            
         // DMs
-        case .workSpaceDMs, .dmUnreadCount:
+        case .workSpaceDMs, .dmChattings, .dmUnreadCount:
             return .get
+        case .makeDMChatting:
+            return .post
             
             
         // Files
         case .downLoadFile:
             return .get
-            
-            
         }
     }
     
@@ -293,6 +295,14 @@ enum NetworkRouter: URLRequestConvertible {
                 "content": sender.content ??  "",
                 "files": sender.files
             ]
+            
+        // DM
+        case .makeDMChatting(let sender):
+            return [
+                "content": sender.content ?? "",
+                "files": sender.files
+            ]
+            
         
         default:
             return [:]
@@ -314,6 +324,10 @@ enum NetworkRouter: URLRequestConvertible {
             ]
             
         // DM
+        case .dmChattings(let sender):
+            return [
+                "cursor_date": sender.cursorDate
+            ]
         case .dmUnreadCount(let sender):
             return [
                 "after": sender.after
@@ -385,31 +399,31 @@ enum NetworkRouter: URLRequestConvertible {
         let multipartFormData = MultipartFormData()
         
         for (key, value) in self.parameter {
-            // 이미지 데이터인 경우
-            if let imageData = value as? Data {
-                multipartFormData.append(
-                    imageData,
-                    withName: key,
-                    fileName: "image.jpeg",
-                    mimeType: "image/jpeg"
-                )
-                
-            }
-            
-            // 이미지 데이터 배열인 경우
-            else if let imageDataArr = value as? [Data] {
-                imageDataArr.forEach { imageData in
-                    multipartFormData.append(
-                        imageData,
-                        withName: key,
-                        fileName: "image.jpeg",
-                        mimeType: "image/jpeg"
-                    )
-                }
-            }
+//            // 이미지 데이터인 경우
+//            if let imageData = value as? Data {
+//                multipartFormData.append(
+//                    imageData,
+//                    withName: key,
+//                    fileName: "image.jpeg",
+//                    mimeType: "image/jpeg"
+//                )
+//                
+//            }
+//            
+//            // 이미지 데이터 배열인 경우
+//            else if let imageDataArr = value as? [Data] {
+//                imageDataArr.forEach { imageData in
+//                    multipartFormData.append(
+//                        imageData,
+//                        withName: key,
+//                        fileName: "image.jpeg",
+//                        mimeType: "image/jpeg"
+//                    )
+//                }
+//            }
             
             // [FileDataModel] (채팅 파일 전송)
-            else if let fileDataArr = value as? [FileDataModel] {
+            /*else*/ if let fileDataArr = value as? [FileDataModel] {
                 fileDataArr.forEach { fileData in
                     
                     multipartFormData.append(
