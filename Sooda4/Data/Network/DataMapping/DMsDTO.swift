@@ -19,6 +19,7 @@ extension DMRoomInfoDTO {
     func toDomain() -> WorkSpaceDMInfoModel {
         return .init(
             roomId: room_id,
+            userId: user.user_id,
             userNickname: user.nickname,
             userProfilImage: user.profileImage
         )

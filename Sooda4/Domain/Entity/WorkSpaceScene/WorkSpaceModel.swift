@@ -43,6 +43,7 @@ struct MyOneWorkSpaceModel {
 
 struct WorkSpaceDMInfoModel {
     let roomId: Int
+    let userId: Int
     let userNickname: String
     let userProfilImage: String?
 }

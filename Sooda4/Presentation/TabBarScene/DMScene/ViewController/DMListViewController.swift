@@ -7,10 +7,25 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
+
+struct DMChattingCellInfoModel {
+    let roomId: Int
+    let userInfo: UserInfoModel
+    let lastContent: String
+    let lastDate: Date
+    let unreadCount: Int
+}
 
 class DMListViewController: BaseViewController {
     
     let mainView = DMListView()
+    let viewModel = DMListViewModel(workSpaceId: 152)
+    
+    
+    private var disposeBag = DisposeBag()
+    
+    let loadData = PublishSubject<Void>()
     
     
     // Navigation 영역
@@ -52,6 +67,10 @@ class DMListViewController: BaseViewController {
         setNavigation()
         setTableView()
         setCollectionView()
+        
+        bindVM()
+        
+        self.loadData.onNext(())
     }
     
     /* === setting === */
@@ -72,6 +91,16 @@ class DMListViewController: BaseViewController {
     func setCollectionView() {
         mainView.headerView.memberListCollectionView.delegate = self
         mainView.headerView.memberListCollectionView.dataSource = self
+    }
+    
+    
+    /* === bind === */
+    func bindVM() {
+        let input = DMListViewModel.Input(
+            loadData: self.loadData
+        )
+        
+        let output = viewModel.transform(input)
     }
 }
 
