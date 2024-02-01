@@ -173,8 +173,7 @@ typealias ChannelChattingResponseDTO = [ChannelChattingDTO]
 struct ChannelUnreadCountRequestDTO: Encodable {
     let workSpaceId: Int
     let channelName: String
-    let after: String
-    // 특정 날짜 - 일단 생략
+    let after: String 
 }
 extension ChannelUnreadCountRequestDTO {
     init(_ model: ChannelUnreadCountRequestModel) {

@@ -30,16 +30,26 @@ class DMListViewModel: BaseViewModelType {
     
     
     struct Input {
-        
+        let loadData: PublishSubject<Void>
     }
     
     struct Output {
         let workSpaceImage: PublishSubject<String>
-        let profileImage: PublishSubject<String>
         let workSpaceMemeberList: PublishSubject<UserInfoModel>
+        let profileImage: PublishSubject<String>
     }
     
     func transform(_ input: Input) -> Output {
-        <#code#>
+        
+        let workSpaceImage = PublishSubject<String>()
+        let workSpaceMemeberList = PublishSubject<UserInfoModel>()
+        let profileImage = PublishSubject<String>()
+        
+        
+        return Output(
+            workSpaceImage: workSpaceImage,
+            workSpaceMemeberList: workSpaceMemeberList,
+            profileImage: profileImage
+        )
     }
 }
