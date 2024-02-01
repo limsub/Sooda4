@@ -37,6 +37,7 @@ class RealmManager: RealmManagerProtocol {
     }
 }
 
+
 // C - 채널 채팅 데이터 추가
 extension RealmManager {
     // 0. 채팅 정보를 디비에 저장
