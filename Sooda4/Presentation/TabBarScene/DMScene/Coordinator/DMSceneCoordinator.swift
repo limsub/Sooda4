@@ -41,7 +41,8 @@ class DMSceneCoordinator: DMSceneCoordinatorProtocol {
     // 프로토콜 메서드 - view
     func showDMView() {
         print(#function)
-        let vc = sample2VC()
+//        let vc = sample2VC()
+        let vc = DMListViewController()
         navigationController.pushViewController(vc, animated: true)
     }
 }
