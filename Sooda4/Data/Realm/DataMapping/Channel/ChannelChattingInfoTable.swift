@@ -25,7 +25,7 @@ class ChannelChattingInfoTable: Object {
 
 extension ChannelChattingInfoTable {
     // to Domain
-    func toDomain() -> ChattingInfoModel {
+    func toDomain() -> ChannelChattingInfoModel {
         return .init(
             chatId: self.chat_id,
             content: self.content,

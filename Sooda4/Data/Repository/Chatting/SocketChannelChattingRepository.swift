@@ -28,7 +28,7 @@ class SocketChannelChattingRepository: SocketChannelChattingRepositoryProtocol {
     }
     
     // 응답
-    func receiveSocket(_ channelId: Int, completion: @escaping (ChattingInfoModel)-> Void) {
+    func receiveSocket(_ channelId: Int, completion: @escaping (ChannelChattingInfoModel)-> Void) {
         
         socketManager.receive(
             type: SocketchannelChattingResponseDTO.self,

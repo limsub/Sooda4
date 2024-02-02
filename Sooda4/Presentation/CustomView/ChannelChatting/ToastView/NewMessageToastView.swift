@@ -93,7 +93,7 @@ class NewMessageToastView: BaseView {
         self.backgroundColor = .black.withAlphaComponent(0.7)
     }
     
-    func setUpView(_ sender: ChattingInfoModel) {
+    func setUpView(_ sender: ChannelChattingInfoModel) {
         self.isHidden = false
         
         // 프로필 이미지

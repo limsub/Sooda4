@@ -26,19 +26,19 @@ protocol ChannelChattingUseCaseProtocol {
     
     
     // 3 - 1. 읽은 채팅 30개
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel]
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChannelChattingInfoModel]
     
     
     // 3 - 2. 안읽은 채팅 30개
-    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel]
     
     
     // 3 - 3. 안읽은 채팅 모두
-    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel]
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel]
 
     
     // 4. 채팅 전송
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChattingInfoModel, NetworkError>>
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChannelChattingInfoModel, NetworkError>>
     
     
     /* - 소켓 - */
@@ -49,7 +49,7 @@ protocol ChannelChattingUseCaseProtocol {
     func closeSocket()
     
     // 응답
-    func receiveSocket(_ channelId: Int, completion: @escaping (ChattingInfoModel)-> Void)
+    func receiveSocket(_ channelId: Int, completion: @escaping (ChannelChattingInfoModel)-> Void)
 }
 
 class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
@@ -101,7 +101,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 3 - 1. 읽은 채팅 30개
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChannelChattingInfoModel] {
         
         return channelChattingRepository.fetchPreviousData(
             requestModel: requestModel,
@@ -112,7 +112,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 3 - 2. 안읽은 채팅 30개
-    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel] {
         
         return channelChattingRepository.fetchNextData(
             requestModel: requestModel,
@@ -122,7 +122,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 3 - 3. 안읽은 채팅 모두
-    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel] {
         
         return channelChattingRepository.fetchAllNextData(
             requestModel: requestModel,
@@ -132,7 +132,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     
     
     // 4. 채팅 전송
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChattingInfoModel, NetworkError>> {
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single<Result<ChannelChattingInfoModel, NetworkError>> {
         
         return channelChattingRepository.makeChatting(requestModel)
     }
@@ -153,7 +153,7 @@ class ChannelChattingUseCase: ChannelChattingUseCaseProtocol {
     }
     
     // 응답
-    func receiveSocket(_ channelId: Int, completion: @escaping (ChattingInfoModel)-> Void) {
+    func receiveSocket(_ channelId: Int, completion: @escaping (ChannelChattingInfoModel)-> Void) {
         print("--- USECASE - RECEIVESOCKET ---")
         socketChannelChattingRepository.receiveSocket(channelId, completion: completion)
     }

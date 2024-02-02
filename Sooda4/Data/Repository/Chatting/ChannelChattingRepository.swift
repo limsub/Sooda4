@@ -71,7 +71,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     // - 3 - 1. targetDate (포함 o) 이전 데이터 (최대) 30개
     // 맨 처음만 targetDate 포함해서 주고, 그 이후에는 포함하지 않아야 한다
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChannelChattingInfoModel] {
         
         return realmManager.fetchPreviousData(
             requestModel: requestModel,
@@ -83,7 +83,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 3 - 2. targetDate (포함 x) 이후 데이터 (최대) 30개
-    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel] {
         
         return realmManager.fetchNextData(
             requestModel: requestModel,
@@ -93,7 +93,7 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // - 3 - 3. targetDate (포함 x) 이후 데이터 모두 가져오기
-    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel] {
         
         return realmManager.fetchAllNextData(
             requestModel: requestModel,
@@ -103,7 +103,8 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     
     // 4. 채팅 전송
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChattingInfoModel, NetworkError> > {
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChannelChattingInfoModel, NetworkError> > {
+    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChannelChattingInfoModel, NetworkError> > {
         
         let dto = MakeChannelChattingRequestDTO(requestModel)
         

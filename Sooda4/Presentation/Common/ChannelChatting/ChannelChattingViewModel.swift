@@ -10,7 +10,7 @@ import RxSwift
 import RxCocoa
 
 enum ResultMakeChatting {
-    case success(model: ChattingInfoModel)
+    case success(model: ChannelChattingInfoModel)
     case failure(networkError: NetworkError)
 }
 
@@ -30,7 +30,7 @@ class ChannelChattingViewModel {
     
     
     private var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
-    private var chatArr: [ChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
+    private var chatArr: [ChannelChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
 //    var seperatorIndex: Int?    // "여기까지 읽었습니다" 셀이 들어갈 위치
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
@@ -38,7 +38,7 @@ class ChannelChattingViewModel {
     // 파일 배열 ([Data] -> [FileDataModel] 수정)
     let fileData = BehaviorSubject<[FileDataModel]>(value: [])    // 이미지 저장
     
-    private var addNewChatData = PublishSubject<ChattingInfoModel>()
+    private var addNewChatData = PublishSubject<ChannelChattingInfoModel>()
     
     
     // 현재 스크롤 위치에 대한 정보 -> newMessageToastView 띄울 때 사용
@@ -84,7 +84,7 @@ class ChannelChattingViewModel {
         let showImageCollectionView: BehaviorSubject<Bool> // 선택한 이미지가 1개 이상이면 컬렉션뷰 보여준다
         let enabledSendButton: BehaviorSubject<Bool> // 텍스트가 입력되었거나 이미지가 있으면 버튼 활성화
         let resultMakeChatting: PublishSubject<ResultMakeChatting>  // 채팅 성공 시 뷰컨에서 처리해줄 일 해주기
-        let addNewChatData: PublishSubject<ChattingInfoModel>    // 소켓 채팅 응답 시 뷰컨에 이벤트 전달
+        let addNewChatData: PublishSubject<ChannelChattingInfoModel>    // 소켓 채팅 응답 시 뷰컨에 이벤트 전달
     }
     
     func transform(_ input: Input) -> Output {
@@ -308,7 +308,7 @@ extension ChannelChattingViewModel {
         // 새롭게 받아온 개수가 몇개인지 리턴하지만, 이건 pagination할 때 insertRows 때문에 필요한거고, 여기선 받고나서 tableView reload를 해버리기 때문에 반환값을 사용할 일이 없다
         
         // 2.
-        let seperatorData = ChattingInfoModel(
+        let seperatorData = ChannelChattingInfoModel(
             chatId: -1,
             content: "기본 데이터",
             createdAt: Date(),
@@ -506,7 +506,7 @@ extension ChannelChattingViewModel {
     }
     
     // cell에 그릴 데이터
-    func dataForRowAt(_ indexPath: IndexPath) -> ChattingInfoModel {
+    func dataForRowAt(_ indexPath: IndexPath) -> ChannelChattingInfoModel {
         return chatArr[indexPath.row]
     }
     

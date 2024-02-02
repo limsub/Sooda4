@@ -64,7 +64,7 @@ struct ChannelChattingDTO: Decodable {
 //}
 // * 수정!
 extension ChannelChattingDTO {
-    func toDomain() -> ChattingInfoModel {
+    func toDomain() -> ChannelChattingInfoModel {
         return .init(
             chatId: chat_id,
             content: content,

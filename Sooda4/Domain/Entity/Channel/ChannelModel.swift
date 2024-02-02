@@ -56,7 +56,7 @@ struct ChannelChattingRequestModel {
 //    let userName: String
 //    let userImage: String?
 //}
-typealias ChannelChattingResponseModel = [ChattingInfoModel]
+typealias ChannelChattingResponseModel = [ChannelChattingInfoModel]
 
 
 // 채널 정보 조회 (ChannelSettingView)

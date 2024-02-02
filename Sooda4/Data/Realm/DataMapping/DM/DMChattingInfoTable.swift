@@ -22,6 +22,7 @@ class DMChattingInfoTable: Object {
 
 extension DMChattingInfoTable {
     
+
     // to Domain
 //    func toDomain()
 }

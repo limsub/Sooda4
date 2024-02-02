@@ -131,7 +131,7 @@ class ChannelChattingCellContentView3: BaseView {
     
     
     
-    func designView(_ sender: ChattingInfoModel) {
+    func designView(_ sender: ChannelChattingInfoModel) {
         
         
         

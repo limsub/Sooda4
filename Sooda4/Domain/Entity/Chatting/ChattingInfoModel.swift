@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ChattingInfoModel: Decodable {
+struct ChannelChattingInfoModel: Decodable {
     let chatId: Int
     
     let content: String?

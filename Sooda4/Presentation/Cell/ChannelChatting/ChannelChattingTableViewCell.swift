@@ -99,7 +99,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
         }
     }
     
-    func designCell(_ sender: ChattingInfoModel) {
+    func designCell(_ sender: ChannelChattingInfoModel) {
         
         // 1. 프로필 이미지
         profileImageView.loadImage(

@@ -128,7 +128,7 @@ extension RealmManager {
     
     
     // 2 - 1. targetDate 포함 (or NOT) 이전 데이터 최대 30개
-    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChattingInfoModel] {
+    func fetchPreviousData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?, isFirst: Bool) -> [ChannelChattingInfoModel] {
         
         // lastChattingDate가 nil이다
         // -> (createdAt <= %@)디비에 저장된 읽은 데이터가 없다
@@ -150,7 +150,7 @@ extension RealmManager {
     
     
     // 2 - 2. targetDate 포함 x 이후 데이터 최대 30개
-    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel] {
         
         guard let realm else { return [] }
         
@@ -180,7 +180,7 @@ extension RealmManager {
     
     
     // 2 - 3. targetDate 포함 x 이후 데이터 모두 가져오기
-    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChattingInfoModel] {
+    func fetchAllNextData(requestModel: ChannelDetailFullRequestModel, targetDate: Date?) -> [ChannelChattingInfoModel] {
         
         guard let realm else { return [] }
         
