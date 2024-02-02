@@ -113,11 +113,6 @@ class DMListViewController: BaseViewController {
         )
     }
     
-//    func setTableView() {
-//        mainView.dmListTableView.dataSource = self
-//        mainView.dmListTableView.delegate = self
-//    }
-    
     func setCollectionView() {
         mainView.headerView.memberListCollectionView.delegate = self
         mainView.headerView.memberListCollectionView.dataSource = self
@@ -127,41 +122,38 @@ class DMListViewController: BaseViewController {
     /* === bind === */
     func bindVM() {
         let input = DMListViewModel.Input(
-            loadData: self.loadData
+            loadData: self.loadData,
+            
+            testButtonClicked: mainView.testButton.rx.tap
         )
         
         let output = viewModel.transform(input)
-//        
-//        output.dmRoomArr
-//            .bind(to: mainView.dmListTableView.rx.items(cellIdentifier: DMListTableViewCell.description(), cellType: DMListTableViewCell.self)) { (row, element, cell) in
-//                
-//                cell.designCell(element)
-//            }
-//            .disposed(by: disposeBag)
+        
+        // test
+        
+        // DMListTableView - RxDataSource
+        let dataSource = RxTableViewSectionedAnimatedDataSource<DMListSectionData>(
+            animationConfiguration: AnimationConfiguration(
+                insertAnimation: .fade,
+                reloadAnimation: .fade,
+                deleteAnimation: .fade
+            )
+        ) { data, tableView, indexPath, item in
+            
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: DMListTableViewCell.description(), for: indexPath) as? DMListTableViewCell else { return UITableViewCell() }
+            
+            cell.designCell(item)
+            
+            return cell
+        }
+        
+        output.dmRoomSectionsArr
+            .bind(to: mainView.dmListTableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+
     }
 }
 
-/*
-// TableView
-extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    // Cell
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: DMListTableViewCell.description(), for: indexPath) as? DMListTableViewCell else { return UITableViewCell() }
-        
-        return cell
-    }
-}
-*/
 
 // CollectionView
 extension DMListViewController: UICollectionViewDataSource, UICollectionViewDelegate {

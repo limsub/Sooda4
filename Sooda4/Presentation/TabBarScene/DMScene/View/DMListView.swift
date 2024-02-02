@@ -32,10 +32,17 @@ class DMListView: BaseView {
     }()
     
     
+    let testButton = {
+        let view = UIButton()
+        view.backgroundColor = .red
+        return view
+    }()
+    
     override func setConfigure() {
         super.setConfigure()
         
         self.addSubview(dmListTableView)
+        self.addSubview(testButton)
     }
     
     override func setConstraints() {
@@ -43,6 +50,11 @@ class DMListView: BaseView {
         
         dmListTableView.snp.makeConstraints { make in
             make.edges.equalTo(self.safeAreaLayoutGuide)
+        }
+        
+        testButton.snp.makeConstraints { make in
+            make.size.equalTo(40)
+            make.bottom.trailing.equalTo(self.safeAreaLayoutGuide).inset(10)
         }
     }
     

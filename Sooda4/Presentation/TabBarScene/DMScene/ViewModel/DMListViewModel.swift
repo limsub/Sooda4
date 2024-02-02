@@ -41,6 +41,8 @@ class DMListViewModel: BaseViewModelType {
     
     struct Input {
         let loadData: PublishSubject<Void>
+        
+        let testButtonClicked: ControlEvent<Void>
     }
     
     struct Output {
@@ -49,7 +51,6 @@ class DMListViewModel: BaseViewModelType {
         let profileImage: PublishSubject<String>
         
         let dmRoomSectionsArr: BehaviorSubject<[DMListSectionData]>  // 배열이긴 하지만 실질적으로 섹션 하나밖에 없다
-//        let dmRoomArr: PublishSubject<[DMChattingCellInfoModel]>
     }
     
     func transform(_ input: Input) -> Output {
@@ -59,8 +60,7 @@ class DMListViewModel: BaseViewModelType {
         let profileImage = PublishSubject<String>()
         
         let dmRoomSectionsArr = BehaviorSubject<[DMListSectionData]>(value: [])
-//        let dmRoomArr = PublishSubject<[DMChattingCellInfoModel]>()
-        
+
         // 1. (내가 속한 워크스페이스 한 개 조회)
         input.loadData
             .flatMap {
@@ -84,7 +84,6 @@ class DMListViewModel: BaseViewModelType {
             .disposed(by: disposeBag)
         
         
-        
         // 1. (내 프로필 정보 조회)
         input.loadData
             .flatMap {
@@ -106,59 +105,7 @@ class DMListViewModel: BaseViewModelType {
                 }
             }
             .disposed(by: disposeBag)
-        
-        
-        
-        
-        /* 디비에 한 번에 넣기 테스트
-        let m = RealmManager()
-        
-        
-        NetworkManager.shared.requestCompletion(
-            type: MyDMsResponseDTO.self,
-            api: .workSpaceDMs(152)) { response in
-                switch response {
-                case .success(let dtoData):
-                    // 디엠 방 리스트 다 받았고,
-                    
-                    dtoData.forEach { dmRoomInfo in
-                        
-                        let dto = DMChattingRequestDTO(
-                            partnerUserId: dmRoomInfo.user.user_id,
-                            workSpaceId: 152,
-                            cursorDate: ""
-                        )
-                        
-                        NetworkManager.shared.requestCompletion(
-                            type: DMChattingResponseDTO.self,
-                            api: .dmChattings(dto)) { response in
-                                switch response {
-                                case .success(let dtoData):
-                                    // 채팅 리스트 다 가져왔고,
-                                    
-                                    dtoData.chats.forEach { chat in
-                                        m.addDMChattingData(
-                                            dtoData: chat,
-                                            workSpaceId: 152
-                                        )
-                                    }
-                                    
-                                    
-                                case .failure:
-                                    break
-                                }
-                            }
-                    }
-                    
-                case .failure:
-                    break
-                    
-                }
-            }
-         */
-        
     
-        
         
         // 1. (DM 방 조회)
         input.loadData
@@ -193,6 +140,7 @@ class DMListViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
  
+        
         
         
         
