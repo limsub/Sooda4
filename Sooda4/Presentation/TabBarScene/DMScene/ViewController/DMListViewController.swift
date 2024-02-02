@@ -8,6 +8,28 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxDataSources
+
+struct DMListSectionData {
+    // 어차피 섹션 하나밖에 없음
+    
+    var header: String
+    var items: [Item]
+}
+
+extension DMListSectionData: AnimatableSectionModelType {
+    typealias Item = DMChattingCellInfoModel
+    typealias Identity = String
+    
+    var identity: String {
+        return header
+    }
+    
+    init(original: DMListSectionData, items: [DMChattingCellInfoModel]) {
+        self = original
+        self.items = items
+    }
+}
 
 struct DMChattingCellInfoModel {
     let roomId: Int
@@ -15,6 +37,14 @@ struct DMChattingCellInfoModel {
     let lastContent: String
     let lastDate: Date
     let unreadCount: Int
+}
+
+extension DMChattingCellInfoModel: IdentifiableType, Equatable {
+    typealias Identity = Int
+    
+    var identity: Int {
+        return roomId
+    }
 }
 
 class DMListViewController: BaseViewController {

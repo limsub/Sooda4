@@ -76,7 +76,7 @@ struct InviteWorkSpaceMemberRequestModel {
 
 
 // 워크스페이스 멤버 조회
-struct UserInfoModel {
+struct UserInfoModel: Equatable {
     let userId: Int
     let email: String
     let nickname: String
