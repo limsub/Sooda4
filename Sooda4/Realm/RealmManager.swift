@@ -248,5 +248,107 @@ extension RealmManager {
 
 
 
+
 /* ===== DM 채팅 ===== */
+
+// C - 채널 채팅 데이터 추가
+extension RealmManager {
+    // 채팅 정보를 디비에 저장
+    func addDMChattingData(dtoData: DMChattingDTO, workSpaceId: Int) {
+        
+        print("***")
+        print(realm?.configuration.fileURL)
+        print("***")
+        
+        
+        guard let realm else { return }
+        
+        // 0. 디비에 이미 있는 채팅인 경우, 걸러
+        if let _ = realm.objects(DMChattingInfoTable.self)
+            .filter("dm_id == %@", dtoData.dm_id)
+            .first {
+            print("(DMChatting) 디비에 이미 있는 채팅. 걸러")
+            return
+        }
+        
+        
+        do {
+            try realm.write {
+                // 1. 디비에 없는 DM Room이면 만들어줌
+                if let existDMRoom = realm.objects(DMRoomInfoTable.self)
+                    .filter("room_id == %@", dtoData.room_id)
+                    .first {
+                    // 이미 있는 디엠 방
+                } else {
+                    // 없는 디엠 방 -> 추가해주기
+                    let newDMRoom = DMRoomInfoTable(
+                        dtoData,
+                        workSpaceId: workSpaceId
+                    )
+                    realm.add(newDMRoom)
+                }
+                
+                // 2. 디비에 없는 유저면 만들어줌
+                if let existUser = realm.objects(UserInfoTable.self)
+                    .filter("user_id == %@", dtoData.user.user_id)
+                    .first {
+                    // 이미 있는 유저
+                } else {
+                    // 없는 유저 -> 추가해주기
+                    let newUser = UserInfoTable(
+                        dtoData.user
+                    )
+                    realm.add(newUser)
+                }
+                
+                
+                // 3. 최종 채팅 정보 저장
+                let newDMChatting = DMChattingInfoTable()
+                newDMChatting.dm_id = dtoData.dm_id
+                newDMChatting.content = dtoData.content
+                newDMChatting.createdAt = dtoData.createdAt.toDate(to: .fromAPI)!
+                
+                var fileList = List<String>()
+                fileList.append(objectsIn: dtoData.files)
+                newDMChatting.files = fileList
+                
+                newDMChatting.dmRoomInfo = realm.objects(DMRoomInfoTable.self)
+                    .filter("room_id == %@", dtoData.room_id).first!
+                newDMChatting.userInfo = realm.objects(UserInfoTable.self)
+                    .filter("user_id == %@", dtoData.user.user_id).first!
+                
+                realm.add(newDMChatting)
+            }
+        } catch {
+            print("디비 write")
+        }
+        
+
+    }
+}
+
+// R - DM 채팅
+extension RealmManager {
+    // 1. DM 채팅 중 가장 마지막 날짜 확인
+    func fetchLastDMChattingDate(roomId: Int) -> Date? {
+        guard let realm else { return nil }
+        
+        return realm.objects(DMChattingInfoTable.self)
+            .filter("dmRoomInfo.room_id == %@", roomId)
+            .sorted(byKeyPath: "createdAt", ascending: false)
+            .first?
+            .createdAt
+    }
+    
+    // 2. DM 채팅 중 가장 마지막 채팅의 정보 -> 만약 안읽은 데이터가 없다면 이걸 셀에 보여주기 위함
+    func fetchLastDMChattingInfo(roomId: Int) -> DMChattingModel? {
+        guard let realm else { return nil }
+        
+        return realm.objects(DMChattingInfoTable.self)
+            .filter("dmRoomInfo.room_id == %@", roomId)
+            .sorted(byKeyPath: "createdAt", ascending: false)
+            .first?
+            .toDomain()
+    }
+}
 

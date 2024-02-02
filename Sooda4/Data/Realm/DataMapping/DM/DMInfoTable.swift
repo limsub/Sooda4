@@ -8,14 +8,14 @@
 import Foundation
 import RealmSwift
 
-class DMInfoTable: Object {
+class DMRoomInfoTable: Object {
     
     @Persisted(primaryKey: true) var room_id: Int
     
     @Persisted var workspace_id: Int
 }
 
-extension DMInfoTable {
+extension DMRoomInfoTable {
     
     // from network
     convenience init(_ model: DMChattingDTO, workSpaceId: Int) {

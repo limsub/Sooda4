@@ -28,3 +28,15 @@ extension UserInfoTable {
         self.user_image = model.profileImage
     }
 }
+
+extension UserInfoTable {
+    
+    func toDomain() -> UserInfoModel {
+        return .init(
+            userId: self.user_id,
+            email: self.user_email,
+            nickname: self.user_name,
+            profileImage: self.user_image
+        )
+    }
+}

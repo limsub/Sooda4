@@ -15,6 +15,8 @@ class DMListViewModel: BaseViewModelType {
     
     private var disposeBag = DisposeBag()
     
+    let dmListUseCase = DMListUseCase()
+    
     init(workSpaceId: Int) {
         self.workSpaceId = workSpaceId
     }
@@ -103,43 +105,79 @@ class DMListViewModel: BaseViewModelType {
         
         
         
+        
+        /* 디비에 한 번에 넣기 테스트
+        let m = RealmManager()
+        
+        
+        NetworkManager.shared.requestCompletion(
+            type: MyDMsResponseDTO.self,
+            api: .workSpaceDMs(152)) { response in
+                switch response {
+                case .success(let dtoData):
+                    // 디엠 방 리스트 다 받았고,
+                    
+                    dtoData.forEach { dmRoomInfo in
+                        
+                        let dto = DMChattingRequestDTO(
+                            partnerUserId: dmRoomInfo.user.user_id,
+                            workSpaceId: 152,
+                            cursorDate: ""
+                        )
+                        
+                        NetworkManager.shared.requestCompletion(
+                            type: DMChattingResponseDTO.self,
+                            api: .dmChattings(dto)) { response in
+                                switch response {
+                                case .success(let dtoData):
+                                    // 채팅 리스트 다 가져왔고,
+                                    
+                                    dtoData.chats.forEach { chat in
+                                        m.addDMChattingData(
+                                            dtoData: chat,
+                                            workSpaceId: 152
+                                        )
+                                    }
+                                    
+                                    
+                                case .failure:
+                                    break
+                                }
+                            }
+                    }
+                    
+                case .failure:
+                    break
+                    
+                }
+            }
+         */
+        
+    
+        
+        
         // 1. (DM 방 조회)
         input.loadData
             .flatMap {
-                NetworkManager.shared.request(
-                    type: MyDMsResponseDTO.self,
-                    api: .workSpaceDMs(self.workSpaceId)
-                )
-                
-                // UseCase에 메서드를 구현해서, 거기서 배열을 완성시켜서 리턴해주자.
-                // VM의 subscribe에서는 완성된 채팅방 배열을 받을 수 있도록
+                self.dmListUseCase.fetchDMList(self.workSpaceId)
             }
             .subscribe(with: self) { owner , response in
                 switch response {
-                case .success(let dtoData):
-                    print("// 1. (DM 방 조회) - room id, userInfo")
-                    // room id와 userInfo만 가져옴.
-                    let newArr = dtoData.map {
-                        DMChattingCellInfoModel(
-                            roomId: $0.room_id,
-                            userInfo: $0.user.toDomain(),
-                            lastContent: "아직 없음",
-                            lastDate: Date(),
-                            unreadCount: -1
-                        )
+                case .success(let arr):
+                    print("**********")
+                    arr.forEach { item in
+                        print(item)
+                        print("")
                     }
+                    print("**********")
                     
-                    chattingInfoList.onNext(newArr)
-                    
-                    
-                    
-                    
-                case .failure(let error):
-                    print("에러났슈 : \(error)")
+                case .failure:
+                    break
                 }
+                
             }
             .disposed(by: disposeBag)
-        
+ 
         
         
         

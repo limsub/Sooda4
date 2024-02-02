@@ -104,7 +104,6 @@ class ChannelChattingRepository: ChannelChattingRepositoryProtocol {
     
     // 4. 채팅 전송
     func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChannelChattingInfoModel, NetworkError> > {
-    func makeChatting(_ requestModel: MakeChannelChattingRequestModel) -> Single< Result<ChannelChattingInfoModel, NetworkError> > {
         
         let dto = MakeChannelChattingRequestDTO(requestModel)
         

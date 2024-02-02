@@ -83,6 +83,8 @@ class HomeDefaultViewController: BaseViewController {
         
         view.backgroundColor = .white
         
+
+        
         
         fetchFirstData()
     

@@ -37,7 +37,7 @@ struct DMChattingDTO: Decodable {
 }
 extension DMChattingDTO {
     func toDomain() -> DMChattingModel {
-        return .init(dmId: dm_id, roomId: room_id, content: content, createdAt: createdAt, files: files, user: user.toDomain()
+        return .init(dmId: dm_id, roomId: room_id, content: content, createdAt: createdAt.toDate(to: .fromAPI)!, files: files, user: user.toDomain()
         )
     }
 }
@@ -73,7 +73,7 @@ extension DMChattingRequestDTO {
     }
 }
 
-struct DMChattingResponseDTO {
+struct DMChattingResponseDTO: Decodable {
     let workspace_id: Int
     let room_id: Int
     let chats: [DMChattingDTO]
