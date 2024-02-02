@@ -48,7 +48,8 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceMemberList: PublishSubject<[UserInfoModel]>
         let profileImage: PublishSubject<String>
         
-        let dmRoomArr: PublishSubject<[DMChattingCellInfoModel]>
+        let dmRoomSectionsArr: BehaviorSubject<[DMListSectionData]>  // 배열이긴 하지만 실질적으로 섹션 하나밖에 없다
+//        let dmRoomArr: PublishSubject<[DMChattingCellInfoModel]>
     }
     
     func transform(_ input: Input) -> Output {
@@ -57,7 +58,8 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceMemberList = PublishSubject<[UserInfoModel]>()
         let profileImage = PublishSubject<String>()
         
-        let dmRoomArr = PublishSubject<[DMChattingCellInfoModel]>()
+        let dmRoomSectionsArr = BehaviorSubject<[DMListSectionData]>(value: [])
+//        let dmRoomArr = PublishSubject<[DMChattingCellInfoModel]>()
         
         // 1. (내가 속한 워크스페이스 한 개 조회)
         input.loadData
@@ -169,13 +171,20 @@ class DMListViewModel: BaseViewModelType {
                     let sortedArr = arr.sorted {
                         $0.lastDate > $1.lastDate
                     }
-                    dmRoomArr.onNext(sortedArr)
+                    let sectionArrData = [DMListSectionData(header: "1", items: sortedArr)]
+                    
+                    dmRoomSectionsArr.onNext(sectionArrData)
+                    
+//                    dmRoomArr.onNext(sortedArr)
                     print("**********")
                     sortedArr.forEach { item in
                         print(item)
                         print("")
                     }
                     print("**********")
+                    print(try! dmRoomSectionsArr.value())
+                    print("**********")
+                    
                     
                 case .failure:
                     break
@@ -191,7 +200,7 @@ class DMListViewModel: BaseViewModelType {
             workSpaceImage: workSpaceImage,
             workSpaceMemberList: workSpaceMemberList,
             profileImage: profileImage,
-            dmRoomArr: dmRoomArr
+            dmRoomSectionsArr: dmRoomSectionsArr
         )
     }
 }

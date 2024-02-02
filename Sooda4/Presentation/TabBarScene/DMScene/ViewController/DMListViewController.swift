@@ -131,13 +131,13 @@ class DMListViewController: BaseViewController {
         )
         
         let output = viewModel.transform(input)
-        
-        output.dmRoomArr
-            .bind(to: mainView.dmListTableView.rx.items(cellIdentifier: DMListTableViewCell.description(), cellType: DMListTableViewCell.self)) { (row, element, cell) in
-                
-                cell.designCell(element)
-            }
-            .disposed(by: disposeBag)
+//        
+//        output.dmRoomArr
+//            .bind(to: mainView.dmListTableView.rx.items(cellIdentifier: DMListTableViewCell.description(), cellType: DMListTableViewCell.self)) { (row, element, cell) in
+//                
+//                cell.designCell(element)
+//            }
+//            .disposed(by: disposeBag)
     }
 }
 
