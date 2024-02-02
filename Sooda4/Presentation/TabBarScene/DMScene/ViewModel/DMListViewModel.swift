@@ -58,8 +58,31 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceImage = PublishSubject<String>()
         let workSpaceMemberList = PublishSubject<[UserInfoModel]>()
         let profileImage = PublishSubject<String>()
-        
         let dmRoomSectionsArr = BehaviorSubject<[DMListSectionData]>(value: [])
+        
+        // * test button : 특정 채팅이 푸시알림으로 왔을 때, 해당 채팅방을 맨 위로 보내준다.
+//        var sampleRoomId = 12   // 특정 채팅방의 room id
+        input.testButtonClicked
+            .subscribe(with: self) { owner , _ in
+                guard var modifiedValue = try? dmRoomSectionsArr.value() else { return }
+                
+//                let targetRoomId = sampleRoomId
+//                
+//                // 1. 배열에서 해당 채팅방을 찾는다
+//                guard let targetIndex = modifiedValue[0].items.firstIndex(where: { $0.roomId == targetRoomId }) else { return }
+                
+                let targetIndex = 2
+                
+                // 2. 해당 요소를 제거한다
+                let removedElement = modifiedValue[0].items.remove(at: targetIndex)
+                dmRoomSectionsArr.onNext(modifiedValue)
+                
+                
+                // 3. 배열의 맨 앞에 삽입한다
+                modifiedValue[0].items.insert(removedElement, at: 0)
+                dmRoomSectionsArr.onNext(modifiedValue)
+            }
+            .disposed(by: disposeBag)
 
         // 1. (내가 속한 워크스페이스 한 개 조회)
         input.loadData
