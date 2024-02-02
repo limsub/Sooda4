@@ -40,9 +40,9 @@ class DMListUseCase {
                     let singleArr = dmInfoArr.map { dmInfo in
                         
                         let requestModel = DMChattingRequestModel(
-                            partnerUserId: dmInfo.userId,
+                            partnerUserId: dmInfo.userId,   // 상대방 정보
                             workSpaceId: workSpaceId,
-                            cursorDate: ""
+                            cursorDate: ""  // 모든 채팅을 불러오기 때문에 커서 X
                         )
                         
                         return self.repo.fetchLastChattingInfo(
@@ -51,19 +51,19 @@ class DMListUseCase {
                         .flatMap { lastChatInfoResult -> Single< Result< DMChattingCellInfoModel, NetworkError> > in
                             
                             switch lastChatInfoResult { // Result<DMChattingModel, NetworkError>
-                            case .success(let lastChatInfo):
+                            case .success(let lastChatInfo):    // 마지막 채팅 정보
                                 
-                                let lastChattingDate = self.repo.fetchLastDMChattingDate(roomId: lastChatInfo.roomId) ?? Date()
+                                // 디비에 저장된 마지막 채팅 날짜
+                                let lastChattingDate = self.repo.fetchLastDMChattingDate(roomId: dmInfo.roomId) ?? Date()
                                 
                                 print("room id : \(dmInfo.roomId)")
                                 print("lastChattingDate : \(lastChattingDate.toString(of: .toAPI))")
                                 
-                                let calendar = Calendar.current
-                                
+
                                 let modifiedLastChattingDate = Calendar.current.date(byAdding: .hour, value: 9, to: lastChattingDate)!
                                 print("+ 9 hours : \(modifiedLastChattingDate.toString(of: .toAPI))")
                                 
-                                
+                                // 디비 날짜 기준으로 요청 -> 읽지 않은 채팅 개수 요청
                                 let requestModel = DMUnreadCountRequestModel(
                                     dmRoomId: lastChatInfo.roomId,
                                     workSpaceId: workSpaceId,
@@ -76,8 +76,13 @@ class DMListUseCase {
                                         switch unreadCountResult {
                                         case .success(let unreadCountInfo):
                                             let ansModel = DMChattingCellInfoModel(
-                                                roomId: lastChatInfo.roomId,
-                                                userInfo: lastChatInfo.user,
+                                                roomId: dmInfo.roomId,
+                                                userInfo: UserInfoModel(
+                                                    userId: dmInfo.userId,
+                                                    email: "이메일이 없어유ㅠ",
+                                                    nickname: dmInfo.userNickname,
+                                                    profileImage: dmInfo.userProfilImage
+                                                ), // 사고... 따로 저장하고 있다 이메일이 없음;;...,
                                                 lastContent: lastChatInfo.content,
                                                 lastDate: lastChatInfo.createdAt,
                                                 unreadCount: unreadCountInfo.count > 0 ?  unreadCountInfo.count - 1 : 0

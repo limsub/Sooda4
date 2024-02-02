@@ -84,6 +84,7 @@ class DMListViewModel: BaseViewModelType {
             }
             .disposed(by: disposeBag)
 
+        
         // 1. (내가 속한 워크스페이스 한 개 조회)
         input.loadData
             .flatMap {
@@ -98,7 +99,13 @@ class DMListViewModel: BaseViewModelType {
                     print("// 1. (내가 속한 워크스페이스 한 개 조회)")
                     print(dtoData)
                     workSpaceImage.onNext(dtoData.thumbnail)
-                    workSpaceMemberList.onNext(dtoData.workspaceMembers.map { $0.toDomain() })
+                    workSpaceMemberList.onNext(
+                        dtoData.workspaceMembers
+                            .map { $0.toDomain() }
+                            .filter { $0.userId != KeychainStorage.shared._id }
+                    )  // 본인 제외
+                    
+                    
                     
                 case .failure(let error):
                     print("에러났슈 : \(error)")

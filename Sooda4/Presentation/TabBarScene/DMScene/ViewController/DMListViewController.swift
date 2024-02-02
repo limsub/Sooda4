@@ -95,9 +95,6 @@ class DMListViewController: BaseViewController {
         
         
         setNavigation()
-//        setTableView()
-        setCollectionView()
-        
         bindVM()
         
         self.loadData.onNext(())
@@ -112,11 +109,7 @@ class DMListViewController: BaseViewController {
             rightImageView: rightImageView
         )
     }
-    
-    func setCollectionView() {
-        mainView.headerView.memberListCollectionView.delegate = self
-        mainView.headerView.memberListCollectionView.dataSource = self
-    }
+
     
     
     /* === bind === */
@@ -129,7 +122,41 @@ class DMListViewController: BaseViewController {
         
         let output = viewModel.transform(input)
         
-        // test
+        
+        // Navigation
+        output.workSpaceImage
+            .subscribe(with: self) { owner , url in
+                owner.leftImageView.loadImage(
+                    endURLString: url,
+                    size: CGSize(width: 40, height: 40),
+                    placeholder: .profileNoPhotoA
+                )
+            }
+            .disposed(by: disposeBag)
+        
+        output.profileImage
+            .subscribe(with: self) { owner , url in
+                owner.rightImageView.loadImage(
+                    endURLString: url,
+                    size: CGSize(width: 40, height: 40),
+                    placeholder: .profileNoPhotoA
+                )
+            }
+            .disposed(by: disposeBag)
+        
+        
+        // HeaderViewCollectionView
+        output.workSpaceMemberList
+            .bind(to: mainView.headerView.memberListCollectionView.rx.items(cellIdentifier: ChannelSettingMemberCollectionViewCell.description(), cellType: ChannelSettingMemberCollectionViewCell.self)) { (row, element, cell) in
+                
+                cell.designCell(
+                    imageUrl: element.profileImage,
+                    name: element.nickname
+                )
+                
+            }
+            .disposed(by: disposeBag)
+        
         
         // DMListTableView - RxDataSource
         let dataSource = RxTableViewSectionedAnimatedDataSource<DMListSectionData>(
@@ -150,11 +177,16 @@ class DMListViewController: BaseViewController {
         output.dmRoomSectionsArr
             .bind(to: mainView.dmListTableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+        
+        
+
+        
+        
 
     }
 }
 
-
+/*
 // CollectionView
 extension DMListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     
@@ -169,3 +201,4 @@ extension DMListViewController: UICollectionViewDataSource, UICollectionViewDele
         return cell
     }
 }
+*/
