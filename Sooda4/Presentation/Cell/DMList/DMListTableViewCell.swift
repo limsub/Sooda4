@@ -105,4 +105,30 @@ class DMListTableViewCell: BaseTableViewCell {
         }
     }
     
+    func designCell(_ sender: DMChattingCellInfoModel) {
+        
+        profileImageView.loadImage(
+            endURLString: sender.userInfo.profileImage ?? "",
+            size: CGSize(width: 34, height: 34),
+            placeholder: .profileNoPhotoB
+        )
+        
+        nameLabel.text = sender.userInfo.nickname
+        nameLabel.setAppFont(.caption)
+        
+        
+        contentLabel.text = sender.lastContent
+        contentLabel.setAppFont(.caption2)
+        
+        
+        if Calendar.current.isDate(sender.lastDate, inSameDayAs: Date()) {
+            dateLabel.text = sender.lastDate.toString(of: .dmCellToday)
+        } else {
+            dateLabel.text = sender.lastDate.toString(of: .dmCellNotToday)
+        }
+        
+        
+        unreadCountLabel.text = String(sender.unreadCount)
+    }
+    
 }

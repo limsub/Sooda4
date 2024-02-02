@@ -65,7 +65,7 @@ class DMListViewController: BaseViewController {
         
         
         setNavigation()
-        setTableView()
+//        setTableView()
         setCollectionView()
         
         bindVM()
@@ -83,10 +83,10 @@ class DMListViewController: BaseViewController {
         )
     }
     
-    func setTableView() {
-        mainView.dmListTableView.dataSource = self
-        mainView.dmListTableView.delegate = self
-    }
+//    func setTableView() {
+//        mainView.dmListTableView.dataSource = self
+//        mainView.dmListTableView.delegate = self
+//    }
     
     func setCollectionView() {
         mainView.headerView.memberListCollectionView.delegate = self
@@ -101,10 +101,17 @@ class DMListViewController: BaseViewController {
         )
         
         let output = viewModel.transform(input)
+        
+        output.dmRoomArr
+            .bind(to: mainView.dmListTableView.rx.items(cellIdentifier: DMListTableViewCell.description(), cellType: DMListTableViewCell.self)) { (row, element, cell) in
+                
+                cell.designCell(element)
+            }
+            .disposed(by: disposeBag)
     }
 }
 
-
+/*
 // TableView
 extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
     
@@ -124,7 +131,7 @@ extension DMListViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 }
-
+*/
 
 // CollectionView
 extension DMListViewController: UICollectionViewDataSource, UICollectionViewDelegate {

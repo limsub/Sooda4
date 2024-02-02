@@ -47,6 +47,8 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceImage: PublishSubject<String>
         let workSpaceMemberList: PublishSubject<[UserInfoModel]>
         let profileImage: PublishSubject<String>
+        
+        let dmRoomArr: PublishSubject<[DMChattingCellInfoModel]>
     }
     
     func transform(_ input: Input) -> Output {
@@ -55,7 +57,7 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceMemberList = PublishSubject<[UserInfoModel]>()
         let profileImage = PublishSubject<String>()
         
-        let chattingInfoList = PublishSubject<[DMChattingCellInfoModel]>()
+        let dmRoomArr = PublishSubject<[DMChattingCellInfoModel]>()
         
         // 1. (내가 속한 워크스페이스 한 개 조회)
         input.loadData
@@ -164,8 +166,12 @@ class DMListViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , response in
                 switch response {
                 case .success(let arr):
+                    let sortedArr = arr.sorted {
+                        $0.lastDate > $1.lastDate
+                    }
+                    dmRoomArr.onNext(sortedArr)
                     print("**********")
-                    arr.forEach { item in
+                    sortedArr.forEach { item in
                         print(item)
                         print("")
                     }
@@ -184,7 +190,8 @@ class DMListViewModel: BaseViewModelType {
         return Output(
             workSpaceImage: workSpaceImage,
             workSpaceMemberList: workSpaceMemberList,
-            profileImage: profileImage
+            profileImage: profileImage,
+            dmRoomArr: dmRoomArr
         )
     }
 }
