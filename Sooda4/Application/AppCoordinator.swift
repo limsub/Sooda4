@@ -96,8 +96,9 @@ extension AppCoordinator: CoordinatorFinishDelegate {
         childCoordinator: Coordinator,
         nextFlow: ChildCoordinatorTypeProtocol?
     ) {
-
+        print("😀😀😀😀😀 필터 넣기 전 Child코디 : \(childCoordinators)")
         childCoordinators = childCoordinators.filter { $0.type != childCoordinator.type }
+        print("😀😀😀😀😀 필터 넣기 후 Child코디 : \(childCoordinators)")
         navigationController.viewControllers.removeAll()
         navigationController.setNavigationBarHidden(false , animated: false)
         

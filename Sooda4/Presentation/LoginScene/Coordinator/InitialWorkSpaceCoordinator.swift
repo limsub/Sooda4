@@ -103,6 +103,10 @@ class InitialWorkSpaceCoordinator: InitialWorkSpaceCoordinatorProtocol {
         
         navigationController.present(nav, animated: true)
     }
+    
+    deinit {
+        print("😀😀😀😀😀😀😀  initial workspace Coordinator deinit")
+    }
 }
 
 

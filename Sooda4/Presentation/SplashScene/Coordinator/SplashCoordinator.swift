@@ -89,6 +89,6 @@ class SplashCoordinator: SplashCoordinatorProtocol {
     
     
     deinit {
-        print("splash Coordinator deinit")
+        print("😀😀😀😀😀😀😀  splash Coordinator deinit")
     }
 }

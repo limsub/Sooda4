@@ -109,6 +109,11 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         
         navigationController.present(nav, animated: true)
     }
+    
+    
+    deinit {
+        print("😀😀😀😀😀😀😀  select auth Coordinator deinit")
+    }
 }
 
 

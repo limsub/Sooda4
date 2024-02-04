@@ -91,6 +91,10 @@ class LoginSceneCoordinator: LoginSceneCoordinatorProtocol {
         
     }
     
+    deinit {
+        print("😀😀😀😀😀😀😀  loginscene Coordinator deinit")
+    }
+    
 }
 
 // MARK: - Child DidFinished
