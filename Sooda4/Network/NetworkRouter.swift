@@ -19,7 +19,7 @@ enum NetworkRouter: URLRequestConvertible {
     case emailLoginRequest(_ sender: SignInRequestDTO)
     
     case logoutRequest
-    
+    case updateDeviceToken(_ sender: DeviceTokenUpdateRequestDTO)
     case myProfileInfo
     
     
@@ -81,6 +81,8 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/users/login"
         case .logoutRequest:
             return "/v1/users/logout"
+        case .updateDeviceToken:
+            return "/v1/users/deviceToken"
         case .myProfileInfo:
             return "/v1/users/my"
             
@@ -195,7 +197,7 @@ enum NetworkRouter: URLRequestConvertible {
             return .get
             
         // USER
-        case .checkValidEmail, .requestSignUp, .emailLoginRequest:
+        case .checkValidEmail, .requestSignUp, .emailLoginRequest, .updateDeviceToken:
             return .post
         case .myProfileInfo, .logoutRequest:
             return .get
@@ -256,6 +258,10 @@ enum NetworkRouter: URLRequestConvertible {
             return [
                 "email": sender.email,
                 "password": sender.password,
+                "deviceToken": sender.deviceToken
+            ]
+        case .updateDeviceToken(let sender):
+            return [
                 "deviceToken": sender.deviceToken
             ]
             

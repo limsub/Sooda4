@@ -74,6 +74,14 @@ extension SignInResponseDTO {
 
 
 
+/* ========== FCM deviceToken 저장 ========== */
+struct DeviceTokenUpdateRequestDTO {
+    let deviceToken: String
+}
+// 응답 No Data
+
+
+
 /* =========== 내 프로필 정보 조회 ========== */
 struct MyProfileInfoDTO: Decodable {
     let user_id: Int
