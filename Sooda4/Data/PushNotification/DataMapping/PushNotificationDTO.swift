@@ -9,16 +9,16 @@ import Foundation
 
 struct PushChannelChattingDTO: Decodable {
     let type: String
-    let workspace_id: Int
-    let channel_id: Int
+    let workspace_id: String
+    let channel_id: String
     
     let aps: Aps
     
-    let googleCAE: Int
-    let googleCSenderID: Int
+    let googleCAE: String
+    let googleCSenderID: String
     let googleCFid: String
     
-    let gcmMessageID: Int
+    let gcmMessageID: String
     
     private enum CodingKeys: String, CodingKey {
         case type, workspace_id, channel_id, aps
@@ -33,19 +33,19 @@ struct PushChannelChattingDTO: Decodable {
 
 struct PushDMChattingDTO: Decodable {
     let type: String
-    let workspace_id: Int
-    let oppenent_id: Int
+    let workspace_id: String
+    let opponent_id: String
     
     let aps: Aps
     
-    let googleCAE: Int
+    let googleCAE: String
     let googleCSenderID: String
     let googleCFid: String
     
-    let gcmMessageID: Int
+    let gcmMessageID: String
     
     private enum CodingKeys: String, CodingKey {
-        case type, workspace_id, oppenent_id, aps
+        case type, workspace_id, opponent_id, aps
         
         case googleCAE = "google.c.a.e"
         case googleCSenderID = "google.c.sender.id"

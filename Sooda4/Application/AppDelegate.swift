@@ -114,6 +114,45 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         
         if let userInfo = notification.request.content.userInfo as? [String: Any] {
             print("***** \(userInfo) *****")
+            
+            print(" ++ \(userInfo["workspace_id"])")
+            print(" --", type(of: userInfo["workspace_id"]))
+            if let workspaceId = userInfo["workspace_id"] as? Int {
+                print("int workspaceId : \(workspaceId)")
+            } else {
+                print("int failed")
+            }
+            
+            if let workspaceId = userInfo["workspace_id"] as? String {
+                print("string workspaceId : \(workspaceId)")
+            } else {
+                print("string failed")
+            }
+            
+            
+            
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: userInfo) else {
+                print("1. 디코딩 실패")
+                return
+            }
+            
+            
+           
+            
+            do {
+//                let decodedData = try JSONDecoder().decode(PushChannelChattingDTO.self, from: jsonData)
+                
+                let decodedData = try JSONDecoder().decode(PushDMChattingDTO.self, from: jsonData)
+                
+                print("final : 디코딩 성공")
+                print(decodedData)
+                
+                
+            } catch {
+                print("2. 디코뎅 에러 : \(error)")
+            }
+            
+
         }
         
     }
