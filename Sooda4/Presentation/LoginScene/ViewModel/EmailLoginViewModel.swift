@@ -156,7 +156,14 @@ class EmailLoginViewModel: BaseViewModelType {
                 let requestModel = EmailLoginRequestModel(
                     email: textValues.0,
                     password: textValues.1,
-                    deviceToken: "eN8BkT3XdU6LrUWbglBn5C:APA91bEre8W2-QenfT-IcUDoQZVgIt70e39kjZBz45ORNeYOsLj2HZOuNmUjRpX--Iwwgb5BHkn9efG-DV7aGZwEEQKu9o4U8p7iTseHq9523Moyl29T7wK0UGuAXofnICOUK23IQ7oh" // "hi"
+                    deviceToken: UserDefaults.standard.string(forKey: "hi")!
+                        //"dQGQSp_8zUyll_S_YRs2Sk:APA91bFP-Dy3q39Gbc3LlQT9kpwAXTEPJJSN2tjZn_dTm0ruDLVyz5VTOEM26is0dTWPi-hC9Lb837q5pZXkvXQPj8c3OqmeQpv4-qUd0x8xbe1QWRIDuVRh6pPLle6uWOzmmci75wZG"
+                        
+                        //"eN8BkT3XdU6LrUWbglBn5C:APA91bEre8W2-QenfT-IcUDoQZVgIt70e39kjZBz45ORNeYOsLj2HZOuNmUjRpX--Iwwgb5BHkn9efG-DV7aGZwEEQKu9o4U8p7iTseHq9523Moyl29T7wK0UGuAXofnICOUK23IQ7oh" // "hi"
+                    
+                    // eN8BkT3XdU6LrUWbglBn5C:APA91bEre8W2-QenfT-IcUDoQZVgIt70e39kjZBz45ORNeYOsLj2HZOuNmUjRpX--Iwwgb5BHkn9efG-DV7aGZwEEQKu9o4U8p7iTseHq9523Moyl29T7wK0UGuAXofnICOUK23IQ7oh
+                    
+                    
                 )
                 
                 

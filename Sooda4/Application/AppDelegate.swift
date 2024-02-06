@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import FirebaseCore
+//import FirebaseCore
+import Firebase
 import FirebaseAnalytics
 import FirebaseMessaging
 
@@ -20,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Firebase Anaylitics
         FirebaseApp.configure()
-        Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
+//        Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
         
         // Firebase Message
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .providesAppNotificationSettings]) { didAllow, error  in
@@ -30,40 +31,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Messaging.messaging().delegate = self
         application.registerForRemoteNotifications()
 
-//        print(Date().toString(of: .toAPI))
+
         
+        Messaging.messaging().token { token, error in
+          if let error = error {
+            print("Error fetching FCM registration token: \(error)")
+          } else if let token = token {
+            print("FCM registration token: \(token)")
+//            self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
+          }
+        }
         
-//        for i in 0...40 {
-//            let requestModel = MakeChannelChattingRequestModel(
-//                channelName: "오아아아",
-//                workSpaceId: 152,
-//                content: "--- pagination Test \(i)",
-//                files: []
-//            )
-//            
-//            let dto = MakeChannelChattingRequestDTO(requestModel)
-//            
-//            NetworkManager.shared.requestCompletionMultipart(
-//                type: MakeChannelChattingResponseDTO.self,
-//                api: .makeChannelChatting(dto)) { response in
-//                    print("\(i)")
-//                    print(response)
-//                }
-//        }
-        
-        
-//        let dto = DeviceTokenUpdateRequestDTO(
-//            deviceToken: "hi"
-//        )
-//        NetworkManager.shared.requestCompletionEmptyResponse(
-//            api: .updateDeviceToken(dto)) { response  in
-//                switch response {
-//                case .success:
-//                    print("디바이스 토큰 업데이트 성공")
-//                case .failure(let networkError):
-//                    print("디바이스 토큰 업데이트 실패 - \(networkError)")
-//                }
-//            }
         
         return true
     }
@@ -100,14 +78,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
+    
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print(#function)
+        print("****** \(deviceToken) ******")
+        Messaging.messaging().apnsToken = deviceToken
+    }
+    
+    
+    
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let firebaseToken = fcmToken ?? "No Token"
         print("firebase token : \(firebaseToken)")
+        
+        
+        UserDefaults.standard.set(firebaseToken, forKey: "hi")
+        
+
+        
+        
+//        Messaging.messaging().isAutoInitEnabled = true
     }
+    
+    
+    
+    
+    
+    
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("********\(#function)********")
         completionHandler([.alert, .badge, .sound])
+        
+        
+        if let userInfo = notification.request.content.userInfo as? [String: Any] {
+            print("***** \(userInfo) *****")
+        }
+        
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
