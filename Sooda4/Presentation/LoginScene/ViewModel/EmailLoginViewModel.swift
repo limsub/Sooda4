@@ -156,8 +156,9 @@ class EmailLoginViewModel: BaseViewModelType {
                 let requestModel = EmailLoginRequestModel(
                     email: textValues.0,
                     password: textValues.1,
-                    deviceToken: "hi"
+                    deviceToken: "eN8BkT3XdU6LrUWbglBn5C:APA91bEre8W2-QenfT-IcUDoQZVgIt70e39kjZBz45ORNeYOsLj2HZOuNmUjRpX--Iwwgb5BHkn9efG-DV7aGZwEEQKu9o4U8p7iTseHq9523Moyl29T7wK0UGuAXofnICOUK23IQ7oh" // "hi"
                 )
+                
                 
                 return requestModel
             }

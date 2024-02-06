@@ -127,6 +127,12 @@ class HomeDefaultViewModel: BaseViewModelType {
                 print(response)
                 owner.didSendEventClosure?(.goBackOnboarding)
                 
+                let dto = DeviceTokenUpdateRequestDTO(deviceToken: "")
+                NetworkManager.shared.requestCompletionEmptyResponse(
+                    api: .updateDeviceToken(dto)) { response in
+                        print(response)
+                    }
+                
             }
             .disposed(by: disposeBag)
         

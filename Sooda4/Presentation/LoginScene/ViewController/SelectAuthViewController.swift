@@ -35,7 +35,13 @@ class SelectAuthViewController: BaseViewController {
         
         // medium sheet presentation 세팅
         if let sheetPresentationController = sheetPresentationController {
-            sheetPresentationController.detents = [.medium()]
+            
+            let customDetentId = UISheetPresentationController.Detent.Identifier("custom")
+            let customDetent = UISheetPresentationController.Detent.custom(identifier: customDetentId) { context in
+                return 279
+            }
+            
+            sheetPresentationController.detents = [customDetent]
             sheetPresentationController.prefersGrabberVisible = true
         }
     }

@@ -258,7 +258,7 @@ enum NetworkRouter: URLRequestConvertible {
             return [
                 "email": sender.email,
                 "password": sender.password,
-                "deviceToken": sender.deviceToken
+                "deviceToken": sender.deviceToken //"hi" // "eN8BkT3XdU6LrUWbglBn5C:APA91bEre8W2-QenfT-IcUDoQZVgIt70e39kjZBz45ORNeYOsLj2HZOuNmUjRpX--Iwwgb5BHkn9efG-DV7aGZwEEQKu9o4U8p7iTseHq9523Moyl29T7wK0UGuAXofnICOUK23IQ7oh" //sender.deviceToken
             ]
         case .updateDeviceToken(let sender):
             return [

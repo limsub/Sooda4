@@ -52,18 +52,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        }
         
         
-        let dto = DeviceTokenUpdateRequestDTO(
-            deviceToken: "hi"
-        )
-        NetworkManager.shared.requestCompletionEmptyResponse(
-            api: .updateDeviceToken(dto)) { response  in
-                switch response {
-                case .success:
-                    print("디바이스 토큰 업데이트 성공")
-                case .failure(let networkError):
-                    print("디바이스 토큰 업데이트 실패 - \(networkError)")
-                }
-            }
+//        let dto = DeviceTokenUpdateRequestDTO(
+//            deviceToken: "hi"
+//        )
+//        NetworkManager.shared.requestCompletionEmptyResponse(
+//            api: .updateDeviceToken(dto)) { response  in
+//                switch response {
+//                case .success:
+//                    print("디바이스 토큰 업데이트 성공")
+//                case .failure(let networkError):
+//                    print("디바이스 토큰 업데이트 실패 - \(networkError)")
+//                }
+//            }
         
         return true
     }
@@ -106,10 +106,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        print("********\(#function)********")
         completionHandler([.alert, .badge, .sound])
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("********\(#function)********")
         completionHandler()
     }
 }
