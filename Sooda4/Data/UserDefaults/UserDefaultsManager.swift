@@ -30,7 +30,7 @@ enum UserDefaultsManager {
         
         // 현재 보고있는 채팅방
         case currentChannelID
-        case currentDMRoomID
+        case currentDMOpponentID
     }
     
     @MyDefault(key: Key.latestChannelChattingId.rawValue, defaultValue: -1)
@@ -39,6 +39,6 @@ enum UserDefaultsManager {
     @MyDefault(key: Key.currentChannelID.rawValue, defaultValue: -1)
     static var currentChannelID
     
-    @MyDefault(key: Key.currentDMRoomID.rawValue, defaultValue: -1)
-    static var currentDMRoomID
+    @MyDefault(key: Key.currentDMOpponentID.rawValue, defaultValue: -1)
+    static var currentDMOpponentID
 }

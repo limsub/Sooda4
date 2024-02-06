@@ -117,36 +117,50 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("********\(#function)********")
         
+
+        guard let userInfo = notification.request.content.userInfo as? [String: Any],
+              let jsonData = try? JSONSerialization.data(withJSONObject: userInfo)
+        else { return }
+        
         // push 알림이 오지 말아야 하는 경우
-        // 1. 현재 접속한 채팅방의 톡 알림
+        // - 현재 접속한 채팅방의 톡 알림
         
         
-        
-        if let userInfo = notification.request.content.userInfo as? [String: Any] {
+        // 1. 채널 채팅인 경우
+        if let channelChatInfo = try? JSONDecoder().decode(PushChannelChattingDTO.self, from: jsonData) {
+            print("1. 채널 채팅 푸시 알림 디코딩 성공!")
             
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: userInfo) else {
-                print("1. 디코딩 실패")
-                return
-            }
+            // 현재 보고 있는 채팅방인지 확인
+            let currentChannelID = UserDefaultsManager.currentChannelID
+            let pushChannelID = channelChatInfo.channel_id
             
-           
-            
-            do {
-                let decodedData = try JSONDecoder().decode(PushChannelChattingDTO.self, from: jsonData)
-                
-//                let decodedData = try JSONDecoder().decode(PushDMChattingDTO.self, from: jsonData)
-                
-                print("final : 디코딩 성공")
-                print(decodedData)
-                
+            print("2. 현재 보고 있는 채팅방인지 확인! (channelID) : \(currentChannelID) vs. \(pushChannelID)")
+            if "\(currentChannelID)" == pushChannelID {
+                print("3. 현재 보고 있는 채팅방이기 때문에 푸시 x")
+            } else {
+                print("3. 현재 보고 있는 채팅방이 아니기 때문에 푸시 o")
                 completionHandler([.list, .badge, .sound, .banner])
-                
-                
-            } catch {
-                print("2. 디코뎅 에러 : \(error)")
             }
+            
+            
         }
         
+        
+        // 2. 디엠 채팅인 경우
+        if let dmChatInfo = try? JSONDecoder().decode(PushDMChattingDTO.self, from: jsonData) {
+            print("1. 디엠 채팅 푸시 알림 디코딩 성공!")
+            
+            let currentOpponentID = UserDefaultsManager.currentDMOpponentID
+            let pushDMOpponentID = dmChatInfo.opponent_id
+            
+            print("2. 현재 보고 있는 채팅방인지 확인! (opponent id) : \(currentOpponentID) vs. \(pushDMOpponentID)")
+            if "\(currentOpponentID)" == pushDMOpponentID {
+                print("3. 현재 보고 있는 채팅방이기 때문에 푸시 x")
+            } else {
+                print("3. 현재 보고 있는 채팅방이 아니기 때문에 푸시 o")
+                completionHandler([.list, .badge, .sound, .banner])
+            }
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
