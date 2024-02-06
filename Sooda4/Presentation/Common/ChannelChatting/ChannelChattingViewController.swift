@@ -62,16 +62,22 @@ final class ChannelChattingViewController: BaseViewController {
         print(#function)
         loadData()
         startObservingSocket()
+        
+        // 현재 보고 있는 채널 채팅방 저장 <- push 알림 방지
+        print("현재 보고 있는 채널 채팅방 저장 <- push 알림 방지")
+        viewModel.setNewCurrentChannelID()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
         print(#function)
         viewModel.disconnectSocket()
         removeObservingSocket()
+        
+        // 현재 보고 있는 채널 채팅방 초기화
+        print("현재 보고 있는 채널 채팅방 초기화")
+        viewModel.initCurrentChannelID()
     }
     
     

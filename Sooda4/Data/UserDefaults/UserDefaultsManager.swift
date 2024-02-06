@@ -26,9 +26,19 @@ struct MyDefault<T> {
 
 enum UserDefaultsManager {
     enum Key: String {
-        case latestChannelChattingId
+        case latestChannelChattingId    // 이건 사실상 실패 (멀티 디바이스)
+        
+        // 현재 보고있는 채팅방
+        case currentChannelID
+        case currentDMRoomID
     }
     
     @MyDefault(key: Key.latestChannelChattingId.rawValue, defaultValue: -1)
     static var latestChannelChattingId
+    
+    @MyDefault(key: Key.currentChannelID.rawValue, defaultValue: -1)
+    static var currentChannelID
+    
+    @MyDefault(key: Key.currentDMRoomID.rawValue, defaultValue: -1)
+    static var currentDMRoomID
 }

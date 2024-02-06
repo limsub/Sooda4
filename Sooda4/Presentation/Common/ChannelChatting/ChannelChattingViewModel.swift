@@ -578,6 +578,20 @@ extension ChannelChattingViewModel {
 }
 
 
+// Push Notification
+extension ChannelChattingViewModel {
+    // 현재 보고 있는 채널 채팅 아이디 업데이트
+    func setNewCurrentChannelID() {
+        UserDefaultsManager.currentChannelID = self.channelId
+    }
+    
+    // 현재 보고 있는 채널 채팅 아이디 초기화
+    func initCurrentChannelID() {
+        UserDefaultsManager.currentChannelID = -1
+    }
+}
+
+
 // File Open
 extension ChannelChattingViewModel {
     func openZip() {

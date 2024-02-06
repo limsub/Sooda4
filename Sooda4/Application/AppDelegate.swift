@@ -19,28 +19,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        // Firebase Anaylitics
         FirebaseApp.configure()
-//        Analytics.logEvent(AnalyticsEventAppOpen, parameters: nil)
         
         // Firebase Message
+        
+        // 알림 허용 확인
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .providesAppNotificationSettings]) { didAllow, error  in
             print("Notification Authorization : \(didAllow)")
         }
+        
         UNUserNotificationCenter.current().delegate = self
+        
         Messaging.messaging().delegate = self
+        
+        
+        // APNs와 함께 앱을 등록하고 전역적으로 고유한 기기 토큰을 받아야 한다
+        // 애플이 제공한 API를 사용해서 앱이 launch될 때마다 앱을 등록하고 기기 토큰을 받는다
+        // registerForRemoteNotifications() 메서드를 호출하고, 등록이 성공적이면 didRegisterForRemoteNotificationsWithDeviceToken 메서드에서 토큰 받는다.
         application.registerForRemoteNotifications()
 
 
         
-        Messaging.messaging().token { token, error in
-          if let error = error {
-            print("Error fetching FCM registration token: \(error)")
-          } else if let token = token {
-            print("FCM registration token: \(token)")
-//            self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
-          }
-        }
+//        Messaging.messaging().token { token, error in
+//          if let error = error {
+//            print("Error fetching FCM registration token: \(error)")
+//          } else if let token = token {
+//            print("FCM registration token: \(token)")
+////            self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
+//          }
+//        }
         
         
         return true
@@ -106,53 +113,38 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     
     
     
-    
+    // 포그라운드에서 알림 받기
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         print("********\(#function)********")
-        completionHandler([.alert, .badge, .sound])
+        
+        // push 알림이 오지 말아야 하는 경우
+        // 1. 현재 접속한 채팅방의 톡 알림
+        
         
         
         if let userInfo = notification.request.content.userInfo as? [String: Any] {
-            print("***** \(userInfo) *****")
-            
-            print(" ++ \(userInfo["workspace_id"])")
-            print(" --", type(of: userInfo["workspace_id"]))
-            if let workspaceId = userInfo["workspace_id"] as? Int {
-                print("int workspaceId : \(workspaceId)")
-            } else {
-                print("int failed")
-            }
-            
-            if let workspaceId = userInfo["workspace_id"] as? String {
-                print("string workspaceId : \(workspaceId)")
-            } else {
-                print("string failed")
-            }
-            
-            
             
             guard let jsonData = try? JSONSerialization.data(withJSONObject: userInfo) else {
                 print("1. 디코딩 실패")
                 return
             }
             
-            
            
             
             do {
-//                let decodedData = try JSONDecoder().decode(PushChannelChattingDTO.self, from: jsonData)
+                let decodedData = try JSONDecoder().decode(PushChannelChattingDTO.self, from: jsonData)
                 
-                let decodedData = try JSONDecoder().decode(PushDMChattingDTO.self, from: jsonData)
+//                let decodedData = try JSONDecoder().decode(PushDMChattingDTO.self, from: jsonData)
                 
                 print("final : 디코딩 성공")
                 print(decodedData)
+                
+                completionHandler([.list, .badge, .sound, .banner])
                 
                 
             } catch {
                 print("2. 디코뎅 에러 : \(error)")
             }
-            
-
         }
         
     }
