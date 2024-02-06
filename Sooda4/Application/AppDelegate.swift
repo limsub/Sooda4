@@ -127,44 +127,77 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         
         
         // 1. 채널 채팅인 경우
-        if let channelChatInfo = try? JSONDecoder().decode(PushChannelChattingDTO.self, from: jsonData) {
+        if let channelChatInfo: PushChannelChattingDTO = self.decodingData(data: jsonData) {
             print("1. 채널 채팅 푸시 알림 디코딩 성공!")
             
             // 현재 보고 있는 채팅방인지 확인
-            let currentChannelID = UserDefaultsManager.currentChannelID
-            let pushChannelID = channelChatInfo.channel_id
-            
-            print("2. 현재 보고 있는 채팅방인지 확인! (channelID) : \(currentChannelID) vs. \(pushChannelID)")
-            if "\(currentChannelID)" == pushChannelID {
-                print("3. 현재 보고 있는 채팅방이기 때문에 푸시 x")
-            } else {
-                print("3. 현재 보고 있는 채팅방이 아니기 때문에 푸시 o")
+            if !self.checkCurrentChannel(chatInfo: channelChatInfo) {
                 completionHandler([.list, .badge, .sound, .banner])
             }
-            
-            
         }
         
         
         // 2. 디엠 채팅인 경우
-        if let dmChatInfo = try? JSONDecoder().decode(PushDMChattingDTO.self, from: jsonData) {
+        if let dmChatInfo: PushDMChattingDTO = self.decodingData(data: jsonData) {
             print("1. 디엠 채팅 푸시 알림 디코딩 성공!")
             
-            let currentOpponentID = UserDefaultsManager.currentDMOpponentID
-            let pushDMOpponentID = dmChatInfo.opponent_id
-            
-            print("2. 현재 보고 있는 채팅방인지 확인! (opponent id) : \(currentOpponentID) vs. \(pushDMOpponentID)")
-            if "\(currentOpponentID)" == pushDMOpponentID {
-                print("3. 현재 보고 있는 채팅방이기 때문에 푸시 x")
-            } else {
-                print("3. 현재 보고 있는 채팅방이 아니기 때문에 푸시 o")
+            // 현재 보고 있는 채팅방인지 확인
+            if !self.checkCurrentDMRoom(chatInfo: dmChatInfo) {
                 completionHandler([.list, .badge, .sound, .banner])
             }
         }
     }
     
+    
+    // 푸시 알림 클릭
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print("********\(#function)********")
+        
+        // 푸시 알림 클릭 시.
+        // - 해당하는 채팅방 화면으로 이동
+        
         completionHandler()
+    }
+}
+
+
+// private func
+extension AppDelegate {
+    // 채널 or 디엠 채팅 디코딩
+    private func decodingData<T: Decodable>(data: Data) -> T? {
+        return try? JSONDecoder().decode(T.self, from: data)
+    }
+    
+    /* ===== will Present ===== */
+    // 현재 보고 있는 채널 채팅방인지 확인
+    private func checkCurrentChannel(chatInfo: PushChannelChattingDTO) -> Bool {
+        
+        let currentChannelID = UserDefaultsManager.currentChannelID
+        let pushChannelID = chatInfo.channel_id
+        
+        print("2. 현재 보고 있는 채팅방인지 확인! (channelID) : \(currentChannelID) vs. \(pushChannelID)")
+        if "\(currentChannelID)" == pushChannelID {
+            print("3. 현재 보고 있는 채팅방이기 때문에 푸시 x")
+            return true
+        } else {
+            print("3. 현재 보고 있는 채팅방이 아니기 때문에 푸시 o")
+            return false
+        }
+    }
+    
+    // 현재 보고 있는 디엠 채팅방인지 확인
+    private func checkCurrentDMRoom(chatInfo: PushDMChattingDTO) -> Bool {
+        
+        let currentOpponentID = UserDefaultsManager.currentDMOpponentID
+        let pushDMOpponentID = chatInfo.opponent_id
+        
+        print("2. 현재 보고 있는 채팅방인지 확인! (opponent id) : \(currentOpponentID) vs. \(pushDMOpponentID)")
+        if "\(currentOpponentID)" == pushDMOpponentID {
+            print("3. 현재 보고 있는 채팅방이기 때문에 푸시 x")
+            return true
+        } else {
+            print("3. 현재 보고 있는 채팅방이 아니기 때문에 푸시 o")
+            return false
+        }
     }
 }
