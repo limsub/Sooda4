@@ -27,11 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         appCoordinator = AppCoordinator(nav)
         appCoordinator?.start()
-//        appCoordinator?.showDirectChannelChattingView(
-//            workSpaceId: 152,
-//            channelId: 203,
-//            channelName: "ababc"
-//        )
+
         
         
         // 노티 등록
@@ -133,9 +129,16 @@ extension SceneDelegate {
     private func channelChatPushClicked(_ notification: Notification) {
         print(#function)
         
-//        if let userInfo = notification.userInfo {
-//            let channelName =
-//        }
+        if let userInfo = notification.userInfo,
+            let channelId = userInfo["channelId"] as? Int ,
+            let workspaceId = userInfo["workspaceId"] as? Int {
+                print("channelId : \(channelId), workspaceId : \(workspaceId)")
+                appCoordinator?.showDirectChannelChattingView(
+                    workSpaceId: workspaceId,
+                    channelId: channelId,
+                    channelName: nil
+                )
+        }
     }
     
     
@@ -143,17 +146,15 @@ extension SceneDelegate {
     @objc
     private func dmChatPushClicked(_ notification: Notification) {
         print(#function)
-    }
-    
-    
-    @objc func a(_ notification: Notification) {
-        print("노티받음!!!")
-        print("hihihi")
-        if let userInfo = notification.userInfo {
-            let a = userInfo["a"]
-            let b = userInfo["b"]
+        
+        if let userInfo = notification.userInfo,
+           let opponentId = userInfo["opponentId"],
+           let workspaceId = userInfo["workspaceId"] {
+            print("opponentId : \(opponentId), workspaceId : \(workspaceId)")
+            // App코디. showDirect
             
-            print("a : \(a) b : \(b)")
         }
     }
+    
+
 }

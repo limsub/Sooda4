@@ -21,7 +21,7 @@ protocol AppCoordinatorProtocol: Coordinator {
     
     
     // direct show view (Push Notification click)
-    func showDirectChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String)
+    func showDirectChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String?)
 }
 
 // MARK: - App Coordinator Class
@@ -90,7 +90,7 @@ class AppCoordinator: AppCoordinatorProtocol {
     func showDirectChannelChattingView(
         workSpaceId: Int,
         channelId: Int,
-        channelName: String
+        channelName: String?
     ) {
         print(#function)
         

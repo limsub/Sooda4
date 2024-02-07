@@ -188,17 +188,21 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             // 채널 아이디랑 워크스페이스 아이디 넘겨줌
             // (채널 이름을 어떻게 해야하지...하)
             
-            let userInfo: [String: Any] = [
-                "channelId": channelChatInfo.channel_id,
-                "workspaceId": channelChatInfo.workspace_id
-            ]
+            if let channelId = Int(channelChatInfo.channel_id),
+               let workspaceId = Int(channelChatInfo.workspace_id) {
+                
+                let userInfo: [String: Any] = [
+                    "channelId": channelId,
+                    "workspaceId": workspaceId
+                ]
 
-            NotificationCenter.default.post(
-                name: Notification.Name("channelChattingPushNotification"),
-                object: nil,
-                userInfo: userInfo
-            )
-            
+                NotificationCenter.default.post(
+                    name: Notification.Name("channelChattingPushNotification"),
+                    object: nil,
+                    userInfo: userInfo
+                )
+                
+            }
         }
         
         
@@ -208,7 +212,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             // 상대방 유저 아이디랑 워크스페이스 아이디 넘겨줌
             
             let userInfo: [String: Any] = [
-                "opponenetId": dmChatInfo.opponent_id,
+                "opponentId": dmChatInfo.opponent_id,
                 "workspaceId": dmChatInfo.workspace_id
             ]
             

@@ -16,7 +16,7 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     
     func showMakeChannelView()
     
-    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String)
+    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String?)
 
     
     // flow
@@ -163,7 +163,7 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
     }
     
     
-    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String) {
+    func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String?) {
         
         
         let channelChattingVM = ChannelChattingViewModel(
