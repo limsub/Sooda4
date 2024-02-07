@@ -52,28 +52,38 @@ class SelectAuthViewModel: BaseViewModelType {
         
         let a = UserApi.shared.rx.loginWithKakaoAccount()
         
-        input.appleLoginButtonClicked
-            .subscribe(with: self) { [self] owner , _ in
-                
+        input.kakaoLoginButtonClicked
+            .flatMap { result -> Single< Result< OAuthToken, Error > > in
                 if UserApi.isKakaoTalkLoginAvailable() {
-                    UserApi.shared.rx.loginWithKakaoTalk()
-                        .subscribe(with: self) { owner , oauthToken in
-                            print("loginWithKakaoTalk Success")
-                            
-                            
-                        }
-                        .disposed(by: disposeBag)
+                    print("카톡 있음")
+                    
+                    return Single.create { single in
+                        UserApi.shared.rx.loginWithKakaoTalk()
+                            .subscribe(with: self) { owner , oAuthToken in
+                                return single(.success(.success(oAuthToken)))
+                            } onError: { owner , error in
+                                return single(.success(.failure(error)))
+                            }
+                    }
                 } else {
-                    UserApi.shared.rx.loginWithKakaoAccount()
-                        .subscribe(with: self) { owner , oauthToken in
-                            print("loginWithKakaoAccount Success")
-                        }
-                        .disposed(by: disposeBag)
+                    print("카톡 없음")
+                    
+                    return Single.create { single in
+                        UserApi.shared.rx.loginWithKakaoAccount()
+                            .subscribe(with: self) { owner , oAuthToken in
+                                return single(.success(.success(oAuthToken)))
+                            } onError: { owner , error  in
+                                return single(.success(.failure(error)))
+                            }
+                    }
                 }
-                
+            }
+            .subscribe(with: self) { owner , response in
+                print("**** 결과 ****")
+                print(response)
             }
             .disposed(by: disposeBag)
-        
+
         // 3. 이메일 로그인
         input.emailLoginButtonClicked
             .subscribe(with: self) { owner , _ in

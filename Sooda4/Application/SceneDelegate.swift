@@ -108,6 +108,7 @@ extension SceneDelegate {
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
             if AuthApi.isKakaoTalkLoginUrl(url) {
+                print("auth api is kakaotalk login url")
                 _ = AuthController.rx.handleOpenUrl(url: url)
             }
         }
