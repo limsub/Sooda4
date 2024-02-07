@@ -41,7 +41,11 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
     
     // 프로토콜 메서드 - view
     func showSelectAuthView() {
-        let selectAuthVM = SelectAuthViewModel()
+        let selectAuthVM = SelectAuthViewModel(
+            socialLoginUseCase: SocialLoginUseCase(
+                socialLoginRepository: SocialLoginRepository()
+            )
+        )
         let selectAuthVC = SelectAuthViewController.create(with: selectAuthVM)
         
         selectAuthVM.didSendEventClosure = { [weak self] event in

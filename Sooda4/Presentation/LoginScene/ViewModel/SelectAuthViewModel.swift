@@ -21,8 +21,14 @@ class SelectAuthViewModel: BaseViewModelType {
     
     private var disposeBag = DisposeBag()
     
+    private let socialLoginUseCase: SocialLoginUseCaseProtocol
+    
     // Coordinator에게 어떤 화면으로 전환할지 요청
     var didSendEventClosure: ( (SelectAuthViewModel.Event) -> Void)?
+    
+    init(socialLoginUseCase: SocialLoginUseCaseProtocol) {
+        self.socialLoginUseCase = socialLoginUseCase
+    }
     
     
     // 필요한 로직
@@ -49,9 +55,6 @@ class SelectAuthViewModel: BaseViewModelType {
         // 1. 애플 로그인
         
         // 2. 카카오 로그인
-        
-        let a = UserApi.shared.rx.loginWithKakaoAccount()
-        
         input.kakaoLoginButtonClicked
             .flatMap { result -> Single< Result< OAuthToken, Error > > in
                 if UserApi.isKakaoTalkLoginAvailable() {
@@ -78,9 +81,26 @@ class SelectAuthViewModel: BaseViewModelType {
                     }
                 }
             }
+            .flatMap { response -> Single< Result< KakaoLoginResponseModel, NetworkError > > in
+                
+                switch response {
+                case .success(let oauthToken):
+                    let requestModel = KakaoLoginRequestModel(
+                        oauthToken: oauthToken.accessToken,
+                        deviceToken: UserDefaults.standard.string(forKey: "hi")!
+                    )
+
+                    return self.socialLoginUseCase.kakaoLoginRequest(requestModel)
+                    
+                case .failure(let error):
+                    return Single.create { single in
+                        single(.success(.failure(NetworkError(error.localizedDescription)))) as! any Disposable
+                    }
+                }
+            }
+
             .subscribe(with: self) { owner , response in
                 print("**** 결과 ****")
-                print(response)
                 
                 switch response {
                 case .success(let oAuthToken):

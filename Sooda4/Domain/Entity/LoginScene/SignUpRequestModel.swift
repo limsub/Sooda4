@@ -50,7 +50,7 @@ struct KakaoLoginRequestModel {
     let oauthToken: String
     let deviceToken: String
 }
-// 응답 모델은 SignUpResponseModel 사용
+typealias KakaoLoginResponseModel = SignUpResponseModel
 
 /* === 애플 로그인 === */
 struct AppleLoginRequestModel {
@@ -58,4 +58,4 @@ struct AppleLoginRequestModel {
     let nickname: String
     let deviceToken: String
 }
-// 응답 모델은 SignUpResponseModel 사용
+typealias AppleLoginResponseModel = SignUpResponseModel
