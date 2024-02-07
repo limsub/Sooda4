@@ -58,7 +58,9 @@ class TabBarCoordinator: NSObject, TabBarCoordinatorProtocol {
         print("*****", childCoordinators)
     }
 
-    
+    deinit {
+        print("😀😀😀😀😀 tabbar Coordinator deinit")
+    }
 }
 
 extension TabBarCoordinator {
