@@ -44,6 +44,9 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
         let selectAuthVM = SelectAuthViewModel(
             socialLoginUseCase: SocialLoginUseCase(
                 socialLoginRepository: SocialLoginRepository()
+            ),
+            myWorkspaceUseCase: WorkSpaceUseCase(
+                workSpaceRepository: WorkSpaceRepository()
             )
         )
         let selectAuthVC = SelectAuthViewController.create(with: selectAuthVM)

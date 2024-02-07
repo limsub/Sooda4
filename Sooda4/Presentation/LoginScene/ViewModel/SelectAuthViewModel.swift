@@ -22,12 +22,16 @@ class SelectAuthViewModel: BaseViewModelType {
     private var disposeBag = DisposeBag()
     
     private let socialLoginUseCase: SocialLoginUseCaseProtocol
+    private let myWorkspaceUseCase: WorkSpaceUseCaseProtocol
     
     // Coordinator에게 어떤 화면으로 전환할지 요청
     var didSendEventClosure: ( (SelectAuthViewModel.Event) -> Void)?
     
-    init(socialLoginUseCase: SocialLoginUseCaseProtocol) {
+    init(socialLoginUseCase: SocialLoginUseCaseProtocol,
+         myWorkspaceUseCase: WorkSpaceUseCaseProtocol
+    ) {
         self.socialLoginUseCase = socialLoginUseCase
+        self.myWorkspaceUseCase = myWorkspaceUseCase
     }
     
     
@@ -98,17 +102,33 @@ class SelectAuthViewModel: BaseViewModelType {
                     }
                 }
             }
-
-            .subscribe(with: self) { owner , response in
+            .filter { response in
                 print("**** 결과 ****")
                 
                 switch response {
-                case .success(let oAuthToken):
-                    print("카카오 로그인 성공 : \(oAuthToken)")
+                case .success(let model):
+                    // 키체인 업데이트
+                    KeychainStorage.shared.accessToken = model.token.accessToken
+                    KeychainStorage.shared.refreshToken = model.token.refreshToken
+                    KeychainStorage.shared._id = model.userId
                     
-                case .failure(let error):
-                    print("카카오 로그인 에러 : \(error.localizedDescription)")
+                    print("--- 토큰 업데이트 ---")
+                    KeychainStorage.shared.printTokens()
+                    
+                    return true
+
+                    
+                case .failure(let networkError):
+                    print(networkError)
+                    return false
                 }
+            }
+            .flatMap { value in
+                // 내가 속한 워크스페이스 조회
+                self.myWorkspaceUseCase.myWorkSpacesRequest()
+            }
+            .subscribe(with: self) { owner , response in
+                print("** ", response)
             }
             .disposed(by: disposeBag)
 
