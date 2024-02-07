@@ -128,7 +128,22 @@ class SelectAuthViewModel: BaseViewModelType {
                 self.myWorkspaceUseCase.myWorkSpacesRequest()
             }
             .subscribe(with: self) { owner , response in
-                print("** ", response)
+                switch response {
+                case .success(let model):
+                    if model.isEmpty {
+                        print("소속된 워크스페이스 없음. go HomeEmpty")
+                        owner.didSendEventClosure?(.goHomeEmptyView)
+                    } else {
+                        print("소속된 워크스페이스 있음. go HomeDefault")
+                        let workspaceID = model[0].workSpaceId
+                        owner.didSendEventClosure?(.goHomeDefaultView(workspaceID: workspaceID))
+                    }
+                    
+                case .failure(let networkError):
+                    print(networkError)
+                }
+                
+                
             }
             .disposed(by: disposeBag)
 
@@ -157,5 +172,8 @@ extension SelectAuthViewModel {
     enum Event {
         case presentSignUpView
         case presentEmailLoginView
+        
+        case goHomeEmptyView
+        case goHomeDefaultView(workspaceID: Int)
     }
 }

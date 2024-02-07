@@ -58,6 +58,14 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
                 
             case .presentEmailLoginView:
                 self?.showEmailLoginView()
+                
+            case .goHomeEmptyView:
+                self?.finish(AppCoordinator.ChildCoordinatorType.homeEmptyScene)
+                print("Go Home Empty View!!")
+                
+            case .goHomeDefaultView(let workspaceID):
+                self?.finish(TabBarCoordinator.ChildCoordinatorType.homeDefaultScene(workSpaceId: workspaceID))
+                print("Go Home Empty View!! : \(workspaceID)")
             }
         }
         
