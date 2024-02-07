@@ -26,7 +26,7 @@ class ChannelChattingViewModel {
     
     private var workSpaceId: Int
     var channelId: Int
-    private var channelName: String
+    private var channelName: String?
     
     
     private var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
@@ -58,7 +58,7 @@ class ChannelChattingViewModel {
     private var channelChattingUseCase: ChannelChattingUseCaseProtocol
     
     
-    init(workSpaceId: Int, channelId: Int, channelName: String, channelChattingUseCase: ChannelChattingUseCaseProtocol) {
+    init(workSpaceId: Int, channelId: Int, channelName: String?, channelChattingUseCase: ChannelChattingUseCaseProtocol) {
         
         print("---------- 채널 정보 ----------")
         print("workspace_id: \(workSpaceId) / channel_id : \(channelId)")
@@ -116,7 +116,7 @@ class ChannelChattingViewModel {
             .withLatestFrom(Observable.combineLatest(input.chattingText, fileData)) { _, values in
 
                 return MakeChannelChattingRequestModel(
-                    channelName: self.channelName,
+                    channelName: self.channelName ?? "",
                     workSpaceId: self.workSpaceId,
                     content: values.0,
                     files: values.1
@@ -163,7 +163,7 @@ class ChannelChattingViewModel {
             .subscribe(with: self) { owner , _ in
                 owner.didSendEventClosure?(.goChannelSetting(
                     workSpaceId: owner.workSpaceId,
-                    channelName: owner.channelName
+                    channelName: owner.channelName ?? ""
                 ))
             }
             .disposed(by: disposeBag)
@@ -188,27 +188,78 @@ class ChannelChattingViewModel {
     // - 채팅 데이터 (테이블뷰)
     func loadData(completion: @escaping () -> Void) {
         
-        // 0. 디비 업데이트! (서버에 저장된 최신 데이터)
-        self.updateChannelInfoRealm {
-            
-            // 1. 디비에 저장된 채팅의 마지막 날짜
-            self.checkLastChattingDate()
-            
-            // 2. 안읽은 채팅 API call -> 디비에 저장
-            // 2. 소켓 오픈
-            self.fetchRecentChatting {
+        // -1 채널 이름이 없을 때 대응! (push 클릭해서 바로 넘어온 경우. push에서는 채널 이름을 주지 않는다..)
+        if self.channelName == nil {
+            print("채널 이름이 없다!!! 푸시 눌러서 넘어왔나보다!!")
+            self.setChannelName {
+                // 0. 디비 업데이트! (서버에 저장된 최신 데이터)
+                self.updateChannelInfoRealm {
+                    
+                    // 1. 디비에 저장된 채팅의 마지막 날짜
+                    self.checkLastChattingDate()
+                    
+                    // 2. 안읽은 채팅 API call -> 디비에 저장
+                    // 2. 소켓 오픈
+                    self.fetchRecentChatting {
+                        
+                        // 3. 디비에서 데이터 가져와서 chatArr 구성
+                        // (이전 (포함) 30 + sample + 이후 30)
+                        self.fetchAllPastChatting()
+                        completion()    // 아마 tableView reload
+                        
+                        // 4. 이제부터 스크롤에 따라 pagination 시작
+                        print("이제부터 스크롤에 따라 pagination 시작")
+                        self.notLoadScrollPagination = false
+                    }
+                }
+            }
+        } else {
+            print("채널 이름이 있다!!! 정상적으로 넘어왔나보다!!")
+            // 0. 디비 업데이트! (서버에 저장된 최신 데이터)
+            self.updateChannelInfoRealm {
                 
-                // 3. 디비에서 데이터 가져와서 chatArr 구성
-                // (이전 (포함) 30 + sample + 이후 30)
-                self.fetchAllPastChatting()
-                completion()    // 아마 tableView reload
+                // 1. 디비에 저장된 채팅의 마지막 날짜
+                self.checkLastChattingDate()
                 
-                // 4. 이제부터 스크롤에 따라 pagination 시작
-                print("이제부터 스크롤에 따라 pagination 시작")
-                self.notLoadScrollPagination = false
+                // 2. 안읽은 채팅 API call -> 디비에 저장
+                // 2. 소켓 오픈
+                self.fetchRecentChatting {
+                    
+                    // 3. 디비에서 데이터 가져와서 chatArr 구성
+                    // (이전 (포함) 30 + sample + 이후 30)
+                    self.fetchAllPastChatting()
+                    completion()    // 아마 tableView reload
+                    
+                    // 4. 이제부터 스크롤에 따라 pagination 시작
+                    print("이제부터 스크롤에 따라 pagination 시작")
+                    self.notLoadScrollPagination = false
+                }
             }
         }
+
+    }
+}
+
+// (임시!!!) 워크스페이스 아이디, 채널 아이디 통해서 채널 이름 찾기
+extension ChannelChattingViewModel {
+    private func setChannelName(completion: @escaping () -> Void) {
         
+        NetworkManager.shared.requestCompletion(
+            type: MyOneWorkSpaceResponseDTO.self,
+            api: .myOneWorkSpace(self.workSpaceId)) { response  in
+                switch response {
+                case .success(let dtoData):
+                    dtoData.channels.forEach { channelInfoDTO in
+                        if channelInfoDTO.channel_id == self.channelId {
+                            self.channelName = channelInfoDTO.name
+                        }
+                    }
+                    completion()
+                    
+                case .failure(let networkError):
+                    print("워크스페이스 리스트 불러오는 과정에서 에러!")
+                }
+            }
     }
 }
 
@@ -227,7 +278,7 @@ extension ChannelChattingViewModel {
         
         let requestModel = ChannelDetailRequestModel(
             workSpaceId: self.workSpaceId,
-            channelName: self.channelName
+            channelName: self.channelName ?? ""
         )
                 
         channelChattingUseCase.updateChannelInfo(
@@ -242,7 +293,7 @@ extension ChannelChattingViewModel {
         let requestModel = ChannelDetailFullRequestModel(
             workSpaceId: self.workSpaceId,
             channelId: self.channelId,
-            channelName: self.channelName
+            channelName: self.channelName ?? ""
         )
         
         self.lastChattingDate = channelChattingUseCase.checkLastDate(
@@ -267,13 +318,13 @@ extension ChannelChattingViewModel {
             
             requestModel = ChannelChattingRequestModel(
                 workSpaceId: workSpaceId,
-                channelName: channelName,
+                channelName: channelName ?? "",
                 cursor_date: targetDate.toString(of: .toAPI)
             )
         } else {
             requestModel = ChannelChattingRequestModel(
                 workSpaceId: workSpaceId,
-                channelName: channelName,
+                channelName: channelName ?? "",
                 cursor_date: Date().toString(of: .toAPI)
                 // 기존에 빈 문자열 넣는 거에서 수정.
                 // 만약 채팅방을 새로 들어가서 디비에 읽은 애들이 없다면, 얘가 소속되기 전 채팅들은 굳이 네트워크 콜로 보낼 필요가 없다.
@@ -383,7 +434,7 @@ extension ChannelChattingViewModel {
         let requestModel = ChannelDetailFullRequestModel(
             workSpaceId: self.workSpaceId,
             channelId: self.channelId,
-            channelName: self.channelName
+            channelName: self.channelName ?? ""
         )
         
         let allNextArr = channelChattingUseCase.fetchAllNextData(
@@ -416,7 +467,7 @@ extension ChannelChattingViewModel {
         let requestModel = ChannelDetailFullRequestModel(
             workSpaceId: self.workSpaceId,
             channelId: self.channelId,
-            channelName: self.channelName
+            channelName: self.channelName ?? ""
         )
         
         let previousArr = channelChattingUseCase.fetchPreviousData(
@@ -451,7 +502,7 @@ extension ChannelChattingViewModel {
         let requestModel = ChannelDetailFullRequestModel(
             workSpaceId: self.workSpaceId,
             channelId: self.channelId,
-            channelName: self.channelName
+            channelName: self.channelName ?? ""
         )
         
         let nextArr = channelChattingUseCase.fetchNextData(
@@ -486,7 +537,7 @@ extension ChannelChattingViewModel {
 extension ChannelChattingViewModel {
     // 채널 이름
     func nameOfChannel() -> String {
-        return self.channelName
+        return self.channelName ?? ""
     }
     
     // 채팅 아이템의 개수
@@ -579,7 +630,7 @@ extension ChannelChattingViewModel {
 }
 
 
-// Push Notification
+// Push Notification 대응
 extension ChannelChattingViewModel {
     // 현재 보고 있는 채널 채팅 아이디 업데이트
     func setNewCurrentChannelID() {

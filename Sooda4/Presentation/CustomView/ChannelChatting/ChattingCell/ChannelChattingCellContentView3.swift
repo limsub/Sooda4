@@ -174,11 +174,11 @@ class ChannelChattingCellContentView3: BaseView {
             }
         }
         
-        print("*------------------------*")
-        print("파일 배열 : ", fileArr)
-        print("이미지 배열 : ", imageArr)
-        print("이미지 배열 Empty : ", imageArr.isEmpty)
-        print("*------------------------*")
+//        print("*------------------------*")
+//        print("파일 배열 : ", fileArr)
+//        print("이미지 배열 : ", imageArr)
+//        print("이미지 배열 Empty : ", imageArr.isEmpty)
+//        print("*------------------------*")
         
         // 이미지 뷰 업데이트
         self.sampleView.updateView(imageArr)
