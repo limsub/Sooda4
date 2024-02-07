@@ -45,3 +45,17 @@ struct EmailLoginResponseModel {
 }
 
 
+/* === 카카오 로그인 === */
+struct KakaoLoginRequestModel {
+    let oauthToken: String
+    let deviceToken: String
+}
+// 응답 모델은 SignUpResponseModel 사용
+
+/* === 애플 로그인 === */
+struct AppleLoginRequestModel {
+    let idToken: String
+    let nickname: String
+    let deviceToken: String
+}
+// 응답 모델은 SignUpResponseModel 사용

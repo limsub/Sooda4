@@ -81,6 +81,14 @@ class SelectAuthViewModel: BaseViewModelType {
             .subscribe(with: self) { owner , response in
                 print("**** 결과 ****")
                 print(response)
+                
+                switch response {
+                case .success(let oAuthToken):
+                    print("카카오 로그인 성공 : \(oAuthToken)")
+                    
+                case .failure(let error):
+                    print("카카오 로그인 에러 : \(error.localizedDescription)")
+                }
             }
             .disposed(by: disposeBag)
 

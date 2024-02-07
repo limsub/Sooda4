@@ -73,6 +73,38 @@ extension SignInResponseDTO {
 }
 
 
+/* ========== 카카오 로그인 ========== */
+struct KakaoLoginRequestDTO: Encodable {
+    let oauthToken: String
+    let deviceToken: String
+}
+extension KakaoLoginRequestDTO {
+    init(_ model: KakaoLoginRequestModel) {
+        self.oauthToken = model.oauthToken
+        self.deviceToken = model.deviceToken
+    }
+}
+typealias KakaoLoginResponseDTO = SignUpResponseDTO
+
+
+
+/* ========== 애플 로그인 ========== */
+struct AppleLoginRequestDTO: Encodable {
+    let idToken: String
+    let nickname: String
+    let deviceToken: String
+}
+extension AppleLoginRequestDTO {
+    init(_ model: AppleLoginRequestModel) {
+        self.idToken = model.idToken
+        self.nickname = model.nickname
+        self.deviceToken = model.deviceToken
+    }
+}
+typealias AppleLoginResponseDTO = SignUpResponseDTO
+
+
+
 
 /* ========== FCM deviceToken 저장 ========== */
 struct DeviceTokenUpdateRequestDTO {
