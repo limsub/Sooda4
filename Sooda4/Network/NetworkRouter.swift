@@ -18,6 +18,9 @@ enum NetworkRouter: URLRequestConvertible {
     case checkValidEmail(_ sender: CheckEmailValidationRequestDTO)
     case emailLoginRequest(_ sender: SignInRequestDTO)
     
+    case kakaoLoginRequest(_ sender: KakaoLoginRequestDTO)
+    case appleLoginRequest(_ sender: AppleLoginRequestDTO)
+    
     case logoutRequest
     case updateDeviceToken(_ sender: DeviceTokenUpdateRequestDTO)
     case myProfileInfo
@@ -79,6 +82,10 @@ enum NetworkRouter: URLRequestConvertible {
             return "/v1/users/join"
         case .emailLoginRequest:
             return "/v1/users/login"
+        case .kakaoLoginRequest:
+            return "/v1/users/login/kakao"
+        case .appleLoginRequest:
+            return "/v1/users/login/apple"
         case .logoutRequest:
             return "/v1/users/logout"
         case .updateDeviceToken:
@@ -197,7 +204,7 @@ enum NetworkRouter: URLRequestConvertible {
             return .get
             
         // USER
-        case .checkValidEmail, .requestSignUp, .emailLoginRequest, .updateDeviceToken:
+        case .checkValidEmail, .requestSignUp, .emailLoginRequest, .kakaoLoginRequest, .appleLoginRequest, .updateDeviceToken:
             return .post
         case .myProfileInfo, .logoutRequest:
             return .get
@@ -242,6 +249,7 @@ enum NetworkRouter: URLRequestConvertible {
     /* === 5. parameter === */
     var parameter: [String: Any] {
         switch self {
+        // USER
         case .checkValidEmail(let sender):
             return [
                 "email": sender.email
@@ -259,6 +267,17 @@ enum NetworkRouter: URLRequestConvertible {
                 "email": sender.email,
                 "password": sender.password,
                 "deviceToken": sender.deviceToken //"hi" // "eN8BkT3XdU6LrUWbglBn5C:APA91bEre8W2-QenfT-IcUDoQZVgIt70e39kjZBz45ORNeYOsLj2HZOuNmUjRpX--Iwwgb5BHkn9efG-DV7aGZwEEQKu9o4U8p7iTseHq9523Moyl29T7wK0UGuAXofnICOUK23IQ7oh" //sender.deviceToken
+            ]
+        case .kakaoLoginRequest(let sender):
+            return [
+                "oauthToken": sender.oauthToken,
+                "deviceToken": sender.deviceToken
+            ]
+        case .appleLoginRequest(let sender):
+            return [
+                "idToken": sender.idToken,
+                "nickname": sender.nickname,
+                "deviceToken": sender.deviceToken
             ]
         case .updateDeviceToken(let sender):
             return [
