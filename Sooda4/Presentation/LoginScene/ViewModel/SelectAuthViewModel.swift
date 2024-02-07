@@ -16,8 +16,9 @@ import RxKakaoSDKAuth
 import KakaoSDKUser
 import RxKakaoSDKUser
 
+import AuthenticationServices
 
-class SelectAuthViewModel: BaseViewModelType {
+class SelectAuthViewModel: NSObject, BaseViewModelType {
     
     private var disposeBag = DisposeBag()
     
@@ -57,6 +58,11 @@ class SelectAuthViewModel: BaseViewModelType {
     func transform(_ input: Input) -> Output {
         
         // 1. 애플 로그인
+        input.appleLoginButtonClicked
+            .subscribe(with: self) { owner , _ in
+                owner.performAppleLogin()
+            }
+            .disposed(by: disposeBag)
         
         // 2. 카카오 로그인
         input.kakaoLoginButtonClicked
@@ -164,6 +170,44 @@ class SelectAuthViewModel: BaseViewModelType {
         
         
         return Output(result: "")
+    }
+}
+
+// 애플 로그인
+extension SelectAuthViewModel: ASAuthorizationControllerDelegate {
+    private func performAppleLogin() {
+        let provider = ASAuthorizationAppleIDProvider()
+        let request = provider.createRequest()
+        request.requestedScopes = [.email, .fullName]
+        
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        controller.delegate = self
+        controller.performRequests()
+    }
+    
+    // 로그인 성공
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        print("애플 로그인 성공")
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential
+    
+        {
+            
+            if let identityTokenData = appleIDCredential.identityToken {
+                let identityTokenString = String(data: identityTokenData, encoding: .utf8)
+                // 이제 identityTokenString에 문자열 형태의 토큰이 저장됩니다.
+                print("info : ", identityTokenString)
+            } else {
+                print("디코딩 실패")
+            }
+            
+//            print("info : ", appleIDCredential)
+        }
+    }
+    
+    // 로그인 실패
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        print("애플 로그인 실패")
+        print("Apple Login In Error : \(error.localizedDescription)")
     }
 }
 
