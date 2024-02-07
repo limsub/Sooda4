@@ -9,6 +9,14 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+import KakaoSDKCommon
+import RxKakaoSDKCommon
+import KakaoSDKAuth
+import RxKakaoSDKAuth
+import KakaoSDKUser
+import RxKakaoSDKUser
+
+
 class SelectAuthViewModel: BaseViewModelType {
     
     private var disposeBag = DisposeBag()
