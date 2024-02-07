@@ -27,7 +27,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         appCoordinator = AppCoordinator(nav)
         appCoordinator?.start()
+//        appCoordinator?.showDirectChannelChattingView(
+//            workSpaceId: 152,
+//            channelId: 203,
+//            channelName: "ababc"
+//        )
+        
+        
+        // 노티 등록
+        setNotification()
     }
+    
+
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -84,10 +95,61 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         } else {
             socketManager.shouldReconnect = false
         }
-        
-        
     }
-
-
 }
 
+
+extension SceneDelegate {
+    
+    // push notification 클릭해서 AppCoordinator로 접근이 필요한 경우!
+}
+
+
+// private func
+extension SceneDelegate {
+    
+    // push notification을 클릭했다는 notification 받기 위함
+    private func setNotification() {
+        // 1. 채널 채팅
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(channelChatPushClicked),
+            name: Notification.Name("channelChattingPushNotification"),
+            object: nil
+        )
+        
+        // 2. 디엠 채팅
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(dmChatPushClicked),
+            name: Notification.Name("dmChattingPushNotification"),
+            object: nil
+        )
+    }
+    
+    
+    // 1. 채널 채팅
+    @objc
+    private func channelChatPushClicked(_ notification: Notification) {
+        print(#function)
+    }
+    
+    
+    // 2. 디엠 채팅
+    @objc
+    private func dmChatPushClicked(_ notification: Notification) {
+        print(#function)
+    }
+    
+    
+    @objc func a(_ notification: Notification) {
+        print("노티받음!!!")
+        print("hihihi")
+        if let userInfo = notification.userInfo {
+            let a = userInfo["a"]
+            let b = userInfo["b"]
+            
+            print("a : \(a) b : \(b)")
+        }
+    }
+}

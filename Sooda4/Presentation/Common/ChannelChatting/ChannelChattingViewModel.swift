@@ -208,6 +208,7 @@ class ChannelChattingViewModel {
                 self.notLoadScrollPagination = false
             }
         }
+        
     }
 }
 

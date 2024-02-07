@@ -54,6 +54,8 @@ class TabBarCoordinator: NSObject, TabBarCoordinatorProtocol {
         }
         
         prepareTabBarController(with: controllers)
+        
+        print("*****", childCoordinators)
     }
 
     

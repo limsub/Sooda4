@@ -18,6 +18,10 @@ protocol AppCoordinatorProtocol: Coordinator {
     func showLoginFlow()
     func showHomeEmptyFlow()
     func showTabBarFlow(workSpaceId: Int)
+    
+    
+    // direct show view (Push Notification click)
+    func showDirectChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String)
 }
 
 // MARK: - App Coordinator Class
@@ -81,6 +85,55 @@ class AppCoordinator: AppCoordinatorProtocol {
         tabBarCoordinator.workSpaceId = workSpaceId
         childCoordinators.append(tabBarCoordinator)
         tabBarCoordinator.start()
+    }
+    
+    func showDirectChannelChattingView(
+        workSpaceId: Int,
+        channelId: Int,
+        channelName: String
+    ) {
+        print(#function)
+        
+        /*
+        1. AppCoordinator child removeAll
+
+        2. AppCoordinator showTabbarFlow(workspaceId: Int)
+
+        3. TabbarCoordinator prepareTabBarController(selectedItem = 0)
+
+        // channel
+        4 - 1. HomeDefaultCoordinator showChannelChatting
+
+        //dm
+        4 - 2. HomeDefaultCoordinator showDMChatting
+*/
+        
+        // 1. child coordinator removeAll
+        childCoordinators.removeAll()
+        navigationController.viewControllers.removeAll()
+        
+        // 2. show tabBar flow
+        let tabBarCoordinator = TabBarCoordinator(navigationController)
+        tabBarCoordinator.finishDelegate = self
+        tabBarCoordinator.workSpaceId = workSpaceId
+        childCoordinators.append(tabBarCoordinator)
+        tabBarCoordinator.start()
+        // (-> homeDefaultCoordinator start)
+        
+        
+        // 3. HomeDefaultCoordinator show ChannelChatting
+        for i in 0...3 {
+            if let homeDefaultCoordinator =  tabBarCoordinator.childCoordinators[i] as? HomeDefaultSceneCoordinatorProtocol {
+                
+                homeDefaultCoordinator.showChannelChattingView(
+                    workSpaceId: workSpaceId,
+                    channelId: channelId,
+                    channelName: channelName
+                )
+            }
+        }
+        
+        
     }
     
     deinit {

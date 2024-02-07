@@ -21,22 +21,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         FirebaseApp.configure()
         
-        // Firebase Message
-        
-        // 알림 허용 확인
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .providesAppNotificationSettings]) { didAllow, error  in
-            print("Notification Authorization : \(didAllow)")
-        }
-        
         UNUserNotificationCenter.current().delegate = self
+//        application.delegate = self
         
         Messaging.messaging().delegate = self
         
         
+        // 알림 허용 확인
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge, .providesAppNotificationSettings]) { didAllow, error  in
+            print("Notification Authorization : \(didAllow)")
+        }
+        
+
+        
         // APNs와 함께 앱을 등록하고 전역적으로 고유한 기기 토큰을 받아야 한다
         // 애플이 제공한 API를 사용해서 앱이 launch될 때마다 앱을 등록하고 기기 토큰을 받는다
         // registerForRemoteNotifications() 메서드를 호출하고, 등록이 성공적이면 didRegisterForRemoteNotificationsWithDeviceToken 메서드에서 토큰 받는다.
+//        application.unregisterForRemoteNotifications()
+//        print(application.isRegisteredForRemoteNotifications)
         application.registerForRemoteNotifications()
+        print(application.isRegisteredForRemoteNotifications)
+        // 둘 다 true 출력....?
+        
+        
+        
+        
 
 
         
@@ -48,6 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ////            self.fcmRegTokenMessage.text  = "Remote FCM registration token: \(token)"
 //          }
 //        }
+        
+
         
         
         return true
@@ -66,13 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
-//    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-//        print("----- device token -----")
-//        print(deviceToken)
-//        print("------------------------")
-//    }
-    
     
     func applicationDidEnterBackground(_ application: UIApplication) {
         print(#function)
@@ -93,15 +98,32 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         Messaging.messaging().apnsToken = deviceToken
     }
     
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print(#function)
+        print(error)
+    }
+    
     
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let firebaseToken = fcmToken ?? "No Token"
         print("firebase token : \(firebaseToken)")
         
+        // 2/7 09:08
+        // token : d9QeOO5pskQKgSBCB4RQxz:APA91bFclvzOnbxo-rWMhDoPPgu9-i5Q0W_XqM514FhSBmAJfwN4tZ_rVOYmFVMMfSRwDYM96Bp0zgwNTZz9S62TE6uYCNf3a_RwhTg1tU4Ve5j6mLsqD-_AedqmQueYTVCFVuDDIeGb
+        
+        print(Messaging.messaging().apnsToken)  // nil 출력..
+        
         
         UserDefaults.standard.set(firebaseToken, forKey: "hi")
         
+        
+//        let dataDict: [String: String] = ["token": fcmToken ?? ""]
+//        NotificationCenter.default.post(
+//          name: Notification.Name("FCMToken"),
+//          object: nil,
+//          userInfo: dataDict
+//        )
 
         
         
@@ -118,16 +140,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         print("********\(#function)********")
         
 
-        guard let userInfo = notification.request.content.userInfo as? [String: Any],
-              let jsonData = try? JSONSerialization.data(withJSONObject: userInfo)
-        else { return }
+        guard let userInfo = notification.request.content.userInfo as? [String: Any] else { return }
         
         // push 알림이 오지 말아야 하는 경우
         // - 현재 접속한 채팅방의 톡 알림
         
         
         // 1. 채널 채팅인 경우
-        if let channelChatInfo: PushChannelChattingDTO = self.decodingData(data: jsonData) {
+        if let channelChatInfo: PushChannelChattingDTO = self.decodingData(userInfo: userInfo) {
             print("1. 채널 채팅 푸시 알림 디코딩 성공!")
             
             // 현재 보고 있는 채팅방인지 확인
@@ -138,7 +158,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         
         
         // 2. 디엠 채팅인 경우
-        if let dmChatInfo: PushDMChattingDTO = self.decodingData(data: jsonData) {
+        if let dmChatInfo: PushDMChattingDTO = self.decodingData(userInfo: userInfo) {
             print("1. 디엠 채팅 푸시 알림 디코딩 성공!")
             
             // 현재 보고 있는 채팅방인지 확인
@@ -153,8 +173,58 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         print("********\(#function)********")
         
+        
+        guard let userInfo = response.notification.request.content.userInfo as? [String: Any] else { return }
+        
+        print("푸시 클릭!")
+        
+        // 1. 채널 채팅인 경우
+        if let channelChatInfo: PushChannelChattingDTO = self.decodingData(userInfo: userInfo) {
+            print("1. 채널 채팅 푸시 알림 디코딩 성공!")
+            // 채널 아이디랑 워크스페이스 아이디 넘겨줌
+            // (채널 이름을 어떻게 해야하지...하)
+            
+            let userInfo: [String: Any] = [
+                "channelId": channelChatInfo.channel_id,
+                "workspaceId": channelChatInfo.workspace_id
+            ]
+
+            NotificationCenter.default.post(
+                name: Notification.Name("channelChattingPushNotification"),
+                object: nil,
+                userInfo: userInfo
+            )
+            
+        }
+        
+        
+        // 2. 디엠 채팅인 경우
+        if let dmChatInfo: PushDMChattingDTO = self.decodingData(userInfo: userInfo) {
+            print("1. 디엠 채팅 푸시 알림 디코딩 성공!")
+            // 상대방 유저 아이디랑 워크스페이스 아이디 넘겨줌
+            
+            let userInfo: [String: Any] = [
+                "opponenetId": dmChatInfo.opponent_id,
+                "workspaceId": dmChatInfo.workspace_id
+            ]
+            
+            NotificationCenter.default.post(
+                name: Notification.Name("dmChattingPushNotification"),
+                object: nil,
+                userInfo: userInfo
+            )
+        }
+        
+        
+        
+        
+//        print(jsonData)
+        
         // 푸시 알림 클릭 시.
         // - 해당하는 채팅방 화면으로 이동
+        
+        // 1. 채널 채팅인 경우
+        
         
         completionHandler()
     }
@@ -164,9 +234,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
 // private func
 extension AppDelegate {
     // 채널 or 디엠 채팅 디코딩
-    private func decodingData<T: Decodable>(data: Data) -> T? {
-        return try? JSONDecoder().decode(T.self, from: data)
+    private func decodingData<T: Decodable>(userInfo: [String: Any]) -> T? {
+        if let jsonData = try? JSONSerialization.data(withJSONObject: userInfo),
+           let decodedData = try? JSONDecoder().decode(T.self, from: jsonData) {
+            return decodedData
+        }
+        
+        return nil
     }
+    
     
     /* ===== will Present ===== */
     // 현재 보고 있는 채널 채팅방인지 확인
