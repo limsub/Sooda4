@@ -11,6 +11,10 @@ import Firebase
 import FirebaseAnalytics
 import FirebaseMessaging
 
+
+import RxKakaoSDKCommon
+
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -64,6 +68,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserDefaultsManager.currentDMOpponentID = -1
         
 
+        
+        // 카카오 로그인
+        let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] ?? ""
+        RxKakaoSDK.initSDK(appKey: kakaoAppKey as! String)
         
         
         return true
@@ -237,6 +245,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
         completionHandler()
     }
 }
+
+
+
 
 
 // private func

@@ -50,6 +50,30 @@ class SelectAuthViewModel: BaseViewModelType {
         
         // 2. 카카오 로그인
         
+        let a = UserApi.shared.rx.loginWithKakaoAccount()
+        
+        input.appleLoginButtonClicked
+            .subscribe(with: self) { [self] owner , _ in
+                
+                if UserApi.isKakaoTalkLoginAvailable() {
+                    UserApi.shared.rx.loginWithKakaoTalk()
+                        .subscribe(with: self) { owner , oauthToken in
+                            print("loginWithKakaoTalk Success")
+                            
+                            
+                        }
+                        .disposed(by: disposeBag)
+                } else {
+                    UserApi.shared.rx.loginWithKakaoAccount()
+                        .subscribe(with: self) { owner , oauthToken in
+                            print("loginWithKakaoAccount Success")
+                        }
+                        .disposed(by: disposeBag)
+                }
+                
+            }
+            .disposed(by: disposeBag)
+        
         // 3. 이메일 로그인
         input.emailLoginButtonClicked
             .subscribe(with: self) { owner , _ in

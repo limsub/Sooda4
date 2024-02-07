@@ -7,6 +7,9 @@
 
 import UIKit
 
+import RxKakaoSDKAuth
+import KakaoSDKAuth
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -98,6 +101,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate {
     
     // push notification 클릭해서 AppCoordinator로 접근이 필요한 경우!
+}
+
+// 카카오 로그인
+extension SceneDelegate {
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            if AuthApi.isKakaoTalkLoginUrl(url) {
+                _ = AuthController.rx.handleOpenUrl(url: url)
+            }
+        }
+    }
 }
 
 
