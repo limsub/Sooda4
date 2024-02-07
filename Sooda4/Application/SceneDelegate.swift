@@ -132,6 +132,10 @@ extension SceneDelegate {
     @objc
     private func channelChatPushClicked(_ notification: Notification) {
         print(#function)
+        
+//        if let userInfo = notification.userInfo {
+//            let channelName =
+//        }
     }
     
     

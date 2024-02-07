@@ -59,6 +59,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //          }
 //        }
         
+        
+        UserDefaultsManager.currentChannelID = -1
+        UserDefaultsManager.currentDMOpponentID = -1
+        
 
         
         
