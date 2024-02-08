@@ -120,7 +120,7 @@ struct MyProfileInfoDTO: Decodable {
     let email: String
     let nickname: String
     let profileImage: String?
-    let phone: String
+    let phone: String?
     let vendor: String?
     let sesacCoin: Int
     let createdAt: String

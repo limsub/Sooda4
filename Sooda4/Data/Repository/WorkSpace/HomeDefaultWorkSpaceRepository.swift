@@ -78,6 +78,8 @@ class HomeDefaultWorkSpaceRepository: MyWorkSpaceRepositoryProtocol {
                     let responseModel = dtoData.toDomain()
                     completion(.success(responseModel))
                 case .failure(let networkError):
+                    print("***** 프로필 정보 조회 에러 ***** ")
+                    print(networkError)
                     completion(.failure(networkError))
                 }
             }

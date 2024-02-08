@@ -78,8 +78,7 @@ class SelectAuthViewModel: NSObject, BaseViewModelType {
             }
             .filter { response in
                 print("**** 결과 ****")
-                print(response)
-                
+
                 switch response {
                 case .success(let model):
                     
