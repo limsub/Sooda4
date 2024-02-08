@@ -75,6 +75,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RxKakaoSDK.initSDK(appKey: kakaoAppKey as! String)
         
         
+        
+        
+
+        
+        /* pagination test */
+        for i in 0...99 {
+            let dto = MakeChannelChattingRequestDTO(
+                channelName: "오아아아qq",
+                workSpaceId: 152,
+                content: "test - \(i)",
+                files: []
+            )
+            
+            NetworkManager.shared.requestCompletionMultipart(
+                type: MakeChannelChattingResponseDTO.self,
+                api: .makeChannelChatting(dto)) { response in
+                    print(response)
+                }
+        }
+        
         return true
     }
 

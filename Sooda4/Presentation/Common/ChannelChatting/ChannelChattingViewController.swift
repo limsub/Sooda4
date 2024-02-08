@@ -41,18 +41,42 @@ final class ChannelChattingViewController: BaseViewController {
     /* ===== life cycle ===== */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        // 채널 이름이 없을 때 대응!! - 푸시 눌러서 바로 들어온 경우
+        if viewModel.nameOfChannel() == nil {
+            print("채널 이름이 없다!! 푸시 눌러서 넘어왔나봄!!")
+            // 먼저 채널 이름 불러오고 시작함
+            viewModel.setChannelName {
+                self.setNavigation(self.viewModel.nameOfChannel()!)
+                self.setNavigationButton()
+                
+                self.setPlusButton()
+                self.setTableView()
+                self.setTextView()
+                self.setNewMessageToastView()
+                
+                self.bindVM()
+                
+                self.startObservingKeyboard()
+            }
+            
+        } else {
+            print("채널 이름이 있다!! 정상적으로 넘어왔나봄!!")
+            self.setNavigation(self.viewModel.nameOfChannel()!)
+            self.setNavigationButton()
+            
+            self.setPlusButton()
+            self.setTableView()
+            self.setTextView()
+            self.setNewMessageToastView()
+            
+            self.bindVM()
+            
+            self.startObservingKeyboard()
+        }
 
-        setNavigation(viewModel.nameOfChannel())
-        setNavigationButton()
-        
-        setPlusButton()
-        setTableView()
-        setTextView()
-        setNewMessageToastView()
-        
-        bindVM()
-        
-        startObservingKeyboard()
+
         
     }
     
@@ -286,6 +310,7 @@ final class ChannelChattingViewController: BaseViewController {
                 // 1. 스크롤 위치가 바닥이라는 건, 당연히 pagination이 모두 끝났어야 함. (안끝났으면 그게 이상)
                     // (1). 디비에 newChat 저장  (2). chatArr에 newChat 붙이고  (3). tableView reload  (4). scrollToBottom
                 if !showToastView { // (isDone은 당연히 true)
+                    print("case 1. 스크롤 위치가 바닥이다")
                     // (1). -> VM
                     // (2). -> VM
                     // (3).
@@ -297,6 +322,7 @@ final class ChannelChattingViewController: BaseViewController {
                 // 2. 스크롤 위치가 위, pagination 모두 끝남
                     // (1). 디비에 newChat 저장  (2). chatArr에 newChat 붙이고  (3). tableView reload  (4). showNewMessageToastView
                 if showToastView && isDone {
+                    print("case 2. 스크롤 위치가 위, pagination 모두 끝남")
                     // (1). -> VM
                     // (2). -> VM
                     // (3).
@@ -308,6 +334,7 @@ final class ChannelChattingViewController: BaseViewController {
                 // 3. 스크롤 위치가 위, pagination 아직 안끝남
                     // (1). 디비에 newChat 저장 (2). showNewMessageToastView
                 if showToastView && !isDone {
+                    print("case 3. 스크롤 위치가 위, pagination 아직 안끝남")
                     // (1). -> VM
                     // (2).
                     owner.mainView.newMessageView.setUpView(newChat)
@@ -809,7 +836,7 @@ extension ChannelChattingViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         
-        print(indexPaths)
+//        print(indexPaths)
         
     }
     

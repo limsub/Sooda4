@@ -242,7 +242,7 @@ class ChannelChattingViewModel {
 
 // (임시!!!) 워크스페이스 아이디, 채널 아이디 통해서 채널 이름 찾기
 extension ChannelChattingViewModel {
-    private func setChannelName(completion: @escaping () -> Void) {
+    func setChannelName(completion: @escaping () -> Void) {
         
         NetworkManager.shared.requestCompletion(
             type: MyOneWorkSpaceResponseDTO.self,
@@ -505,6 +505,8 @@ extension ChannelChattingViewModel {
             channelName: self.channelName ?? ""
         )
         
+        /* realm에서 꺼내기 때문에 따로 completion x */
+        
         let nextArr = channelChattingUseCase.fetchNextData(
             requestModel: requestModel,
             targetDate: targetDate
@@ -517,12 +519,19 @@ extension ChannelChattingViewModel {
         chatArr.append(contentsOf: nextArr)
         
         // 더 이상 pagination이 가능한지 여부 판단
-        isDoneNextPagination = nextArr.isEmpty
+        let moreNextArr = channelChattingUseCase.fetchNextData(
+            requestModel: requestModel,
+            targetDate: nextOffsetTargetDate
+        )
+        isDoneNextPagination = moreNextArr.isEmpty
+        
+//        isDoneNextPagination = nextArr.isEmpty
         
         print("--------------- fetchNextData 실행 결과 ---------------")
         nextArr.forEach { chat in
             print("\(chat.createdAt)  \(chat.content)  \(chat.userName)")
         }
+        print("이 뒤에 더 남아있는 배열 : \(moreNextArr)")
         print("이제 pagination 불가능? : \(isDoneNextPagination)")
         print("----------------------------------------------------------")
         
@@ -536,8 +545,8 @@ extension ChannelChattingViewModel {
 // VC
 extension ChannelChattingViewModel {
     // 채널 이름
-    func nameOfChannel() -> String {
-        return self.channelName ?? ""
+    func nameOfChannel() -> String? {
+        return self.channelName
     }
     
     // 채팅 아이템의 개수
@@ -620,7 +629,10 @@ extension ChannelChattingViewModel {
                 
                 // 2. 아래 pagination이 모두 끝난 상태일 때만 배열 뒤에 붙여줌.
                 if self.isDoneNextPagination {
+                    print("현재 아래 pagination이 모두 끝난 상태이기 때문에 배열 뒤에 붙여줌")
                     self.chatArr.append(newData)
+                } else {
+                    print("현재 아래 pagination이 모두 끝나지 않았기 때문에 배열 뒤에는 붙이지 않는다")
                 }
                 
                 // 3. 뷰컨에 newChat 전달

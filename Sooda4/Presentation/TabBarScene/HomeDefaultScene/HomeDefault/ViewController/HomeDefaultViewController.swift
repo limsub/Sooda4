@@ -85,6 +85,8 @@ class HomeDefaultViewController: BaseViewController {
         
 
         
+
+        
         
         fetchFirstData()
     
