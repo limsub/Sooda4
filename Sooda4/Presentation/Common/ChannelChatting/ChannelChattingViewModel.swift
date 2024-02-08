@@ -31,7 +31,7 @@ class ChannelChattingViewModel {
     
     private var lastChattingDate: Date? // 안읽은 채팅의 기준이 되는 날짜. (얘 포함 이전 날짜)
     private var chatArr: [ChannelChattingInfoModel] = []   // 채팅 테이블뷰에 보여줄 데이터
-//    var seperatorIndex: Int?    // "여기까지 읽었습니다" 셀이 들어갈 위치
+
     
     var didSendEventClosure: ( (ChannelChattingViewModel.Event) -> Void )?
     
@@ -486,13 +486,20 @@ extension ChannelChattingViewModel {
         chatArr.insert(contentsOf: previousArr, at: 0)
         
         // 더이상 pagination이 가능한지 여부 판단
-        isDonePreviousPagination = previousArr.isEmpty
+        let morePreviousArr = channelChattingUseCase.fetchPreviousData(
+            requestModel: requestModel,
+            targetDate: previousOffsetTargetDate,
+            isFirst: isFirst
+        )
+        isDonePreviousPagination = morePreviousArr.isEmpty
         
         
         print("----- fetchPreviousData 실행 결과 isFirst : \(isFirst) -----")
         previousArr.forEach { chat in
             print("\(chat.createdAt)  \(chat.content)  \(chat.userName)")
         }
+        
+        print("이 앞에 더 남아있는 배열 : \(morePreviousArr)")
         print("이제 pagination 불가능? : \(isDonePreviousPagination)")
         print("----------------------------------------------------------")
         
@@ -527,8 +534,6 @@ extension ChannelChattingViewModel {
             targetDate: nextOffsetTargetDate
         )
         isDoneNextPagination = moreNextArr.isEmpty
-        
-//        isDoneNextPagination = nextArr.isEmpty
         
         print("--------------- fetchNextData 실행 결과 ---------------")
         nextArr.forEach { chat in

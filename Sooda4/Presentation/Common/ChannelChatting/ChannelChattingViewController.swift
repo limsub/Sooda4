@@ -278,6 +278,7 @@ final class ChannelChattingViewController: BaseViewController {
                     
                     
                     // 3.
+                    // 이 때도 역시, 디비에 남은 애들 다 꺼내고 난 후에 bottom으로 보내줘야 함 (toastView 클릭 시와 동일)
                     owner.tableViewScrollToBottom()
                     
                     
