@@ -84,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let dto = MakeChannelChattingRequestDTO(
                 channelName: "오아아아qq",
                 workSpaceId: 152,
-                content: "test - \(i)",
+                content: "test3 - \(i)",
                 files: []
             )
             
