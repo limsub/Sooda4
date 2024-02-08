@@ -276,7 +276,7 @@ enum NetworkRouter: URLRequestConvertible {
         case .appleLoginRequest(let sender):
             return [
                 "idToken": sender.idToken,
-                "nickname": sender.nickname,
+//                "nickname": sender.nickname,
                 "deviceToken": sender.deviceToken
             ]
         case .updateDeviceToken(let sender):

@@ -28,6 +28,8 @@ class SelectAuthViewModel: NSObject, BaseViewModelType {
     // Coordinator에게 어떤 화면으로 전환할지 요청
     var didSendEventClosure: ( (SelectAuthViewModel.Event) -> Void)?
     
+    var appleLoginSucess = PublishSubject<String>()
+    
     init(socialLoginUseCase: SocialLoginUseCaseProtocol,
          myWorkspaceUseCase: WorkSpaceUseCaseProtocol
     ) {
@@ -63,6 +65,61 @@ class SelectAuthViewModel: NSObject, BaseViewModelType {
                 owner.performAppleLogin()
             }
             .disposed(by: disposeBag)
+        
+        appleLoginSucess
+            .flatMap {
+                let requestModel = AppleLoginRequestModel(
+                    idToken: $0,
+                    nickname: "",
+                    deviceToken: UserDefaults.standard.string(forKey: "hi")!
+                )
+                
+                return self.socialLoginUseCase.appleLoginRequest(requestModel)
+            }
+            .filter { response in
+                print("**** 결과 ****")
+                print(response)
+                
+                switch response {
+                case .success(let model):
+                    
+                    // 키체인 업데이트
+                    KeychainStorage.shared.accessToken = model.token.accessToken
+                    KeychainStorage.shared.refreshToken = model.token.refreshToken
+                    KeychainStorage.shared._id = model.userId
+                    
+                    print("--- 토큰 업데이트 ---")
+                    KeychainStorage.shared.printTokens()
+                    
+                    return true
+                    
+                case .failure(let networkError):
+                    print(networkError)
+                    return false
+                }
+            }
+            .flatMap { value in
+                self.myWorkspaceUseCase.myWorkSpacesRequest()
+            }
+            .subscribe(with: self) { owner , response in
+                switch response {
+                case .success(let model):
+                    if model.isEmpty {
+                        print("소속된 워크스페이스 없음. go HomeEmpty")
+                        owner.didSendEventClosure?(.goHomeEmptyView)
+                    } else {
+                        print("소속된 워크스페이스 있음. go HomeDefault")
+                        let workspaceID = model[0].workSpaceId
+                        owner.didSendEventClosure?(.goHomeDefaultView(workspaceID: workspaceID))
+                    }
+                    
+                case .failure(let networkError):
+                    print(networkError)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        
         
         // 2. 카카오 로그인
         input.kakaoLoginButtonClicked
@@ -148,8 +205,6 @@ class SelectAuthViewModel: NSObject, BaseViewModelType {
                 case .failure(let networkError):
                     print(networkError)
                 }
-                
-                
             }
             .disposed(by: disposeBag)
 
@@ -188,20 +243,15 @@ extension SelectAuthViewModel: ASAuthorizationControllerDelegate {
     // 로그인 성공
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         print("애플 로그인 성공")
-        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential
-    
-        {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+           let identityTokenData = appleIDCredential.identityToken,
+           let identityTokenString = String(data: identityTokenData, encoding: .utf8) {
             
-            if let identityTokenData = appleIDCredential.identityToken {
-                let identityTokenString = String(data: identityTokenData, encoding: .utf8)
-                // 이제 identityTokenString에 문자열 형태의 토큰이 저장됩니다.
-                print("info : ", identityTokenString)
-            } else {
-                print("디코딩 실패")
-            }
-            
-//            print("info : ", appleIDCredential)
+            appleLoginSucess.onNext(identityTokenString)
+        } else {
+            print("디코딩 실패")
         }
+    
     }
     
     // 로그인 실패

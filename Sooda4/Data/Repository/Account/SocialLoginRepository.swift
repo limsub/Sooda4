@@ -36,8 +36,23 @@ class SocialLoginRepository: SocialLoginRepositoryProtocol {
     // 애플 로그인
     func appleLoginRequest(_ requestModel: AppleLoginRequestModel) -> Single<Result<AppleLoginResponseModel, NetworkError>> {
         
-        return Single.create { single in
-            return single(.failure(NetworkError.unknown(message: "hi"))) as! any Disposable
+        let dto = AppleLoginRequestDTO(requestModel)
+        
+        return NetworkManager.shared.request(
+            type: AppleLoginResponseDTO.self,
+            api: .appleLoginRequest(dto)
+        )
+        .map { response in
+            switch response {
+            case .success(let dtoData):
+                let responseModel = dtoData.toDomain()
+                return .success(responseModel)
+                
+            case .failure(let networkError):
+                return .failure(networkError)
+                
+            }
         }
+
     }
 }

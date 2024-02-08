@@ -171,7 +171,7 @@ class HomeDefaultViewModel: BaseViewModelType {
                 self?.workSpaceInfo = data
                 
             case .failure(let networkError):
-                print("아직 에러 처리 안했으 에러 : \(networkError)")
+                print("아직 에러 처리 안했으1 에러 : \(networkError)")
             }
             
             group.leave()
@@ -191,7 +191,7 @@ class HomeDefaultViewModel: BaseViewModelType {
                     }
                 )
             case .failure(let networkError):
-                print("아직 에러 처리 안했으 에러 : \(networkError)")
+                print("아직 에러 처리 안했으2 에러 : \(networkError)")
             }
             
             group.leave()
@@ -212,7 +212,7 @@ class HomeDefaultViewModel: BaseViewModelType {
                     }
                 )
             case .failure(let networkError):
-                print("아직 에러 처리 안했으 에러 : \(networkError)")
+                print("아직 에러 처리 안했으3 에러 : \(networkError)")
             }
             
             group.leave()
@@ -225,7 +225,7 @@ class HomeDefaultViewModel: BaseViewModelType {
             case .success(let data):
                 self.myProfileInfo = data
             case .failure(let networkError):
-                print("아직 에러 처리 안했으 에러 : \(networkError)")
+                print("아직 에러 처리 안했으4 에러 : \(networkError)")
             }
             
             group.leave()
