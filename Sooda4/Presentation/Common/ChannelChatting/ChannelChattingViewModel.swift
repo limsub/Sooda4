@@ -356,7 +356,8 @@ extension ChannelChattingViewModel {
         // 3. 뒤에 (최대) 30개는 lastChattingDate를 포함하지 않은 읽은 채팅
         // 1, 3 모두 realm에서 가져온다
         
-        print("-- chatArr에 데이터 추가 --")
+        print("*****-- chatArr에 데이터 추가 --*****")
+        print("lastChattingDate : ", lastChattingDate)
         
         // 1.
         self.fetchPreviousData(self.lastChattingDate, isFirst: true)
@@ -460,7 +461,7 @@ extension ChannelChattingViewModel {
     }
 }
 
-// private func
+// private func (fetchData - realm)
 extension ChannelChattingViewModel {
     // 1. 초기 데이터 불러올 때      2. pagination할 때
     
@@ -486,13 +487,19 @@ extension ChannelChattingViewModel {
         chatArr.insert(contentsOf: previousArr, at: 0)
         
         // 더이상 pagination이 가능한지 여부 판단
-        let morePreviousArr = channelChattingUseCase.fetchPreviousData(
-            requestModel: requestModel,
-            targetDate: previousOffsetTargetDate,
-            isFirst: isFirst
-        )
-        isDonePreviousPagination = morePreviousArr.isEmpty
-        
+        // previousArr이 empty일 때는 예외처리 - 당연히 더이상 페이지네이션 불가
+        var morePreviousArr: [ChannelChattingInfoModel] = []
+        if previousArr.isEmpty {
+            isDonePreviousPagination = true
+        } else {
+            morePreviousArr = channelChattingUseCase.fetchPreviousData(
+                requestModel: requestModel,
+                targetDate: previousOffsetTargetDate,
+                isFirst: isFirst
+            )
+            isDonePreviousPagination = morePreviousArr.isEmpty
+        }
+
         
         print("----- fetchPreviousData 실행 결과 isFirst : \(isFirst) -----")
         previousArr.forEach { chat in
@@ -528,17 +535,28 @@ extension ChannelChattingViewModel {
         // 배열 뒤에 추가
         chatArr.append(contentsOf: nextArr)
         
+        
+        // 만약, nextArr가 빈 배열이라면, nextOffsetTargetDate는 nil이 되고,
+        // 이걸로 moreNextArr을 받으면 디비에 있는 모든 데이터를 받게 된다.
+        // 따라서, nextArr.isEmpty 일 때는 예외처리를 해준다.
         // 더 이상 pagination이 가능한지 여부 판단
-        let moreNextArr = channelChattingUseCase.fetchNextData(
-            requestModel: requestModel,
-            targetDate: nextOffsetTargetDate
-        )
-        isDoneNextPagination = moreNextArr.isEmpty
+        var moreNextArr: [ChannelChattingInfoModel] = []
+        
+        if nextArr.isEmpty {
+            isDoneNextPagination = true
+        } else {
+            moreNextArr = channelChattingUseCase.fetchNextData(
+                requestModel: requestModel,
+                targetDate: nextOffsetTargetDate
+            )
+            isDoneNextPagination = moreNextArr.isEmpty
+        }
         
         print("--------------- fetchNextData 실행 결과 ---------------")
         nextArr.forEach { chat in
             print("\(chat.createdAt)  \(chat.content)  \(chat.userName)")
         }
+        print("new nextOffsetTargetDate : ", nextOffsetTargetDate)
         print("이 뒤에 더 남아있는 배열 : \(moreNextArr)")
         print("이제 pagination 불가능? : \(isDoneNextPagination)")
         print("----------------------------------------------------------")
@@ -660,14 +678,6 @@ extension ChannelChattingViewModel {
     // 현재 보고 있는 채널 채팅 아이디 초기화
     func initCurrentChannelID() {
         UserDefaultsManager.currentChannelID = -1
-    }
-}
-
-
-// File Open
-extension ChannelChattingViewModel {
-    func openZip() {
-        
     }
 }
 
