@@ -24,6 +24,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        
+        
         FirebaseApp.configure()
         
         UNUserNotificationCenter.current().delegate = self
@@ -79,21 +81,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 
         
-        /* pagination test */
-        for i in 0...99 {
-            let dto = MakeChannelChattingRequestDTO(
-                channelName: "오아아아qq",
-                workSpaceId: 152,
-                content: "test3 - \(i)",
-                files: []
-            )
-            
-            NetworkManager.shared.requestCompletionMultipart(
-                type: MakeChannelChattingResponseDTO.self,
-                api: .makeChannelChatting(dto)) { response in
-                    print(response)
-                }
-        }
+//        /* pagination test */
+//        for i in 0...99 {
+//            let dto = MakeChannelChattingRequestDTO(
+//                channelName: "오아아아qq",
+//                workSpaceId: 152,
+//                content: "test3 - \(i)",
+//                files: []
+//            )
+//            
+//            NetworkManager.shared.requestCompletionMultipart(
+//                type: MakeChannelChattingResponseDTO.self,
+//                api: .makeChannelChatting(dto)) { response in
+//                    print(response)
+//                }
+//        }
+        
+        /* 날짜 테스트 */
+        print("***** 날짜 테스트 *****")
+        let a = "2024-02-07T09:55:13.303Z"
+        print("서버에서 주는 시간 : 2024-02-07T09:55:13.303Z")
+        print("이걸 toDate : \(a.toDate(to: .fromAPI))")
+        print("이걸 다시 toString : \(a.toDate(to: .fromAPI)?.toString(of: .toAPI))")
+        
+        print("현재 시간 : \(Date())")
+        print("이걸 toString : \(Date().toString(of: .toAPI))")
+        print("***** 날짜 테스트 *****")
         
         return true
     }

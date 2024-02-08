@@ -354,7 +354,6 @@ final class ChannelChattingViewController: BaseViewController {
         viewModel.loadData {
             self.mainView.chattingTableView.reloadData()
             self.tableViewScrollToSeperatorCell()
-            
         }
     }
 }

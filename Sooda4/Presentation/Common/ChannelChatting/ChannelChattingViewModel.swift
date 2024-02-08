@@ -193,7 +193,7 @@ class ChannelChattingViewModel {
         
         // -1 채널 이름이 없을 때 대응! (push 클릭해서 바로 넘어온 경우. push에서는 채널 이름을 주지 않는다..)
         if self.channelName == nil {
-            print("채널 이름이 없다!!! 푸시 눌러서 넘어왔나보다!!")
+            print("(이건 이제 실행 안됨. viewDidLoad에서 무조건 채널 이름 가져옴!) 채널 이름이 없다!!! 푸시 눌러서 넘어왔나보다!!")
             self.setChannelName {
                 // 0. 디비 업데이트! (서버에 저장된 최신 데이터)
                 self.updateChannelInfoRealm {
@@ -230,7 +230,7 @@ class ChannelChattingViewModel {
                     
                     // 3. 디비에서 데이터 가져와서 chatArr 구성
                     // (이전 (포함) 30 + sample + 이후 30)
-                    self.fetchAllPastChatting()
+                    self.fetchAllPastChatting() // 모두 realm에서 가져옴
                     completion()    // 아마 tableView reload
                     
                     // 4. 이제부터 스크롤에 따라 pagination 시작
@@ -303,7 +303,7 @@ extension ChannelChattingViewModel {
             requestModel: requestModel
         )
  
-        print("확인한 채팅 중 가장 마지막 날짜 : ", lastChattingDate)
+        print("1. 디비에서 확인한 채팅 중 가장 마지막 날짜 : ", lastChattingDate)
     }
 
     // 2.
@@ -312,8 +312,8 @@ extension ChannelChattingViewModel {
         // 모델 생성
         var requestModel: ChannelChattingRequestModel
         
-        if var targetDate = lastChattingDate {
-            // * 임시 : 1ms 더해서 네트워크 콜 쏜다. (v2에서 바뀔 예정)
+        if let targetDate = lastChattingDate {
+            
 //            var dateComponents = DateComponents()
 //            dateComponents.second = 1
 //            targetDate = Calendar.current.date(byAdding: dateComponents, to: targetDate)!
@@ -335,7 +335,7 @@ extension ChannelChattingViewModel {
             )
         }
         
-        // 네트워크 통신
+        // 네트워크 통신 - Repo에서 DB에 넣어주는 작업까지 진행
         channelChattingUseCase.fetchRecentChatting(
             channelChattingRequestModel: requestModel,
             completion: completion
