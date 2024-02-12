@@ -108,7 +108,7 @@ class ChannelChattingTableViewCell: BaseTableViewCell {
             placeholder: .profileNoPhotoA
         )
         
-        // 2. 본문 (이름, 내용, 이미지)
+        // 2. 본문 (이름, 내용, 파일)
         self.chattingContentView.designView(sender)
 
         // 3. 날짜

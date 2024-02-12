@@ -87,6 +87,17 @@ class FileContentView: BaseView {
         let fileName = components[components.count - 1]
         
         
+        // '_' 이후 분리 및 디코딩
+        var decodedFileName = ""
+        
+        if let lastUnderscoreRange = fileName.range(of: "_", options: .backwards) {
+            let trimmedString = String(fileName.prefix(upTo: lastUnderscoreRange.lowerBound))
+            decodedFileName = trimmedString.removingPercentEncoding ?? trimmedString
+        } else {
+            decodedFileName = fileName
+        }
+        
+        
         // 이미지 세팅
         FileExtension.allCases.forEach { fileExtension in
             if fileName.hasSuffix(fileExtension.extensionStr) {
@@ -96,7 +107,7 @@ class FileContentView: BaseView {
         
         
         // 레이블 세팅
-        fileNameLabel.text = fileName
+        fileNameLabel.text = decodedFileName
         fileNameLabel.setAppFont(.body)
     }
     
