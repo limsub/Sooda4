@@ -50,7 +50,7 @@ extension DMChattingCellInfoModel: IdentifiableType, Equatable {
 class DMListViewController: BaseViewController {
     
     let mainView = DMListView()
-    let viewModel = DMListViewModel(workSpaceId: 152)
+    let viewModel = DMListViewModel(workSpaceId: 265)
     
     
     private var disposeBag = DisposeBag()

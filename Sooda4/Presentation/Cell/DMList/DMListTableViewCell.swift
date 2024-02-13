@@ -56,7 +56,7 @@ class DMListTableViewCell: BaseTableViewCell {
     
     let unreadCountLabel = {
         let view = HomeDefaultUnreadCountLabel()
-        view.setText([1, 21, 99, 101].randomElement()!)
+//        view.setText([1, 21, 99, 101].randomElement()!)
         return view
     }()
     
@@ -86,8 +86,11 @@ class DMListTableViewCell: BaseTableViewCell {
         unreadCountLabel.snp.makeConstraints { make in
             make.top.equalTo(dateLabel.snp.bottom)
             make.trailing.equalTo(dateLabel).priority(1000)
-            make.width.lessThanOrEqualTo(30)
+//            make.width.lessThanOrEqualTo(30)
+//            make.width.greaterThanOrEqualTo(20)
             make.height.equalTo(18)
+//            make.width.equalTo(unreadCountLabel.snp.width).multipliedBy(1.5)
+            make.width.equalTo(20)
         }
         
         nameLabel.snp.makeConstraints { make in
@@ -100,7 +103,7 @@ class DMListTableViewCell: BaseTableViewCell {
         contentLabel.snp.makeConstraints { make in
             make.top.equalTo(nameLabel.snp.bottom)
             make.leading.equalTo(nameLabel)
-            make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-4)
+//            make.trailing.equalTo(unreadCountLabel.snp.leading).offset(-4)
             make.bottom.equalTo(contentView).inset(6)
         }
     }
@@ -127,8 +130,7 @@ class DMListTableViewCell: BaseTableViewCell {
             dateLabel.text = sender.lastDate.toString(of: .dmCellNotToday)
         }
         
-        
-        unreadCountLabel.text = String(sender.unreadCount)
+        unreadCountLabel.setText(sender.unreadCount)
     }
     
 }

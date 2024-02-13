@@ -30,7 +30,8 @@ class HomeDefaultUnreadCountLabel: UILabel {
     }
     
     func setText(_ count: Int ) {
-        self.text = " \(count) "
+        self.text = "\(count)"
         setAppFont(.caption)
+        self.textAlignment = .center
     }
 }

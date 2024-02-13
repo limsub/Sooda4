@@ -693,9 +693,6 @@ extension ChannelChattingViewController: UIDocumentPickerDelegate {
             asCopy: true
         )
         
-        
-        
-        
         picker.delegate = self
         picker.allowsMultipleSelection = true
         present(picker, animated: true)
@@ -801,7 +798,7 @@ extension ChannelChattingViewController: FileOpenDelegate, UIDocumentInteraction
                     guard let fileName = fileURL.extractFileName() else { return }
                     
                     let fileManager = FileManager()
-                    let documentPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("SAMPLE_\(fileName)")
+                    let documentPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(fileName)")
                     
                     do {
                         try data.write(to: documentPath)
