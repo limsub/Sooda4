@@ -493,6 +493,8 @@ extension ChannelChattingViewController {
     /* keyboard */
     private func startObservingKeyboard() {
         
+        print("******** start Observing Keyboard **********")
+        
         let notificationCenter = NotificationCenter.default
         
         notificationCenter.addObserver(
@@ -502,131 +504,78 @@ extension ChannelChattingViewController {
             using: keyboardWillAppear
         )
         
+        
         notificationCenter.addObserver(
             forName: UIResponder.keyboardWillHideNotification,
             object: nil,
             queue: nil,
             using: keyboardWillDisappear
         )
+        
+        notificationCenter.addObserver(
+            forName: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil,
+            queue: nil,
+            using: a
+        )
+    }
+    private func a(_ notification: Notification) {
+//        print("*** a ***")
+//        
+//        let key = UIResponder.keyboardFrameEndUserInfoKey
+//        guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
+//        
+//        print("keyboardFrame height : \(keyboardFrame.height)")
     }
     
     private func keyboardWillAppear(_ notification: Notification) {
-//        print("********** keyboardWillAppear  **********")
-        
-        // 1. tableView 레이아웃 (bottom이 키보드 top + 인풋뷰 height)
-        // 2. 스크롤 시점(?)도 키보드 top + 인풋뷰 height만큼 올려줘야 함.
-        
-        
-    
+        print("")
+        print("*** keyboardWillAppear ***")
         
         let key = UIResponder.keyboardFrameEndUserInfoKey
         guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
-//        
-//        print("- 키보드 올라옴 - ")
-//        print("keyboardFrame.height : ", keyboardFrame.height)
-//        print("chattingBackView Frame.height : ", mainView.chattingInputBackView.frame.height)
-//    
+        
+        print("keyboardFrame height : \(keyboardFrame.height)")
+        
+//
         let height = keyboardFrame.height - 83 /*+ mainView.chattingInputBackView.frame.height*/
 //        // inputView의 height은 필요가 없어.
-//        
-//        print("총 올려야 하는 height : ", height)
-        
-//        mainView.chattingTableView.contentInset.bottom = height
-//        mainView.layoutIfNeeded()
-        
+
         let currentOffset = mainView.chattingTableView.contentOffset.y
         
         let newOffset = max(currentOffset + height, 0)
         
-//        print("현재 offset : \(currentOffset)")
-//        print("새로운 offset : \(newOffset)")
+        print("현재 offset : \(currentOffset)")
+        print("새로운 offset : \(newOffset)")
         
         UIView.animate(withDuration: 0.25) {
             self.mainView.chattingTableView.setContentOffset(CGPoint(x: 0, y: newOffset), animated: false)
         }
-        
-
-        
-//        let contentOffset = CGPoint(x: 0, y: -50)
-//        mainView.chattingTableView.setContentOffset(contentOffset, animated: true)
-        
-//
-//        
-//        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
-//        
-//        let newOffset = CGPoint(
-//            x: self.mainView.chattingTableView.contentOffset.x,
-//            y: self.mainView.chattingTableView.contentOffset.y + height
-//        )
-//        
-//        print("새로운 스크롤 Offset : ", newOffset)
-//                
-//        UIView.animate(withDuration: 0.25) {
-//            self.mainView.chattingTableView.setContentOffset(
-//                newOffset,
-//                animated: true
-//            )
-//        }
-        
-//        
-//        
-//        
-//        // 테이블뷰의 스크롤 조절
-//        mainView.chattingTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
-//        mainView.chattingTableView.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: height, right: 0)
-//        
-//        // 살짝 더 올라가.... 이유가 뭘까
-//        
-//        mainView.setConstraints()
     }
     
     private func keyboardWillDisappear(_ notification: Notification) {
-//        print("********** keyboardWillDisappear  **********")
-        
+        print("")
+        print("*** keyboardWillDisappear ***")
             
         let key = UIResponder.keyboardFrameEndUserInfoKey
         guard let keyboardFrame = notification.userInfo?[key] as? CGRect else { return }
         
-        let height = keyboardFrame.height - 83
+        print("keyboardFrame height : \(keyboardFrame.height)")
+        
+        let keyboardHeight: CGFloat = 336
+        
+        let height = keyboardHeight - 83
         
         let currentOffset = mainView.chattingTableView.contentOffset.y
         
-//        let newOffset = max(currentOffset + height, 0)
-//        let newOffset = min(
-//            currentOffset - height,
-//            mainView.chattingTableView.contentSize.height
-//        )
         let newOffset = currentOffset - height
         
-//        print("현재 offset : \(currentOffset)")
-//        print("새로운 offset : \(newOffset)")
+        print("현재 offset : \(currentOffset)")
+        print("새로운 offset : \(newOffset)")
         
         UIView.animate(withDuration: 0.25) {
             self.mainView.chattingTableView.setContentOffset(CGPoint(x: 0, y: newOffset), animated: false)
         }
-//
-//        print("- 키보드 내려감 - ")
-//        print("keyboardFrame.height : ", keyboardFrame.height)
-//        
-//        let height: CGFloat = 336 /*keyboardFrame.height*/
-//    
-//        print("현재 스크롤 Offset : ", self.mainView.chattingTableView.contentOffset)
-//        
-//        let newOffset = CGPoint(
-//            x: self.mainView.chattingTableView.contentOffset.x,
-//            y: self.mainView.chattingTableView.contentOffset.y - height
-//        )
-//        
-//        print("새로운 스크롤 Offset : ", newOffset)
-//                
-//        UIView.animate(withDuration: 0.25) {
-//            self.mainView.chattingTableView.setContentOffset(
-//                newOffset,
-//                animated: true
-//            )
-//        }
-//        
-//        mainView.setConstraints()
     }
     
     

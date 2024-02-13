@@ -88,7 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                let dto = MakeChannelChattingRequestDTO(
 //                    channelName: "짱구는 못말려",
 //                    workSpaceId: 265,
-//                    content: "Test - \(i)",
+//                    content: "Bottom Pagination Test - \(i)",
 //                    files: []
 //                )
 //
