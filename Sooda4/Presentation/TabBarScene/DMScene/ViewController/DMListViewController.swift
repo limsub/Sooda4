@@ -34,9 +34,9 @@ extension DMListSectionData: AnimatableSectionModelType {
 struct DMChattingCellInfoModel {
     let roomId: Int
     let userInfo: UserInfoModel
-    let lastContent: String
-    let lastDate: Date
-    let unreadCount: Int
+    var lastContent: String
+    var lastDate: Date
+    var unreadCount: Int
 }
 
 extension DMChattingCellInfoModel: IdentifiableType, Equatable {

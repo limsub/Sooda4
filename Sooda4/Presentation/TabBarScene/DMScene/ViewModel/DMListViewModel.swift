@@ -21,6 +21,8 @@ class DMListViewModel: BaseViewModelType {
         self.workSpaceId = workSpaceId
     }
     
+    let dmRoomSectionsArr = BehaviorSubject<[DMListSectionData]>(value: [])
+    
     /* 네트워크 콜 */
     // 1. (내가 속한 워크스페이스 한 개 조회) -> 워크스페이스 정보 조회, 멤버 리스트 조회
     // 1. (내 프로필 정보 조회) -> 프로필 조회
@@ -58,13 +60,13 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceImage = PublishSubject<String>()
         let workSpaceMemberList = PublishSubject<[UserInfoModel]>()
         let profileImage = PublishSubject<String>()
-        let dmRoomSectionsArr = BehaviorSubject<[DMListSectionData]>(value: [])
+
         
         // * test button : 특정 채팅이 푸시알림으로 왔을 때, 해당 채팅방을 맨 위로 보내준다.
 //        var sampleRoomId = 12   // 특정 채팅방의 room id
         input.testButtonClicked
             .subscribe(with: self) { owner , _ in
-                guard var modifiedValue = try? dmRoomSectionsArr.value() else { return }
+                guard var modifiedValue = try? owner.dmRoomSectionsArr.value() else { return }
                 
 //                let targetRoomId = sampleRoomId
 //                
@@ -75,12 +77,12 @@ class DMListViewModel: BaseViewModelType {
                 
                 // 2. 해당 요소를 제거한다
                 let removedElement = modifiedValue[0].items.remove(at: targetIndex)
-                dmRoomSectionsArr.onNext(modifiedValue)
+                owner.dmRoomSectionsArr.onNext(modifiedValue)
                 
                 
                 // 3. 배열의 맨 앞에 삽입한다
                 modifiedValue[0].items.insert(removedElement, at: 0)
-                dmRoomSectionsArr.onNext(modifiedValue)
+                owner.dmRoomSectionsArr.onNext(modifiedValue)
             }
             .disposed(by: disposeBag)
 
@@ -150,7 +152,7 @@ class DMListViewModel: BaseViewModelType {
                     }
                     let sectionArrData = [DMListSectionData(header: "1", items: sortedArr)]
                     
-                    dmRoomSectionsArr.onNext(sectionArrData)
+                    owner.dmRoomSectionsArr.onNext(sectionArrData)
                     
 //                    dmRoomArr.onNext(sortedArr)
                     print("**********")
@@ -159,7 +161,7 @@ class DMListViewModel: BaseViewModelType {
                         print("")
                     }
                     print("**********")
-                    print(try! dmRoomSectionsArr.value())
+                    print(try! owner.dmRoomSectionsArr.value())
                     print("**********")
                     
                     
@@ -173,6 +175,17 @@ class DMListViewModel: BaseViewModelType {
         
         
         
+        // Push Notification
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(receiveDMChattingPushNotification),
+            name: Notification.Name("receiveDMChattingPushNotification"),
+            object: nil
+        )
+        
+
+        
+        
         
         return Output(
             workSpaceImage: workSpaceImage,
@@ -180,5 +193,80 @@ class DMListViewModel: BaseViewModelType {
             profileImage: profileImage,
             dmRoomSectionsArr: dmRoomSectionsArr
         )
+    }
+    
+    
+    
+    @objc private func receiveDMChattingPushNotification(_ notification: Notification) {
+        
+        print("*****")
+        
+        
+        if let userInfo = notification.userInfo,
+           let opponentId = userInfo["opponentId"] as? Int,
+           let workspaceId = userInfo["workspaceId"] as? Int,
+           let content = userInfo["content"] as? String,
+           let opponentName = userInfo["opponentName"] as? String
+        {
+            print("opponentId : \(opponentId), workspaceId : \(workspaceId)")
+            print("content: \(content), oppoonentName: \(opponentName)")
+            // opponent id 가지고 배열에서 찾을거야
+            
+            // content는 알림에서 준 거 쓰고, 시간은 어쩔 수 없이 현재 시간 직접 계산해야 할 것 같아
+            
+            do {
+                var newArr = try self.dmRoomSectionsArr.value()
+                
+                var targetIndex: Int = 0
+                
+                for i in 0..<newArr[0].items.count {
+                    if newArr[0].items[i].userInfo.userId == opponentId {
+                        print("푸시 알림 온 디엠 채팅방 찾음. 이걸 배열의 맨 앞으로 올린다")
+                        targetIndex = i
+                        break
+
+                    }
+                }
+                
+                var newItem = newArr[0].items.remove(at: targetIndex)
+                newItem.lastDate = Date()
+                newItem.lastContent = content
+                newItem.unreadCount += 1
+                
+                self.dmRoomSectionsArr.onNext(newArr)
+                
+                
+                newArr[0].items.insert(newItem, at: 0)
+                self.dmRoomSectionsArr.onNext(newArr)
+            
+                
+
+                
+            } catch {
+                print("에러에러에러")
+            }
+            
+    
+        
+            
+            // opo
+        }
+        
+    }
+    
+    
+    
+}
+
+
+extension DMListViewModel {
+    // 채널 or 디엠 채팅 디코딩
+    private func decodingData<T: Decodable>(userInfo: [String: Any]) -> T? {
+        if let jsonData = try? JSONSerialization.data(withJSONObject: userInfo),
+           let decodedData = try? JSONDecoder().decode(T.self, from: jsonData) {
+            return decodedData
+        }
+        
+        return nil
     }
 }

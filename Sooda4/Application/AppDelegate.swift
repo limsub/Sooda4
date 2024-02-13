@@ -157,24 +157,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         let firebaseToken = fcmToken ?? "No Token"
         print("firebase token : \(firebaseToken)")
-        
-        // 2/7 09:08
-        // token : d9QeOO5pskQKgSBCB4RQxz:APA91bFclvzOnbxo-rWMhDoPPgu9-i5Q0W_XqM514FhSBmAJfwN4tZ_rVOYmFVMMfSRwDYM96Bp0zgwNTZz9S62TE6uYCNf3a_RwhTg1tU4Ve5j6mLsqD-_AedqmQueYTVCFVuDDIeGb
-        
+
         print(Messaging.messaging().apnsToken)  // nil 출력..
         
         
         UserDefaults.standard.set(firebaseToken, forKey: "hi")
-        
-        
-//        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-//        NotificationCenter.default.post(
-//          name: Notification.Name("FCMToken"),
-//          object: nil,
-//          userInfo: dataDict
-//        )
-
-        
         
 //        Messaging.messaging().isAutoInitEnabled = true
     }
@@ -213,6 +200,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
             // 현재 보고 있는 채팅방인지 확인
             if !self.checkCurrentDMRoom(chatInfo: dmChatInfo) {
                 completionHandler([.list, .badge, .sound, .banner])
+                
+                // 필요한 정보 전달
+                let userInfo: [String: Any] = [
+                    "workspaceId": Int(dmChatInfo.workspace_id)!,
+                    "opponentId": Int(dmChatInfo.opponent_id)!,
+                    "content": dmChatInfo.aps.alert.body,
+                    "opponentName": dmChatInfo.aps.alert.title
+                ]
+                
+                
+                // DM List 화면에서는 푸시 알림이 올 때 뷰의 업데이트가 일어난다
+                NotificationCenter.default.post(
+                    name: Notification.Name("receiveDMChattingPushNotification"),
+                    object: nil,
+                    userInfo: userInfo
+                )
             }
         }
     }
