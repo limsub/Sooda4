@@ -266,26 +266,16 @@ final class ChannelChattingViewController: BaseViewController {
                 switch result {
                 case .success(let model):
                     // 채팅 보내기 성공 TODO
-                    // 1. (VM) 보낸 채팅 테이블뷰 업데이트 -> 배열에 추가
-                    // 1.5 (VC) 테이블뷰 reload
-                    // 2. (REPO) 보낸 채팅 디비에 바로 저장
-                    // 3. (VC) 테이블뷰 스크롤 위치 맨 아래로 이동 (방금 보낸 채팅 보이게 하기)
-                    // 4. (VC) input view 초기화 (텍스트, 이미지)
+                    // 1. (VM) (필요 시 fetchAllNextData) + chatArr append
+                    // 2. (VC) tableView reload
+                    // 3. (VC) scrollToBottom
+                    // 4. (VC) initInputView
                     
-                    
-                    // 1.5
+
                     owner.mainView.chattingTableView.reloadData()
-                    
-                    
-                    // 3.
-                    // 이 때도 역시, 디비에 남은 애들 다 꺼내고 난 후에 bottom으로 보내줘야 함 (toastView 클릭 시와 동일)
                     owner.tableViewScrollToBottom()
-                    
-                    
-                    // 4.
                     owner.mainView.chattingInputView.chattingTextView.text = ""
                     owner.viewModel.removeAllImages()   // -> showImageCollectionView output 받아서 레이아웃 및 textViewDidChange 실행
-                          
                     
                 case .failure(let networkError):
                     print("여기서 전송 실패에 대한 처리를 해줄 수 있을 것 같다. 단, 그럼 보내는 requestModel을 저장하고 있어야 해")

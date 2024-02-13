@@ -81,20 +81,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 
         
-//        /* pagination test */
+        /* pagination test */
 //        for i in 0...99 {
-//            let dto = MakeChannelChattingRequestDTO(
-//                channelName: "오아아아qq",
-//                workSpaceId: 152,
-//                content: "test3 - \(i)",
-//                files: []
-//            )
 //            
-//            NetworkManager.shared.requestCompletionMultipart(
-//                type: MakeChannelChattingResponseDTO.self,
-//                api: .makeChannelChatting(dto)) { response in
-//                    print(response)
-//                }
+//            DispatchQueue.main.async {
+//                let dto = MakeChannelChattingRequestDTO(
+//                    channelName: "짱구는 못말려",
+//                    workSpaceId: 265,
+//                    content: "Test - \(i)",
+//                    files: []
+//                )
+//
+//                NetworkManager.shared.requestCompletionMultipart(
+//                    type: MakeChannelChattingResponseDTO.self,
+//                    api: .makeChannelChatting(dto)) { response in
+//                        print(response)
+//                    }
+//            }
 //        }
         
         /* 날짜 테스트 */

@@ -140,14 +140,15 @@ class ChannelChattingViewModel {
                     print(model)
                     
                     // 1.
-                    // 무작정 배열에 붙이면 안됨!! - pagination이 끝난는지 확인하기!!
+                    // 무작정 배열에 붙이면 안됨!! - pagination이 끝났는지 확인하기!!
                     if owner.isDoneNextPagination {
                         owner.chatArr.append(model)
+                    } else {
+                        owner.fetchAllNextData {
+                            owner.chatArr.append(model)
+                        }
                     }
-                    
-                    // 2.
-                    
-                    
+
                     
                     // 결과 전달
                     resultMakeChatting.onNext(.success(model: model))
