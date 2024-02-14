@@ -31,7 +31,8 @@ class HomeDefaultView: BaseView {
         view.register(HomeDefaultPlusTableViewCell.self, forCellReuseIdentifier: HomeDefaultPlusTableViewCell.description())
         
         
-        view.separatorColor = .red
+        view.separatorColor = .lightGray
+        view.separatorInset = .zero
         
         
 
@@ -48,7 +49,7 @@ class HomeDefaultView: BaseView {
 //        
 //        view.allowsSelection = false
         
-        view.backgroundColor = .green
+//        view.backgroundColor = .green
         
         return view
     }()

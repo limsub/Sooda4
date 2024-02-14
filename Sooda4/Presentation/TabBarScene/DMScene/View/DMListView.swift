@@ -35,6 +35,7 @@ class DMListView: BaseView {
     let testButton = {
         let view = UIButton()
         view.backgroundColor = .red
+        view.isHidden = true 
         return view
     }()
     

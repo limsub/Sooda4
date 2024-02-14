@@ -33,5 +33,7 @@ class HomeDefaultUnreadCountLabel: UILabel {
         self.text = "\(count)"
         setAppFont(.caption)
         self.textAlignment = .center
+        
+        self.isHidden = count == 0
     }
 }

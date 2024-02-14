@@ -11,11 +11,11 @@ import SideMenu
 import RxSwift
 import RxCocoa
 
-struct cellData {
-    var opened = Bool()
-    var title = String()
-    var sectionData = [String]()
-}
+//struct cellData {
+//    var opened = Bool()
+//    var title = String()
+//    var sectionData = [String]()
+//}
 
 class HomeDefaultViewController: BaseViewController {
     

@@ -61,7 +61,7 @@ class DMListViewModel: BaseViewModelType {
         let workSpaceMemberList = PublishSubject<[UserInfoModel]>()
         let profileImage = PublishSubject<String>()
 
-        
+/*
         // * test button : 특정 채팅이 푸시알림으로 왔을 때, 해당 채팅방을 맨 위로 보내준다.
 //        var sampleRoomId = 12   // 특정 채팅방의 room id
         input.testButtonClicked
@@ -85,7 +85,7 @@ class DMListViewModel: BaseViewModelType {
                 owner.dmRoomSectionsArr.onNext(modifiedValue)
             }
             .disposed(by: disposeBag)
-
+*/
         
         // 1. (내가 속한 워크스페이스 한 개 조회)
         input.loadData

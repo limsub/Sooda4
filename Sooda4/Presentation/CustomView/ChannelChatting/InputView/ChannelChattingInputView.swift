@@ -75,24 +75,24 @@ class ChannelChattingInputView: BaseView {
             make.bottom.equalTo(self).inset(8)
         }
         
-    [
-        chattingTextView.topAnchor.constraint(
-            equalTo: self.topAnchor, constant: 3.2
-        ),
-        chattingTextView.leadingAnchor.constraint(
-            equalTo: plusButton.trailingAnchor, constant: 8
-        ),
-        chattingTextView.trailingAnchor.constraint(
-            equalTo: sendButton.leadingAnchor, constant: -8
-        ),
-        chattingTextView.heightAnchor.constraint(equalToConstant: 31.6),
-    
-    ].forEach{ $0.isActive = true }
-    
-    
-    chattingTextView.bottomAnchor.constraint(
-        equalTo: self.bottomAnchor, constant: -3.2
-    ).isActive = fileImageCollectionView.isHidden
+        [
+            chattingTextView.topAnchor.constraint(
+                equalTo: self.topAnchor, constant: 3.2
+            ),
+            chattingTextView.leadingAnchor.constraint(
+                equalTo: plusButton.trailingAnchor, constant: 8
+            ),
+            chattingTextView.trailingAnchor.constraint(
+                equalTo: sendButton.leadingAnchor, constant: -8
+            ),
+            chattingTextView.heightAnchor.constraint(equalToConstant: 31.6),
+        
+        ].forEach{ $0.isActive = true }
+        
+        
+        chattingTextView.bottomAnchor.constraint(
+            equalTo: self.bottomAnchor, constant: -3.2
+        ).isActive = fileImageCollectionView.isHidden
         
         
         fileImageCollectionView.snp.makeConstraints { make in
