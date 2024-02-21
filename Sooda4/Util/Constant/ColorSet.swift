@@ -30,7 +30,7 @@ enum ColorSet {
         
         switch self {
         case .brand_green:
-            return "#4AC645"
+            return "#FB8B24"
         case .brand_error:
             return "#E9666B"
         case .brand_inactive:

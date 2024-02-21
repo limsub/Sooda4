@@ -67,7 +67,7 @@ class SelectAuthView: BaseView {
         
         appleLoginButton.setBackgroundImage(UIImage(named: "loginButton_Apple ID Login"), for: .normal)
         kakaoLoginButton.setBackgroundImage(UIImage(named: "loginButton_Kakao Login"), for: .normal)
-        emailLoginButton.setBackgroundImage(UIImage(named: "loginButton_ActiveWithIcon"), for: .normal)
+        emailLoginButton.setBackgroundImage(UIImage(named: "new_email_button"), for: .normal)
         
         signUpButton.setTitle("또는 새롭게 회원가입 하기", for: .normal)
         signUpButton.makeEmailSignUpButton(.title2, for: .normal)
