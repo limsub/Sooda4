@@ -42,6 +42,7 @@ class HomeDefaultDMTableViewCell: BaseTableViewCell {
             make.trailing.equalTo(contentView).inset(16).priority(1000)
             make.centerY.equalTo(contentView)
             make.height.equalTo(18)
+//            make.width.equalTo(20)
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -61,6 +62,25 @@ class HomeDefaultDMTableViewCell: BaseTableViewCell {
         
         titleLabel.setText(text)
         unreadCountLabel.setText(count)
+        
+        switch count {
+        case 1...9:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(19)
+            }
+        case 10...99:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(24)
+            }
+        case 100...999:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(29)
+            }
+        default:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(0)
+            }
+        }
         
         if count > 0 {
             titleLabel.update(true)

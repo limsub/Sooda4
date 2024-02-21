@@ -131,6 +131,26 @@ class DMListTableViewCell: BaseTableViewCell {
         }
         
         unreadCountLabel.setText(sender.unreadCount)
+        
+        switch sender.unreadCount {
+        case 1...9:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(19)
+            }
+        case 10...99:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(24)
+            }
+        case 100...999:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(29)
+            }
+        default:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(0)
+            }
+        }
+
     }
     
 }

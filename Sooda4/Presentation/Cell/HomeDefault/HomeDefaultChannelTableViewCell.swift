@@ -48,6 +48,25 @@ class HomeDefaultChannelTableViewCell: BaseTableViewCell {
         titleLabel.setText(text)
         unreadCountLabel.setText(count)
         
+        switch count {
+        case 1...9:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(19)
+            }
+        case 10...99:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(24)
+            }
+        case 100...999:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(29)
+            }
+        default:
+            unreadCountLabel.snp.makeConstraints { make in
+                make.width.equalTo(0)
+            }
+        }
+        
         // count에 따라
         if count > 0 {
             hashtagImageView.update(true)
