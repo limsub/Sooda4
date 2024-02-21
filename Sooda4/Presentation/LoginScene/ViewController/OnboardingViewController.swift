@@ -31,6 +31,8 @@ final class OnboardingViewController: BaseViewController {
         
         title = "온보딩 뷰"
         
+        navigationController?.isNavigationBarHidden = true 
+        
     }
         
     @objc

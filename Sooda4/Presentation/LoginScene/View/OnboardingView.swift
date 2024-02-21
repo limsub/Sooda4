@@ -13,32 +13,40 @@ class OnboardingView: BaseView {
     // MARK: - 임시
     let tempLabel = UILabel()
     
+    let introduceLabel = {
+        let view = UILabel()
+        view.setAppFont(.title1)
+        view.numberOfLines = 2
+        view.textAlignment = .center
+        return view
+    }()
     let iconImageView = UIImageView()
     let nextButton = UIButton()
     
     override func setting() {
         super.setting()
         
-//        backgroundColor = .blue
-        
-//        tempLabel.text = "온보딩 뷰"
-//        tempLabel.backgroundColor = .yellow
-        
+        introduceLabel.text = "자유롭고 유연한 업무 소통의 시작,\n수다와 함께하세요"
+        introduceLabel.setAppFont(.title1)
+        introduceLabel.textAlignment = .center
+
         iconImageView.image = .mainIcon
         
         nextButton.setTitle("다음", for: .normal)
         nextButton.backgroundColor = .blue
         
-//        self.addSubview(tempLabel)
+        self.addSubview(introduceLabel)
         self.addSubview(iconImageView)
         self.addSubview(nextButton)
-//        tempLabel.snp.makeConstraints { make in
-//            make.size.equalTo(200)
-//            make.center.equalTo(self)
-//        }
+
+        introduceLabel.snp.makeConstraints { make in
+            make.top.equalTo(self).inset(120)
+            make.horizontalEdges.equalTo(self).inset(24)
+        }
         iconImageView.snp.makeConstraints { make in
+            make.top.equalTo(introduceLabel.snp.bottom).offset(50)
             make.size.equalTo(368)
-            make.center.equalTo(self)
+            make.centerX.equalTo(self)
         }
         nextButton.snp.makeConstraints { make in
             make.size.equalTo(100)
