@@ -56,9 +56,15 @@ class HomeDefaultView: BaseView {
     
     let floatingButton = {
         let view = UIButton()
-        view.backgroundColor = .red
+        view.backgroundColor = UIColor.appColor(.brand_green)
+//        view.setImage(UIImage.iconMakeChat, for: .normal)
         view.clipsToBounds = true
         view.layer.cornerRadius = 27
+        return view
+    }()
+    let fakeImageView = {
+        let view = UIImageView()
+        view.image = .iconMakeChat
         return view
     }()
     
@@ -68,6 +74,7 @@ class HomeDefaultView: BaseView {
         
         self.addSubview(tableView)
         self.addSubview(floatingButton)
+        self.addSubview(fakeImageView)
     }
     
     override func setConstraints() {
@@ -79,6 +86,9 @@ class HomeDefaultView: BaseView {
         floatingButton.snp.makeConstraints { make in
             make.size.equalTo(54)
             make.trailing.bottom.equalTo(self.safeAreaLayoutGuide).inset(16)
+        }
+        fakeImageView.snp.makeConstraints { make in
+            make.edges.equalTo(floatingButton).inset(18)
         }
     }
     
