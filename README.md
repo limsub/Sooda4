@@ -11,12 +11,12 @@
 
 
 ## 📚 Tech Blog
-- [채팅 UI 구현]()
-- [채팅 로직 구현]()
-- [채팅 구현 과정에서 고민했던 지점]()
-- [Push Notification]()
-- [Clean Architecture 적용기]()
-- [Coordinator Pattern 적용기]()
+- [채팅 UI 구현](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-26%EC%A3%BC%EC%B0%A8)
+- [채팅 로직 구현](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-27%EC%A3%BC%EC%B0%A8)
+- [채팅 구현 과정에서 고민했던 지점](https://velog.io/@s_sub/12)
+- [Push Notification](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-23%EC%A3%BC%EC%B0%A8)
+- [Clean Architecture 적용기](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-24%EC%A3%BC%EC%B0%A8)
+- [Coordinator Pattern 적용기](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-25%EC%A3%BC%EC%B0%A8)
 
 
 <br>
@@ -48,20 +48,22 @@
 
 ## 💡 아키텍처
 ### Clean Architecture
+![image](https://github.com/limsub/Sooda4/assets/99518799/b50668b7-69a1-48f3-a7e2-2b9e3faad2c3)
 - 기존 VM의 비즈니스 로직을 UseCase와 Repository 로 분리
 - 레이어 별 역할 분리 및 의존성 방향 유지
-// 이미지
+  
+
 
 
 <br>
 
 
-#### MVVM - C
+### MVVM - C
+![‎Coordinator1 ‎001](https://github.com/limsub/Sooda4/assets/99518799/74619c45-97fd-4d51-8be5-0e12f0a267d1)
 - View : 화면에 나타나는 뷰 객체
 - VC : 사용자 interaction 및 View와 VM 연결
 - VM : VC에 필요한 데이터 및 비즈니스 로직
 - C : 화면 전환 로직
-// 이미지
 
 
 <br>
@@ -79,10 +81,12 @@
 ### 2. FCM Token을 이용한 Remote Push Notification 구현
 - FCM Token 등록
   - `application.registerForRemoteNotifcations()` <br>
-    - 앱 등록 및 deviceToken 수신
+    - 앱 등록
+  - `func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)`
+    - deviceToken 수신
   - `Messaging.messaging().apnsToken = deviceToken` <br>
     - deviceToken 등록
-  - `didReceiveRegistrationToken`
+  - `func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?)`
     - fcmToken 수신
   - 서버에 fcmToken 전송
 
@@ -103,19 +107,26 @@
 
 ### 3. UITableView와 UITextView를 활용한 채팅 UI 구현
 - Chatting Input View 구현<br>
-// 이미지
+  ![‎채팅6 ‎001](https://github.com/limsub/Sooda4/assets/99518799/baf0d125-575d-4b7d-bf29-cfd1dcf96771)
+
 
 
 - Chatting TableView Cell 구현 <br>
-// 이미지
+  ![‎채팅2 ‎001](https://github.com/limsub/Sooda4/assets/99518799/e74769dd-0b3f-47b4-a844-a220d5dd6271)
 
 
 - Seperator Cell 및 실시간 채팅 응답 toastView 구현 <br>
-// 이미지
+  ![‎채팅5 ‎001](https://github.com/limsub/Sooda4/assets/99518799/255d2032-07d3-4f96-a232-247c7253a999)
 
 
-- 키보드 활성화 여부에 따라 채팅 화면 스크롤 이동 <br>
-// gif
+
+- 키보드 활성화 여부에 따라 채팅 화면 스크롤 이동
+  |<img src="https://github.com/limsub/Sooda4/assets/99518799/099a301c-d3a4-4939-8846-758cfd8d635c" align="center" width="200">|<img src="https://github.com/limsub/Sooda4/assets/99518799/08942871-c502-4d46-a6fd-c42e7adde24e" align="center" width="200">|
+  |:--:|:--:|
+  |no input data|with input data|
+
+
+
 
 
 <br>
@@ -168,10 +179,14 @@
 
 ### 5. Realm, HTTP, Socket 조합하여 채팅 기능 구현
 - 채팅방 진입 시 초기 데이터 로딩 로직<br>
-// 이미지
+  ![‎채팅 ‎001](https://github.com/limsub/Sooda4/assets/99518799/1ccd93bb-444d-4e8b-914b-4e504efcc21e)
+
+
+<br>
+
 
 - 실시간 채팅 응답 및 전송 로직<br>
-// 이미지
+  ![‎채팅3 ‎001](https://github.com/limsub/Sooda4/assets/99518799/1cbe1c53-d752-4c96-81f7-90fddda45b39)
   - 하단 Pagination 완료 여부에 따라 세부 로직 분기 처리
 
 
@@ -181,13 +196,17 @@
 ### 6. RxDataSources AnimatableSectionModelType 를 이용한 채팅 리스트 화면 애니메이션 적용
 - Push Notification (willPresent) 에서 NotificationCenter를 이용해 실시간 응답 채팅 정보 수신
 - 일치하는 채팅방 데이터 탐색 후, 배열 업데이트
+  
+  |<img src="https://github.com/limsub/Sooda4/assets/99518799/dd6169d2-d247-4cd5-b537-020553e2e44b" align="center" width="200">|
+  |:--:|
+  |DMListView|
 
 
 <br>
 
 
 ### 7. DataBase Normalization (BCNF)
-// 이미지
+![‎DB Table1 ‎001](https://github.com/limsub/Sooda4/assets/99518799/791bd013-16b8-44cc-bbc8-3075091ebaf9)
 - 정규화 이전 : 채팅에 필요한 데이터를 모두 하나의 테이블에서 관리
 
 
@@ -426,7 +445,7 @@
 - 소켓 연결 / 해제 시점에 대한 고민
   - viewDidAppear / viewDidDisappear
   - background / foreground
-  - HTTP 통신 요청 완료 / 응답 완료
+  - HTTP 통신 요청 완료 시점 vs. 응답 완료 시점
 
 
 - 다중 계정 환경에서 DB 공유 이슈
@@ -440,4 +459,10 @@
 <br>
 
 
-### 3. 채팅 화면에서 tableView와 키보드 스크롤 동기화(?)
+### 3. 채팅 화면에서 tableView와 키보드 스크롤 동기화
+
+
+<br>
+
+
+### 4. 새로운 아키텍처 도전 (Clean Architecture)
