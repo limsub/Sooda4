@@ -411,7 +411,7 @@ extension ChannelChattingViewModel {
     
     
     // 아래로 pagination
-    func paginationNextData(completion: @escaping (Int) -> Void) {
+    func paginationNextData(completion: @escaping () -> Void) {
         // 0. 걸러유~
         if stopNextPagination || isDoneNextPagination { return }
         
@@ -421,10 +421,11 @@ extension ChannelChattingViewModel {
         self.stopNextPagination = true
         
         // 2. 디비에서 끄내유~
-        let newArrCnt = self.fetchNextData(nextOffsetTargetDate)
+//        let newArrCnt = self.fetchNextData(nextOffsetTargetDate)
+        let _ = self.fetchNextData(nextOffsetTargetDate)
         
         // 3. tableView reload유~~
-        completion(newArrCnt)
+        completion()
         
 //        // 4. stop 풀어줘 -> VC에서
 //        if delta > 1000 {

@@ -11,6 +11,12 @@ import RxCocoa
 
 class EmailLoginViewController: BaseViewController {
     
+    deinit {
+        for i in 0...50 {
+            print("EmailLogin Deinit~~~ \(i)")
+        }
+    }
+    
     private let mainView = EmailLoginView()
     private var viewModel: EmailLoginViewModel!
     private var disposeBag = DisposeBag()

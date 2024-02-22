@@ -29,15 +29,16 @@ class DMListUseCase {
     
     func fetchDMList(_ workSpaceId: Int) -> Single<Result<[DMChattingCellInfoModel], NetworkError> > {
         
-        return repo.fetchDMList(workSpaceId)
-            .flatMap { result -> Single< Result<[DMChattingCellInfoModel], NetworkError> > in
+        return repo.fetchDMList(workSpaceId)  // -> Single<Result<[WorkSpaceDMInfoModel], NetworkError> >
+        
+            .flatMap { result /*result -> Single< Result<[DMChattingCellInfoModel], NetworkError> >*/ in
                 
                 switch result { // Result<[WorkSpaceDMInfoModel], NetworkError>
                     
                 case .success(let dmInfoArr):
                     
                     // [PrimitiveSequence<SingleTrait, Result<DMChattingCellInfoModel, NetworkError>>]
-                    let singleArr = dmInfoArr.map { dmInfo in
+                    let singleArr: [Single< Result< DMChattingCellInfoModel, NetworkError > >] = dmInfoArr.map { dmInfo in
                         
                         let requestModel = DMChattingRequestModel(
                             partnerUserId: dmInfo.userId,   // 상대방 정보
@@ -48,7 +49,7 @@ class DMListUseCase {
                         return self.repo.fetchLastChattingInfo(
                             requestModel: requestModel
                         )
-                        .flatMap { lastChatInfoResult -> Single< Result< DMChattingCellInfoModel, NetworkError> > in
+                        .flatMap { lastChatInfoResult /*lastChatInfoResult -> Single< Result< DMChattingCellInfoModel, NetworkError> >*/ in
                             
                             switch lastChatInfoResult { // Result<DMChattingModel, NetworkError>
                             case .success(let lastChatInfo):    // 마지막 채팅 정보
@@ -85,7 +86,7 @@ class DMListUseCase {
                                                 ), // 사고... 따로 저장하고 있다 이메일이 없음;;...,
                                                 lastContent: lastChatInfo.content,
                                                 lastDate: lastChatInfo.createdAt,
-                                                unreadCount: unreadCountInfo.count > 0 ?  unreadCountInfo.count - 1 : 0
+                                                unreadCount: unreadCountInfo.count > 0 ?  unreadCountInfo.count : 0
                                                 // 얘도 역시 넣어주는 date의 채팅도 포함해서 계산하는 것 같음
                                             )
                                             
@@ -98,7 +99,12 @@ class DMListUseCase {
                                     }
                                 
                             case .failure(let networkError):
+//                                return .failure(networkError)
+                                
+//                                return Single(.success(.failure(networkError)))
+
                                 return Single.just(.failure(networkError))
+//                                return Single.create(.failure(networkError))
                                 
                             }
                         }

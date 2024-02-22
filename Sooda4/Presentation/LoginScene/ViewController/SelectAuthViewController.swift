@@ -11,6 +11,12 @@ import RxCocoa
 
 class SelectAuthViewController: BaseViewController {
     
+    deinit {
+        for i in 0...100 {
+            print("SelectAuth Deinit~~~ \(i)")
+        }
+    }
+    
     private let mainView = SelectAuthView()
     private var viewModel: SelectAuthViewModel!
     

@@ -12,6 +12,12 @@ import RxCocoa
 
 class ChannelSettingViewController: BaseViewController {
     
+    deinit {
+        for i in 0...50 {
+            print("ChannelSetting Deinit~~~ \(i)")
+        }
+    }
+    
     private let mainView = ChannelSettingView()
     private var viewModel: ChannelSettingViewModel!
     

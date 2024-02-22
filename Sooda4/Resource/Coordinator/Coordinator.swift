@@ -33,8 +33,20 @@ protocol Coordinator: AnyObject {
 // 모든 코디네이터에서 동일하기 때문에 여기서 미리 선언
 extension Coordinator {
     func finish(_ nextFlow: ChildCoordinatorTypeProtocol?) {
+        print("😆😆😆😆 Finish 함수 실행!! : \(self.type)")
+        print("😆😆😆😆 nav.VCs : \(navigationController.viewControllers)")
+        print("😆😆😆😆 nav.presentedVC : \(navigationController.presentedViewController)")
+        
         // 1. 자식 코디 다 지우기
         childCoordinators.removeAll()
+        
+        // 1.3 네비게이션에서 push로 띄운 vc 모두 제거
+        navigationController.viewControllers.removeAll()
+        
+        // 1.5 네비게이션에서 present로 띄운 vc 모두 제거
+        navigationController.presentedViewController?.dismiss(animated: false)
+        
+        
         
         // 2. 부모 코디에게 알리기
         finishDelegate?.coordinatorDidFinish(

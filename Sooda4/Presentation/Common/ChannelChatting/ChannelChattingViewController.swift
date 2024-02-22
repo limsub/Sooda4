@@ -15,6 +15,12 @@ import MobileCoreServices
 
 final class ChannelChattingViewController: BaseViewController {
     
+    deinit {
+        for i in 0...50 {
+            print("ChannelChatting Deinit~~~ \(i)")
+        }
+    }
+    
     
     var interaction: UIDocumentInteractionController?
     
@@ -105,23 +111,23 @@ final class ChannelChattingViewController: BaseViewController {
     }
     
     
-    deinit {    // 이거 지금 실행 안됨ㅠ
-        print("채널 채팅 뷰 deinit!! - 지우는 noti observer 많음!")
-        
-        let notificationCenter = NotificationCenter.default
-        
-        notificationCenter.removeObserver(
-            self,
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        
-        notificationCenter.removeObserver(
-            self,
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-    }
+//    deinit {    // 이거 지금 실행 안됨ㅠ
+//        print("채널 채팅 뷰 deinit!! - 지우는 noti observer 많음!")
+//        
+//        let notificationCenter = NotificationCenter.default
+//        
+//        notificationCenter.removeObserver(
+//            self,
+//            name: UIResponder.keyboardWillShowNotification,
+//            object: nil
+//        )
+//        
+//        notificationCenter.removeObserver(
+//            self,
+//            name: UIResponder.keyboardWillHideNotification,
+//            object: nil
+//        )
+//    }
     
     
     
@@ -456,7 +462,7 @@ extension ChannelChattingViewController: UITableViewDelegate, UITableViewDataSou
         
         // 아래로 pagination
         if delta < 1000 {
-            viewModel.paginationNextData { [weak self] cnt in
+            viewModel.paginationNextData { [weak self] in
 //                let arrCnt = self?.viewModel.numberOfRows() ?? 0
 //                let indexPaths = (0..<cnt).map { IndexPath(row: $0 + arrCnt, section: 0) }
 //                self?.mainView.chattingTableView.insertRows(at: indexPaths, with: .top)

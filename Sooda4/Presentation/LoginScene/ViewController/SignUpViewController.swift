@@ -11,6 +11,12 @@ import RxCocoa
 
 class SignUpViewController: BaseViewController {
     
+    deinit {
+        for _ in 0...100 {
+            print("SignUP Deinit~~~")
+        }
+    }
+    
     private let mainView = SignUpView()
     private var viewModel: SignUpViewModel!
     private let disposeBag = DisposeBag()

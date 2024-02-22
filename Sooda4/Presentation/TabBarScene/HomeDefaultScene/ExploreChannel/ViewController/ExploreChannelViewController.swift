@@ -11,6 +11,12 @@ import RxCocoa
 
 class ExploreChannelViewController: BaseViewController {
     
+    deinit {
+        for i in 0...50 {
+            print("ExploreChannel Deinit~~~ \(i)")
+        }
+    }
+    
     
     private let mainView = ExploreChannelView()
     private var viewModel: ExploreChannelViewModel!

@@ -128,7 +128,8 @@ class SelectAuthCoordinator: SelectAuthCoordinatorProtocol {
     
     deinit {
         print("😀😀😀😀😀😀😀  select auth Coordinator deinit")
-    }
+        print("😀😀😀😀😀😀😀  select auth vcs: \(navigationController.viewControllers)")
+        print("😀😀😀😀😀😀😀  select auth vc.presentedVC: \(navigationController.presentedViewController)")    }
 }
 
 
