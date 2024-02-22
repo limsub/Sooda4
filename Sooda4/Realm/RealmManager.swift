@@ -26,14 +26,15 @@ class RealmManager: RealmManagerProtocol {
             return
         }
         
-        let realmFileName = "user_\(userId).realm"
+        let realmFileName = "SoodaRealm_user_\(userId).realm"
         let realmURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent(realmFileName)
         let config = Realm.Configuration(fileURL: realmURL)
        
         self.realm = try! Realm(configuration: config)
         
-//        print("----- \(userId) realm 파일 생성 -----")
-//        print(realm?.configuration.fileURL)
+        print("----- \(userId) realm 파일 생성 -----")
+        print(realm?.configuration.fileURL)
+        self.checkRealmFileCount()
     }
 }
 
@@ -352,3 +353,83 @@ extension RealmManager {
     }
 }
 
+
+
+
+/* ===== FileManaager ===== */
+extension RealmManager {
+    
+    private func checkRealmFileCount() {
+        let fileManager = FileManager.default
+        var realmFileDict: [String: [URL]] = [:]
+        
+        
+        do {
+            let documentURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+            
+            let files = try fileManager.contentsOfDirectory(
+                at: documentURL,
+                includingPropertiesForKeys: [.contentModificationDateKey],
+                options: .skipsHiddenFiles
+            )
+            
+            files.forEach { url in
+                let fileName = url.deletingPathExtension().lastPathComponent
+                
+                if fileName.hasPrefix("SoodaRealm_user_") {
+                    
+                    var key = ""
+                    
+                    if let dotRange = fileName.range(of: ".") {
+                        key = String(fileName[..<dotRange.lowerBound])
+                    } else {
+                        key = fileName
+                    }
+                                    
+                    // 아직 없는 key이면 새로 만든다.
+                    if realmFileDict[key] == nil {
+                        realmFileDict[key] = []
+                    }
+                    
+                    // dict에 url 추가
+                    realmFileDict[key]?.append(url)
+                }
+            }
+            
+            print("😇😇😇😇😇😇")
+//            realmFileDict.forEach { (key, value) in
+//                print(key)
+//                print(value)
+//                print("----")
+//            }
+//            print(realmFileDict)
+            print("😇😇😇😇😇😇")
+            
+            let realmFileCount = realmFileDict.keys.count
+            
+            if realmFileCount > 5 {
+                print("realm 파일이 5개 초과입니다. 가장 이전에 수정했던 realm 파일을 삭제합니다")
+                
+                if let oldestRealmFile = realmFileDict.min(by: { v1, v2 in
+                    let modificationDate1 = (try? v1.value[1].resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast
+                    let modificationDate2 = (try? v2.value[1].resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast
+                    
+                    return modificationDate1 < modificationDate2
+                }) {
+                    
+                    for fileURL in oldestRealmFile.value {
+                        do {
+                            print(" - 파일 제거 : \(fileURL)")
+                            try fileManager.removeItem(at: fileURL)
+                        } catch {
+                            print("error")
+                        }
+                    }
+                    print("---- 모든 파일 제거 완료 ----")
+                }
+            }
+        } catch {
+            print("error")
+        }
+    }
+}
