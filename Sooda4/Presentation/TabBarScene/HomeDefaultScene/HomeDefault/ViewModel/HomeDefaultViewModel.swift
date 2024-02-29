@@ -61,6 +61,8 @@ class HomeDefaultViewModel: BaseViewModelType {
         let presentExploreChannel: PublishSubject<Void>
 
         let logoutButtonClicked: ControlEvent<Void>
+        
+        let goMyProfileView: PublishSubject<Void>
     }
     
     struct Output {
@@ -133,6 +135,14 @@ class HomeDefaultViewModel: BaseViewModelType {
                         print(response)
                     }
                 
+            }
+            .disposed(by: disposeBag)
+        
+        
+        // 임시 프로필 화면
+        input.goMyProfileView
+            .subscribe(with: self) { owner, _ in
+                owner.didSendEventClosure?(.goMyProfileView)
             }
             .disposed(by: disposeBag)
         
@@ -428,5 +438,7 @@ extension HomeDefaultViewModel {
         case goChannelChatting(workSpaceId: Int, channelId: Int, channelName: String)
         
         case goBackOnboarding
+        
+        case goMyProfileView
     }
 }

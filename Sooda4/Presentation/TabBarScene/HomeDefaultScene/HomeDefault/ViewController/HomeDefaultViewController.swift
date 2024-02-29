@@ -35,7 +35,8 @@ class HomeDefaultViewController: BaseViewController {
     let makeChannelEvent = PublishSubject<Void>()
     let exploreCannelEvent = PublishSubject<Void>()
     
-    
+    // 프로필 화면 전달 이벤트
+    let myProfileEvent = PublishSubject<Void>()
     
     
     
@@ -158,7 +159,8 @@ class HomeDefaultViewController: BaseViewController {
             tableViewItemSelected: mainView.tableView.rx.itemSelected,
             presentMakeChannel: makeChannelEvent,
             presentExploreChannel: exploreCannelEvent,
-            logoutButtonClicked: mainView.floatingButton.rx.tap
+            logoutButtonClicked: mainView.floatingButton.rx.tap,
+            goMyProfileView: myProfileEvent
         )
         
         let output = viewModel.transform(input)
@@ -288,6 +290,11 @@ extension HomeDefaultViewController: UITableViewDelegate, UITableViewDataSource 
         }
         
         // 2 - 3. 팀원 추가 -> 새로운 뷰 present -> 코디로 전달할 필요 -> VM에서 전달. -> rx Input / Output 구현
+        // 프로필 화면 전환
+        if indexPath.section == 1 && viewModel.checkCellType(indexPath: indexPath) == .plusCell {
+            print("프로필 화면 전환시켜주기")
+            self.myProfileEvent.onNext(())
+        }
     
         
     }

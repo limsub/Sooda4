@@ -17,6 +17,8 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
     func showMakeChannelView()
     
     func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String?)
+    
+    func showMyProfileView()
 
     
     // flow
@@ -27,8 +29,6 @@ protocol HomeDefaultSceneCoordinatorProtocol: Coordinator {
 // 생성 시 반드시 데이터가 필요함. workspace_id: Int
 class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
 
-
-    
     // 1.
     weak var finishDelegate: CoordinatorFinishDelegate?
     
@@ -91,6 +91,9 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
                 
             case .goBackOnboarding:     // 로그아웃
                 self?.finish(AppCoordinator.ChildCoordinatorType.loginScene)
+                
+            case .goMyProfileView:  // 프로필 화면
+                self?.showMyProfileView()
             }
             
         }
@@ -162,7 +165,6 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         print(#function)
     }
     
-    
     func showChannelChattingView(workSpaceId: Int, channelId: Int, channelName: String?) {
         
         
@@ -193,6 +195,14 @@ class HomeDefaultSceneCoordinator: HomeDefaultSceneCoordinatorProtocol {
         let channelChattingVC = ChannelChattingViewController.create(with: channelChattingVM)
         
         navigationController.pushViewController(channelChattingVC, animated: true)
+    }
+    
+    func showMyProfileView() {
+        print(#function)
+        
+        let vm = MyProfileViewModel()
+        let vc = MyProfileViewController.create(with: vm)
+        navigationController.pushViewController(vc, animated: true)
     }
     
     
