@@ -11,9 +11,11 @@ import RxCocoa
 
 class MyProfileViewModel: BaseViewModelType {
     
+    private var disposeBag = DisposeBag()
+    
     
     struct Input {
-        let a: ControlEvent<Void>
+        let loadData: PublishSubject<Void>
     }
     
     struct Output {
@@ -23,10 +25,23 @@ class MyProfileViewModel: BaseViewModelType {
     func transform(_ input: Input) -> Output {
         let b = PublishSubject<Int>()
         
+        
+//        input.loadData
+//            .flatMap {
+//
+//            }
+//            .subscribe(with: self) { owner , _ in
+//                <#code#>
+//            }
+//            .disposed(by: disposeBag)
+        
+        
         return Output(
             b: b
         )
     }
+    
+    
     
 }
 

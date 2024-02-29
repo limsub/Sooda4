@@ -23,6 +23,8 @@ class MyProfileViewController: BaseViewController {
         return vc
     }
     
+    private let loadData = PublishSubject<Void>()
+    
     override func loadView() {
         self.view = mainView
     }
@@ -30,7 +32,20 @@ class MyProfileViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bindVM()
+        fetchFirstData()
+    }
+    
+    private func bindVM() {
+        let input = MyProfileViewModel.Input(
+            loadData: self.loadData
+        )
         
+        let output = viewModel.transform(input)
+    }
+    
+    private func fetchFirstData() {
+        self.loadData.onNext(())
     }
     
 }
