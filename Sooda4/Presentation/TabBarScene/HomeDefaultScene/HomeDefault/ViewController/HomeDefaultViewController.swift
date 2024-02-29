@@ -101,7 +101,24 @@ class HomeDefaultViewController: BaseViewController {
         bindVM()
 
         SideMenuManager.default.addScreenEdgePanGesturesToPresent(toView: view)
+        
+        
+        /* 임시 */
+//        
+//        cView.backgroundColor = .black.withAlphaComponent(0.5)
+//        self.tabBarController?.view.addSubview(cView)
+//        cView.isHidden = true
+//        
+//        customNavigationItemView.rx.tap
+//            .subscribe(with: self) { [self] owner , _ in
+//                cView.isHidden = false
+//            }
+//            .disposed(by: disposeBag)
     }
+//    let cView = UIView(frame: CGRect(x: -1000, y: -1000, width: 10000, height: 10000))
+    
+    
+
 
     func setTableView() {
         mainView.tableView.delegate = self

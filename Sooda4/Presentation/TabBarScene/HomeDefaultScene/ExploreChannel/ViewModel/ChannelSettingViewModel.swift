@@ -60,7 +60,23 @@ class ChannelSettingViewModel {
         channelSettingUseCase.oneChannelInfoRequest(requestModel) { response  in
             switch response {
             case .success(let model):
-                self.channelInfoData = model
+                /* 임시 */
+//                self.channelInfoData = model
+                
+                
+                self.channelInfoData = OneChannelInfoModel(
+                    channelName: "🎁 정보공유",
+                    channelDescription: "'정보 공유' 채널은 여러 분야의 유용한 정보를 효과적으로 공유하고 지식을 확장하기 위한 공간으로서, 최신 뉴스, 도움이 되는 팁, 그리고 흥미로운 자료들을 신속하게 전달하며 회원 간의 지식 교류와 협력을 촉진합니다. 또한, 이 채널은 학습과 성장을 공유하는 다양한 활동을 통해 회원들이 함께 발전할 수 있는 소통의 장을 제공합니다.",
+                    ownerId: 0,
+                    users: sampleNameArr.map {
+                        UserInfoModel(
+                            userId: 0,
+                            email: "",
+                            nickname: $0,
+                            profileImage: ""
+                        )
+                    }
+                )
                 
                 print("channelInfoData 업데이트!")
                 print(model)

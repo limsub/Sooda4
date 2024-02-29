@@ -12,7 +12,7 @@ class ExploreChannelView: BaseView {
     let tableView = {
         let view = UITableView(frame: .zero)
         view.register(HomeDefaultChannelTableViewCell.self , forCellReuseIdentifier: HomeDefaultChannelTableViewCell.description())
-        view.backgroundColor = .red
+//        view.backgroundColor = .red
         view.separatorStyle = .none
         return view
     }()

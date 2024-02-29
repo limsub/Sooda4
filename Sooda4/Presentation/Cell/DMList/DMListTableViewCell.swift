@@ -110,11 +110,15 @@ class DMListTableViewCell: BaseTableViewCell {
     
     func designCell(_ sender: DMChattingCellInfoModel) {
         
-        profileImageView.loadImage(
-            endURLString: sender.userInfo.profileImage ?? "",
-            size: CGSize(width: 34, height: 34),
-            placeholder: .profileNoPhotoB
-        )
+        /* 임시 */
+//        profileImageView.loadImage(
+//            endURLString: sender.userInfo.profileImage ?? "",
+//            size: CGSize(width: 34, height: 34),
+//            placeholder: .profileNoPhotoB
+//        )
+        
+        let imageName = "sampleProfile_" +  sender.userInfo.nickname
+        profileImageView.image = UIImage(named: imageName)
         
         nameLabel.text = sender.userInfo.nickname
         nameLabel.setAppFont(.caption)

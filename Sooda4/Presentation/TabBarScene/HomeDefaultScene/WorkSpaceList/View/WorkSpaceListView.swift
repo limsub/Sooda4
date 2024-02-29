@@ -44,7 +44,7 @@ class WorkSpaceListView: BaseView {
     let addWorkSpaceButton = {
         let view = UIButton()
         view.setTitle("워크스페이스 만들기", for: .normal)
-        view.backgroundColor = .red
+//        view.backgroundColor = .red
         return view
     }()
     

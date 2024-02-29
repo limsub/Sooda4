@@ -48,7 +48,7 @@ class WorkSpaceListViewController: BaseViewController {
         
         
         navigationController?.navigationBar.clipsToBounds = true
-        view.backgroundColor = .red
+//        view.backgroundColor = .red
         
         
         view.clipsToBounds = true

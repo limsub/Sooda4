@@ -227,7 +227,7 @@ class EmailLoginViewModel: BaseViewModelType {
                         print("내가 속한 워크스페이스가 있다. Home Default로 가자")
                         // 어떤 워크스페이스인지 값전달을 어떻게 해주냐..?
                         
-                        let workSpaceId = model[0].workSpaceId
+                        let workSpaceId = model.last!.workSpaceId
                         owner.didSendEventClosure?(.goHomeDefaultView(workSpaceId: workSpaceId))
                     }
                     

@@ -57,11 +57,17 @@ class ChannelSettingMemberCollectionViewCell: BaseCollectionViewCell {
     
     func designCell(imageUrl: String?, name: String) {
         // * 이미지 넣어주기
-        profileImageView.loadImage(
-            endURLString: imageUrl ?? "",
-            size: CGSize(width: 40, height: 40),
-            placeholder: .profileNoPhotoA
-        )
+        
+        
+        /* 임시 */
+//        profileImageView.loadImage(
+//            endURLString: imageUrl ?? "",
+//            size: CGSize(width: 40, height: 40),
+//            placeholder: .profileNoPhotoA
+//        )
+        
+        let imageName = "sampleProfile_" + name
+        profileImageView.image = UIImage(named: imageName)
         
         nameLabel.text = name
         nameLabel.setAppFont(.body)

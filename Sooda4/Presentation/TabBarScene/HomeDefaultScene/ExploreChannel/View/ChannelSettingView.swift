@@ -48,7 +48,7 @@ class ChannelSettingView: BaseView {
             forCellReuseIdentifier: ChannelSettingHandleChannelTableViewCell.description()
         )
         
-        view.backgroundColor = .brown
+//        view.backgroundColor = .brown
         
         view.separatorStyle = .none
         

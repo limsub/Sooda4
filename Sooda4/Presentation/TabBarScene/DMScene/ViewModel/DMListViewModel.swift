@@ -9,7 +9,75 @@ import Foundation
 import RxSwift
 import RxCocoa
 
+let sampleNameArr = [
+    "Sophia", "Liam", "Chloe", "Noah", "Oliver", "Lucas", "Aria", "Luna", "James", "Alexandar", "Michael", "Madison", "Benjamin", "Mason"/*, "Elizabeth", "Scarlett"*/
+]
+
+let sampleSentenceArr = [
+    "Hello, How can I help?",
+    "Any specific issue?",
+    "Checking, please wait.",
+    "Need more details.",
+    "Trouble understanding, clarify?",
+    "Elaborate on your issue.",
+    "Resolving issue shortly.",
+    "Need additional assistance?",
+    "Providing update shortly.",
+    "More info, please?",
+    "Discussing next steps.",
+    "Any other requests?",
+    "Thanks for the update.",
+    "Seeking optimal solution.",
+    "More info required.",
+    "Reviewing, will respond.",
+    "Other concerns? Ask.",
+    "Need more help?",
+    "Striving for better.",
+    "Issue persists? Inform.",
+]
+
 class DMListViewModel: BaseViewModelType {
+    
+    var index = 0
+
+    lazy var samplDMListeArr: [DMListSectionData] = sampleNameArr.map {
+        
+        
+        
+//        var dateComponent = DateComponents()
+//        dateComponent.day = Int.random(in: -40...0)
+//        let sampleDate = Calendar.current.date(byAdding: dateComponent, to: Date())!
+        
+        let sentence = sampleSentenceArr[index]
+        let sampleDate = Calendar.current.date(byAdding: DateComponents(day: index * (-1)), to: Date())!
+        
+        index += 1
+        
+        return DMListSectionData(header: "1", items: [
+            DMChattingCellInfoModel(
+                roomId: 0,
+                userInfo: UserInfoModel(
+                    userId: 0,
+                    email: "",
+                    nickname: $0,
+                    profileImage: ""
+                ),
+                lastContent: sentence,
+                lastDate: sampleDate,
+                unreadCount:(index >= 7) ? 0 :  Int.random(in: 0...12)
+            )
+        ])
+    }
+    
+    var sampleUserListArr: [UserInfoModel] = sampleNameArr.map {
+        UserInfoModel(
+            userId: 0,
+            email: "",
+            nickname: $0,
+            profileImage: ""
+        )
+    }
+    
     
     let workSpaceId: Int
     
@@ -101,11 +169,15 @@ class DMListViewModel: BaseViewModelType {
                     print("// 1. (내가 속한 워크스페이스 한 개 조회)")
                     print(dtoData)
                     workSpaceImage.onNext(dtoData.thumbnail)
-                    workSpaceMemberList.onNext(
-                        dtoData.workspaceMembers
-                            .map { $0.toDomain() }
-                            .filter { $0.userId != KeychainStorage.shared._id }
-                    )  // 본인 제외
+                    
+                    /* 임시 */
+//                    workSpaceMemberList.onNext(
+//                        dtoData.workspaceMembers
+//                            .map { $0.toDomain() }
+//                            .filter { $0.userId != KeychainStorage.shared._id }
+//                    )  // 본인 제외
+                    
+                    workSpaceMemberList.onNext(self.sampleUserListArr)
                     
                     
                     
@@ -152,7 +224,10 @@ class DMListViewModel: BaseViewModelType {
                     }
                     let sectionArrData = [DMListSectionData(header: "1", items: sortedArr)]
                     
-                    owner.dmRoomSectionsArr.onNext(sectionArrData)
+                    
+                    /* 임시 */
+//                    owner.dmRoomSectionsArr.onNext(sectionArrData)
+                    owner.dmRoomSectionsArr.onNext(self.samplDMListeArr)
                     
 //                    dmRoomArr.onNext(sortedArr)
                     print("**********")

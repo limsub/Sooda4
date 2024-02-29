@@ -252,6 +252,16 @@ class HomeDefaultViewModel: BaseViewModelType {
         
         for (index, item) in channelData!.sectionData.enumerated() {
             
+            
+            /* 임시 */
+            var dateComponents = DateComponents()
+            dateComponents.day = -10
+
+            // 현재 날짜에 DateComponents를 더해서 10일 뒤의 날짜를 얻음
+            let futureDate = Calendar.current.date(byAdding: dateComponents, to: Date())
+            
+            
+            
             let requestModel = ChannelUnreadCountRequestModel(
                 workSpaceId: self.workSpaceId,
                 channelName: item.channelInfo.name,

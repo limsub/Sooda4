@@ -19,6 +19,6 @@ enum DateFormatType: String {
     case monthday = "M/d"
     
     
-    case dmCellNotToday = "yyyysus M월 d일"
+    case dmCellNotToday = "yyyy년 M월 d일"
     case dmCellToday = "a hh:mm"
 }
