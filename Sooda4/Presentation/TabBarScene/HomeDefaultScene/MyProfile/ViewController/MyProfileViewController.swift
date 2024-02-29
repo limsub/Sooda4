@@ -23,4 +23,14 @@ class MyProfileViewController: BaseViewController {
         return vc
     }
     
+    override func loadView() {
+        self.view = mainView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        
+    }
+    
 }
