@@ -62,6 +62,12 @@ enum NetworkRouter: URLRequestConvertible {
     case dmUnreadCount(_ sender: DMUnreadCountRequestDTO)
     
     
+    /* === SeSAC STORE === */
+    case portOneValidation(_ sender: PortOneValidationRequestDTO)
+    case sesacStoreItemList
+    
+    
+    
     /* === OTHER === */
     case downLoadFile(_ sender: String) // fileURL
     
@@ -157,6 +163,12 @@ enum NetworkRouter: URLRequestConvertible {
         case .dmUnreadCount(let sender):
             return "/v1/workspaces/\(sender.workSpaceId)/dms/\(sender.dmRoomId)/unreads"
             
+        
+        // SeSAC_STORE
+        case .portOneValidation:
+            return "/v1/store/pay/validation"
+        case .sesacStoreItemList:
+            return "/v1/store/item/list"
             
             
         // FILE
@@ -237,6 +249,13 @@ enum NetworkRouter: URLRequestConvertible {
             return .get
         case .makeDMChatting:
             return .post
+            
+            
+        // SsSAC_STORE
+        case .portOneValidation:
+            return .post
+        case .sesacStoreItemList:
+            return .get
             
             
         // Files
@@ -326,6 +345,14 @@ enum NetworkRouter: URLRequestConvertible {
             return [
                 "content": sender.content ?? "",
                 "files": sender.files
+            ]
+        
+        
+        // SeSAC_STORE
+        case .portOneValidation(let sender):
+            return [
+                "imp_uid": sender.imp_uid,
+                "merchant_uid": sender.merchant_uid
             ]
             
         
