@@ -69,6 +69,13 @@ class PurchaseCoinButton: UIButton {
         coinAmountLabel.text = coinType.title
         
         coinPriceLabel.text = coinType.price
+        
+        
+        coinAmountLabel.setAppFont(.bodyBold)
+        coinPriceLabel.setAppFont(.title2)
+        
+        coinPriceLabel.textAlignment = .center
+        
     }
     
     

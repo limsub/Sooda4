@@ -44,17 +44,8 @@ class AppCoordinator: AppCoordinatorProtocol {
     
     // 5.
     func start() {
-//        showSplashFlow()
-        showMyProfileView()
-    }
-    
-    /* 임시 */
-    func showMyProfileView() {
-        print(#function)
-        
-        let vm = MyProfileViewModel()
-        let vc = MyProfileViewController.create(with: vm)
-        navigationController.pushViewController(vc, animated: true)
+        showSplashFlow()
+//        showMyProfileView()
     }
     
     
