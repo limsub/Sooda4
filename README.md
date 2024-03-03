@@ -1,3 +1,5 @@
+![01 Header](https://github.com/limsub/Sooda4/assets/99518799/faeee90c-68b2-40bb-ae18-b131f50cb3a2)
+
 
 ## 💬 Sooda
 > 서비스 소개 : 워크스페이스, 채널, DM 채팅 앱<br>
@@ -29,7 +31,7 @@
 - KingFisher, SnapKit, SideMenu, RxDataSources
 - AuthenticationServices, KakaoSDK
 - PHPicker, UIDocumentPicker, UIDocumentInteraction, FileManager
-- FirebaseMessaging
+- FirebaseMessaging, iamport-ios
 
 
 <br>
@@ -41,6 +43,7 @@
 - **채널** (생성 / 수정 / 삭제 / 퇴장 / 채팅 생성 / 읽지 않은 채팅 개수 / 권한 변경)
 - **DM** (채팅 생성 / 읽지 않은 채팅 개수)
 - **푸시 알림** (실시간 채팅 응답)
+- **PG 결제** (코인 구매)
 
 
 <br>
