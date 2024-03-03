@@ -14,6 +14,7 @@ import FirebaseMessaging
 
 import RxKakaoSDKCommon
 
+import iamport_ios
 
 
 @main
@@ -287,6 +288,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
 }
 
 
+// iamport
+extension AppDelegate {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        Iamport.shared.receivedURL(url)
+        
+        return true
+    }
+}
 
 
 

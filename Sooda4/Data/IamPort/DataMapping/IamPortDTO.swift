@@ -24,7 +24,7 @@ struct PortOneValidataionResponseDTO: Decodable {
 
 struct SeSACItemResponseDTO: Decodable {
     let item: String
-    let ammount: String
+    let amount: String
     
 }
 
