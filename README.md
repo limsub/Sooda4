@@ -15,7 +15,7 @@
 ## 📚 Tech Blog
 - [채팅 UI 구현](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-26%EC%A3%BC%EC%B0%A8)
 - [채팅 로직 구현](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-27%EC%A3%BC%EC%B0%A8)
-- [채팅 구현 과정에서 고민했던 지점](https://velog.io/@s_sub/12)
+- [채팅 구현 과정에서 고민했던 지점](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-28%EC%A3%BC%EC%B0%A8)
 - [Push Notification](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-23%EC%A3%BC%EC%B0%A8)
 - [Clean Architecture 적용기](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-24%EC%A3%BC%EC%B0%A8)
 - [Coordinator Pattern 적용기](https://velog.io/@s_sub/%EC%83%88%EC%8B%B9-iOS-25%EC%A3%BC%EC%B0%A8)
@@ -84,28 +84,46 @@
 <br>
 
 
+<details>
+<summary><b>sample</b></b> </summary>
+<div markdown="1">
+	
+</div>
+</details>
+
+
 ### 2. FCM Token을 이용한 Remote Push Notification 구현
-- FCM Token 등록
-  - `application.registerForRemoteNotifcations()` <br>
+<details>
+<summary><b> FCM Token 등록</b></b> </summary>
+<div markdown="1">
+
+1.  `application.registerForRemoteNotifcations()` <br>
     - 앱 등록
-  - `func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)`
+2.  `func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)`
     - deviceToken 수신
-  - `Messaging.messaging().apnsToken = deviceToken` <br>
+3.  `Messaging.messaging().apnsToken = deviceToken` <br>
     - deviceToken 등록
-  - `func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?)`
+4.  `func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?)`
     - fcmToken 수신
-  - 서버에 fcmToken 전송
+5.  API Request (Login, SignUp, UpdateDeviceToken)
+    - 서버에 FCM Token 전송 -> 계정에 대한 토큰 등록
 
+</div>
+</details>
 
-<br>
+<details>
+<summary><b>예외처리</b> </summary>
+<div markdown="1">
 
+1. **현재 보고 있는 화면의 채팅은 푸시 알림 x**
+   - `UserDefaults`에 현재 보고 있는 채팅방 roomID 저장
 
-- 예외 사항
-  - **사용자가 현재 화면으로 보고 있는 채팅방의 채팅은 푸시 알림으로 받지 않는다**
-    - 현재 보고 있는 채팅방 정보를 `UserDefaults` 로 저장 후 예외처리
-  - **푸시 알림 클릭 시, 해당 채팅방으로 화면 전환**
-    - `NotificationCenter`를 이용해 AppDelegate에서 SceneDelegate로 채팅 정보 전달
-    - `AppCoordinator`의 메서드 이용해서 화면 전환 구현
+2. **푸시 알림 클릭 시, 해당 채팅방으로 화면 전환**
+   - `NotificationCenter` 이용해서 SceneDelegate로 채팅 정보 전달
+   - SceneDelegate의 `AppCoordinator`의 메서드 실행
+
+</div>
+</details>
 
 
 <br>
@@ -130,9 +148,6 @@
   |<img src="https://github.com/limsub/Sooda4/assets/99518799/099a301c-d3a4-4939-8846-758cfd8d635c" align="center" width="200">|<img src="https://github.com/limsub/Sooda4/assets/99518799/08942871-c502-4d46-a6fd-c42e7adde24e" align="center" width="200">|
   |:--:|:--:|
   |no input data|with input data|
-
-
-
 
 
 <br>
@@ -438,37 +453,89 @@
 
 ## 🧭 회고
 ### 1. 일관적이지 않은 서버의 요청 모델
-- 채널 ID (소켓), 채널 이름 (채팅 생성, 조회)
-- DM room ID (채팅 생성), 상대방 userID (채팅 조회)
+- **서버의 요청 모델이 일관적이지 않을 수 있다**는 점을 알게 되었다.
+  - 채널 데이터를 요청할 때, channel_ID가 필요한 경우도 있었고, channel_name이 필요한 경우도 있었다.
+  - DM 데이터 역시, room_ID가 필요한 경우도 있었고, 상대방의 user_ID가 필요한 경우도 있었다.
 
-- DTO 사용의 장점
+
+- **DTO 사용의 장점**을 느꼈다.
+  - requestDTO 모델을 사용함으로써 각 요청에 필요한 데이터를 손쉽게 추출하고, 깔끔하게 보낼 수 있었다.
 
 
 <br>
 
 
 ### 2. 채팅 구현 과정에서 다양한 고민 지점
-- 소켓 연결 / 해제 시점에 대한 고민
-  - viewDidAppear / viewDidDisappear
-  - background / foreground
-  - HTTP 통신 요청 완료 시점 vs. 응답 완료 시점
-
-
-- 다중 계정 환경에서 DB 공유 이슈
-
-
-- 멀티 디바이스 로그인 시 실시간 채팅 (소켓) 응답 조건 추가 필요
-  - 단순 userID로만 분기 처리 -> 멀티 디바이스 대응 불가능
-  - HTTP 전송 결과를 통해 분기 처리 -> 소켓 응답이 더 먼저 오기 때문에 비교 불가능
+1. **소켓 연결 / 해제 시점**에 대한 고민 [1]
+    - 초기 데이터를 불러오는 과정 속에서 정확히 어떤 시점에 소켓을 오픈해야 하는지 고민했다.
+    - 미세한 차이로 인해 **HTTP와 소켓의 중복 데이터가 존재할 수 있는 가능성**을 고려하였다.
+    - 어느 정도 중복의 가능성을 열어두고, DB CRUD 과정에서 예외처리를 해주었다.
 
 
 <br>
 
 
+2. **소켓 연결 / 해제 시점**에 대한 고민 [2]
+    - **적절한 시점에 소켓 연결을 해제**시켜주어야 한다.
+    1. VC의 생명주기
+       - `viewWillAppear`와 `viewWillDisappear` 시점에 연결 or 해제
+    2. 앱의 생명주기
+       - `sceneDidBecomeActive`와 `sceneDidEnterBackground` 시점에 연결 or 해제
+       - 현재 화면이 채팅방 여부에 따라 로직 분기 처리
+
+
+<br>
+
+
+3. **서버 DB와 로컬 DB 데이터 동기화**
+    - **유저 정보**, **채널 정보**, **디엠 정보**는 서버 DB와 로컬 DB에 모두 저장된다.
+    - **사용자가 정보를 수정하게 되면** 서버 DB에는 즉시 반영되지만 기기에는 기존 데이터가 저장되어 있다.
+    - 따라서, 적절한 시점에 로컬 DB의 데이터를 업데이트시켜주는 것이 필요하다.
+    - 채택 : **채팅방 진입 시 HTTP 요청을 통해 최신 데이터를 받아서 로컬 DB의 데이터를 업데이트한다**
+    - 한계 : 채팅방에 있는 동안, 서버에서 변경된 데이터는 실시간으로 반영할 수 없다
+
+
+<br>
+
+
+4. **다중 계정 환경**
+    - **하나의 기기에 여러 계정이 로그인할 수 있다는 점**을 고려하였다.
+    - 단순히 realm 파일을 이용하면 데이터가 공유될 수 있기 때문에, **계정 별 realm 파일을 따로 사용하는 방법**을 채택하였다.
+
+
+<br>
+
+
+5. **멀티 디바이스 대응**
+    - **전송한 채팅** 에 대해서는 HTTP 결과를 통해 뷰 업데이트를 하기 때문에,<br>
+      소켓으로 응답받을 때, 이 채팅에 대해 **user_ID**를 이용해서 예외처리를 해준다.
+    - 이슈 : 다중 기기에서 같은 계정으로 로그인했을 때, (다른 기기에서) 내가 보낸 채팅을 확인할 수 없다.
+    - 시도 : HTTP response (**chat_ID**)를 통해 분기 처리 시도
+    - 결과 : **HTTP 보다 소켓 데이터가 먼저 도착** -> 분기 처리 불가능
+
+
+<br>
+
+
+
 ### 3. 채팅 화면에서 tableView와 키보드 스크롤 동기화
+- 키보드가 올라가고 내려가는 만큼, tableView의 스크롤도 변하게 구현하였다.
+- 추후 카카오톡, 슬랙처럼 tableView의 스크롤과 키보드가 맞물리게끔(?) 구현하고 싶다.
 
 
 <br>
 
 
 ### 4. 새로운 아키텍처 도전 (Clean Architecture)
+- 동기
+    - 기존 MVVM 패턴에서 **ViewModel이 지나치게 많은 로직**을 포함
+    - 코드 유지보수 시 **가독성 저하**
+    - 여러 VM에 중복된 코드 때문에 **일관성 훼손**
+- 시도
+    - **Clean Architecture**를 도입
+    - **계층 별 관심사를 분리**
+    - **의존성 규칙을 준수**
+- 결과
+    - Repository와 UseCase에 기존 VM 로직 분리
+    - **독립적인 테스트 가능** 및 **코드 재사용성 증가**
+
