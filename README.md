@@ -5,8 +5,8 @@
 > 서비스 소개 : 워크스페이스, 채널, DM 채팅 앱<br>
 개발 인원 : 1인<br>
 개발 기간 : 2024.01.01 ~ 2024.02.08<br>
-협업 툴 : Figma, Confluence, Swagger<br>
-협업 일지 : 
+협업 툴 : Figma, Confluence, Swagger, JANDI<br>
+협업 일지 : [서버 & 디자인 협업](https://prairie-drill-e3a.notion.site/ee12213da87940768999719df0ebc28a?v=81acc54747f44114b0ccc817bceaeae0&pvs=4)
 
 
 <br>
